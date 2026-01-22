@@ -1,22 +1,11 @@
-<template>
-  <router-link to="/app/app-vue2/#/">vue-app2</router-link>
-  &nbsp;
-  <router-link to="/app/app-vue3">vue-app3</router-link>
+<script setup lang="ts"></script>
 
-  <router-view />
+<template>
+  <h1>You did it!</h1>
+  <p>
+    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
+    documentation
+  </p>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<style scoped></style>
