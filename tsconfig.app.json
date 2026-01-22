@@ -3,6 +3,9 @@
   "include": [
     "env.d.ts",
     "src/**/*",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
     "src/**/*.vue"
   ],
   "exclude": [
