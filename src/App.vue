@@ -1,19 +1,41 @@
 <template>
-  <h1>You did it!</h1>
-  <el-button>Default</el-button>
-  <el-button type="primary">Primary</el-button>
-  <el-button type="success">Success</el-button>
-  <el-button type="info">Info</el-button>
-  <el-button type="warning">Warning</el-button>
-  <el-button type="danger">{{ t('title') }}</el-button>
-  <router-link to="/frame">vue-app3</router-link>
+  <div class="app-container">
     <router-view />
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+window.document.title = t('title')
 </script>
 
-<style scoped></style>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+</style>
+
+<style scoped>
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden; /* 防止内部内容溢出 */
+}
+</style>

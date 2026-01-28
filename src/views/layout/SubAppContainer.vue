@@ -1,6 +1,5 @@
 <template>
-  <h1>SubAppContainer.vue You did it!</h1>
-  <div id="sub-app-container"></div>
+  <div id="sub-app-container" class="child-app"></div>
 </template>
 
 <script lang="ts" setup>
@@ -31,4 +30,10 @@ if (!win.qiankunStarted) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.child-app {
+  width: 100vw !important;
+  height: 100% !important;
+  background-color: red;
+}
+</style>

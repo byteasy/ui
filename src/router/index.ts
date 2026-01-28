@@ -4,10 +4,20 @@ const routers = [
   {
     path: '/',
     name: 'Home',
-    redirect: '/frame'
+    redirect: '/app/system'
   },
   {
-    // history模式需要通配所有路由，详见vue-router文档
+    path: '/app',
+    component: () => import('../views/layout/WebLayout.vue'),
+    children: [
+      {
+        path: 'system/:path*',
+        name: 'System',
+        component: () => import('../views/layout/SubAppContainer.vue')
+      }
+    ]
+  },
+  {
     path: '/frame/:pathMatch(.*)*',
     name: 'system',
     component: () => import('../views/layout/SubAppContainer.vue'),
