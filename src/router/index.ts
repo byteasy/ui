@@ -7,6 +7,17 @@ const routers = [
     redirect: '/app/system'
   },
   {
+    path: '/frame',
+    component: () => import('../views/layout/WebLayout.vue'),
+    children: [
+      {
+        path: 'appearanceSettings',
+        name: 'AppearanceSettings',
+        component: () => import('../views/layout/AsideMain.vue')
+      }
+    ]
+  },
+  {
     path: '/app',
     component: () => import('../views/layout/WebLayout.vue'),
     children: [
@@ -17,17 +28,6 @@ const routers = [
       }
     ]
   },
-  {
-    path: '/frame',
-    component: () => import('../views/layout/WebLayout.vue'),
-    children: [
-      {
-        path: 'appearanceSettings',
-        name: 'AppearanceSettings',
-        component: () => import('../views/common/AppearanceSettings.vue')
-      }
-    ]
-  }
 ]
 
 const router = createRouter({
