@@ -2,7 +2,7 @@
   <el-config-provider :locale="locale" :size="componentSize as any">
     <div class="layout bg-color-blank">
       <navbar-default class="navbar-default" />
-      <div class="layout__content"><div class="bg-color-page"><router-view /></div> </div>
+      <div class="layout__content"><div class="bg-color-page m-1"><router-view /></div> </div>
     </div>
     <widget-modal-container />
   </el-config-provider>
