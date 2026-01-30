@@ -43,7 +43,6 @@ onBeforeMount(() => {
 }
 .layout__content {
   flex: 1; /* 占据剩余空间 */
-  margin-top: 0.2rem;
   overflow: auto; /* 如果内容过多，在内容区域内滚动 */
   min-height: 0; /* 重要：修复flex容器中的滚动问题 */
 }
