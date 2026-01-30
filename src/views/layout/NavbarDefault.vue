@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import whiteLogo from '@/assets/img/black-logo.png'
+import defaultAvatar from '@/assets/img/defaultAvatar.png'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -15,8 +16,8 @@ const { t } = useI18n()
       <el-dropdown :placement="'bottom-start'">
         <div class="el-dropdown-link">
           <div class="flex-row">
-            <el-avatar :size="35">
-              <IconLocalDefaultAvatar />
+            <el-avatar :size="35" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg">
+              <img :src="defaultAvatar"/>
             </el-avatar>
             <div class="flex-column ml-2">
               <span style="color: var(--el-text-color-primary)">王手和</span>
