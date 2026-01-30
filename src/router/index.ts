@@ -18,9 +18,15 @@ const routers = [
     ]
   },
   {
-    path: '/frame/:pathMatch(.*)*',
-    name: 'system',
-    component: () => import('../views/layout/SubAppContainer.vue'),
+    path: '/frame',
+    component: () => import('../views/layout/WebLayout.vue'),
+    children: [
+      {
+        path: 'appearanceSettings',
+        name: 'AppearanceSettings',
+        component: () => import('../views/common/AppearanceSettings.vue')
+      }
+    ]
   }
 ]
 

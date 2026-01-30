@@ -1,9 +1,10 @@
 <template>
-  <el-config-provider :locale="locale">
-    <div class="layout">
+  <el-config-provider :locale="locale" :size="componentSize as any">
+    <div class="layout bg-color-blank">
       <navbar-default class="navbar-default" />
-      <div class="layout__content"><router-view /></div>
+      <div class="layout__content"><div class="bg-color-page"><router-view /></div> </div>
     </div>
+    <widget-modal-container />
   </el-config-provider>
 </template>
 
@@ -14,12 +15,13 @@ import { computed, ref, onBeforeMount } from 'vue'
 import NavbarDefault from '@/views/layout/NavbarDefault.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
+import { container as WidgetModalContainer } from 'jenesius-vue-modal'
 
 const language = ref('zh-cn')
 const locale = computed(() => (language.value === 'zh-cn' ? zhCn : en))
 const appSettingsStore = useAppSettingsStore()
 
-const { theme } = storeToRefs(appSettingsStore)
+const { theme, componentSize } = storeToRefs(appSettingsStore)
 
 onBeforeMount(() => {
   window.document.documentElement.setAttribute('class', theme.value!)
@@ -41,6 +43,7 @@ onBeforeMount(() => {
 }
 .layout__content {
   flex: 1; /* 占据剩余空间 */
+  margin-top: 0.2rem;
   overflow: auto; /* 如果内容过多，在内容区域内滚动 */
   min-height: 0; /* 重要：修复flex容器中的滚动问题 */
 }

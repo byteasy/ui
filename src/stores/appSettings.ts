@@ -4,11 +4,16 @@ import { safeGet, safePut } from '@/stores/localStorage.ts'
 
 export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   const theme = ref(safeGet('theme') !== null ? safeGet('theme') : 'light')
+  const componentSize= ref(safeGet('componentSize') !== null ? safeGet('componentSize') : 'normal')
 
   function setTheme(value: string) {
     theme.value = value
     safePut('theme', value)
   }
 
-  return { theme, setTheme }
+  function setComponentSize(value: string) {
+    componentSize.value = value
+  }
+
+  return { theme, setTheme, componentSize, setComponentSize }
 })
