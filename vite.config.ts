@@ -7,8 +7,10 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import path from 'path'
+import Icons from 'unplugin-icons/vite'
+import { FileSystemIconLoader } from 'unplugin-icons/loaders'
+import { resolve } from 'path'
+import IconsResolver from 'unplugin-icons/resolver'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -20,26 +22,29 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()]
     }),
     Components({
-      resolvers: [ElementPlusResolver()]
+      resolvers: [
+        ElementPlusResolver(),
+        IconsResolver({
+          prefix: 'icon',
+          enabledCollections: ['ep', 'local'],
+        })
+      ],
+      dts: 'src/components.d.ts'
     }),
-    createSvgIconsPlugin({
-      // 指定需要缓存的图标文件夹
-      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
-      // 指定symbolId格式
-      symbolId: 'icon-[dir]-[name]'
-
-      /**
-       * 自定义插入位置
-       * @default: body-last
-       */
-      // inject?: 'body-last' | 'body-first'
-
-      /**
-       * custom dom id
-       * @default: __svg__icons__dom__
-       */
-      // customDomId: '__svg__icons__dom__',
-    }),
+    Icons({
+      autoInstall: true, // 自动安装图标集
+      compiler: 'vue3', // 编译器
+      // 默认样式
+      defaultStyle: 'display: inline-block;',
+      // 默认类名
+      defaultClass: 'icon',
+      customCollections: {
+        // 本地 SVG 图标
+        'local': FileSystemIconLoader(
+          resolve(__dirname, 'src/icons')
+        )
+      }
+    })
   ],
   server: {
     port: 7999,

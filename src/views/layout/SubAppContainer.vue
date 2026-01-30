@@ -34,6 +34,6 @@ if (!win.qiankunStarted) {
 .child-app {
   width: 100vw !important;
   height: 100% !important;
-  background-color: lightgray;
+  background-color: var(--el-bg-color-page);
 }
 </style>
