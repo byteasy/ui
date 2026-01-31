@@ -8,6 +8,7 @@ export default {
   cancel: '取消',
   search: '查询',
   deleteWarn: '确定要删除这条记录？',
+  frame: '系统设置',
   favoriteSettings: '偏好设置',
   personalSettings: '个人设置',
   passwordSettings: '密码设置',

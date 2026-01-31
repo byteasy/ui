@@ -1,15 +1,15 @@
 <template>
   <div>
-    <el-menu default-active="1-1" class="el-menu-border">
-      <el-sub-menu index="1">
+    <el-menu default-active="/frame/favoriteSettings/appearanceSettings" class="el-menu-border" :router="true">
+      <el-sub-menu index="/frame/favoriteSettings">
         <template #title>
           <el-icon><operation /></el-icon>
-          <span>偏好设置</span>
+          <span>{{ t('favoriteSettings') }}</span>
         </template>
-        <el-menu-item index="1-3">{{ t('appearanceSettings') }}</el-menu-item>
-        <el-menu-item index="1-2">{{ t('languageSettings') }}</el-menu-item>
-        <el-menu-item index="1-1">{{ t('personalSettings') }}</el-menu-item>
-        <el-menu-item index="1-4">{{ t('passwordSettings') }}</el-menu-item>
+        <el-menu-item index="/frame/favoriteSettings/appearanceSettings">{{ t('appearanceSettings') }}</el-menu-item>
+        <el-menu-item index="/frame/favoriteSettings/languageSettings">{{ t('languageSettings') }}</el-menu-item>
+        <el-menu-item index="/frame/favoriteSettings/personalSettings">{{ t('personalSettings') }}</el-menu-item>
+        <el-menu-item index="/frame/favoriteSettings/passwordSettings">{{ t('passwordSettings') }}</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>

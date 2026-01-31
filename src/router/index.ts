@@ -9,10 +9,13 @@ const routers = [
   {
     path: '/frame',
     component: () => import('../views/layout/WebLayout.vue'),
+    name: 'frame',
+    redirect: '/frame/favoriteSettings',
     children: [
       {
         path: 'favoriteSettings',
         name: 'favoriteSettings',
+        redirect: '/frame/favoriteSettings/appearanceSettings',
         component: () => import('../views/layout/AsideMain.vue'),
         children: [
           {
