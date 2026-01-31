@@ -1,20 +1,14 @@
 <script setup lang="ts">
-import { openModal } from 'jenesius-vue-modal'
 import whiteLogo from '@/assets/img/black-logo.png'
 import defaultAvatar from '@/assets/img/defaultAvatar.png'
 import { useI18n } from 'vue-i18n'
-import AppearanceSettings from '@/views/common/AppearanceSettings.vue'
 import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 const router = useRouter()
 
-function onpersonalSettingsClick() {
-  openModal(AppearanceSettings, {}, { backgroundClose: true, draggable: true })
-}
-
-function onAppearanceSettingsClick() {
-  router.push('/frame/favoriteSettings/appearanceSettings')
+function onSettingsClick(name) {
+  router.push('/frame/favoriteSettings/' + name)
 }
 </script>
 
@@ -42,25 +36,25 @@ function onAppearanceSettingsClick() {
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="onpersonalSettingsClick">
+            <el-dropdown-item @click="onSettingsClick('personalSettings')">
               <div class="flex-row">
                 <IconLocalAccount style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('personalSettings') }}</span>
               </div>
             </el-dropdown-item>
-            <el-dropdown-item @click="onpersonalSettingsClick">
+            <el-dropdown-item @click="onSettingsClick('passwordSettings')">
               <div class="flex-row">
                 <IconLocalPassword style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('passwordSettings') }}</span>
               </div>
             </el-dropdown-item>
-            <el-dropdown-item divided @click="onAppearanceSettingsClick">
+            <el-dropdown-item divided @click="onSettingsClick('appearanceSettings')">
               <div class="flex-row">
                 <IconLocalShowSettings style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('appearanceSettings') }}</span>
               </div>
             </el-dropdown-item>
-            <el-dropdown-item>
+            <el-dropdown-item @click="onSettingsClick('languageSettings')">
               <div class="flex-row">
                 <IconLocalLanguage style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('languageSettings') }}</span>

@@ -12,7 +12,11 @@
           <tag-view v-else />
         </div>
         <div class="el-card is-always-shadow p-2 mt-1" style="width: 100%">
-          <router-view />
+          <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <component :is="Component" :key="$route.path" />
+            </transition>
+          </router-view>
         </div>
       </div>
     </el-splitter-panel>
@@ -30,4 +34,20 @@ const appSettingsStore = useAppSettingsStore()
 const { tagView } = storeToRefs(appSettingsStore)
 </script>
 
-<style scoped></style>
+<style scoped>
+/* 淡入淡出动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 保持页面切换时的滚动位置 */
+.router-view-container {
+  min-height: 100%;
+}
+</style>
