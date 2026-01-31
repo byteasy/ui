@@ -4,12 +4,12 @@
       <el-sub-menu index="/frame/favoriteSettings">
         <template #title>
           <el-icon><operation /></el-icon>
-          <span>{{ t('favoriteSettings') }}</span>
+          <span class="my-font-size-md">{{ t('favoriteSettings') }}</span>
         </template>
-        <el-menu-item index="/frame/favoriteSettings/appearanceSettings">{{ t('appearanceSettings') }}</el-menu-item>
-        <el-menu-item index="/frame/favoriteSettings/languageSettings">{{ t('languageSettings') }}</el-menu-item>
-        <el-menu-item index="/frame/favoriteSettings/personalSettings">{{ t('personalSettings') }}</el-menu-item>
-        <el-menu-item index="/frame/favoriteSettings/passwordSettings">{{ t('passwordSettings') }}</el-menu-item>
+        <el-menu-item index="/frame/favoriteSettings/appearanceSettings"><span class="my-font-size">{{ t('appearanceSettings') }}</span></el-menu-item>
+        <el-menu-item index="/frame/favoriteSettings/languageSettings"><span class="my-font-size">{{ t('languageSettings') }}</span></el-menu-item>
+        <el-menu-item index="/frame/favoriteSettings/personalSettings"><span class="my-font-size">{{ t('personalSettings') }}</span></el-menu-item>
+        <el-menu-item index="/frame/favoriteSettings/passwordSettings"><span class="my-font-size">{{ t('passwordSettings') }}</span></el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>
@@ -26,6 +26,6 @@ const { t } = useI18n()
 }
 .el-menu-item.is-active {
   color: var(--el-menu-active-color);
-  background-color: var(--my-bg-color);
+  background-color: var(--my-bg-menu-item-active-color);
 }
 </style>

@@ -35,8 +35,8 @@ function onAppearanceSettingsClick() {
               <img :src="defaultAvatar" />
             </el-avatar>
             <div class="flex-column ml-2">
-              <span style="color: var(--el-text-color-primary)" class="font-bold-700">王手和</span>
-              <span style="color: var(--el-color-info)" class="mt-1">信息化管理部</span>
+              <span style="color: var(--my-text-color); font-size: var(--my-font-size);" class="font-bold-700">王手和</span>
+              <span style="color: var(--my-text-gray); font-size: var(--my-font-size);" class="mt-1">信息化管理部</span>
             </div>
           </div>
         </div>
@@ -95,9 +95,9 @@ function onAppearanceSettingsClick() {
 }
 
 .system-title {
-  font-size: 1.1rem;
+  font-size: var(--my-font-size-2xl);
   font-weight: bold; /* 加粗 */
-  color: var(--el-text-color-primary);
+  color: var(--my-text-color);
 
   /* 完美垂直居中 */
   display: inline-flex;

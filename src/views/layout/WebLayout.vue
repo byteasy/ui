@@ -3,7 +3,7 @@
     <div class="layout my-bg-color-blank">
       <navbar-default class="navbar-default" />
       <div class="layout__content">
-        <div class="bg-color-page m-1"><router-view /></div>
+        <div class="m-1"><router-view /></div>
       </div>
     </div>
     <widget-modal-container />
@@ -27,15 +27,44 @@ const appSettingsStore = useAppSettingsStore()
 const { theme, componentSize } = storeToRefs(appSettingsStore)
 
 onBeforeMount(() => {
-  window.document.documentElement.setAttribute('class', theme.value!)
-  // window.document.body.setAttribute('class', fontsize.value)
+  setTheme()
+  setFontSize()
 })
+
+function setFontSize() {
+  // 移除旧的字体类
+  window.document.documentElement.classList.remove('font-small', 'font-default', 'font-large')
+
+  if(componentSize.value === 'default') {
+    window.document.documentElement.classList.add('font-default')
+  }
+  if(componentSize.value === 'small') {
+    window.document.documentElement.classList.add('font-small')
+  }
+  if(componentSize.value === 'large') {
+    window.document.documentElement.classList.add('font-large')
+  }
+}
+
+function setTheme() {
+  window.document.documentElement.classList.remove('dark', 'light', 'green', 'blue')
+  window.document.documentElement.classList.add(theme.value!)
+}
 
 watch(
   () => theme.value,
   (newTheme, oldTheme) => {
     console.log('主题变化:', oldTheme, '→', newTheme)
-    window.document.documentElement.setAttribute('class', theme.value!)
+    setTheme()
+  },
+  { immediate: true }, // 是否立即执行一次
+)
+
+watch(
+  () => componentSize.value,
+  (newTheme, oldTheme) => {
+    console.log('字体变化:', oldTheme, '→', newTheme)
+    setFontSize()
   },
   { immediate: true }, // 是否立即执行一次
 )

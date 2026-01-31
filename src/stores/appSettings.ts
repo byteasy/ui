@@ -13,6 +13,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
 
   function setComponentSize(value: string) {
     componentSize.value = value
+    safePut('componentSize', value)
   }
 
   return { theme, setTheme, componentSize, setComponentSize }

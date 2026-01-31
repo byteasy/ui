@@ -17,6 +17,19 @@ export default {
   appearanceSettingsTheme: '主题设置',
   appearanceSettingsFont: '字体设置',
   appearanceSettingsLayout: '布局设置',
+  appearanceTheme: {
+    themeGreen: '粒子绿',
+    themeBlue: '科技蓝',
+    themeDark: '炫酷黑',
+    themeLight: '明亮风',
+  },
+  appearanceFontSize: {
+    small: '小',
+    default: '中',
+    defaultWarn: '建议分辨率1400以上的显示器使用',
+    large: '大',
+    largeWarn: '建议分辨率1600以上的显示器使用',
+  },
   exit: '退出',
   description: '',
   theme: '外观',
@@ -34,7 +47,7 @@ export default {
   operationFailed: '操作失败',
   pager: {
     total: '共',
-    row: '条'
+    row: '条',
   },
   table: {
     loading: '加载中',
@@ -44,7 +57,7 @@ export default {
     edit: '编辑',
     role: '角色',
     delete: '删除',
-    save: '保存'
+    save: '保存',
   },
   validate: {
     minLength: '最小长度',
@@ -52,6 +65,6 @@ export default {
     min: '最小',
     max: '最大',
     required: '必须填写',
-    email: '邮箱格式不正确'
-  }
+    email: '邮箱格式不正确',
+  },
 } as const

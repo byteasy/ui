@@ -1,49 +1,62 @@
-// en.ts
 export default {
-  title: 'Byteasy',
-  description: 'Byteasy aims to provide a one-stop tool platform for technical professionals, facilitating development and troubleshooting for developers and testers. It includes tools for HTTP/HTTPS, WebSocket, TCP, and UDP packet capture, network protocol analysis, middleware diagnostic and debugging tools, as well as commonly used development and testing utilities.',
-  theme: 'Theme',
+  title: 'Operation Center',
+  subTitle: 'LGAG',
+  add: 'Add',
+  ok: 'Ok',
+  save: 'Save',
+  cancel: 'Cancel',
+  search: 'Search',
+  deleteWarn: 'Are you sure you want to delete this record?',
+  frame: 'System Settings',
+  favoriteSettings: 'Favorite Settings',
+  personalSettings: 'Personal Settings',
+  passwordSettings: 'Password Settings',
+  appearanceSettings: 'Display Settings',
+  languageSettings: 'Language Settings',
+  appearanceSettingsTheme: 'Theme Settings',
+  appearanceSettingsFont: 'Font Settings',
+  appearanceSettingsLayout: 'Layout Settings',
+  appearanceTheme: {
+    themeGreen: 'Particle Green',
+    themeBlue: 'Tech Blue',
+    themeDark: 'Cool Dark',
+    themeLight: 'Bright Style',
+  },
+  exit: 'Exit',
+  description: '',
+  theme: 'Appearance',
   layout: 'Layout',
   skin: 'Skin',
-  error404: 'Page not found',
-  backLastPage: 'Go back',
-  operationSuccess: 'Success',
+  fullscreenTooltip: 'Full Screen Display',
+  columnVisibleSet: 'Custom Column Display',
+  exitFullscreenTooltip: 'Exit Full Screen',
+  error404: 'The page you are trying to access does not exist',
+  errorAuthorizeFailed: 'You do not have permission to access this page. If you need access, please contact the administrator',
+  errorLoadComponent: 'Please check if the front-end component path configuration is correct',
+  goBackHome: 'Return to Home Page',
+  goBackLastPage: 'Return to Previous Page',
+  operationSuccess: 'Operation Successful',
+  operationFailed: 'Operation Failed',
   pager: {
     total: 'Total',
-    row: 'records'
+    row: 'rows'
+  },
+  table: {
+    loading: 'Loading',
+    emptyText: 'No Data',
+    operation: 'Operation',
+    view: 'View',
+    edit: 'Edit',
+    role: 'Role',
+    delete: 'Delete',
+    save: 'Save'
   },
   validate: {
-    minLength: 'Minimum length',
-    maxLength: 'Maximum length',
+    minLength: 'Minimum Length',
+    maxLength: 'Maximum Length',
     min: 'Minimum',
     max: 'Maximum',
-    required: 'Required field',
-    email: 'Invalid email format'
-  },
-  navMenu: {
-    home: 'Home',
-    market: 'Plugins',
-    netTools: 'Network Tools',
-    middleWare: 'Middleware',
-  },
-  netTools: {
-    fiddler: 'HTTP Packet Capture',
-    tcp: 'TCP Packet Capture'
-  },
-  fiddler: {
-    time: 'Time',
-    url: 'URL',
-    protocol: 'Protocol',
-    method: 'Method',
-    status: 'Status',
-    costTime: 'Duration',
-    host: 'Host',
-    port: 'Port',
-    requestSize: 'Request Size',
-    responseSize: 'Response Size',
-    clientIp: 'Source Address',
-    serverIp: 'Server Address',
-    request: 'Request',
-    response: 'Response'
+    required: 'Required',
+    email: 'Invalid Email Format'
   }
-} as const // 使用 as const 获得更精确的类型
+} as const
