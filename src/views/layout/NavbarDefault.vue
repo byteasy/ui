@@ -18,7 +18,14 @@ function onSettingsClick(name) {
       <img :src="whiteLogo" class="system_logo" alt="" />
       <span class="system-title">-{{ t('title') }}</span>
     </div>
-    <div>
+    <div class="flex-row">
+      <el-input
+        style="width: 200px"
+        placeholder="Please Input"
+        suffix-icon="Search"
+        class="mr-3"
+      />
+      <el-icon class="mr-3" size="24" style="color: var(--my-text-color)" :title="$t('help')"><QuestionFilled /></el-icon>
       <el-dropdown :placement="'bottom-start'">
         <div class="el-dropdown-link">
           <div class="flex-row">

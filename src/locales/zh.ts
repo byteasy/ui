@@ -41,6 +41,7 @@ export default {
     changeWarn: '是否刷新浏览器设置使语言切换生效?',
   },
   exit: '退出',
+  help: '问题帮助',
   description: '',
   theme: '外观',
   layout: '布局',

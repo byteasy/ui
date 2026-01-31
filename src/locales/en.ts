@@ -40,6 +40,7 @@ export default {
     breadCrumbView: 'Breadcrumb Navigation Mode',
   },
   exit: 'Exit',
+  help: 'Question help',
   description: '',
   theme: 'Appearance',
   layout: 'Layout',
