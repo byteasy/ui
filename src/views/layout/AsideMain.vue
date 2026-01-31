@@ -6,13 +6,17 @@
       </div>
     </el-splitter-panel>
     <el-splitter-panel :min="200">
-      <div class="demo-panel">2</div>
+      <div class="flex-column m-1">
+        <bread-crumb />
+        <router-view />
+      </div>
     </el-splitter-panel>
   </el-splitter>
 </template>
 
 <script lang="ts" setup>
 import LeftMenu from '@/views/layout/LeftMenu.vue'
+import BreadCrumb from '@/components/BreadCrumb.vue'
 </script>
 
 <style scoped>

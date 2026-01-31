@@ -1,15 +1,10 @@
 <template>
   <el-card>
-    <template #header>
-      <div class="card-header">
-        <span>{{ t('settingsVisible') }}</span>
-      </div>
-    </template>
     <el-tabs
     >
-      <el-tab-pane :label="t('settingsVisibleTheme')" name="first">{{ t('settingsVisibleTheme')}}</el-tab-pane>
-      <el-tab-pane :label="t('settingsVisibleFont')" name="second">{{ t('settingsVisibleFont')}}</el-tab-pane>
-      <el-tab-pane :label="t('settingsVisibleLayout')" name="third">{{ t('settingsVisibleLayout')}}</el-tab-pane>
+      <el-tab-pane :label="t('appearanceSettingsTheme')" name="first">{{ t('appearanceSettingsTheme')}}</el-tab-pane>
+      <el-tab-pane :label="t('appearanceSettingsFont')" name="second">{{ t('appearanceSettingsFont')}}</el-tab-pane>
+      <el-tab-pane :label="t('appearanceSettingsLayout')" name="third">{{ t('appearanceSettingsLayout')}}</el-tab-pane>
     </el-tabs>
     <template #footer>
       <div class="flex-row">

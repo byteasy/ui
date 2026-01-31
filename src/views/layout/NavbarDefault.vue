@@ -9,12 +9,12 @@ import { useRouter } from 'vue-router'
 const { t } = useI18n()
 const router = useRouter()
 
-function onPersonalSettingsClick() {
+function onpersonalSettingsClick() {
   openModal(AppearanceSettings, {}, { backgroundClose: true, draggable: true })
 }
 
 function onAppearanceSettingsClick() {
-  router.push('/frame/appearanceSettings')
+  router.push('/frame/favoriteSettings/appearanceSettings')
 }
 </script>
 
@@ -42,28 +42,28 @@ function onAppearanceSettingsClick() {
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="onPersonalSettingsClick">
+            <el-dropdown-item @click="onpersonalSettingsClick">
               <div class="flex-row">
                 <IconLocalAccount style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('settingsPersonal') }}</span>
+                <span class="ml-2">{{ t('personalSettings') }}</span>
               </div>
             </el-dropdown-item>
-            <el-dropdown-item @click="onPersonalSettingsClick">
+            <el-dropdown-item @click="onpersonalSettingsClick">
               <div class="flex-row">
                 <IconLocalPassword style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('settingsPassword') }}</span>
+                <span class="ml-2">{{ t('passwordSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item divided @click="onAppearanceSettingsClick">
               <div class="flex-row">
                 <IconLocalShowSettings style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('settingsVisible') }}</span>
+                <span class="ml-2">{{ t('appearanceSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item>
               <div class="flex-row">
                 <IconLocalLanguage style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('settingsLanguage') }}</span>
+                <span class="ml-2">{{ t('languageSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item divided>

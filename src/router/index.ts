@@ -11,9 +11,31 @@ const routers = [
     component: () => import('../views/layout/WebLayout.vue'),
     children: [
       {
-        path: 'appearanceSettings',
-        name: 'AppearanceSettings',
-        component: () => import('../views/layout/AsideMain.vue')
+        path: 'favoriteSettings',
+        name: 'favoriteSettings',
+        component: () => import('../views/layout/AsideMain.vue'),
+        children: [
+          {
+            path: 'appearanceSettings',
+            name: 'appearanceSettings',
+            component: () => import('../views/common/AppearanceSettings.vue')
+          },
+          {
+            path: 'languageSettings',
+            name: 'languageSettings',
+            component: () => import('../views/common/AppearanceSettings.vue')
+          },
+          {
+            path: 'personalSettings',
+            name: 'personalSettings',
+            component: () => import('../views/common/AppearanceSettings.vue')
+          },
+          {
+            path: 'passwordSettings',
+            name: 'passwordSettings',
+            component: () => import('../views/common/AppearanceSettings.vue')
+          }
+        ]
       }
     ]
   },
