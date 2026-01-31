@@ -36,7 +36,6 @@ const { tagView } = storeToRefs(appSettingsStore)
 const refLeftMenu = ref()
 
 function onLeftMenuSizeUpdate(size) {
-  console.log(size)
   refLeftMenu.value.closeOrOpenMenu(size)
 }
 </script>
