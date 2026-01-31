@@ -13,7 +13,7 @@ function updateFontSize() {
 </script>
 
 <template>
-  <el-space direction="vertical" style="width: 20vw">
+  <el-space direction="vertical" class="ml-5">
     <el-radio-group v-model="tagViewValue" @change="updateFontSize" >
       <div class="flex-column">
         <el-radio value="1">{{ $t('appearanceLayout.tagView') }}</el-radio>
