@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TopMenu from '@/views/layout/TopMenu.vue'
 import whiteLogo from '@/assets/img/black-logo.png'
 import defaultAvatar from '@/assets/img/defaultAvatar.png'
 import { useI18n } from 'vue-i18n'
@@ -17,6 +18,7 @@ function onSettingsClick(name) {
     <div class="flex-row">
       <img :src="whiteLogo" class="system_logo" alt="" />
       <span class="system-title">-{{ t('title') }}</span>
+      <top-menu />
     </div>
     <div class="flex-row">
       <el-input

@@ -1,13 +1,13 @@
 <template>
   <el-splitter>
-    <el-splitter-panel size="200" collapsible :min="70" :max="240" @update:size="onLeftMenuSizeUpdate">
+    <el-splitter-panel size="220" collapsible :min="80" :max="220" @update:size="onLeftMenuSizeUpdate">
       <div class="mt-1">
         <left-menu ref="refLeftMenu"></left-menu>
       </div>
     </el-splitter-panel>
     <el-splitter-panel :min="200">
       <div class="flex-column ml-1 mt-1">
-        <div class="el-card is-always-shadow p-1" style="height: 2rem; width: 100%">
+        <div class="el-card is-always-shadow p-1" style="height: 2.8rem; width: 100%">
           <bread-crumb v-if="tagView === '0'" />
           <tag-view v-else />
         </div>

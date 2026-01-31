@@ -2,7 +2,7 @@
   <div>
     <el-menu
       default-active="/frame/favoriteSettings/appearanceSettings"
-      class="el-menu-border"
+      class="el-menu-border m-2"
       :router="true"
       :collapse="collapse"
       ref="refMenu"
@@ -50,7 +50,7 @@ watch(
 )
 
 function closeOrOpenMenu(size) {
-  if (size < 85) {
+  if (size < 150) {
     collapse.value = true
   } else {
     collapse.value = false

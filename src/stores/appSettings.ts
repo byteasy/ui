@@ -3,9 +3,21 @@ import { defineStore } from 'pinia'
 import { safeGet, safePut } from '@/stores/localStorage.ts'
 
 export const useAppSettingsStore = defineStore('appSettingsStore', () => {
+  /**
+   * 主题颜色
+   */
   const theme = ref(safeGet('theme') !== null ? safeGet('theme') : 'light')
+  /**
+   * 显示尺寸大小
+   */
   const componentSize= ref(safeGet('componentSize') !== null ? safeGet('componentSize') : 'default')
+  /**
+   * 显示语言
+   */
   const lang = ref(safeGet('lang') !== null ? safeGet('lang') : 'zh-cn')
+  /**
+   * 导航模式
+   */
   const tagView= ref(safeGet('tagView') !== null ? safeGet('tagView') : '0')
 
   function setTheme(value: string) {

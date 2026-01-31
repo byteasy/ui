@@ -2,8 +2,8 @@
   <el-config-provider :locale="locale" :size="componentSize as any">
     <div class="layout my-bg-color-blank">
       <navbar-default class="navbar-default" />
-      <div class="layout__content">
-        <div class="m-1"><router-view /></div>
+      <div class="layout__content" >
+        <div style="height: 100%;"><router-view /></div>
       </div>
     </div>
     <widget-modal-container />
