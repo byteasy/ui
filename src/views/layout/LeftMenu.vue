@@ -4,11 +4,12 @@
       default-active="/frame/favoriteSettings/appearanceSettings"
       class="el-menu-border"
       :router="true"
+      :collapse="collapse"
       ref="refMenu"
     >
       <el-sub-menu index="/frame/favoriteSettings">
         <template #title>
-          <el-icon><operation /></el-icon>
+          <el-icon style="color: var(--my-menu-icon-color);"><User /></el-icon>
           <span class="my-font-size-md">{{ $t('favoriteSettings') }}</span>
         </template>
         <el-menu-item index="/frame/favoriteSettings/appearanceSettings"
@@ -29,11 +30,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const refMenu = ref()
+const collapse = ref(false)
 
 onMounted(() => {
   refMenu.value?.updateActiveIndex(route.fullPath)
@@ -46,6 +48,16 @@ watch(
     refMenu.value?.updateActiveIndex(route.fullPath)
   },
 )
+
+function closeOrOpenMenu(size) {
+  if (size < 85) {
+    collapse.value = true
+  } else {
+    collapse.value = false
+  }
+}
+
+defineExpose({ closeOrOpenMenu })
 </script>
 <style scoped>
 .el-menu-border {

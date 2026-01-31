@@ -60,6 +60,7 @@
   --my-bg-color: #ffffff !important;
   --my-bg-menu-item-active-color: #efefef !important;
   --my-text-color: black !important;
+  --my-menu-icon-color: black !important;
   --my-text-gray: #909399 !important;
   /* 基础字体大小（默认中等） */
   --font-size-base: 14px;
@@ -92,6 +93,7 @@ html.dark {
   --my-text-color: white !important;
   --my-text-gray: #A3A3A3 !important;
   --my-bg-menu-item-active-color: #000000 !important;
+  --my-menu-icon-color: white !important;
 }
 
 html.light {
@@ -99,6 +101,7 @@ html.light {
   --my-text-color: black !important;
   --my-text-gray: #939393 !important;
   --my-bg-menu-item-active-color: #efefef !important;
+  --my-menu-icon-color: black !important;
 }
 
 html.green {
@@ -107,6 +110,7 @@ html.green {
   --my-text-color: white !important;
   --my-text-gray: #D3D3D3 !important;
   --my-bg-menu-item-active-color: #008351 !important;
+  --my-menu-icon-color: black !important;
 }
 
 html.blue {
@@ -115,6 +119,7 @@ html.blue {
   --my-text-color: white !important;
   --my-text-gray: #D3D3D3 !important;
   --my-bg-menu-item-active-color: #014ba9 !important;
+  --my-menu-icon-color: black !important;
 }
 
 .my-bg-color-page {

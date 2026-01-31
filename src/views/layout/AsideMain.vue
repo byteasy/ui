@@ -1,8 +1,8 @@
 <template>
   <el-splitter>
-    <el-splitter-panel size="200" collapsible :min="80" :max="240">
+    <el-splitter-panel size="200" collapsible :min="70" :max="240" @update:size="onLeftMenuSizeUpdate">
       <div class="mt-1">
-        <left-menu></left-menu>
+        <left-menu ref="refLeftMenu"></left-menu>
       </div>
     </el-splitter-panel>
     <el-splitter-panel :min="200">
@@ -29,9 +29,16 @@ import BreadCrumb from '@/components/BreadCrumb.vue'
 import TagView from '@/components/TagView.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 const appSettingsStore = useAppSettingsStore()
 const { tagView } = storeToRefs(appSettingsStore)
+const refLeftMenu = ref()
+
+function onLeftMenuSizeUpdate(size) {
+  console.log(size)
+  refLeftMenu.value.closeOrOpenMenu(size)
+}
 </script>
 
 <style scoped>
