@@ -8,6 +8,7 @@ export default {
   search: 'Search',
   deleteWarn: 'Are you sure you want to delete this record?',
   frame: 'System Settings',
+  warning: 'Warning',
   favoriteSettings: 'Favorite Settings',
   personalSettings: 'Personal Settings',
   passwordSettings: 'Password Settings',
@@ -32,6 +33,11 @@ export default {
   appearanceLanguage: {
     zh: '中文简体',
     en: 'English',
+    changeWarn: 'Should the browser be refreshed to apply the language change?',
+  },
+  appearanceLayout: {
+    tagView: 'Tab View Navigation Mode',
+    breadCrumbView: 'Breadcrumb Navigation Mode',
   },
   exit: 'Exit',
   description: '',

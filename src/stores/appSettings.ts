@@ -6,6 +6,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   const theme = ref(safeGet('theme') !== null ? safeGet('theme') : 'light')
   const componentSize= ref(safeGet('componentSize') !== null ? safeGet('componentSize') : 'default')
   const lang = ref(safeGet('lang') !== null ? safeGet('lang') : 'zh-cn')
+  const tagView= ref(safeGet('tagView') !== null ? safeGet('tagView') : '0')
 
   function setTheme(value: string) {
     theme.value = value
@@ -22,5 +23,10 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     safePut('lang', value)
   }
 
-  return { theme, setTheme, componentSize, setComponentSize, lang, setLang }
+  function setTagView(value: string) {
+    tagView.value = value
+    safePut('tagView', value)
+  }
+
+  return { theme, setTheme, componentSize, setComponentSize, lang, setLang, tagView, setTagView }
 })

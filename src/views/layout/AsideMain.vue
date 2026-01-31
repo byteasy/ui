@@ -8,7 +8,8 @@
     <el-splitter-panel :min="200">
       <div class="flex-column ml-1 mt-1">
         <div class="el-card is-always-shadow p-1" style="height: 2rem; width: 100%">
-          <bread-crumb />
+          <bread-crumb v-if="tagView === '0'" />
+          <tag-view v-else />
         </div>
         <div class="el-card is-always-shadow p-2 mt-1" style="width: 100%">
           <router-view />
@@ -21,6 +22,12 @@
 <script lang="ts" setup>
 import LeftMenu from '@/views/layout/LeftMenu.vue'
 import BreadCrumb from '@/components/BreadCrumb.vue'
+import TagView from '@/components/TagView.vue'
+import { useAppSettingsStore } from '@/stores/appSettings.ts'
+import { storeToRefs } from 'pinia'
+
+const appSettingsStore = useAppSettingsStore()
+const { tagView } = storeToRefs(appSettingsStore)
 </script>
 
 <style scoped></style>

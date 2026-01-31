@@ -31,6 +31,10 @@ export default {
     large: '大',
     largeWarn: '建议分辨率1600以上的显示器使用',
   },
+  appearanceLayout: {
+    tagView: '标签视图导航模式',
+    breadCrumbView: '面包屑导航模式',
+  },
   appearanceLanguage: {
     zh: '中文简体',
     en: 'English',
