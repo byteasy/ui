@@ -52,10 +52,36 @@
   align-items: flex-start;
 }
 
-.bg-color-page {
-  background-color: var(--el-bg-color);
+.align-items-center {
+  align-items: center !important;
 }
 
-.bg-color-blank {
+.my-bg-color-page {
+  background-color: var(--my-bg-color);
+}
+
+.my-bg-color-blank {
   background-color: var(--el-bg-color-page);
+}
+
+:root {
+  --my-bg-color: #ffffff;
+}
+
+html.dark {
+  --my-bg-color: #000000 !important;
+}
+
+html.light {
+  --my-bg-color: #ffffff !important;
+}
+
+html.green {
+  --my-bg-color: #008351 !important;
+  --el-menu-active-color: #FFFFFF !important;
+}
+
+html.blue {
+  --my-bg-color: #014ba9 !important;
+  --el-menu-active-color: #FFFFFF !important;
 }

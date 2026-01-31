@@ -1,8 +1,8 @@
 <template>
-  <el-tabs>
-    <el-tab-pane :label="t('appearanceSettingsTheme')" name="first">{{
-      t('appearanceSettingsTheme')
-    }}</el-tab-pane>
+  <el-tabs default-value="first">
+    <el-tab-pane :label="t('appearanceSettingsTheme')" name="first">
+      <theme-settings />
+    </el-tab-pane>
     <el-tab-pane :label="t('appearanceSettingsFont')" name="second">{{
       t('appearanceSettingsFont')
     }}</el-tab-pane>
@@ -10,15 +10,12 @@
       t('appearanceSettingsLayout')
     }}</el-tab-pane>
   </el-tabs>
-  <div class="flex-row">
-    <el-button type="warning" icon="close">{{ t('cancel') }}</el-button>
-    <el-button type="success" icon="check" @click="doLogout">{{ t('save') }}</el-button>
-  </div>
 </template>
 
 <script lang="ts" setup>
 import { closeModal } from 'jenesius-vue-modal'
 import { useI18n } from 'vue-i18n'
+import ThemeSettings from '@/views/common/ThemeSettings.vue'
 
 const { t } = useI18n()
 

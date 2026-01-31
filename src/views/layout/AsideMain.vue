@@ -1,5 +1,5 @@
 <template>
-  <el-splitter class="">
+  <el-splitter>
     <el-splitter-panel size="200" collapsible :min="80" :max="240">
       <div class="m-1">
         <left-menu></left-menu>

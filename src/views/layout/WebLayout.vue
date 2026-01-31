@@ -1,8 +1,10 @@
 <template>
   <el-config-provider :locale="locale" :size="componentSize as any">
-    <div class="layout bg-color-blank">
+    <div class="layout my-bg-color-blank">
       <navbar-default class="navbar-default" />
-      <div class="layout__content"><div class="bg-color-page m-1"><router-view /></div> </div>
+      <div class="layout__content">
+        <div class="bg-color-page m-1"><router-view /></div>
+      </div>
     </div>
     <widget-modal-container />
   </el-config-provider>
@@ -16,6 +18,7 @@ import NavbarDefault from '@/views/layout/NavbarDefault.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
 import { container as WidgetModalContainer } from 'jenesius-vue-modal'
+import { watch } from 'vue'
 
 const language = ref('zh-cn')
 const locale = computed(() => (language.value === 'zh-cn' ? zhCn : en))
@@ -28,6 +31,14 @@ onBeforeMount(() => {
   // window.document.body.setAttribute('class', fontsize.value)
 })
 
+watch(
+  () => theme.value,
+  (newTheme, oldTheme) => {
+    console.log('主题变化:', oldTheme, '→', newTheme)
+    window.document.documentElement.setAttribute('class', theme.value!)
+  },
+  { immediate: true }, // 是否立即执行一次
+)
 </script>
 
 <style scoped>

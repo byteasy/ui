@@ -26,6 +26,6 @@ const { t } = useI18n()
 }
 .el-menu-item.is-active {
   color: var(--el-menu-active-color);
-  background-color: var(--el-menu-active-color);
+  background-color: var(--my-bg-color);
 }
 </style>

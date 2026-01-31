@@ -19,7 +19,7 @@ function onAppearanceSettingsClick() {
 </script>
 
 <template>
-  <div class="navbar-layout bg-color-page">
+  <div class="navbar-layout my-bg-color-page">
     <div class="flex-row">
       <img :src="whiteLogo" class="system_logo" alt="" />
       <span class="system-title">-{{ t('title') }}</span>
