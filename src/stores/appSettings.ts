@@ -5,6 +5,7 @@ import { safeGet, safePut } from '@/stores/localStorage.ts'
 export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   const theme = ref(safeGet('theme') !== null ? safeGet('theme') : 'light')
   const componentSize= ref(safeGet('componentSize') !== null ? safeGet('componentSize') : 'default')
+  const lang = ref(safeGet('lang') !== null ? safeGet('lang') : 'zh-cn')
 
   function setTheme(value: string) {
     theme.value = value
@@ -16,5 +17,10 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     safePut('componentSize', value)
   }
 
-  return { theme, setTheme, componentSize, setComponentSize }
+  function setLang(value: string) {
+    lang.value = value
+    safePut('lang', value)
+  }
+
+  return { theme, setTheme, componentSize, setComponentSize, lang, setLang }
 })

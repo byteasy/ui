@@ -13,18 +13,15 @@
 <script lang="ts" setup>
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import en from 'element-plus/dist/locale/en.mjs'
-import { computed, ref, onBeforeMount } from 'vue'
+import { computed, onBeforeMount, watch } from 'vue'
 import NavbarDefault from '@/views/layout/NavbarDefault.vue'
-import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
 import { container as WidgetModalContainer } from 'jenesius-vue-modal'
-import { watch } from 'vue'
+import { useAppSettingsStore } from '@/stores/appSettings.ts'
 
-const language = ref('zh-cn')
-const locale = computed(() => (language.value === 'zh-cn' ? zhCn : en))
 const appSettingsStore = useAppSettingsStore()
-
-const { theme, componentSize } = storeToRefs(appSettingsStore)
+const { theme, componentSize, lang } = storeToRefs(appSettingsStore)
+const locale = computed(() => (lang.value === 'zh-cn' ? zhCn : en))
 
 onBeforeMount(() => {
   setTheme()
@@ -35,13 +32,13 @@ function setFontSize() {
   // 移除旧的字体类
   window.document.documentElement.classList.remove('font-small', 'font-default', 'font-large')
 
-  if(componentSize.value === 'default') {
+  if (componentSize.value === 'default') {
     window.document.documentElement.classList.add('font-default')
   }
-  if(componentSize.value === 'small') {
+  if (componentSize.value === 'small') {
     window.document.documentElement.classList.add('font-small')
   }
-  if(componentSize.value === 'large') {
+  if (componentSize.value === 'large') {
     window.document.documentElement.classList.add('font-large')
   }
 }
@@ -65,6 +62,14 @@ watch(
   (newTheme, oldTheme) => {
     console.log('字体变化:', oldTheme, '→', newTheme)
     setFontSize()
+  },
+  { immediate: true }, // 是否立即执行一次
+)
+
+watch(
+  () => lang.value,
+  (newTheme, oldTheme) => {
+    console.log('语言变化:', oldTheme, '→', newTheme)
   },
   { immediate: true }, // 是否立即执行一次
 )

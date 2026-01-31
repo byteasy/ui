@@ -26,7 +26,7 @@ const routers = [
           {
             path: 'languageSettings',
             name: 'languageSettings',
-            component: () => import('../views/common/AppearanceSettings.vue')
+            component: () => import('../views/common/LanguageSettings.vue')
           },
           {
             path: 'personalSettings',

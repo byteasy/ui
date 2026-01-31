@@ -1,8 +1,8 @@
 export default {
-  title: 'Operation Center',
+  title: 'System Operation Center',
   subTitle: 'LGAG',
   add: 'Add',
-  ok: 'Ok',
+  ok: 'Confirm',
   save: 'Save',
   cancel: 'Cancel',
   search: 'Search',
@@ -22,6 +22,17 @@ export default {
     themeDark: 'Cool Dark',
     themeLight: 'Bright Style',
   },
+  appearanceFontSize: {
+    small: 'Small',
+    default: 'Medium',
+    defaultWarn: 'Recommended for displays with resolution above 1400',
+    large: 'Large',
+    largeWarn: 'Recommended for displays with resolution above 1600',
+  },
+  appearanceLanguage: {
+    zh: '中文简体',
+    en: 'English',
+  },
   exit: 'Exit',
   description: '',
   theme: 'Appearance',
@@ -31,7 +42,7 @@ export default {
   columnVisibleSet: 'Custom Column Display',
   exitFullscreenTooltip: 'Exit Full Screen',
   error404: 'The page you are trying to access does not exist',
-  errorAuthorizeFailed: 'You do not have permission to access this page. If you need access, please contact the administrator',
+  errorAuthorizeFailed: 'You do not have permission to access this page. If access is required, please contact the administrator',
   errorLoadComponent: 'Please check if the front-end component path configuration is correct',
   goBackHome: 'Return to Home Page',
   goBackLastPage: 'Return to Previous Page',
@@ -39,7 +50,7 @@ export default {
   operationFailed: 'Operation Failed',
   pager: {
     total: 'Total',
-    row: 'rows'
+    row: 'records',
   },
   table: {
     loading: 'Loading',
@@ -49,7 +60,7 @@ export default {
     edit: 'Edit',
     role: 'Role',
     delete: 'Delete',
-    save: 'Save'
+    save: 'Save',
   },
   validate: {
     minLength: 'Minimum Length',
@@ -57,6 +68,6 @@ export default {
     min: 'Minimum',
     max: 'Maximum',
     required: 'Required',
-    email: 'Invalid Email Format'
-  }
+    email: 'Invalid Email Format',
+  },
 } as const
