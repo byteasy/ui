@@ -56,6 +56,10 @@
   align-items: center !important;
 }
 
+.align-items-start {
+  align-items: flex-start !important;
+}
+
 :root {
   --my-bg-color: #ffffff !important;
   --my-bg-menu-item-active-color: #efefef !important;
