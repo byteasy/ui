@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 
 const popoverWidth = ref(500)
+const refPopWindow = ref()
 
 const calculateWidth = () => {
   const viewportWidth = window.innerWidth
@@ -32,10 +33,15 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', calculateWidth)
 })
+
+function onItemClick(url) {
+  console.log('1111111111')
+  refPopWindow.value.hide()
+}
 </script>
 
 <template>
-  <el-popover placement="bottom-end" :width="popoverWidth">
+  <el-popover placement="bottom-end" :width="popoverWidth" ref="refPopWindow">
     <template #reference>
       <div class="flex-row ml-5 app-text-color my-font-size-lg" type="text">
         系统设置<el-icon class="ml-2"><ArrowDown /></el-icon>
@@ -57,17 +63,17 @@ onUnmounted(() => {
       <div class="my-bg-color-blank item-second">
         <el-space wrap alignment="normal" size="large">
           <div class="flex-column align-items-start p-3">
-            <div class="my-font-size font-bold">供应商</div>
-            <div class="group-tow-child"><el-link :underline="false">供应商档案参数配置</el-link></div>
-            <div class="group-tow-child"><el-link :underline="false">供应商档案</el-link></div>
-            <div class="group-tow-child"><el-link :underline="false">供应商变更</el-link></div>
-            <div class="group-tow-child"><el-link :underline="false">供应商淘汰</el-link></div>
+            <div class="my-font-size-md font-bold">供应商</div>
+            <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>
+            <div class="my-font-size group-tow-child">供应商档案</div>
+            <div class="my-font-size group-tow-child">供应商变更</div>
+            <div class="my-font-size group-tow-child">供应商淘汰</div>
           </div>
           <div class="flex-column align-items-start p-3">
-            <div class="my-font-size font-bold">生产管理</div>
-            <div class="my-font-size group-tow-child"><el-link :underline="false">物料生产视图</el-link></div>
-            <div class="my-font-size group-tow-child"><el-link :underline="false">年度生产大纲</el-link></div>
-            <div class="my-font-size group-tow-child"><el-link :underline="false">月度生产预测</el-link></div>
+            <div class="my-font-size-md font-bold">生产管理</div>
+            <div class="my-font-size group-tow-child">物料生产视图</div>
+            <div class="my-font-size group-tow-child">年度生产大纲</div>
+            <div class="my-font-size group-tow-child">月度生产预测</div>
           </div>
         </el-space>
 
@@ -119,5 +125,7 @@ onUnmounted(() => {
 }
 
 .group-tow-child:hover {
+  color: var(--el-color-primary);
+  cursor: pointer;
 }
 </style>
