@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 
 const popoverWidth = ref(500)
 const refPopWindow = ref()
+const currentGroup = ref('')
 
 const calculateWidth = () => {
   const viewportWidth = window.innerWidth
@@ -38,48 +39,54 @@ function onItemClick(url) {
   console.log('1111111111')
   refPopWindow.value.hide()
 }
-</script>
 
+function onGroupClick(group) {
+  currentGroup.value = group
+  console.log(group)
+}
+</script>
 <template>
   <el-popover placement="bottom-end" :width="popoverWidth" ref="refPopWindow">
     <template #reference>
-      <div class="flex-row ml-5 app-text-color my-font-size-lg" type="text">
+      <div class="flex-row ml-5 app-text-color my-font-size-lg" style="cursor:pointer">
         系统设置<el-icon class="ml-2"><ArrowDown /></el-icon>
       </div>
     </template>
-    <div class="flex-row align-items-start my-bg-color-blank" style="height: 50vh; overflow-y: auto; width: 100%;">
-      <div class="item-first">
-        <el-space direction="vertical" fill>
-          <div><span class="my-font-size group-one">企业战略</span></div>
-          <div><span class="my-font-size group-one">人力资源</span></div>
-          <div><span class="my-font-size group-one">产品研发</span></div>
-          <div><span class="my-font-size group-one">供应链</span></div>
-          <div><span class="my-font-size group-one">营销</span></div>
-          <div><span class="my-font-size group-one">客服</span></div>
-          <div><span class="my-font-size group-one">法务</span></div>
-          <div><span class="my-font-size group-one">车联网</span></div>
-        </el-space>
-      </div>
-      <div class="item-second">
-        <el-space wrap alignment="normal" size="large">
-          <div class="flex-column align-items-start p-3">
-            <div class="my-font-size-md font-bold">供应商</div>
-            <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>
-            <div class="my-font-size group-tow-child">供应商档案</div>
-            <div class="my-font-size group-tow-child">供应商变更</div>
-            <div class="my-font-size group-tow-child">供应商淘汰</div>
-          </div>
-          <div class="flex-column align-items-start p-3">
-            <div class="my-font-size-md font-bold">生产管理</div>
-            <div class="my-font-size group-tow-child">物料生产视图</div>
-            <div class="my-font-size group-tow-child">年度生产大纲</div>
-            <div class="my-font-size group-tow-child">月度生产预测</div>
-          </div>
-        </el-space>
 
+    <!-- 父容器固定高度，取消全局滚动，改为内部局部滚动 -->
+    <div class="flex-row nav-container">
+
+      <!-- 左侧：独立滚动区 -->
+      <div class="item-first custom-scrollbar">
+        <div class="menu-list">
+          <!-- 模拟大量数据测试滚动 -->
+          <div v-for="item in ['企业战略', '人力资源', '产品研发', '供应链', '营销', '客服', '法务', '车联网', '财务管理', '资产管理']"
+               :key="item"
+               class="group-one" @mouseenter="onGroupClick(item)">
+            {{ item }}
+          </div>
+        </div>
       </div>
+
+      <!-- 右侧：独立滚动区 -->
+      <div class="item-second custom-scrollbar">
+        <div class="content-wrapper">
+          <el-space wrap alignment="normal" size="large">
+            <div class="flex-column align-items-start p-3" v-if="currentGroup === '企业战略'">
+              <div class="my-font-size-md font-bold mb-2">供应商</div>
+              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>
+              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">供应商子项 {{n}}</div>
+            </div>
+            <div class="flex-column align-items-start p-3" v-if="currentGroup === '人力资源'">
+              <div class="my-font-size-md font-bold mb-2">人力资源</div>
+              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>
+              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">人力资源 {{n}}</div>
+            </div>
+          </el-space>
+        </div>
+      </div>
+
     </div>
-
   </el-popover>
 </template>
 
@@ -92,41 +99,83 @@ function onItemClick(url) {
 .app-text-color:hover {
   background-color: color-mix(in srgb, var(--my-bg-color) 90%, var(--my-text-color));
 }
-.item-first {
-  flex: 0 0 20%; /* 不增长，不收缩，基础宽度30% */
-  /* 或者 */
-  flex-basis: 20%;
-  flex-shrink: 0; /* 禁止收缩 */
-  flex-grow: 0;   /* 禁止增长 */
+/* 容器基础布局 */
+.nav-container {
   display: flex;
-  justify-content: flex-end; /* 水平右对齐 */
-  padding-top: 1rem;
-  background-color: var(--el-bg-color);
+  align-items: stretch;
+  height: 50vh; /* 固定整个弹出层高度 */
+  min-height: 300px; /* 保证最小可操作空间 */
+  overflow: hidden; /* 禁止外层滚动 */
 }
 
-.item-second {
-  flex: 1; /* 简写：flex-grow: 1, flex-shrink: 1, flex-basis: 0 */
-  /* 或者详细写法 */
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 0%;
-  height: 50vh !important;
-  padding: 2rem;
+/* 左侧样式优化 */
+.item-first {
+  flex: 0 0 120px; /* 默认宽度 */
+  background-color: var(--el-fill-color-light); /* 背景色占满 */
+  border-right: 1px solid var(--el-border-color-lighter);
+  overflow-y: auto; /* 开启局部滚动 */
+  display: flex;
+  flex-direction: column;
 }
+
+.menu-list {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .group-one {
-  padding: 1rem;
-  display: block;
-  min-width: 80px;
+  padding: 12px 20px;
+  text-align: right;
+  cursor: pointer;
+  white-space: nowrap; /* 窄屏不换行 */
+  transition: background 0.2s;
 }
 
 .group-one:hover {
-  padding: 1rem;
-  color: var(--my-text-color);
-  background-color: var(--my-bg-color);
+  background-color: var(--el-bg-color);
+  color: var(--el-color-primary);
 }
 
+/* 右侧样式优化 */
+.item-second {
+  flex: 1;
+  overflow-y: auto; /* 开启局部滚动 */
+  padding: 1rem;
+}
+
+/* 响应式适配：窄屏幕下缩小左侧宽度 */
+@media (max-width: 768px) {
+  .item-first {
+    flex: 0 0 90px;
+  }
+  .group-one {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+
+/* 响应式适配：宽屏幕下展开左侧 */
+@media (min-width: 1200px) {
+  .item-first {
+    flex: 0 0 180px;
+  }
+}
+
+/* 美化滚动条 (可选) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--el-border-color-lighter);
+  border-radius: 10px;
+}
+.group-tow-child {
+  padding: 0.1rem;
+}
 .group-tow-child:hover {
   color: var(--el-color-primary);
   cursor: pointer;
 }
 </style>
+

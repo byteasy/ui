@@ -4,7 +4,9 @@ import whiteLogo from '@/assets/img/black-logo.png'
 import defaultAvatar from '@/assets/img/defaultAvatar.png'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
+const searchValue = ref('')
 const { t } = useI18n()
 const router = useRouter()
 
@@ -22,22 +24,22 @@ function onSettingsClick(name) {
     </div>
     <div class="flex-row">
       <el-input
-        style="width: 200px"
+        v-model="searchValue"
         placeholder="Please Input"
         suffix-icon="Search"
-        class="mr-3"
+        class="custom-search-input mr-3"
       />
-      <el-icon class="mr-3" size="24" style="color: var(--my-text-color)" :title="$t('help')"><QuestionFilled /></el-icon>
+      <el-icon class="mr-3" size="30" style="color: var(--my-text-color)" :title="$t('help')"><QuestionFilled /></el-icon>
       <el-dropdown :placement="'bottom-start'">
         <div class="el-dropdown-link">
           <div class="flex-row">
             <el-avatar
-              :size="35"
+              :size="45"
               src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
             >
               <img :src="defaultAvatar" />
             </el-avatar>
-            <div class="flex-column ml-2">
+            <div class="flex-column ml-2" style="width: 100px;">
               <span style="color: var(--my-text-color); font-size: var(--my-font-size);" class="font-bold-700">王手和</span>
               <span style="color: var(--my-text-gray); font-size: var(--my-font-size);" class="mt-1">信息化管理部</span>
             </div>
@@ -111,5 +113,35 @@ function onSettingsClick(name) {
   /* 可选字体增强 */
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   letter-spacing: 0.5px;
+}
+
+/* 深度选择器修改 Element Plus 内部样式 */
+.custom-search-input :deep(.el-input__wrapper) {
+  width: 220px;               /* 稍微加宽一点，视觉更舒展 */
+  border-radius: 20px;        /* 胶囊形状圆角 */
+  background-color: var(--el-fill-color-lighter); /* 浅色背景 */
+  box-shadow: none;           /* 去除默认投影 */
+  border: 1px solid var(--el-border-color);
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* 悬停样式 */
+.custom-search-input :deep(.el-input__wrapper):hover {
+  border-color: var(--el-color-primary-light-3);
+  background-color: var(--el-bg-color);
+}
+
+/* 聚焦样式：增加呼吸感阴影 */
+.custom-search-input :deep(.el-input__wrapper.is-focus) {
+  width: 260px;               /* 聚焦时轻轻展开，增加交互动效 */
+  border-color: var(--el-color-primary);
+  box-shadow: 0 0 0 2px var(--el-color-primary-light-8) !important;
+  background-color: var(--el-bg-color);
+}
+
+/* 图标颜色优化 */
+.custom-search-input :deep(.el-input__icon) {
+  color: var(--el-text-color-secondary);
+  font-size: 1.1rem;
 }
 </style>
