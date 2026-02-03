@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const popoverWidth = ref(500)
 const refPopWindow = ref()
 const currentGroup = ref('')
+const router = useRouter()
 
 const calculateWidth = () => {
   const viewportWidth = window.innerWidth
@@ -37,6 +39,7 @@ onUnmounted(() => {
 
 function onItemClick(url) {
   console.log('1111111111')
+  router.push('/app/system/123')
   refPopWindow.value.hide()
 }
 
