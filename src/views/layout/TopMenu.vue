@@ -47,7 +47,7 @@ function onItemClick(url) {
         系统设置<el-icon class="ml-2"><ArrowDown /></el-icon>
       </div>
     </template>
-    <div class="flex-row align-items-start" style="height: 50vh; overflow-y: auto; width: 100%;">
+    <div class="flex-row align-items-start my-bg-color-blank" style="height: 50vh; overflow-y: auto; width: 100%;">
       <div class="item-first">
         <el-space direction="vertical" fill>
           <div><span class="my-font-size group-one">企业战略</span></div>
@@ -60,7 +60,7 @@ function onItemClick(url) {
           <div><span class="my-font-size group-one">车联网</span></div>
         </el-space>
       </div>
-      <div class="my-bg-color-blank item-second">
+      <div class="item-second">
         <el-space wrap alignment="normal" size="large">
           <div class="flex-column align-items-start p-3">
             <div class="my-font-size-md font-bold">供应商</div>
@@ -101,6 +101,7 @@ function onItemClick(url) {
   display: flex;
   justify-content: flex-end; /* 水平右对齐 */
   padding-top: 1rem;
+  background-color: var(--el-bg-color);
 }
 
 .item-second {
@@ -109,7 +110,7 @@ function onItemClick(url) {
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: 0%;
-  height: 100%;
+  height: 50vh !important;
   padding: 2rem;
 }
 .group-one {
