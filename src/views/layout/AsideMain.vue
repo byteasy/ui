@@ -14,7 +14,9 @@
         <div class="el-card is-always-shadow p-2 mt-1" style="width: 100%">
           <router-view v-slot="{ Component }">
             <transition name="fade" mode="out-in">
-              <component :is="Component" :key="$route.path" />
+              <keep-alive :include="tagsStore.cachedViews">
+                <component :is="Component" :key="$route.path" />
+              </keep-alive>
             </transition>
           </router-view>
         </div>
@@ -30,8 +32,10 @@ import TagView from '@/components/TagView.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
+import { useTagsViewStore } from '@/stores/tagsView'
 
 const appSettingsStore = useAppSettingsStore()
+const tagsStore = useTagsViewStore()
 const { tagView } = storeToRefs(appSettingsStore)
 const refLeftMenu = ref()
 

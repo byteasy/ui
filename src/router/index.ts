@@ -21,22 +21,22 @@ const routers = [
           {
             path: 'appearanceSettings',
             name: 'appearanceSettings',
-            component: () => import('../views/common/AppearanceSettings.vue')
+            component: () => import('../views/common/appearanceSettings.vue')
           },
           {
             path: 'languageSettings',
             name: 'languageSettings',
-            component: () => import('../views/common/LanguageSettings.vue')
+            component: () => import('../views/common/languageSettings.vue')
           },
           {
             path: 'personalSettings',
             name: 'personalSettings',
-            component: () => import('../views/common/AppearanceSettings.vue')
+            component: () => import('../views/common/appearanceSettings.vue')
           },
           {
             path: 'passwordSettings',
             name: 'passwordSettings',
-            component: () => import('../views/common/AppearanceSettings.vue')
+            component: () => import('../views/common/appearanceSettings.vue')
           }
         ]
       }
@@ -45,6 +45,7 @@ const routers = [
   {
     path: '/app',
     component: () => import('../views/layout/WebLayout.vue'),
+    redirect: '/app/system/index',
     children: [
       {
         path: 'system/:path*',
