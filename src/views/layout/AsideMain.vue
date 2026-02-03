@@ -7,7 +7,7 @@
     </el-splitter-panel>
     <el-splitter-panel :min="200">
       <div class="flex-column ml-1 mt-1 mr-1">
-        <div class="el-card is-always-shadow p-1" style="height: 2.8rem; width: 100%">
+        <div class="el-card is-always-shadow p-1" style="height: 2.4rem; width: 100%">
           <bread-crumb v-if="tagView === '0'" />
           <tag-view v-else />
         </div>

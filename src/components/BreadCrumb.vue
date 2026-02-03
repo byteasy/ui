@@ -1,6 +1,6 @@
 <template>
   <div class="flex-row ml-2" style="height: 100%">
-    <IconLocalHome style="width: 1rem; height: 1rem" />
+    <IconLocalHome style="width: 0.9rem; height: 0.9rem" />
     <el-breadcrumb :separator-icon="ArrowRight" class="ml-2">
       <template v-for="item in levelList" :key="item.path">
         <el-breadcrumb-item :to="item.path">
