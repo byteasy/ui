@@ -2,7 +2,7 @@
   <div>
     <el-menu
       default-active="/frame/favoriteSettings/appearanceSettings"
-      class="el-menu-border m-2"
+      class="el-menu-border m-1"
       :router="true"
       :collapse="collapse"
       ref="refMenu"

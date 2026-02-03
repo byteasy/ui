@@ -39,7 +39,7 @@ onUnmounted(() => {
 
 function onItemClick(url) {
   console.log('1111111111')
-  router.push('/app/system/123')
+  router.push('/app/system/account/index')
   refPopWindow.value.hide()
 }
 

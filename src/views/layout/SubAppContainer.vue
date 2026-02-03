@@ -3,13 +3,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useI18n } from 'vue-i18n'
 import { registerApps } from '@/util/qiankun'
 import { start } from 'qiankun'
 
-const { t } = useI18n()
-
-console.log('SubAppContainer')
 
 const win = window as Window & { qiankunStarted?: boolean }
 
@@ -30,9 +26,14 @@ if (!win.qiankunStarted) {
 }
 </script>
 
-<style scoped>
+<style>
 .child-app {
-  width: 100vw !important;
+  width: 100% !important;
   height: 100% !important;
+}
+div[id^="__qiankun_microapp_wrapper"] {
+  height: 100% !important;
+  display: flex;
+  flex: 1;
 }
 </style>
