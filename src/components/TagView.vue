@@ -13,7 +13,7 @@
           @close="closeSelectedTag(tag)"
           @contextmenu.prevent="openMenu(tag, $event)"
         >
-          {{ $t(tag.name) }}
+          {{ $t(String(tag.name)) }}
         </el-tag>
       </div>
     </el-scrollbar>

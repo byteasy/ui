@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted, defineExpose } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
