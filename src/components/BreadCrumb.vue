@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import { onMounted, type Ref, ref, watch } from 'vue'
 import { type RouteLocationMatched, useRoute } from 'vue-router'
-import { ArrowRight, House } from '@element-plus/icons-vue'
+import { ArrowRight } from '@element-plus/icons-vue'
 
 const levelList: Ref<RouteLocationMatched[]> = ref([])
 const route = useRoute()
