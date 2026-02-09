@@ -14,6 +14,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/platform/',
   plugins: [
     vue(),
     vueJsx(),

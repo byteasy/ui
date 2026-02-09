@@ -16,11 +16,17 @@ const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
-initI18n().then(() => {
-  app.use(createPinia())
-  app.use(router)
-  app.use(i18n)
-  app.use(ElementPlus)
+// initI18n().then(() => {
+//   app.use(createPinia())
+//   app.use(router)
+//   app.use(i18n)
+//   app.use(ElementPlus)
+//
+//   app.mount('#app')
+// })
+app.use(createPinia())
+app.use(router)
+app.use(i18n)
+app.use(ElementPlus)
 
-  app.mount('#app')
-})
+app.mount('#app')
