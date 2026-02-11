@@ -13,6 +13,11 @@ const router = useRouter()
 function onSettingsClick(name) {
   router.push('/frame/favoriteSettings/' + name)
 }
+
+function onLogoutClick() {
+  window.location.href = '/platform/logout'
+}
+
 </script>
 
 <template>
@@ -71,7 +76,7 @@ function onSettingsClick(name) {
                 <span class="ml-2">{{ t('languageSettings') }}</span>
               </div>
             </el-dropdown-item>
-            <el-dropdown-item divided>
+            <el-dropdown-item divided @click="onLogoutClick()">
               <div class="flex-row">
                 <IconLocalExit style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('exit') }}</span>
