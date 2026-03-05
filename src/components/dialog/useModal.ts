@@ -1,7 +1,8 @@
 // composables/useModal.ts
-import { reactive, markRaw } from 'vue'
 import type { Component } from 'vue'
+import { markRaw, reactive } from 'vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
+type DrawerDirection = 'rtl' | 'ltr' | 'ttb' | 'btt'
 
 // 直接用 reactive 对象，不用 ref
 interface ModalState {
@@ -15,14 +16,15 @@ interface ModalState {
     visible: boolean
     draggable: boolean
     closeOnClickModal: boolean
-    fullscreen: boolean
+    fullscreen: boolean // 仅对dialog有效
+    direction?: DrawerDirection // 仅对抽屉有效
     onClose?: (data?: unknown) => void
   }>
 }
 
 // 创建一个响应式状态
 const state: ModalState = reactive({
-  items: []
+  items: [],
 })
 
 export const useModal = () => {
@@ -31,15 +33,17 @@ export const useModal = () => {
   const open = <P extends Record<string, unknown>>(
     component: Component,
     props?: P,
-    options: Partial<Omit<ModalState['items'][0], 'id' | 'component' | 'props' | 'visible'>> = {}
+    options: Partial<Omit<ModalState['items'][0], 'id' | 'component' | 'props' | 'visible'>> = {},
   ) => {
     const id = Symbol('modal')
 
     const defaultOptions = {
-      draggable: true,  // 默认值
+      draggable: true, // 默认值
       fullscreen: false,
-      dialogModel: (appSettingsStore.dialogModel || "1") === "1",
-      closeOnClickModal: true
+      dialogModel: (appSettingsStore.dialogModel) === '1',
+      closeOnClickModal: (appSettingsStore.closeOnClickModal) === '1',
+      width: '50%',
+      direction: appSettingsStore.drawerDirection as DrawerDirection,
     }
 
     // 直接操作 state.items
@@ -48,8 +52,8 @@ export const useModal = () => {
       component: markRaw(component),
       props: props || {},
       visible: true,
-      ...defaultOptions,  // 先应用默认值
-      ...options
+      ...defaultOptions, // 先应用默认值
+      ...options,
     })
 
     console.log('弹窗已添加，当前数量：', state.items.length) // 调试用
@@ -57,14 +61,17 @@ export const useModal = () => {
   }
 
   const close = (id: symbol, data?: unknown) => {
-    const index = state.items.findIndex(m => m.id === id)
+    const index = state.items.findIndex((m) => m.id === id)
     if (index === -1) return
 
     const modal = state.items[index]
+    if (modal === undefined) {
+      return
+    }
     modal.visible = false
 
     setTimeout(() => {
-      const currentIndex = state.items.findIndex(m => m.id === id)
+      const currentIndex = state.items.findIndex((m) => m.id === id)
       if (currentIndex > -1) {
         modal.onClose?.(data)
         state.items.splice(currentIndex, 1)
@@ -77,6 +84,6 @@ export const useModal = () => {
     // 直接返回 state.items，这是响应式的
     modals: state.items,
     open,
-    close
+    close,
   }
 }

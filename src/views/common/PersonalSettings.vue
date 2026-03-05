@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useModal } from '@/components/useModal'
+import { useModal } from '@/components/dialog/useModal.ts'
 import PasswordSettings from './PasswordSettings.vue'
 
 const { open } = useModal()
@@ -13,7 +13,7 @@ const showForm = () => {
     { userId: 123 }, // 传给组件的 props
     {
       title: '编辑用户',
-      dialogModel: false,
+      width: "50%",
       onClose: (data) => {
         console.log('弹窗关闭', data)
       },

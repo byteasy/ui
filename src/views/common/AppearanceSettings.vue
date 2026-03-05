@@ -9,13 +9,17 @@
     <el-tab-pane :label="$t('appearanceSettingsLayout')" name="third">
       <layout-settings />
     </el-tab-pane>
+    <el-tab-pane :label="$t('appearanceSettingsFavorite')" name="forth">
+      <favorite-settings />
+    </el-tab-pane>
   </el-tabs>
 </template>
 
 <script lang="ts" setup>
-import ThemeSettings from '@/views/common/ThemeSettings.vue'
-import ComponentSizeSettings from '@/views/common/ComponentSizeSettings.vue'
-import LayoutSettings from '@/views/common/LayoutSettings.vue'
+import ThemeSettings from '@/views/common/appearanceSettings/ThemeSettings.vue'
+import ComponentSizeSettings from '@/views/common/appearanceSettings/ComponentSizeSettings.vue'
+import LayoutSettings from '@/views/common/appearanceSettings/LayoutSettings.vue'
+import FavoriteSettings from '@/views/common/appearanceSettings/FavoriteSettings.vue'
 
 </script>
 

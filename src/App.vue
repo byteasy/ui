@@ -7,7 +7,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
-import DialogContainer from '@/components/DialogContainer.vue'
+import DialogContainer from '@/components/dialog/DialogContainer.vue'
 
 const { t } = useI18n()
 window.document.title = t('title')

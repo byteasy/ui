@@ -3,7 +3,6 @@
 </template>
 
 <script lang="ts" setup>
-
 const emit = defineEmits<{
   (e: 'close', data?: unknown): void
   (e: 'confirm', data?: unknown): void

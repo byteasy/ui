@@ -10,7 +10,9 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
    * 显示尺寸大小
    */
-  const componentSize= ref(safeGet('componentSize') !== null ? safeGet('componentSize') : 'default')
+  const componentSize = ref(
+    safeGet('componentSize') !== null ? safeGet('componentSize') : 'default',
+  )
   /**
    * 显示语言
    */
@@ -18,11 +20,21 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
    * 导航模式
    */
-  const tagView= ref(safeGet('tagView') !== null ? safeGet('tagView') : '0')
+  const tagView = ref(safeGet('tagView') !== null ? safeGet('tagView') : '0')
   /**
    * 弹窗方式
    */
-  const dialogModel= ref(safeGet('dialogModel') !== null ? safeGet('dialogModel') : '0')
+  const dialogModel = ref(safeGet('dialogModel') !== null ? safeGet('dialogModel') : '1')
+
+  /**
+   * 全局对话框是否允许点击外部关闭
+   */
+  const closeOnClickModal = ref(safeGet('closeOnClickModal') !== null ? safeGet('closeOnClickModal') : '1')
+
+  /**
+   * 抽屉展示方向
+   */
+  const drawerDirection= ref(safeGet('drawerDirection') !== null ? safeGet('drawerDirection') : 'rtl')
 
   function setTheme(value: string) {
     theme.value = value
@@ -49,5 +61,30 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     safePut('dialogModel', value)
   }
 
-  return { theme, setTheme, componentSize, setComponentSize, lang, setLang, tagView, setTagView, dialogModel, setDialogModel }
+  function setCloseOnClickModal(value: string) {
+    closeOnClickModal.value = value
+    safePut('closeOnClickModal', value)
+  }
+
+  function setDrawerDirection(value: string) {
+    drawerDirection.value = value
+    safePut('drawerDirection', value)
+  }
+
+  return {
+    theme,
+    setTheme,
+    componentSize,
+    setComponentSize,
+    lang,
+    setLang,
+    tagView,
+    setTagView,
+    dialogModel,
+    setDialogModel,
+    closeOnClickModal,
+    setCloseOnClickModal,
+    drawerDirection,
+    setDrawerDirection,
+  }
 })
