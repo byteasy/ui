@@ -21,22 +21,22 @@ const routers = [
           {
             path: 'appearanceSettings',
             name: 'appearanceSettings',
-            component: () => import('../views/common/appearanceSettings.vue')
+            component: () => import('../views/common/AppearanceSettings.vue')
           },
           {
             path: 'languageSettings',
             name: 'languageSettings',
-            component: () => import('../views/common/languageSettings.vue')
+            component: () => import('../views/common/LanguageSettings.vue')
           },
           {
             path: 'personalSettings',
             name: 'personalSettings',
-            component: () => import('../views/common/appearanceSettings.vue')
+            component: () => import('../views/common/PersonalSettings.vue')
           },
           {
             path: 'passwordSettings',
             name: 'passwordSettings',
-            component: () => import('../views/common/appearanceSettings.vue')
+            component: () => import('../views/common/PasswordSettings.vue')
           }
         ]
       }

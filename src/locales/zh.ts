@@ -18,6 +18,7 @@ export default {
   appearanceSettingsTheme: '主题设置',
   appearanceSettingsFont: '字体设置',
   appearanceSettingsLayout: '布局设置',
+  appearanceSettingsPersonal: '个性化设置',
   appearanceTheme: {
     themeGreen: '粒子绿',
     themeBlue: '科技蓝',

@@ -51,7 +51,7 @@ export default defineConfig({
     port: 7999,
     proxy: {
       '/system': {
-        target: 'http://192.168.202.21:8080',
+        target: 'http://localhost:80',
         changeOrigin: true,
       }
     }

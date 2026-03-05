@@ -19,6 +19,10 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
    * 导航模式
    */
   const tagView= ref(safeGet('tagView') !== null ? safeGet('tagView') : '0')
+  /**
+   * 弹窗方式
+   */
+  const dialogModel= ref(safeGet('dialogModel') !== null ? safeGet('dialogModel') : '0')
 
   function setTheme(value: string) {
     theme.value = value
@@ -40,5 +44,10 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     safePut('tagView', value)
   }
 
-  return { theme, setTheme, componentSize, setComponentSize, lang, setLang, tagView, setTagView }
+  function setDialogModel(value: string) {
+    dialogModel.value = value
+    safePut('dialogModel', value)
+  }
+
+  return { theme, setTheme, componentSize, setComponentSize, lang, setLang, tagView, setTagView, dialogModel, setDialogModel }
 })
