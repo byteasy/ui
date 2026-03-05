@@ -1,5 +1,5 @@
 <template>
-  <el-tabs default-value="first">
+  <el-tabs default-value="first" style="width: 100%;">
     <el-tab-pane :label="$t('appearanceSettingsTheme')" name="first">
       <theme-settings />
     </el-tab-pane>

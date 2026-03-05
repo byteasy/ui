@@ -24,7 +24,7 @@ function updateDrawerDirectionValue() {
 
 <template>
   <el-space direction="vertical" class="ml-5">
-    <el-form style="max-width: 600px" label-width="auto">
+    <el-form style="max-width: 600px">
       <el-form-item :label="$t('appearanceFavorite.popupMode')" prop="delivery">
         <el-radio-group v-model="dialogModelValue" @change="updateDialogModel">
           <el-radio value="1">{{ $t('appearanceFavorite.dialog') }}</el-radio>

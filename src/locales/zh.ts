@@ -37,6 +37,7 @@ export default {
     breadCrumbView: '面包屑导航模式',
   },
   appearanceLanguage: {
+    showLanguage: '显示语言',
     zh: '中文简体',
     en: 'English',
     changeWarn: '是否刷新浏览器设置使语言切换生效?',

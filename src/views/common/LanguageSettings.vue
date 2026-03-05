@@ -25,14 +25,14 @@ function updateFontSize() {
 </script>
 
 <template>
-  <el-space direction="vertical" style="width: 20vw">
-    <el-radio-group v-model="langValue" @change="updateFontSize">
-      <div class="flex-column">
-        <el-radio value="zh-cn">{{ $t('appearanceLanguage.zh') }}</el-radio>
-        <el-radio value="en">{{ $t('appearanceLanguage.en') }}</el-radio>
-      </div>
-    </el-radio-group>
-  </el-space>
+    <el-form style="max-width: 600px" label-width="auto">
+      <el-form-item prop="delivery" :label="$t('appearanceLanguage.showLanguage')">
+        <el-radio-group v-model="langValue" @change="updateFontSize">
+          <el-radio value="zh-cn">{{ $t('appearanceLanguage.zh') }}</el-radio>
+          <el-radio value="en">{{ $t('appearanceLanguage.en') }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
 </template>
 
 <style scoped></style>
