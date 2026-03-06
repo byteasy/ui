@@ -55,6 +55,46 @@ export default {
     closeOnClickModalEnable: '点击窗外关闭',
     closeOnClickModalDisabled: '点击窗外不关闭',
   },
+  passwordModify: {
+    oldPasswordLabel: "原始密码",
+    newPasswordLabel: "新密码",
+    confirmPasswordLabel: "确认密码",
+    placeholders: {
+      oldPassword: "请输入原始密码",
+      newPassword: "请输入新密码（8-20位，包含字母和数字）",
+      confirmPassword: "请再次输入新密码"
+    },
+    buttons: {
+      submit: "提交修改"
+    },
+    passwordStrength: {
+      label: "密码强度：",
+      levels: {
+        "0": "无",
+        "1": "弱",
+        "2": "中",
+        "3": "强"
+      },
+      tips: {
+        "0": "请输入密码",
+        "1": "密码强度过低，请增加长度或复杂度",
+        "2": "密码强度中等，可添加特殊字符提升强度",
+        "3": "密码强度优秀，安全性高"
+      }
+    },
+    validateRules: {
+      requiredOldPwd: "请输入原始密码",
+      requiredNewPwd: "请输入新密码",
+      requiredConfirmPwd: "请确认新密码",
+      passwordLength: "密码长度在 8 到 20 个字符",
+      passwordComplexity: "密码必须包含字母和数字",
+      passwordNotMatch: "两次输入的密码不一致"
+    },
+    messages: {
+      modifySuccess: "密码修改成功！",
+      validateError: "校验失败，请检查输入！"
+    }
+  },
   exit: '退出',
   help: '问题帮助',
   description: '',

@@ -25,7 +25,7 @@ function updateFontSize() {
 </script>
 
 <template>
-    <el-form style="max-width: 600px" label-width="auto">
+    <el-form label-width="auto" style="padding: 20px;">
       <el-form-item prop="delivery" :label="$t('appearanceLanguage.showLanguage')">
         <el-radio-group v-model="langValue" @change="updateFontSize">
           <el-radio value="zh-cn">{{ $t('appearanceLanguage.zh') }}</el-radio>
@@ -35,4 +35,5 @@ function updateFontSize() {
     </el-form>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

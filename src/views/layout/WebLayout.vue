@@ -6,7 +6,6 @@
         <div style="height: 100%;"><router-view /></div>
       </div>
     </div>
-    <widget-modal-container />
   </el-config-provider>
 </template>
 
@@ -16,7 +15,6 @@ import en from 'element-plus/dist/locale/en.mjs'
 import { computed, onBeforeMount, watch } from 'vue'
 import NavbarDefault from '@/views/layout/NavbarDefault.vue'
 import { storeToRefs } from 'pinia'
-import { container as WidgetModalContainer } from 'jenesius-vue-modal'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 
 const appSettingsStore = useAppSettingsStore()

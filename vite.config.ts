@@ -50,7 +50,7 @@ export default defineConfig({
   server: {
     port: 7999,
     proxy: {
-      '/system': {
+      '/platform/sapi': {
         target: 'http://localhost:80',
         changeOrigin: true,
       }
@@ -75,5 +75,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)), 'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
     },
-  },
+  }
 })
