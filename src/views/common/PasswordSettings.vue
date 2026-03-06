@@ -70,7 +70,6 @@ import { computed, reactive, ref } from 'vue'
 import { ElForm, ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { editPassword } from '@/api/common/user'
-
 const { t } = useI18n() // 表单引用
 const passwordFormRef = ref<InstanceType<typeof ElForm>>(); // 表单数据
 const passwordForm = reactive({
@@ -175,14 +174,17 @@ const submitForm = () => {
   passwordFormRef.value.validate((valid) => {
     if (valid) {
       editPassword({ oldPassword: passwordForm.oldPassword, newPassword: passwordForm.newPassword }).then((rsp) => {
-        console.log(rsp)
-        // 这里替换为实际的接口请求逻辑
-        ElMessage.success(t('passwordModify.messages.modifySuccess'))
-        // 仅清空表单数据，不显示重置按钮
-        passwordForm.oldPassword = ''
-        passwordForm.newPassword = ''
-        passwordForm.confirmPassword = ''
-        strengthLevel.value = 0
+        if(rsp.success) {
+          // 这里替换为实际的接口请求逻辑
+          ElMessage.success(t('passwordModify.messages.modifySuccess'))
+          // 仅清空表单数据，不显示重置按钮
+          passwordForm.oldPassword = ''
+          passwordForm.newPassword = ''
+          passwordForm.confirmPassword = ''
+          strengthLevel.value = 0
+        } else {
+          ElMessage.error(rsp.description)
+        }
       })
     } else {
       ElMessage.error(t('passwordModify.messages.validateError'))
