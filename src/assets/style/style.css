@@ -45,7 +45,6 @@
 .flex-row {
   display: inline-flex; /* 改为 inline-flex */
   flex-direction: row;
-  /* 移除 flex-wrap，因为 inline-flex 通常不需要换行 */
   align-items: center;
 }
 
@@ -53,7 +52,14 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  height: 100% !important;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.justify-content-end {
+  justify-content: end;
 }
 
 .align-items-center {

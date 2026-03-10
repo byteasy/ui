@@ -13,7 +13,7 @@
     </el-splitter-panel>
     <el-splitter-panel :min="200">
       <div class="pl-1 pt-1 pr-1 full-height-container my-bg-color-blank" >
-        <div class="flex-column">
+        <div class="flex-column h-full">
           <div class="el-card is-always-shadow p-1" style="height: 2.4rem; width: 100%">
             <bread-crumb v-if="tagView === '0'" />
             <tag-view v-else />
@@ -21,7 +21,7 @@
           <div
             class="el-card is-always-shadow p-2 mt-1 flex-grow"
             style="width: 100%;">
-            <div class="h-full">
+            <div class="h-full" >
               <router-view v-slot="{ Component }">
                 <transition name="fade" mode="out-in">
                   <keep-alive :include="tagsStore.cachedViews">
@@ -77,7 +77,5 @@ function onLeftMenuSizeUpdate(size) {
   width: 100% !important;
   height: 100% !important;
 }
-.flex-grow {
-  flex-grow: 1;
-}
+
 </style>
