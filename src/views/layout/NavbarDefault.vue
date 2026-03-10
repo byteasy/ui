@@ -1,10 +1,23 @@
 <script setup lang="ts">
 import TopMenu from '@/views/layout/TopMenu.vue'
-import whiteLogo from '@/assets/img/black-logo.png'
+import blackLogo from '@/assets/img/black-logo.png'
+import whiteLogo from '@/assets/img/white-logo.png'
 import defaultAvatar from '@/assets/img/defaultAvatar.png'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+const appSettingsStore = useAppSettingsStore()
+const { theme: storeTheme } = storeToRefs(appSettingsStore)
+import { useAppSettingsStore } from '@/stores/appSettings.ts'
+import { storeToRefs } from 'pinia'
+
+// 创建一个中转计算属性
+const theme = computed({
+  get: () => storeTheme.value ?? 'light', // 读取时：如果 store 里是 null，返回 'light'
+  set: (val) => {
+    appSettingsStore.setTheme(val) // 写入时：调用 store 的方法更新
+  },
+})
 
 const searchValue = ref('')
 const { t } = useI18n()
@@ -17,13 +30,12 @@ function onSettingsClick(name) {
 function onLogoutClick() {
   window.location.href = '/platform/logout'
 }
-
 </script>
 
 <template>
   <div class="navbar-layout my-bg-color-page">
     <div class="flex-row">
-      <img :src="whiteLogo" class="system_logo" alt="" />
+      <img :src="theme === 'light' ? blackLogo : whiteLogo" class="system_logo" alt="" />
       <span class="system-title">-{{ t('title') }}</span>
       <top-menu />
     </div>
@@ -34,7 +46,9 @@ function onLogoutClick() {
         suffix-icon="Search"
         class="custom-search-input mr-3"
       />
-      <el-icon class="mr-3" size="30" style="color: var(--my-text-color)" :title="$t('help')"><QuestionFilled /></el-icon>
+      <el-icon class="mr-3" size="30" style="color: var(--my-text-color)" :title="$t('help')"
+        ><QuestionFilled
+      /></el-icon>
       <el-dropdown :placement="'bottom-start'">
         <div class="el-dropdown-link">
           <div class="flex-row">
@@ -44,9 +58,15 @@ function onLogoutClick() {
             >
               <img :src="defaultAvatar" />
             </el-avatar>
-            <div class="flex-column ml-2" style="width: 100px;">
-              <span style="color: var(--my-text-color); font-size: var(--my-font-size);" class="font-bold-700">王手和</span>
-              <span style="color: var(--my-text-gray); font-size: var(--my-font-size);" class="mt-1">信息化管理部</span>
+            <div class="flex-column ml-2" style="width: 100px">
+              <span
+                style="color: var(--my-text-color); font-size: var(--my-font-size)"
+                class="font-bold-700"
+                >王手和</span
+              >
+              <span style="color: var(--my-text-gray); font-size: var(--my-font-size)" class="mt-1"
+                >信息化管理部</span
+              >
             </div>
           </div>
         </div>
@@ -122,10 +142,10 @@ function onLogoutClick() {
 
 /* 深度选择器修改 Element Plus 内部样式 */
 .custom-search-input :deep(.el-input__wrapper) {
-  width: 220px;               /* 稍微加宽一点，视觉更舒展 */
-  border-radius: 20px;        /* 胶囊形状圆角 */
+  width: 220px; /* 稍微加宽一点，视觉更舒展 */
+  border-radius: 20px; /* 胶囊形状圆角 */
   background-color: var(--el-fill-color-lighter); /* 浅色背景 */
-  box-shadow: none;           /* 去除默认投影 */
+  box-shadow: none; /* 去除默认投影 */
   border: 1px solid var(--el-border-color);
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
@@ -138,7 +158,7 @@ function onLogoutClick() {
 
 /* 聚焦样式：增加呼吸感阴影 */
 .custom-search-input :deep(.el-input__wrapper.is-focus) {
-  width: 260px;               /* 聚焦时轻轻展开，增加交互动效 */
+  width: 260px; /* 聚焦时轻轻展开，增加交互动效 */
   border-color: var(--el-color-primary);
   box-shadow: 0 0 0 2px var(--el-color-primary-light-8) !important;
   background-color: var(--el-bg-color);

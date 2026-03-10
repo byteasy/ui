@@ -43,6 +43,27 @@ const routers = [
     ]
   },
   {
+    path: '/platform',
+    component: () => import('../views/layout/WebLayout.vue'),
+    name: 'platform',
+    redirect: '/platform/baseCommon',
+    children: [
+      {
+        path: 'baseCommon',
+        name: 'baseCommon',
+        redirect: '/platform/baseCommon/resourceGroups',
+        component: () => import('../views/layout/AsideMain.vue'),
+        children: [
+          {
+            path: 'resourceGroups',
+            name: 'resourceGroups',
+            component: () => import('../views/platform/resource/ResourceGroupList.vue')
+          },
+        ]
+      }
+    ]
+  },
+  {
     path: '/app',
     component: () => import('../views/layout/WebLayout.vue'),
     redirect: '/app/system/index',

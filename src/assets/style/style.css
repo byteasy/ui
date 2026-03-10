@@ -19,6 +19,10 @@
 .m-4 { margin: 1rem !important; }
 .m-5 { margin: 1.5rem !important; }
 .p-1 { padding: 0.25rem !important; }
+.pt-1 { padding-top: 0.25rem !important; }
+.pl-1 { padding-left: 0.25rem !important; }
+.pr-1 { padding-right: 0.25rem !important; }
+.pb-1 { padding-bottom: 0.25rem !important; }
 .p-2 { padding: 0.5rem !important; }
 .p-3 { padding: 0.75rem !important; }
 .p-4 { padding: 1rem !important; }
@@ -48,8 +52,8 @@
 .flex-column {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   align-items: flex-start;
+  height: 100% !important;
 }
 
 .align-items-center {
@@ -58,6 +62,14 @@
 
 .align-items-start {
   align-items: flex-start !important;
+}
+
+.h-full {
+  height: 100% !important;
+}
+
+.w-full {
+  width: 100% !important;
 }
 
 :root {

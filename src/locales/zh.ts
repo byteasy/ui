@@ -95,6 +95,9 @@ export default {
       validateError: "校验失败，请检查输入！"
     }
   },
+  platform: '平台设置',
+  baseCommon: '常用功能',
+  resourceGroups: '菜单分组',
   exit: '退出',
   help: '问题帮助',
   description: '',
