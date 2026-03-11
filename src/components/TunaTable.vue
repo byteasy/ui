@@ -4,7 +4,7 @@
       <el-form :inline="true">
         <template v-for="col in tableColumns" :key="col.name">
           <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
-            <slot :name="'formItem_' + col.name">
+            <slot :name="'formItem_' + col.name" :column="col">
               <tuna-input-field
                 :column="col"
                 :placeholder="col.displayName"
@@ -80,12 +80,12 @@
                       </el-button>
                     </template>
                   </el-popconfirm>
+                  <slot name="operationSlotExt" :row="scope.row"> </slot>
                 </slot>
               </template>
             </el-table-column>
-          </el-table>
-        </template></el-auto-resizer
-      >
+          </el-table> </template
+      ></el-auto-resizer>
     </template>
     <template v-slot:bottomBar>
       <el-pagination
