@@ -119,14 +119,19 @@ export default {
     row: '条',
   },
   table: {
+    loadingTableColumnsError: '加载数据表元数据失败',
+    loadingTableDataError: '加载数据失败',
     loading: '加载中',
     emptyText: '数据为空',
     operation: '操作',
     view: '查看',
     edit: '编辑',
-    role: '角色',
     delete: '删除',
+    role: '角色',
     save: '保存',
+    startDate: '开始时间',
+    endDate: '结束时间',
+    rangeSeparator: '到'
   },
   validate: {
     minLength: '最小长度',

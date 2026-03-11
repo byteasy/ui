@@ -62,6 +62,10 @@ export default defineConfig(({ mode }) => {
         '/platform/sapi': {
           target: 'http://localhost:80',
           changeOrigin: true,
+        },
+        '/platform/papi': {
+          target: 'http://localhost:80',
+          changeOrigin: true,
         }
       }
     },

@@ -1,0 +1,170 @@
+<template>
+  <tuna-container>
+    <template v-slot:topBar>
+      <el-form :inline="true">
+        <template v-for="col in tableColumns" :key="col.name">
+          <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
+            <slot :name="'formItem_' + col.name">
+              <tuna-input-field
+                :column="col"
+                :placeholder="col.displayName"
+                v-model="queryParam[col.name]"
+                clearable
+                @change="refresh"
+                :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
+              />
+            </slot>
+          </el-form-item>
+        </template>
+        <el-form-item>
+          <el-button type="primary" icon="Search" @click="refresh">{{ $t('search') }}</el-button>
+          <el-button type="success" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
+          <slot name="formButton"></slot>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template v-slot:mainContent>
+      <el-auto-resizer>
+        <template #default="{ height, width }">
+          <el-table style="width: 100%" :height="height" fit :data="tableData.records">
+            <slot name="columnsSlot">
+              <template v-for="col in tableColumns" :key="col.name">
+                <el-table-column
+                  :align="
+                    col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
+                  "
+                  :fixed="col.isFixed === 'YES'"
+                  :label="col.displayName"
+                  :prop="col.name"
+                  v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
+                  :width="col.width === 0 ? '' : col.width"
+                  :show-overflow-tooltip="col.isOverflow === 'YES'"
+                >
+                  <template #default="scope">
+                    <slot :name="'column_' + col.name" :row="scope.row">{{
+                      scope.row[col.name]
+                    }}</slot>
+                  </template>
+                </el-table-column>
+                <enum-column
+                  :code="col.typeClassName"
+                  context="platform"
+                  :fixed="col.isFixed === 'YES'"
+                  :label="col.displayName"
+                  :prop="col.name"
+                  v-if="col.isShow === 'YES' && col.type === 'ENUM'"
+                  :width="col.width === 0 ? '' : col.width"
+                  :show-overflow-tooltip="col.isOverflow === 'YES'"
+                />
+              </template>
+            </slot>
+            <el-table-column fixed="right" :label="$t('table.operation')" min-width="120">
+              <template #default="scope">
+                <slot name="operationSlot">
+                  <el-button link type="success" @click="onView(scope.row)">{{
+                    t('table.view')
+                  }}</el-button>
+                  <el-button link type="primary" @click="onEdit(scope.row)">
+                    {{ t('table.edit') }}
+                  </el-button>
+                  <el-popconfirm
+                    :confirm-button-text="$t('ok')"
+                    :cancel-button-text="$t('cancel')"
+                    :title="$t('deleteWarn')"
+                    :hide-after="10"
+                    @confirm="onDelete(scope.row)"
+                  >
+                    <template #reference>
+                      <el-button link type="danger">
+                        {{ t('table.delete') }}
+                      </el-button>
+                    </template>
+                  </el-popconfirm>
+                </slot>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template></el-auto-resizer
+      >
+    </template>
+    <template v-slot:bottomBar>
+      <el-pagination
+        background
+        layout="total, sizes, prev, pager, next"
+        :default-page-size="20"
+        :total="parseInt(tableData.total)"
+        @change="onPageChange"
+      />
+    </template>
+  </tuna-container>
+</template>
+
+<script lang="ts" setup>
+import { onBeforeMount, onMounted, ref } from 'vue'
+import TunaContainer from '@/components/TunaContainer.vue'
+import { doHttpGet } from '@/api/common/platform'
+import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n() // 表单引用
+
+const props = defineProps<{
+  baseUrl: string
+  queryParams?: any
+}>()
+
+const tableColumns = ref([])
+const tableData = ref({})
+const loading = ref(false)
+const queryParam = ref({ current: 1, size: 20, descColumns: ['id'] })
+
+const mergeQueryParams = () => {
+  if (props.queryParams && typeof props.queryParams === 'object') {
+    // 使用对象展开运算符合并，props.queryParams 会覆盖默认值
+    queryParam.value = {
+      ...queryParam.value,
+      ...props.queryParams,
+    }
+  }
+}
+
+onBeforeMount(() => {
+  doHttpGet(props.baseUrl + '/schemas', {})
+    .then((response) => {
+      tableColumns.value = response.data
+      mergeQueryParams()
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage.error(t('table.loadingTableColumnsError'))
+    })
+})
+
+onMounted(() => {
+  refresh()
+})
+
+function onPageChange(currentPage, pageSize) {
+  queryParam.value.current = currentPage
+  queryParam.value.size = pageSize
+  refresh()
+}
+
+function refresh() {
+  loading.value = true
+  doHttpGet(props.baseUrl, queryParam.value)
+    .then((rsp) => {
+      tableData.value = rsp.data
+      loading.value = false
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage.error(t('table.loadingTableDataError'))
+    })
+}
+
+function onView(row) {}
+function onAdd() {}
+function onEdit(row) {}
+function onDelete(row) {}
+</script>
