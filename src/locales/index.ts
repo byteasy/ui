@@ -37,7 +37,7 @@ async function loadMessages(lang: string) {
 
     // 如果服务器失败，尝试加载本地备用
     try {
-      const localMessages = await import(`./locales/${lang}.ts`)
+      const localMessages = await import('./' + lang + '.ts')
       i18n.global.setLocaleMessage(lang, localMessages.default)
       return true
     } catch {

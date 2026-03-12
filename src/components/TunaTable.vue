@@ -100,23 +100,30 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { type Component, onBeforeMount, onMounted, ref } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
-import { doHttpGet } from '@/api/common/platform'
+import { doHttpDelete, doHttpGet } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { useModal } from '@/components/dialog/useModal.ts'
+import TunaTableForm from '@/components/TunaTableForm.vue'
 
+const route = useRoute()
 const { t } = useI18n() // 表单引用
 
 const props = defineProps<{
   baseUrl: string
   queryParams?: any
+  formComponent?: Component
+  formWidth?: string | number
 }>()
 
 const tableColumns = ref([])
-const tableData = ref({})
+const tableData = ref({ total: 0 })
 const loading = ref(false)
 const queryParam = ref({ current: 1, size: 20, descColumns: ['id'] })
+const { open } = useModal()
 
 const mergeQueryParams = () => {
   if (props.queryParams && typeof props.queryParams === 'object') {
@@ -163,8 +170,66 @@ function refresh() {
     })
 }
 
-function onView(row) {}
-function onAdd() {}
-function onEdit(row) {}
-function onDelete(row) {}
+function getFormComponent() {
+  if (props.formComponent) {
+    return props.formComponent
+  } else {
+    return TunaTableForm
+  }
+}
+
+function onView(row) {
+  const [lastRoute] = route.matched.slice(-1)
+  open(
+    getFormComponent(), // 要显示的组件
+    row, // 传给组件的 props
+    {
+      title: t('table.view') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
+      width: getFormWidth(),
+      onClose: (data) => {},
+    },
+  )
+}
+function onAdd() {
+  const [lastRoute] = route.matched.slice(-1)
+  open(
+    getFormComponent(), // 要显示的组件
+    {}, // 传给组件的 props
+    {
+      title: t('add') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
+      width: getFormWidth(),
+      onClose: (data) => {
+        refresh()
+      },
+    },
+  )
+}
+function onEdit(row) {
+  const [lastRoute] = route.matched.slice(-1)
+  open(
+    getFormComponent(), // 要显示的组件
+    row, // 传给组件的 props
+    {
+      title: t('table.edit') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
+      width: getFormWidth(),
+      onClose: (data) => {
+        refresh()
+      },
+    },
+  )
+}
+function onDelete(row) {
+  doHttpDelete(props.baseUrl + '/' + row.id)
+    .then((rsp) => {
+      ElMessage.success(t('operationSuccess'))
+    })
+    .catch((err) => {
+      console.log(err)
+      ElMessage.error(t('operationFailed'))
+    })
+}
+
+function getFormWidth() {
+  return props.formWidth !== undefined ? props.formWidth : '50%'
+}
 </script>

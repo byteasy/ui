@@ -1,7 +1,7 @@
 <!-- DialogContainer.vue 最简化版本 -->
 <template>
   <Teleport to="body">
-    <div v-for="item in modals" :key="String(item.id)">
+    <div v-for="item in modals" :key="String(item.id)" class="my-bg-color-blank">
       <el-dialog
         v-if="item.dialogModel"
         v-model="item.visible"
@@ -28,6 +28,8 @@
         :size="item.width"
         :resizable="item.draggable"
         :close-on-click-modal="item.closeOnClickModal"
+        body-class="my-bg-color-blank"
+        @close="handleClose(item.id)"
         :direction="item.direction"
       >
         <component
