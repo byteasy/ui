@@ -140,20 +140,24 @@ html.light {
 
 html.green {
   --my-bg-color: #008351 !important;
-  --el-menu-active-color: #FFFFFF !important;
   --my-text-color: white !important;
   --my-text-gray: #D3D3D3 !important;
   --my-bg-menu-item-active-color: #008351 !important;
   --my-menu-icon-color: black !important;
+  --el-menu-active-color: #FFFFFF !important;
+  --el-color-primary: #008351 !important;
+  --el-color-primary-light-3: #076742 !important;
+  --el-color-primary-dark-2: #0d4c35 !important;
 }
 
 html.blue {
   --my-bg-color: #014ba9 !important;
-  --el-menu-active-color: #FFFFFF !important;
   --my-text-color: white !important;
   --my-text-gray: #D3D3D3 !important;
   --my-bg-menu-item-active-color: #014ba9 !important;
   --my-menu-icon-color: black !important;
+  --el-menu-active-color: #FFFFFF !important;
+  --el-color-primary: #014ba9 !important;
 }
 
 .my-bg-color-page {

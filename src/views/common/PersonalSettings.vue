@@ -1,25 +1,21 @@
 <template>
-  <div><el-button @click="showForm">打开表单</el-button></div>
+  <personal-settings-view :user="user" />
 </template>
 
-<script lang="ts" setup>
-import { useModal } from '@/components/dialog/useModal.ts'
-import PasswordSettings from './PasswordSettings.vue'
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { onMounted, ref } from 'vue'
+import { getLoginPersonalInfo } from '@/api/common/user'
+import PersonalSettingsView from '@/views/common/PersonalSettingsView.vue'
 
-const { open } = useModal()
-const showForm = () => {
-  open(
-    PasswordSettings, // 要显示的组件
-    { userId: 123 }, // 传给组件的 props
-    {
-      title: '编辑用户',
-      width: "50%",
-      onClose: (data) => {
-        console.log('弹窗关闭', data)
-      },
-    },
-  )
-}
+const { t } = useI18n() // 表单引用
+const user = ref({})
+
+onMounted(() => {
+  getLoginPersonalInfo().then(rsp => {
+    user.value = rsp.data
+  })
+})
 </script>
 
 <style scoped></style>

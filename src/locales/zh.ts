@@ -143,4 +143,8 @@ export default {
     email: '邮箱格式不正确',
     noChinese: '不能含有中文字符'
   },
+  user: {
+    basic: '基本资料',
+    realName: '姓名'
+  }
 } as const

@@ -15,16 +15,17 @@
             :prop="col.name"
             :required="col.isRequire === 'YES'"
             :rules="[
-        {
-          validator: (rule, value, callback) => {
-            validateColumnRule(col, rule, value, callback)
-          },
-          trigger: 'blur',
-        }
-      ]"
+              {
+                validator: (rule, value, callback) => {
+                  validateColumnRule(col, rule, value, callback)
+                },
+                trigger: 'blur',
+              },
+            ]"
           >
             <tuna-form-field
               :column="col"
+              :context="props.context"
               :placeholder="col.displayName"
               clearable
               :disabled="props.readonly"
@@ -46,7 +47,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { type Component, ref, defineEmits } from 'vue'
+import { defineEmits, ref } from 'vue'
 import TunaFormField from '@/components/TunaFormField.vue'
 import { useI18n } from 'vue-i18n'
 import { doHttpPost } from '@/api/common/platform'
@@ -58,10 +59,10 @@ const refForm = ref(null)
 
 const props = defineProps<{
   url: string
+  context: string
   columns: Array<any>
   row?: any
   readonly?: boolean
-  headerComponent?: Component
 }>()
 const formValue = ref({ ...props.row })
 const { t } = useI18n() // 表单引用

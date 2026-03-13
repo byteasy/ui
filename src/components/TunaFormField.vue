@@ -35,7 +35,7 @@
     type="datetime"
     value-format="YYYY-MM-DD HH:mm:ss"
   />
-  <enum-select :code="props.column.typeClassName" context="platform" v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword :multiple="props.column.multiple === 'YES'" />
+  <enum-select :code="props.column.typeClassName" :context="props.context" v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword :multiple="props.column.multiple === 'YES'" />
 </template>
 
 <script lang="ts" setup>
@@ -44,6 +44,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const props = defineProps<{
+  context: string
   column: {
     className: string
     name: string

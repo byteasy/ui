@@ -7,6 +7,7 @@
             <slot :name="'formItem_' + col.name" :column="col">
               <tuna-query-field
                 :column="col"
+                :context="props.context"
                 :placeholder="col.displayName"
                 v-model="queryParam[col.name]"
                 clearable
@@ -18,7 +19,7 @@
         </template>
         <el-form-item>
           <el-button type="primary" icon="Search" @click="refresh">{{ $t('search') }}</el-button>
-          <el-button type="success" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
+          <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
           <slot name="formButton"></slot>
         </el-form-item>
       </el-form>
@@ -48,7 +49,7 @@
                 </el-table-column>
                 <enum-column
                   :code="col.typeClassName"
-                  context="platform"
+                  :context="props.context"
                   :fixed="col.isFixed === 'YES'"
                   :label="col.displayName"
                   :prop="col.name"
@@ -61,7 +62,7 @@
             <el-table-column fixed="right" :label="$t('table.operation')" min-width="120">
               <template #default="scope">
                 <slot name="operationSlot">
-                  <el-button link type="success" @click="onView(scope.row)">{{
+                  <el-button link type="primary" @click="onView(scope.row)">{{
                     t('table.view')
                   }}</el-button>
                   <el-button link type="primary" @click="onEdit(scope.row)">
@@ -102,7 +103,7 @@
 <script lang="ts" setup>
 import { type Component, onBeforeMount, onMounted, ref } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
-import { doHttpDelete, doHttpGet } from '@/api/common/platform'
+import { doHttpDelete, doHttpGet, getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -114,6 +115,8 @@ const { t } = useI18n() // 表单引用
 
 const props = defineProps<{
   baseUrl: string
+  context: string
+  className: string
   queryParams?: any
   formComponent?: Component
   formWidth?: string | number
@@ -136,15 +139,13 @@ const mergeQueryParams = () => {
 }
 
 onBeforeMount(() => {
-  doHttpGet(props.baseUrl + '/schemas', {})
-    .then((response) => {
-      tableColumns.value = response.data
-      mergeQueryParams()
-    })
-    .catch((error) => {
-      console.log(error)
-      ElMessage.error(t('table.loadingTableColumnsError'))
-    })
+  getEntitySchema(props.context, props.className).then(response => {
+    tableColumns.value = response.data
+    mergeQueryParams()
+  }).catch((error) => {
+    console.log(error)
+    ElMessage.error(t('table.loadingTableColumnsError'))
+  })
 })
 
 onMounted(() => {
@@ -186,7 +187,7 @@ function onView(row) {
       columns: tableColumns.value,
       row: row,
       url: props.baseUrl,
-      readonly: true
+      readonly: true, context: props.context
     }, // 传给组件的 props
     {
       title: t('table.view') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
@@ -199,7 +200,7 @@ function onAdd() {
   const [lastRoute] = route.matched.slice(-1)
   open(
     getFormComponent(), // 要显示的组件
-    { columns: tableColumns.value, url: props.baseUrl }, // 传给组件的 props
+    { columns: tableColumns.value, url: props.baseUrl, context: props.context }, // 传给组件的 props
     {
       title: t('add') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
       width: getFormWidth(),
@@ -217,6 +218,7 @@ function onEdit(row) {
       columns: tableColumns.value,
       row: row,
       url: props.baseUrl,
+      context: props.context,
     }, // 传给组件的 props
     {
       title: t('table.edit') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),

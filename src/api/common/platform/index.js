@@ -41,7 +41,14 @@ export function doHttpDelete(url, params, data) {
 
 export function getEnumValues(serviceContext, enumClassName) {
   return request({
-    url: '/' + serviceContext + '/papi/enums/' + enumClassName,
+    url: '/' + serviceContext + '/sapi/enums/' + enumClassName,
+    method: 'get',
+  })
+}
+
+export function getEntitySchema(serviceContext, enumClassName) {
+  return request({
+    url: '/' + serviceContext + '/sapi/schemas/' + enumClassName,
     method: 'get',
   })
 }

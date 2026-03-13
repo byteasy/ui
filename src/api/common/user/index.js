@@ -15,3 +15,18 @@ export function editPassword(passwordForm) {
     data: passwordForm,
   })
 }
+
+export function editPersonalInfo(info) {
+  return request({
+    url: '/platform/sapi/users/personalInfo',
+    method: 'put',
+    data: info,
+  })
+}
+
+export function getLoginPersonalInfo() {
+  return request({
+    url: '/platform/sapi/users/personalInfo',
+    method: 'get',
+  })
+}
