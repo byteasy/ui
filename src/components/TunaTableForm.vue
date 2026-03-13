@@ -1,9 +1,28 @@
 <template>
   <div class="w-full h-full flex-column">
-    <el-form :inline="true" ref="refForm" label-width="auto" label-position="left" :model="formValue">
+    <el-form
+      :inline="true"
+      ref="refForm"
+      label-width="auto"
+      label-position="left"
+      :model="formValue"
+    >
       <template v-for="col in props.columns" :key="col.name">
-        <el-form-item :label="col.displayName" v-if="col.isForm === 'YES'" :prop="col.name">
-          <slot :name="'formItem_' + col.name" :column="col">
+        <slot :name="'formItem_' + col.name" :column="col">
+          <el-form-item
+            :label="col.displayName"
+            v-if="col.isForm === 'YES'"
+            :prop="col.name"
+            :required="col.isRequire === 'YES'"
+            :rules="[
+        {
+          validator: (rule, value, callback) => {
+            validateColumnRule(col, rule, value, callback)
+          },
+          trigger: 'blur',
+        }
+      ]"
+          >
             <tuna-form-field
               :column="col"
               :placeholder="col.displayName"
@@ -12,14 +31,16 @@
               v-model="formValue[col.name]"
               :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
             />
-          </slot>
-        </el-form-item>
+          </el-form-item>
+        </slot>
       </template>
     </el-form>
     <div class="w-full flex-none">
       <div class="flex-row align-items-start">
-        <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{ $t('save') }}</el-button>
-        <el-button @click="onClearForm" icon="Close">{{ $t('cancel') }}</el-button>
+        <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
+          t('save')
+        }}</el-button>
+        <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
       </div>
     </div>
   </div>
@@ -30,8 +51,9 @@ import TunaFormField from '@/components/TunaFormField.vue'
 import { useI18n } from 'vue-i18n'
 import { doHttpPost } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
-const emit = defineEmits(['close'])
+import { validateColumnRule } from '@/util/validateUtils.ts'
 
+const emit = defineEmits(['close'])
 const refForm = ref(null)
 
 const props = defineProps<{
@@ -41,7 +63,7 @@ const props = defineProps<{
   readonly?: boolean
   headerComponent?: Component
 }>()
-const formValue = ref({...props.row})
+const formValue = ref({ ...props.row })
 const { t } = useI18n() // 表单引用
 
 function onSaveClick() {
@@ -64,5 +86,4 @@ function onClearForm() {
   refForm.value?.resetFields()
   emit('close')
 }
-
 </script>

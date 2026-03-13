@@ -5,6 +5,7 @@ export default {
   add: '添加',
   ok: '确定',
   save: '保存',
+  close: '关闭',
   cancel: '取消',
   search: '查询',
   deleteWarn: '确定要删除这条记录？',
@@ -140,5 +141,6 @@ export default {
     max: '最大',
     required: '必须填写',
     email: '邮箱格式不正确',
+    noChinese: '不能含有中文字符'
   },
 } as const

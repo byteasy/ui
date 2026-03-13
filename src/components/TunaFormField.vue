@@ -26,19 +26,13 @@
   />
   <el-date-picker
     v-else-if="props.column.type === 'LOCAL_DATE'"
-    type="daterange"
-    :range-separator="$t('table.rangeSeparator')"
-    :start-placeholder="$t('table.startDate')"
-    :end-placeholder="$t('table.endDate')"
+    type="date"
     value-format="YYYY-MM-DD"
     :style="{ width: (props.column.width === 0 ? 240 : props.column.width) + 'px' }"
   />
   <el-date-picker
     v-else-if="props.column.type === 'LOCAL_DATE_TIME'"
-    type="datetimerange"
-    :range-separator="$t('table.rangeSeparator')"
-    :start-placeholder="$t('table.startDate')"
-    :end-placeholder="$t('table.endDate')"
+    type="datetime"
     value-format="YYYY-MM-DD HH:mm:ss"
   />
   <enum-select :code="props.column.typeClassName" context="platform" v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword :multiple="props.column.multiple === 'YES'" />
