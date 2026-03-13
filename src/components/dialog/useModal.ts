@@ -8,12 +8,12 @@ type DrawerDirection = 'rtl' | 'ltr' | 'ttb' | 'btt'
 interface ModalState {
   items: Array<{
     id: symbol
+    props?: Record<string, unknown>
+    visible: boolean
     component: Component
     dialogModel: boolean
-    props?: Record<string, unknown>
     title?: string
     width?: string | number
-    visible: boolean
     draggable: boolean
     closeOnClickModal: boolean
     fullscreen: boolean // 仅对dialog有效
@@ -33,7 +33,7 @@ export const useModal = () => {
   const open = <P extends Record<string, unknown>>(
     component: Component,
     props?: P,
-    options: Partial<Omit<ModalState['items'][0], 'id' | 'component' | 'props' | 'visible'>> = {},
+    options: Partial<Omit<ModalState['items'][0], 'id' | 'props' | 'visible'>> = {},
   ) => {
     const id = Symbol('modal')
 
@@ -55,6 +55,7 @@ export const useModal = () => {
       ...defaultOptions, // 先应用默认值
       ...options,
     })
+    console.log(state.items)
 
     console.log('弹窗已添加，当前数量：', state.items.length) // 调试用
     return id

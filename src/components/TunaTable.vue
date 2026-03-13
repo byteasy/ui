@@ -5,7 +5,7 @@
         <template v-for="col in tableColumns" :key="col.name">
           <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
             <slot :name="'formItem_' + col.name" :column="col">
-              <tuna-input-field
+              <tuna-query-field
                 :column="col"
                 :placeholder="col.displayName"
                 v-model="queryParam[col.name]"
@@ -120,7 +120,7 @@ const props = defineProps<{
 }>()
 
 const tableColumns = ref([])
-const tableData = ref({ total: 0 })
+const tableData = ref({ total: '0' })
 const loading = ref(false)
 const queryParam = ref({ current: 1, size: 20, descColumns: ['id'] })
 const { open } = useModal()
@@ -182,7 +182,12 @@ function onView(row) {
   const [lastRoute] = route.matched.slice(-1)
   open(
     getFormComponent(), // 要显示的组件
-    row, // 传给组件的 props
+    {
+      columns: tableColumns.value,
+      row: row,
+      url: props.baseUrl,
+      readonly: true
+    }, // 传给组件的 props
     {
       title: t('table.view') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
       width: getFormWidth(),
@@ -194,7 +199,7 @@ function onAdd() {
   const [lastRoute] = route.matched.slice(-1)
   open(
     getFormComponent(), // 要显示的组件
-    {}, // 传给组件的 props
+    { columns: tableColumns.value, url: props.baseUrl }, // 传给组件的 props
     {
       title: t('add') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
       width: getFormWidth(),
@@ -208,7 +213,11 @@ function onEdit(row) {
   const [lastRoute] = route.matched.slice(-1)
   open(
     getFormComponent(), // 要显示的组件
-    row, // 传给组件的 props
+    {
+      columns: tableColumns.value,
+      row: row,
+      url: props.baseUrl,
+    }, // 传给组件的 props
     {
       title: t('table.edit') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
       width: getFormWidth(),
@@ -222,6 +231,7 @@ function onDelete(row) {
   doHttpDelete(props.baseUrl + '/' + row.id)
     .then((rsp) => {
       ElMessage.success(t('operationSuccess'))
+      refresh()
     })
     .catch((err) => {
       console.log(err)

@@ -14,12 +14,7 @@
         destroy-on-close
         append-to-body
       >
-        <component
-          :is="item.component"
-          v-bind="item.props"
-          @close="(data) => handleClose(item.id, data)"
-          @confirm="(data) => handleConfirm(item.id, data)"
-        />
+        <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)" />
       </el-dialog>
       <el-drawer
         v-else
@@ -32,12 +27,7 @@
         @close="handleClose(item.id)"
         :direction="item.direction"
       >
-        <component
-          :is="item.component"
-          v-bind="item.props"
-          @close="(data) => handleClose(item.id, data)"
-          @confirm="(data) => handleConfirm(item.id, data)"
-        />
+        <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)" />
       </el-drawer>
     </div>
   </Teleport>
@@ -53,11 +43,6 @@ console.log('DialogContainer 渲染，弹窗数量：', modals.length)
 
 const handleClose = (id: symbol, data?: unknown) => {
   console.log('关闭弹窗：', id)
-  close(id, data)
-}
-
-const handleConfirm = (id: symbol, data?: unknown) => {
-  console.log('确认弹窗：', id)
   close(id, data)
 }
 </script>

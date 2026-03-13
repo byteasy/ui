@@ -1,27 +1,68 @@
 <template>
-  <div class="w-full">
-    <el-form :inline="true">
-      <template v-for="col in tableColumns" :key="col.name">
-        <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
+  <div class="w-full h-full flex-column">
+    <el-form :inline="true" ref="refForm" label-width="auto" label-position="left" :model="formValue">
+      <template v-for="col in props.columns" :key="col.name">
+        <el-form-item :label="col.displayName" v-if="col.isForm === 'YES'" :prop="col.name">
           <slot :name="'formItem_' + col.name" :column="col">
-            <tuna-input-field
+            <tuna-form-field
               :column="col"
               :placeholder="col.displayName"
-              v-model="queryParam[col.name]"
               clearable
-              @change="refresh"
+              :disabled="props.readonly"
+              v-model="formValue[col.name]"
               :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
             />
           </slot>
         </el-form-item>
       </template>
-      <el-form-item>
-        <el-button type="primary" icon="Search" @click="refresh">{{ $t('search') }}</el-button>
-        <el-button type="success" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
-        <slot name="formButton"></slot>
-      </el-form-item>
     </el-form>
+    <div class="w-full flex-none">
+      <div class="flex-row align-items-start">
+        <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{ $t('save') }}</el-button>
+        <el-button @click="onClearForm" icon="Close">{{ $t('cancel') }}</el-button>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
+import { type Component, ref, defineEmits } from 'vue'
+import TunaFormField from '@/components/TunaFormField.vue'
+import { useI18n } from 'vue-i18n'
+import { doHttpPost } from '@/api/common/platform'
+import { ElMessage } from 'element-plus'
+const emit = defineEmits(['close'])
+
+const refForm = ref(null)
+
+const props = defineProps<{
+  url: string
+  columns: Array<any>
+  row?: any
+  readonly?: boolean
+  headerComponent?: Component
+}>()
+const formValue = ref({...props.row})
+const { t } = useI18n() // 表单引用
+
+function onSaveClick() {
+  refForm.value.validate((valid) => {
+    if (valid) {
+      doHttpPost(props.url, {}, formValue.value)
+        .then(() => {
+          ElMessage.success(t('operationSuccess'))
+          emit('close')
+        })
+        .catch((err) => {
+          console.log(err)
+          ElMessage.error(t('operationFailed'))
+        })
+    }
+  })
+}
+
+function onClearForm() {
+  refForm.value?.resetFields()
+  emit('close')
+}
+
 </script>
