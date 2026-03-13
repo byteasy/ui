@@ -99,6 +99,7 @@ export default {
   platform: '平台设置',
   baseCommon: '常用功能',
   resourceGroups: '菜单分组',
+  schemaDefines: '表单设置',
   exit: '退出',
   help: '问题帮助',
   description: '',

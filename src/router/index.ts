@@ -59,6 +59,11 @@ const routers = [
             name: 'resourceGroups',
             component: () => import('../views/platform/resource/ResourceGroupList.vue')
           },
+          {
+            path: 'schemaDefines',
+            name: 'schemaDefines',
+            component: () => import('../views/platform/schemaDefine/SchemaDefineList.vue')
+          },
         ]
       }
     ]

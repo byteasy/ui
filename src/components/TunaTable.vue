@@ -2,26 +2,34 @@
   <tuna-container>
     <template v-slot:topBar>
       <el-form :inline="true">
-        <template v-for="col in tableColumns" :key="col.name">
-          <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
-            <slot :name="'formItem_' + col.name" :column="col">
-              <tuna-query-field
-                :column="col"
-                :context="props.context"
-                :placeholder="col.displayName"
-                v-model="queryParam[col.name]"
-                clearable
-                @change="refresh"
-                :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
-              />
+        <slot name="formQuery">
+          <template v-for="col in tableColumns" :key="col.name">
+            <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
+              <slot :name="'formItem_' + col.name" :column="col">
+                <tuna-query-field
+                  :column="col"
+                  :context="props.context"
+                  :placeholder="col.displayName"
+                  v-model="queryParam[col.name]"
+                  clearable
+                  @change="refresh"
+                  :align="
+                    col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
+                  "
+                />
+              </slot>
+            </el-form-item>
+          </template>
+          <el-form-item>
+            <slot name="formQueryButton">
+              <el-button type="primary" icon="Search" @click="refresh">{{
+                $t('search')
+              }}</el-button>
+              <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
             </slot>
+            <slot name="formQueryButtonExt"></slot>
           </el-form-item>
-        </template>
-        <el-form-item>
-          <el-button type="primary" icon="Search" @click="refresh">{{ $t('search') }}</el-button>
-          <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
-          <slot name="formButton"></slot>
-        </el-form-item>
+        </slot>
       </el-form>
     </template>
     <template v-slot:mainContent>
@@ -139,13 +147,15 @@ const mergeQueryParams = () => {
 }
 
 onBeforeMount(() => {
-  getEntitySchema(props.context, props.className).then(response => {
-    tableColumns.value = response.data
-    mergeQueryParams()
-  }).catch((error) => {
-    console.log(error)
-    ElMessage.error(t('table.loadingTableColumnsError'))
-  })
+  getEntitySchema(props.context, props.className)
+    .then((response) => {
+      tableColumns.value = response.data
+      mergeQueryParams()
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage.error(t('table.loadingTableColumnsError'))
+    })
 })
 
 onMounted(() => {
@@ -187,7 +197,8 @@ function onView(row) {
       columns: tableColumns.value,
       row: row,
       url: props.baseUrl,
-      readonly: true, context: props.context
+      readonly: true,
+      context: props.context,
     }, // 传给组件的 props
     {
       title: t('table.view') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),

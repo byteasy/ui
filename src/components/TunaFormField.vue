@@ -34,8 +34,9 @@
     v-else-if="props.column.type === 'LOCAL_DATE_TIME'"
     type="datetime"
     value-format="YYYY-MM-DD HH:mm:ss"
+    :style="{ width: (props.column.width === 0 ? 240 : props.column.width) + 'px' }"
   />
-  <enum-select :code="props.column.typeClassName" :context="props.context" v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword :multiple="props.column.multiple === 'YES'" />
+  <enum-select :code="props.column.typeClassName" :context="props.context" v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword :multiple="props.column.multiple === 'YES'" :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }"/>
 </template>
 
 <script lang="ts" setup>

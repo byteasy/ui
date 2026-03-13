@@ -1,12 +1,11 @@
 <template>
-  <personal-settings-view :user="user" />
+  <tuna-viewer context="platform" class-name="com.tuna.platform.vo.PersonalSettingsVO" :entity="user" :title="$t('user.basic')"/>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { onMounted, ref } from 'vue'
 import { getLoginPersonalInfo } from '@/api/common/user'
-import PersonalSettingsView from '@/views/common/PersonalSettingsView.vue'
 
 const { t } = useI18n() // 表单引用
 const user = ref({})

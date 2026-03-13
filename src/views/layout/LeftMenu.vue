@@ -34,6 +34,9 @@
         <el-menu-item index="/platform/baseCommon/resourceGroups">
           <span class="my-font-size">菜单分组</span>
         </el-menu-item>
+        <el-menu-item index="/platform/baseCommon/schemaDefines">
+          <span class="my-font-size">表单设置</span>
+        </el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>

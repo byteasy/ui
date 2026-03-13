@@ -5,6 +5,7 @@
       :model="passwordForm"
       :rules="passwordRules"
       label-width="100px"
+      label-position="left"
       class="password-form"
     >
       <!-- 原始密码 -->
