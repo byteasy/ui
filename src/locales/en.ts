@@ -10,7 +10,7 @@ export default {
   frame: 'System Settings',
   warning: 'Warning',
   favoriteSettings: 'Favorite Settings',
-  personalSettings: 'Personal Settings',
+  personalInformation: 'Personal Settings',
   passwordSettings: 'Password Settings',
   appearanceSettings: 'Display Settings',
   languageSettings: 'Language Settings',

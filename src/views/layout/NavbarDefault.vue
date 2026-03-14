@@ -72,10 +72,10 @@ function onLogoutClick() {
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="onSettingsClick('personalSettings')">
+            <el-dropdown-item @click="onSettingsClick('personalInformation')">
               <div class="flex-row">
                 <IconLocalAccount style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('personalSettings') }}</span>
+                <span class="ml-2">{{ t('personalInformation') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item @click="onSettingsClick('passwordSettings')">

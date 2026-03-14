@@ -29,8 +29,8 @@ const routers = [
             component: () => import('../views/common/LanguageSettings.vue')
           },
           {
-            path: 'personalSettings',
-            name: 'personalSettings',
+            path: 'personalInformation',
+            name: 'personalInformation',
             component: () => import('../views/common/PersonalSettings.vue')
           },
           {

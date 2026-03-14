@@ -35,7 +35,7 @@ export default {
   operationSuccess: '操作成功',
   operationFailed: '操作失败',
   favoriteSettings: '偏好设置',
-  personalSettings: '个人设置',
+  personalInformation: '个人资料',
   passwordSettings: '密码设置',
   appearanceSettings: '显示设置',
   languageSettings: '语言设置',

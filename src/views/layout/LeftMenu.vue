@@ -19,8 +19,8 @@
         <el-menu-item index="/frame/favoriteSettings/languageSettings"
           ><span class="my-font-size">{{ $t('languageSettings') }}</span></el-menu-item
         >
-        <el-menu-item index="/frame/favoriteSettings/personalSettings"
-          ><span class="my-font-size">{{ $t('personalSettings') }}</span></el-menu-item
+        <el-menu-item index="/frame/favoriteSettings/personalInformation"
+          ><span class="my-font-size">{{ $t('personalInformation') }}</span></el-menu-item
         >
         <el-menu-item index="/frame/favoriteSettings/passwordSettings"
           ><span class="my-font-size">{{ $t('passwordSettings') }}</span></el-menu-item
