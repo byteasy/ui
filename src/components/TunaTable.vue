@@ -35,7 +35,7 @@
     <template v-slot:mainContent>
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <el-table style="width: 100%" :height="height" fit :data="tableData.records">
+          <el-table :height="height" :data="tableData.records" fix scrollbar-always-on>
             <slot name="columnsSlot">
               <template v-for="col in tableColumns" :key="col.name">
                 <el-table-column
@@ -45,8 +45,10 @@
                   :fixed="col.isFixed === 'YES'"
                   :label="col.displayName"
                   :prop="col.name"
+                  stripe
+                  highlight-current-row
                   v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
-                  :width="col.width === 0 ? '' : col.width"
+                  :min-width="col.width === 0 ? undefined : col.width"
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
                 >
                   <template #default="scope">
@@ -56,13 +58,16 @@
                   </template>
                 </el-table-column>
                 <enum-column
+                  :align="
+                    col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
+                  "
                   :code="col.typeClassName"
                   :context="props.context"
                   :fixed="col.isFixed === 'YES'"
                   :label="col.displayName"
                   :prop="col.name"
                   v-if="col.isShow === 'YES' && col.type === 'ENUM'"
-                  :width="col.width === 0 ? '' : col.width"
+                  :min-width="col.width === 0 ? undefined : col.width"
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
                 />
               </template>

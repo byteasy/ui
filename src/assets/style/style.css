@@ -192,3 +192,7 @@ html.blue {
   font-size: var(--my-font-size-2xl);
 }
 .my-font-bold {font-weight: bold;}
+
+div.el-scrollbar__bar.is-horizontal {
+  height: 10px;
+}
