@@ -4,7 +4,7 @@
       :inline="true"
       ref="refForm"
       label-width="auto"
-      label-position="left"
+      label-position="right"
       :model="formValue"
     >
       <template v-for="col in props.columns" :key="col.name">

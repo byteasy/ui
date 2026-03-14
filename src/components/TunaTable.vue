@@ -19,6 +19,7 @@
                 />
               </slot>
             </el-form-item>
+            <slot name="formItemExt" />
           </template>
           <el-form-item>
             <slot name="formQueryButton">
@@ -52,7 +53,7 @@
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
                 >
                   <template #default="scope">
-                    <slot :name="'column_' + col.name" :row="scope.row">{{
+                    <slot :name="'table_column_' + col.name" :row="scope.row">{{
                       scope.row[col.name]
                     }}</slot>
                   </template>
@@ -72,7 +73,7 @@
                 />
               </template>
             </slot>
-            <el-table-column fixed="right" :label="$t('table.operation')" min-width="120">
+            <el-table-column fixed="right" :label="$t('table.operation')" :min-width="props.operationColumnWidth ? props.operationColumnWidth : 160">
               <template #default="scope">
                 <slot name="operationSlot">
                   <el-button link type="primary" @click="onView(scope.row)">{{
@@ -114,7 +115,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type Component, onBeforeMount, onMounted, ref } from 'vue'
+import { type Component, onBeforeMount, onMounted, ref, defineExpose } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
 import { doHttpDelete, doHttpGet, getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
@@ -133,12 +134,13 @@ const props = defineProps<{
   queryParams?: any
   formComponent?: Component
   formWidth?: string | number
+  operationColumnWidth?: number
 }>()
 
 const tableColumns = ref([])
 const tableData = ref({ total: '0' })
 const loading = ref(false)
-const queryParam = ref({ current: 1, size: 20, descColumns: ['id'] })
+const queryParam = ref({ current: 1, size: 20, descColumns: [] })
 const { open } = useModal()
 
 const mergeQueryParams = () => {
@@ -260,4 +262,12 @@ function onDelete(row) {
 function getFormWidth() {
   return props.formWidth !== undefined ? props.formWidth : '50%'
 }
+
+defineExpose({
+  queryParam,
+  tableColumns,
+  tableData,
+  loading,
+  refresh,
+})
 </script>

@@ -1,7 +1,7 @@
 <template>
   <el-table-column>
     <template #default="scope">
-      <el-tag :type="parseType(scope.row[$props.prop])">
+      <el-tag :type="parseType(scope.row[$props.prop])" v-if="scope.row[$props.prop]">
         {{ parseLabel(scope.row[$props.prop]) }}</el-tag
       >
     </template>

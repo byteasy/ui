@@ -207,7 +207,7 @@ export function validateColumnRule(col: any, rule: any, value: any, callback: an
       callback(new Error(col.displayName + t('validate.min') + col.min))
       return
     }
-    if (parseInt(value) < col.max) {
+    if (parseInt(value) > col.max) {
       callback(new Error(col.displayName + t('validate.max') + col.max))
       return
     }

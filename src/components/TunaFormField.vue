@@ -4,7 +4,7 @@
     type="text"
     :maxlength="props.column.maxLength"
     :minlength="props.column.minLength"
-    :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }"
+    :style="{ width: (props.column.width ? props.column.width : 160) + 'px' }"
   />
   <el-input
     v-else-if="
@@ -13,7 +13,7 @@
       props.column.type === 'INT' ||
       props.column.type === 'LONG'
     "
-    :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }"
+    :style="{ width: (props.column.width ? props.column.width : 160) + 'px' }"
     type="number"
     :min="props.column.min"
     :max="props.column.max"
@@ -22,21 +22,22 @@
     v-else-if="props.column.type === 'FLOAT' || props.column.type === 'DOUBLE'" :precision="props.column.precision" :min="props.column.min"
     :max="props.column.max"
     type="number"
-    :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }"
+    :style="{ width: (props.column.width ? props.column.width : 160) + 'px' }"
   />
   <el-date-picker
     v-else-if="props.column.type === 'LOCAL_DATE'"
     type="date"
     value-format="YYYY-MM-DD"
-    :style="{ width: (props.column.width === 0 ? 240 : props.column.width) + 'px' }"
+    :style="{ width: (props.column.width ? props.column.width : 220) + 'px' }"
   />
   <el-date-picker
     v-else-if="props.column.type === 'LOCAL_DATE_TIME'"
     type="datetime"
     value-format="YYYY-MM-DD HH:mm:ss"
-    :style="{ width: (props.column.width === 0 ? 240 : props.column.width) + 'px' }"
+    :style="{ width: (props.column.width ? props.column.width : 240) + 'px' }"
   />
-  <enum-select :code="props.column.typeClassName" :context="props.context" v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword :multiple="props.column.multiple === 'YES'" :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }"/>
+  <enum-select :code="props.column.typeClassName" :context="props.context" v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword :multiple="props.column.multiple === 'YES'"
+               :style="{ width: (props.column.width ? props.column.width : 160) + 'px' }"/>
 </template>
 
 <script lang="ts" setup>
