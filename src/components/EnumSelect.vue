@@ -1,6 +1,6 @@
 <template>
   <el-select :loading="loading" >
-    <el-option v-for="item in enumValues" :key="item.value" :label="item.label" :value="item.value" />
+    <el-option v-for="item in enumValues" :key="item.value" :label="item.displayName" :value="item.value" />
   </el-select>
 </template>
 <script lang="ts" setup>

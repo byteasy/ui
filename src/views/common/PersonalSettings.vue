@@ -1,5 +1,7 @@
 <template>
-  <tuna-viewer context="platform" class-name="com.tuna.platform.vo.PersonalSettingsVO" :entity="user" :title="$t('user.basic')"/>
+  <tuna-viewer context="platform" class-name="com.tuna.platform.vo.PersonalSettingsVO" :entity="user" :title="$t('user.basic')">
+    <template v-slot:view_avatar="scope"> <el-avatar shape="square" :size="100" fit="scale-down" :src="scope.value" /> </template>
+  </tuna-viewer>
 </template>
 
 <script setup lang="ts">

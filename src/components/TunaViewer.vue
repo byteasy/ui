@@ -1,16 +1,28 @@
 <template>
   <el-descriptions border>
     <template #extra>
-      <el-button type="primary">{{ $t('table.edit') }}</el-button>
+      <slot name="extra">
+        <el-button type="primary" @click="onClick">{{ $t('table.edit') }}</el-button>
+      </slot>
     </template>
-    <el-descriptions-item v-for="col in columns" :key="col.name" :label="col.displayName">{{
-      props.entity[col.name]
-    }}</el-descriptions-item>
+    <template v-for="col in columns" :key="col.name">
+      <el-descriptions-item :label="col.displayName" v-if="col.isShow === 'YES'">
+        <slot :name="'view_' + col.name" :value="props.entity[col.name]">
+          <enum-viewer
+            v-if="col.type === 'ENUM'"
+            :prop="props.entity[col.name]"
+            :context="props.context"
+            :code="col.typeClassName"
+          />
+          <span v-else>{{ props.entity[col.name] }}</span>
+        </slot>
+      </el-descriptions-item>
+    </template>
   </el-descriptions>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { defineEmits, ref } from 'vue'
 import { getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -23,6 +35,7 @@ const props = defineProps<{
   entity: any
   onEditClick?: (data?: unknown) => void
 }>()
+const emit = defineEmits(['editClick'])
 
 const columns = ref([])
 
@@ -34,6 +47,10 @@ getEntitySchema(props.context, props.className)
     console.log(error)
     ElMessage.error(t('table.loadingTableColumnsError'))
   })
+
+function onClick() {
+  emit('editClick', props.entity)
+}
 </script>
 
 <style scoped></style>

@@ -4,8 +4,8 @@
       ref="passwordFormRef"
       :model="passwordForm"
       :rules="passwordRules"
-      label-width="100px"
-      label-position="left"
+      label-position="right"
+      :label-width="160"
       class="password-form"
     >
       <!-- 原始密码 -->

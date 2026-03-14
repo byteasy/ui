@@ -38,7 +38,7 @@ onMounted(() => {
 
 function parseLabel(value) {
   if (enumMap.value[XEUtils.toString(value)] !== undefined) {
-    return enumMap.value[XEUtils.toString(value)]['label']
+    return enumMap.value[XEUtils.toString(value)]['displayName']
   } else {
     return value
   }

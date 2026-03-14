@@ -37,6 +37,7 @@
       </template>
     </el-form>
     <div class="w-full flex-none">
+      <el-divider />
       <div class="flex-row align-items-start">
         <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
           t('save')
