@@ -66,6 +66,10 @@ export default defineConfig(({ mode }) => {
         '/platform/papi': {
           target: 'http://localhost:80',
           changeOrigin: true,
+        },
+        '/platform/avatar/*': {
+          target: 'http://localhost:80',
+          changeOrigin: true,
         }
       }
     },

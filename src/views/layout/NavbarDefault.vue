@@ -5,12 +5,14 @@ import whiteLogo from '@/assets/img/white-logo.png'
 import defaultAvatar from '@/assets/img/defaultAvatar.png'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 const appSettingsStore = useAppSettingsStore()
 const { theme: storeTheme } = storeToRefs(appSettingsStore)
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
+import { getLoginPersonalInfo } from '@/api/common/user'
 
+const loginUser = ref({})
 // 创建一个中转计算属性
 const theme = computed({
   get: () => storeTheme.value ?? 'light', // 读取时：如果 store 里是 null，返回 'light'
@@ -30,6 +32,12 @@ function onSettingsClick(name) {
 function onLogoutClick() {
   window.location.href = '/platform/logout'
 }
+
+onMounted(() => {
+  getLoginPersonalInfo().then((rsp) => {
+    loginUser.value = rsp.data
+  })
+})
 </script>
 
 <template>
@@ -51,22 +59,17 @@ function onLogoutClick() {
       /></el-icon>
       <el-dropdown :placement="'bottom-start'">
         <div class="el-dropdown-link">
-          <div class="flex-row">
-            <el-avatar
-              :size="45"
-              src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-            >
+          <div class="flex-row align-items-center">
+            <el-avatar :size="45" :src="loginUser.avatar">
               <img :src="defaultAvatar" />
             </el-avatar>
-            <div class="flex-column ml-2" style="width: 100px">
-              <span
-                style="color: var(--my-text-color); font-size: var(--my-font-size)"
-                class="font-bold-700"
-                >王手和</span
-              >
-              <span style="color: var(--my-text-gray); font-size: var(--my-font-size)" class="mt-1"
-                >信息化管理部</span
-              >
+            <div class="flex-column ml-2" >
+              <el-text style="color: var(--my-text-color); font-size: var(--my-font-size)" class="font-bold-700" truncated>
+                {{ loginUser.realName }}
+              </el-text>
+              <el-text style="color: var(--my-text-gray); font-size: var(--my-font-size)" class="mt-1" truncated>
+                {{ loginUser.orgName }}
+              </el-text>
             </div>
           </div>
         </div>
