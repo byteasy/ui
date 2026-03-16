@@ -53,7 +53,6 @@
 .flex-row {
   display: inline-flex; /* 改为 inline-flex */
   flex-direction: row;
-  align-items: center;
 }
 
 .flex-column {
@@ -80,6 +79,22 @@
 
 .align-items-start {
   align-items: flex-start !important;
+}
+
+.align-items-end {
+  align-items: flex-end !important;
+}
+
+.justify-content-start {
+  justify-content: start !important; /* 水平方向居左（新增核心属性） */
+}
+
+.justify-content-center {
+  justify-content: center !important; /* 水平方向居中（新增核心属性） */
+}
+
+.justify-content-right{
+  justify-content: right !important;/* 水平方向居左（新增核心属性） */
 }
 
 .h-full {

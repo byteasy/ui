@@ -3,42 +3,46 @@
     <el-form
       :inline="true"
       ref="refForm"
-      label-width="auto"
+      label-width="200"
       label-position="right"
+      class="w-full"
       :model="formValue"
     >
-      <template v-for="col in props.columns" :key="col.name">
-        <slot :name="'formItem_' + col.name" :column="col">
-          <el-form-item
-            :label="col.displayName"
-            v-if="col.isForm === 'YES'"
-            :prop="col.name"
-            :required="col.isRequire === 'YES'"
-            :rules="[
-              {
-                validator: (rule, value, callback) => {
-                  validateColumnRule(col, rule, value, callback)
+      <el-space wrap direction="horizontal" style="width: 100%">
+        <template v-for="col in props.columns" :key="col.name">
+          <slot :name="'formItem_' + col.name" :column="col">
+            <el-form-item
+              :label="col.displayName"
+              v-if="col.isForm === 'YES'"
+              :prop="col.name"
+              :required="col.isRequire === 'YES'"
+              :rules="[
+                {
+                  validator: (rule, value, callback) => {
+                    validateColumnRule(col, rule, value, callback)
+                  },
+                  trigger: 'blur',
                 },
-                trigger: 'blur',
-              },
-            ]"
-          >
-            <tuna-form-field
-              :column="col"
-              :context="props.context"
-              :placeholder="col.displayName"
-              clearable
-              :disabled="props.readonly"
-              v-model="formValue[col.name]"
-              :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
-            />
-          </el-form-item>
-        </slot>
-      </template>
+              ]"
+            >
+              <tuna-form-field
+                :column="col"
+                :context="props.context"
+                :placeholder="col.displayName"
+                clearable
+                :disabled="props.readonly"
+                v-model="formValue[col.name]"
+                style="width: 300px"
+                :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
+              />
+            </el-form-item>
+          </slot>
+        </template>
+      </el-space>
     </el-form>
-    <div class="w-full flex-none">
+    <div class="w-full flex-column p-3">
       <el-divider />
-      <div class="flex-row align-items-start">
+      <div class="flex-row w-full justify-content-center">
         <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
           t('save')
         }}</el-button>
