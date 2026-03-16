@@ -22,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { defineEmits, ref } from 'vue'
 import { getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'

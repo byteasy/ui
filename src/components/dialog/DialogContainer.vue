@@ -23,7 +23,7 @@
         :size="item.width"
         :resizable="item.draggable"
         :close-on-click-modal="item.closeOnClickModal"
-        body-class="my-bg-color-blank"
+        body-class="my-bg-color-blank p-0"
         @close="handleClose(item.id)"
         :direction="item.direction"
       >

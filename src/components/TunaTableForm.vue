@@ -40,14 +40,15 @@
         </template>
       </el-space>
     </el-form>
-    <div class="w-full flex-column p-3">
-      <el-divider />
-      <div class="flex-row w-full justify-content-center">
-        <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
-          t('save')
-        }}</el-button>
-        <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
-      </div>
+    <div class="w-full flex-column">
+      <el-affix position="bottom" class="w-full">
+        <div class="flex-row w-full justify-content-center p-3">
+          <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
+            t('save')
+          }}</el-button>
+          <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
+        </div>
+      </el-affix>
     </div>
   </div>
 </template>
