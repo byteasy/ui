@@ -34,12 +34,12 @@ function onLogoutClick() {
 
 <template>
   <div class="navbar-layout my-bg-color-page">
-    <div class="flex-row">
+    <div class="flex-row align-items-center">
       <img :src="theme === 'light' ? blackLogo : whiteLogo" class="system_logo" alt="" />
       <span class="system-title">-{{ t('title') }}</span>
       <top-menu />
     </div>
-    <div class="flex-row">
+    <div class="flex-row align-items-center">
       <el-input
         v-model="searchValue"
         placeholder="Please Input"

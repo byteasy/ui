@@ -51,7 +51,7 @@ function onGroupClick(group) {
 <template>
   <el-popover placement="bottom-end" :width="popoverWidth" ref="refPopWindow">
     <template #reference>
-      <div class="flex-row ml-5 app-text-color my-font-size-lg" style="cursor:pointer">
+      <div class="flex-row align-items-center ml-5 app-text-color my-font-size-lg" style="cursor:pointer">
         系统设置<el-icon class="ml-2"><ArrowDown /></el-icon>
       </div>
     </template>
