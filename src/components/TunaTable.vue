@@ -1,7 +1,7 @@
 <template>
   <tuna-container>
     <template v-slot:topBar>
-      <el-form :inline="true">
+      <el-form :inline="true" v-if="props.queryFormVisible !== 0">
         <slot name="formQuery">
           <template v-for="col in tableColumns" :key="col.name">
             <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
@@ -36,9 +36,17 @@
     <template v-slot:mainContent>
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <el-table :height="height" :data="tableData.records" fix scrollbar-always-on>
-            <slot name="columnsSlot">
-              <template v-for="col in tableColumns" :key="col.name">
+          <el-table
+            :height="height"
+            :data="tableData.records"
+            fix
+            scrollbar-always-on
+            @row-dblclick="onEdit"
+            @row-click="onTableRowClick"
+            v-loading="loading"
+          >
+            <template v-for="col in tableColumns" :key="col.name">
+              <slot :name="'columnsSlot_' + col.name" :column="col">
                 <el-table-column
                   :align="
                     col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
@@ -71,15 +79,16 @@
                   :min-width="col.width === 0 ? undefined : col.width"
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
                 />
-              </template>
-            </slot>
+              </slot>
+            </template>
             <el-table-column
               fixed="right"
               :label="$t('table.operation')"
+              v-if="props.operationColumnWidth !== 0"
               :min-width="props.operationColumnWidth ? props.operationColumnWidth : 160"
             >
               <template #default="scope">
-                <slot name="operationSlot">
+                <slot name="operationSlot" :row="scope.row">
                   <el-button link type="primary" @click="onView(scope.row)">{{
                     t('table.view')
                   }}</el-button>
@@ -106,7 +115,7 @@
           </el-table> </template
       ></el-auto-resizer>
     </template>
-    <template v-slot:bottomBar>
+    <template v-slot:bottomBar v-if="props.paginationVisible !== 0">
       <el-pagination
         background
         layout="total, sizes, prev, pager, next"
@@ -119,7 +128,15 @@
 </template>
 
 <script lang="ts" setup>
-import { type Component, onBeforeMount, onMounted, ref, defineExpose, nextTick } from 'vue'
+import {
+  type Component,
+  onBeforeMount,
+  onMounted,
+  ref,
+  defineExpose,
+  nextTick,
+  defineEmits,
+} from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
 import { doHttpDelete, doHttpGet, getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
@@ -139,7 +156,11 @@ const props = defineProps<{
   formComponent?: Component
   formWidth?: string | number
   operationColumnWidth?: number
+  paginationVisible?: number
+  queryFormVisible?: number
 }>()
+
+const emit = defineEmits(['rowClick'])
 
 const tableColumns = ref([])
 const tableData = ref({ total: '0' })
@@ -268,11 +289,17 @@ function getFormWidth() {
   return props.formWidth !== undefined ? props.formWidth : '50%'
 }
 
+function onTableRowClick(row) {
+  emit('rowClick', row)
+}
+
 defineExpose({
   queryParam,
   tableColumns,
   tableData,
   loading,
   refresh,
+  onAdd,
+  onDelete
 })
 </script>

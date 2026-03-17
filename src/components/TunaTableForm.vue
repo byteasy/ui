@@ -47,9 +47,10 @@
         </template>
       </el-space>
     </el-form>
+    <el-divider />
     <div class="w-full flex-column">
       <el-affix position="bottom" class="w-full">
-        <div class="flex-row w-full justify-content-center p-3">
+        <div class="flex-row w-full justify-content-center pb-2">
           <slot name="footerButton">
             <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
                 t('save')
