@@ -15,8 +15,11 @@
               :label="col.displayName"
               v-if="col.isForm === 'YES'"
               :prop="col.name"
-              :required="col.isRequire === 'YES'"
               :rules="[
+                {
+                  required: col.isRequire === 'YES',
+                  message: col.displayName + t('validate.required'),
+                },
                 {
                   validator: (rule, value, callback) => {
                     validateColumnRule(col, rule, value, callback)
@@ -25,16 +28,20 @@
                 },
               ]"
             >
-              <tuna-form-field
-                :column="col"
-                :context="props.context"
-                :placeholder="col.displayName"
-                clearable
-                :disabled="props.readonly"
-                v-model="formValue[col.name]"
-                style="width: 300px"
-                :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
-              />
+              <slot :name="'formItemField_' + col.name" :row="formValue" :column="col">
+                <tuna-form-field
+                  :column="col"
+                  :context="props.context"
+                  :placeholder="col.displayName"
+                  clearable
+                  :disabled="props.readonly"
+                  v-model="formValue[col.name]"
+                  style="width: 300px"
+                  :align="
+                    col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
+                  "
+                />
+              </slot>
             </el-form-item>
           </slot>
         </template>
@@ -43,10 +50,12 @@
     <div class="w-full flex-column">
       <el-affix position="bottom" class="w-full">
         <div class="flex-row w-full justify-content-center p-3">
-          <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
-            t('save')
-          }}</el-button>
-          <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
+          <slot name="footerButton">
+            <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
+                t('save')
+              }}</el-button>
+            <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
+          </slot>
         </div>
       </el-affix>
     </div>

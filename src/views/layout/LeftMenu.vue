@@ -32,7 +32,10 @@
           <span class="my-font-size-md">{{ $t('platform') }}</span>
         </template>
         <el-menu-item index="/platform/baseCommon/resourceGroups">
-          <span class="my-font-size">菜单分组</span>
+          <span class="my-font-size">资源分组</span>
+        </el-menu-item>
+        <el-menu-item index="/platform/baseCommon/resources">
+          <span class="my-font-size">平台资源</span>
         </el-menu-item>
         <el-menu-item index="/platform/baseCommon/schemaDefines">
           <span class="my-font-size">表单设置</span>

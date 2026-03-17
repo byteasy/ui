@@ -5,7 +5,7 @@
         <slot name="formQuery">
           <template v-for="col in tableColumns" :key="col.name">
             <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
-              <slot :name="'formItem_' + col.name" :column="col">
+              <slot :name="'formItemField_' + col.name" :column="col" :queryParam="queryParam">
                 <tuna-query-field
                   :column="col"
                   :context="props.context"
@@ -19,7 +19,7 @@
                 />
               </slot>
             </el-form-item>
-            <slot name="formItemExt" />
+            <slot name="formItemExt" :queryParam="queryParam" />
           </template>
           <el-form-item>
             <slot name="formQueryButton">
@@ -73,7 +73,11 @@
                 />
               </template>
             </slot>
-            <el-table-column fixed="right" :label="$t('table.operation')" :min-width="props.operationColumnWidth ? props.operationColumnWidth : 160">
+            <el-table-column
+              fixed="right"
+              :label="$t('table.operation')"
+              :min-width="props.operationColumnWidth ? props.operationColumnWidth : 160"
+            >
               <template #default="scope">
                 <slot name="operationSlot">
                   <el-button link type="primary" @click="onView(scope.row)">{{
@@ -115,7 +119,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type Component, onBeforeMount, onMounted, ref, defineExpose } from 'vue'
+import { type Component, onBeforeMount, onMounted, ref, defineExpose, nextTick } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
 import { doHttpDelete, doHttpGet, getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
@@ -166,6 +170,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
+  mergeQueryParams()
   refresh()
 })
 

@@ -190,7 +190,7 @@ export function validateColumnRule(col: any, rule: any, value: any, callback: an
         return
       }
     }
-    if (value !== undefined && value.length > col.maxLength) {
+    if (value !== null && value !== undefined && value.length > col.maxLength) {
       callback(new Error(col.displayName + t('validate.maxLength') + col.maxLength))
       return
     }

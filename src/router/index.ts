@@ -60,6 +60,10 @@ const routers = [
             component: () => import('../views/platform/resource/ResourceGroupList.vue')
           },
           {
+            path: 'resources',
+            name: 'resources',
+            component: () => import('../views/platform/resource/ResourceList.vue')
+          }, {
             path: 'schemaDefines',
             name: 'schemaDefines',
             component: () => import('../views/platform/schemaDefine/SchemaDefineList.vue')
