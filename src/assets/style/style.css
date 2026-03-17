@@ -122,7 +122,9 @@
   --my-font-size-lg: calc(var(--font-size-base) * 1.286);  /* 18px */
   --my-font-size-xl: calc(var(--font-size-base) * 1.429);  /* 20px */
   --my-font-size-2xl: calc(var(--font-size-base) * 1.571); /* 22px */
+  --el-table-current-row-bg-color: var(--el-color-primary-light-3);
 }
+
 /* 小号字体主题 */
 html.font-small {
   --font-size-base: 12px;
@@ -150,7 +152,7 @@ html.light {
   --my-bg-color: #ffffff !important;
   --my-text-color: black !important;
   --my-text-gray: #939393 !important;
-  --my-bg-menu-item-active-color: #efefef !important;
+  --my-bg-menu-item-active-color: #c5c6c8 !important;
   --my-menu-icon-color: black !important;
 }
 

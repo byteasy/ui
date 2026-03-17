@@ -10,7 +10,7 @@
     >
       <el-space wrap direction="horizontal" style="width: 100%">
         <template v-for="col in props.columns" :key="col.name">
-          <slot :name="'formItem_' + col.name" :column="col">
+          <slot :name="'formItem_' + col.name" :column="col" :props="props">
             <el-form-item
               :label="col.displayName"
               v-if="col.isForm === 'YES'"
@@ -28,7 +28,7 @@
                 },
               ]"
             >
-              <slot :name="'formItemField_' + col.name" :row="formValue" :column="col">
+              <slot :name="'formItemField_' + col.name" :row="formValue" :column="col" :props="props">
                 <tuna-form-field
                   :column="col"
                   :context="props.context"
@@ -51,7 +51,7 @@
     <div class="w-full flex-column">
       <el-affix position="bottom" class="w-full">
         <div class="flex-row w-full justify-content-center pb-2">
-          <slot name="footerButton">
+          <slot name="footerButton" :props="props">
             <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
                 t('save')
               }}</el-button>

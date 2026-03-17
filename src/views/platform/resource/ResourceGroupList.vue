@@ -51,7 +51,14 @@
         class-name="com.tuna.platform.entity.ResourceGroup"
         :query-params="{ ascColumns: ['showOrder'] }"
         class="pl-2"
+        :form-component="ResourceGroupForm"
       >
+        <template v-slot:formQueryButton>
+          <el-button type="primary" icon="Search" @click="refTable.refresh()">{{
+              $t('search')
+            }}</el-button>
+          <el-button type="primary" @click="onGroupAddClick" icon="Plus">{{ $t('add') }}</el-button>
+        </template>
         <template v-slot:table_column_showOrder="scope">
           <el-input-number
             v-model="scope.row.showOrder"
@@ -71,10 +78,12 @@ import { ref } from 'vue'
 import { doHttpPost } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-const { t } = useI18n() // 表单引用
+import ResourceGroupForm from '@/views/platform/resource/ResourceGroupForm.vue'
+const { t } = useI18n()
 
 const refTable = ref(null)
 const refTableCategory = ref(null)
+const currentCategory = ref({})
 
 function saveShowOrder(row) {
   doHttpPost('/platform/sapi/resourceGroups', {}, row)
@@ -89,7 +98,12 @@ function saveShowOrder(row) {
 }
 
 const onCategoryTableRowClick = (row) => {
+  currentCategory.value = row
   refTable.value.queryParam.categoryId = row.id
   refTable.value.refresh()
+}
+
+const onGroupAddClick = () => {
+  refTable.value.onAdd({ categoryId: currentCategory.value.id })
 }
 </script>

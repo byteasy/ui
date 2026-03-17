@@ -1,12 +1,12 @@
 <template>
   <tuna-table-form>
     <template v-slot:formItemField_groupId="scope">
-      <el-select v-model="scope.row.groupId" filterable style="width: 300px;" :placeholder="scope.column.displayName">
+      <el-select v-model="scope.row.groupId" filterable style="width: 300px;" :placeholder="scope.column.displayName" :disabled="scope.props.readonly">
         <el-option v-for="item in parentResourceGroups" :key="item.id" :label="item.name" :value="item.id"/>
       </el-select>
     </template>
     <template v-slot:formItemField_parentId="scope">
-      <el-select v-model="scope.row.parentId" filterable style="width: 300px;" :placeholder="scope.column.displayName">
+      <el-select v-model="scope.row.parentId" filterable style="width: 300px;" :placeholder="scope.column.displayName" :disabled="scope.props.readonly">
         <el-option v-for="item in parentResources" :key="item.id" :label="item.name" :value="item.id"/>
       </el-select>
     </template>

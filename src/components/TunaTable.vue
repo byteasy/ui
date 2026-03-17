@@ -44,6 +44,7 @@
             @row-dblclick="onEdit"
             @row-click="onTableRowClick"
             v-loading="loading"
+            highlight-current-row
           >
             <template v-for="col in tableColumns" :key="col.name">
               <slot :name="'columnsSlot_' + col.name" :column="col">
@@ -240,11 +241,11 @@ function onView(row) {
     },
   )
 }
-function onAdd() {
+function onAdd(row) {
   const [lastRoute] = route.matched.slice(-1)
   open(
     getFormComponent(), // 要显示的组件
-    { columns: tableColumns.value, url: props.baseUrl, context: props.context }, // 传给组件的 props
+    { columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row }, // 传给组件的 props
     {
       title: t('add') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
       width: getFormWidth(),

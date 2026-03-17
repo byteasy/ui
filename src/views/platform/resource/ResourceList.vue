@@ -1,5 +1,6 @@
 <template>
   <tuna-table
+    ref="refTable"
     base-url="/platform/sapi/resources"
     context="platform"
     class-name="com.tuna.platform.entity.Resource"
@@ -10,8 +11,10 @@
       <el-select
         v-model="scope.queryParam.groupId"
         filterable
+        clearable
         style="width: 200px"
         :placeholder="scope.column.displayName"
+        @change="refTable.refresh()"
       >
         <el-option
           v-for="item in parentResources"
@@ -29,6 +32,7 @@ import ResourceForm from '@/views/platform/resource/ResourceForm.vue'
 import { onMounted, ref } from 'vue'
 import { doHttpGet } from '@/api/common/platform'
 
+const refTable = ref(null)
 const parentResources = ref([])
 onMounted(() => {
   doHttpGet('/platform/sapi/resourceGroups', {
