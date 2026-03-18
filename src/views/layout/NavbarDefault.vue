@@ -76,31 +76,31 @@ onMounted(() => {
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="onSettingsClick('personalInformation')">
-              <div class="flex-row">
+              <div class="flex-row align-items-center">
                 <IconLocalAccount style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('personalInformation') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item @click="onSettingsClick('passwordSettings')">
-              <div class="flex-row">
+              <div class="flex-row align-items-center">
                 <IconLocalPassword style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('passwordSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item divided @click="onSettingsClick('appearanceSettings')">
-              <div class="flex-row">
+              <div class="flex-row align-items-center">
                 <IconLocalShowSettings style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('appearanceSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item @click="onSettingsClick('languageSettings')">
-              <div class="flex-row">
+              <div class="flex-row align-items-center">
                 <IconLocalLanguage style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('languageSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item divided @click="onLogoutClick()">
-              <div class="flex-row">
+              <div class="flex-row align-items-center">
                 <IconLocalExit style="width: 0.8rem; height: 0.8rem" />
                 <span class="ml-2">{{ t('exit') }}</span>
               </div>

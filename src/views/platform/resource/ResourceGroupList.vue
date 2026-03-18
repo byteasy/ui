@@ -10,6 +10,7 @@
         :operation-column-width="0"
         :pagination-visible="0"
         :query-form-visible="0"
+        :form-component="ResourceCategoryForm"
         @row-click="onCategoryTableRowClick"
       >
         <template v-slot:columnsSlot_name="scope">
@@ -83,6 +84,7 @@ import { ref } from 'vue'
 import { doHttpPost } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import ResourceCategoryForm from '@/views/platform/resource/ResourceCategoryForm.vue'
 import ResourceGroupForm from '@/views/platform/resource/ResourceGroupForm.vue'
 const { t } = useI18n()
 
