@@ -7,6 +7,12 @@
     :form-component="ResourceForm"
     :query-params="{ ascColumns: ['showOrder'] }"
   >
+    <template v-slot:table_column_groupId="scope">
+      {{ scope.row.groupName }}
+    </template>
+    <template v-slot:table_column_parentId="scope">
+      {{ scope.row.parentName }}
+    </template>
     <template v-slot:formItemField_groupId="scope">
       <el-select
         v-model="scope.queryParam.groupId"

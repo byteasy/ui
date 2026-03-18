@@ -26,18 +26,23 @@
               </div>
             </template>
             <template #default="scope">
-              {{ scope.row.name }}
-              <el-popconfirm
-                :confirm-button-text="$t('ok')"
-                :cancel-button-text="$t('cancel')"
-                :title="$t('deleteWarn')"
-                :hide-after="10"
-                @confirm="refTableCategory.onDelete(scope.row)"
-              >
-                <template #reference>
-                  <el-button icon="Delete" type="danger" text circle class="ml-3" />
-                </template>
-              </el-popconfirm>
+              <div class="flex-row align-items-center w-full">
+                <div class="flex-grow">{{ scope.row.name }}</div>
+                <div class="flex-none">
+                  <el-popconfirm
+                  :confirm-button-text="$t('ok')"
+                  :cancel-button-text="$t('cancel')"
+                  :title="$t('deleteWarn')"
+                  :hide-after="10"
+                  @confirm="refTableCategory.onDelete(scope.row)"
+                >
+                  <template #reference>
+                    <el-button icon="Delete" type="danger" text circle class="ml-3" />
+                  </template>
+                </el-popconfirm>
+                </div>
+              </div>
+
             </template>
           </el-table-column>
         </template>

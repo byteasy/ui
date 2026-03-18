@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { doHttpGet } from '@/api/common/platform'
 
 const popoverWidth = ref(500)
 const refPopWindow = ref()
-const currentGroup = ref('')
 const router = useRouter()
+
+const menuEntries = ref([])
+const groupEntries = ref([])
 
 const calculateWidth = () => {
   const viewportWidth = window.innerWidth
@@ -31,42 +34,49 @@ const calculateWidth = () => {
 onMounted(() => {
   calculateWidth()
   window.addEventListener('resize', calculateWidth)
+
+  doHttpGet('/platform/sapi/resourceCategorys/topMenu').then((res) => {
+    menuEntries.value = res.data
+  })
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', calculateWidth)
 })
 
-function onItemClick(url) {
-  console.log('1111111111')
-  router.push('/app/system/account/index')
+function onItemClick(group) {
+  router.push(group.router)
   refPopWindow.value.hide()
 }
 
-function onGroupClick(group) {
-  currentGroup.value = group
-  console.log(group)
+function onGroupClick(category) {
+  groupEntries.value = category.resourceGroups
 }
 </script>
 <template>
   <el-popover placement="bottom-end" :width="popoverWidth" ref="refPopWindow">
     <template #reference>
-      <div class="flex-row align-items-center ml-5 app-text-color my-font-size-lg" style="cursor:pointer">
-        系统设置<el-icon class="ml-2"><ArrowDown /></el-icon>
+      <div
+        class="flex-row align-items-center ml-5 app-text-color my-font-size-lg"
+        style="cursor: pointer"
+      >
+        <el-icon :size="20"><Menu /></el-icon>
       </div>
     </template>
 
     <!-- 父容器固定高度，取消全局滚动，改为内部局部滚动 -->
     <div class="flex-row nav-container">
-
       <!-- 左侧：独立滚动区 -->
       <div class="item-first custom-scrollbar">
         <div class="menu-list">
           <!-- 模拟大量数据测试滚动 -->
-          <div v-for="item in ['企业战略', '人力资源', '产品研发', '供应链', '营销', '客服', '法务', '车联网', '财务管理', '资产管理']"
-               :key="item"
-               class="group-one" @mouseenter="onGroupClick(item)">
-            {{ item }}
+          <div
+            v-for="item in menuEntries"
+            :key="item"
+            class="group-one"
+            @mouseenter="onGroupClick(item)"
+          >
+            {{ item.name }}
           </div>
         </div>
       </div>
@@ -75,20 +85,19 @@ function onGroupClick(group) {
       <div class="item-second custom-scrollbar">
         <div class="content-wrapper">
           <el-space wrap alignment="normal" size="large">
-            <div class="flex-column align-items-start p-3" v-if="currentGroup === '企业战略'">
-              <div class="my-font-size-md font-bold mb-2">供应商</div>
-              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>
-              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">供应商子项 {{n}}</div>
-            </div>
-            <div class="flex-column align-items-start p-3" v-if="currentGroup === '人力资源'">
-              <div class="my-font-size-md font-bold mb-2">人力资源</div>
-              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>
-              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">人力资源 {{n}}</div>
+            <!--            <div class="flex-column align-items-start p-3">-->
+            <!--              <div class="my-font-size-md font-bold mb-2">供应商</div>-->
+            <!--              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>-->
+            <!--              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">供应商子项 {{n}}</div>-->
+            <!--            </div>-->
+            <div class="flex-column align-items-start p-3">
+              <div v-for="item in groupEntries" :key="item.code" class="my-font-size group-tow-child" @click="onItemClick(item)">
+                {{ item.name }}
+              </div>
             </div>
           </el-space>
         </div>
       </div>
-
     </div>
   </el-popover>
 </template>
@@ -181,4 +190,3 @@ function onGroupClick(group) {
   cursor: pointer;
 }
 </style>
-
