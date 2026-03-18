@@ -2,11 +2,15 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
+import SubAppContainer from '@/views/layout/SubAppContainer.vue'
+import WebLayout from '@/views/layout/WebLayout.vue'
+
+const router = useRouter()
 
 const popoverWidth = ref(500)
 const refPopWindow = ref()
-const router = useRouter()
 
+const quickMenus = ref([])
 const menuEntries = ref([])
 const groupEntries = ref([])
 
@@ -36,7 +40,32 @@ onMounted(() => {
   window.addEventListener('resize', calculateWidth)
 
   doHttpGet('/platform/sapi/resourceCategorys/topMenu').then((res) => {
-    menuEntries.value = res.data
+    menuEntries.value = res.data.resourceCategoryVOS
+    quickMenus.value = res.data.resourceGroups
+
+    for (let i = 0; i < menuEntries.value.length; i++) {
+      const entry = menuEntries.value[i]
+      for (let j = 0; j < entry.resourceGroups.length; j++) {
+        const group = entry.resourceGroups[j]
+        const path = group.router
+        const arrs = (path || '').split('/')
+        console.log('path', path, arrs)
+        const dynamicRoute = {
+          path: '/' + arrs[1],
+          component: () => WebLayout,
+          redirect: router,
+          children: [
+            {
+              path: arrs[2] + '/:path*',
+              name: group.code,
+              component: () => SubAppContainer,
+            }
+          ]
+        }
+        router.addRoute(dynamicRoute)
+        console.log('dynamicRoute', dynamicRoute)
+      }
+    }
   })
 })
 
@@ -54,52 +83,57 @@ function onGroupClick(category) {
 }
 </script>
 <template>
-  <el-popover placement="bottom-end" :width="popoverWidth" ref="refPopWindow">
-    <template #reference>
-      <div
-        class="flex-row align-items-center ml-5 app-text-color my-font-size-lg"
-        style="cursor: pointer"
-      >
-        <el-icon :size="20"><Menu /></el-icon>
-      </div>
-    </template>
+  <div class="flex-row align-items-center">
+    <el-text v-for="item in quickMenus" :key="item.code" class="app-text-color ml-5" @click="onItemClick(item)"> {{ item.name }}</el-text>
+    <el-popover placement="bottom-end" :width="popoverWidth" ref="refPopWindow">
+      <template #reference>
+        <div
+          class="flex-row align-items-center ml-5 app-text-color my-font-size-lg"
+          style="cursor: pointer"
+        >
+          <el-icon :size="20"><Menu /></el-icon>
+        </div>
+      </template>
 
-    <!-- 父容器固定高度，取消全局滚动，改为内部局部滚动 -->
-    <div class="flex-row nav-container">
-      <!-- 左侧：独立滚动区 -->
-      <div class="item-first custom-scrollbar">
-        <div class="menu-list">
-          <!-- 模拟大量数据测试滚动 -->
-          <div
-            v-for="item in menuEntries"
-            :key="item"
-            class="group-one"
-            @mouseenter="onGroupClick(item)"
-          >
-            {{ item.name }}
+      <!-- 父容器固定高度，取消全局滚动，改为内部局部滚动 -->
+      <div class="flex-row nav-container">
+        <!-- 左侧：独立滚动区 -->
+        <div class="item-first custom-scrollbar">
+          <div class="menu-list">
+            <!-- 模拟大量数据测试滚动 -->
+            <div
+              v-for="item in menuEntries"
+              :key="item"
+              class="group-one"
+              @mouseenter="onGroupClick(item)"
+            >
+              {{ item.name }}
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：独立滚动区 -->
+        <div class="item-second custom-scrollbar">
+          <div class="content-wrapper">
+            <el-space wrap alignment="normal" size="large">
+              <!--            <div class="flex-column align-items-start p-3">-->
+              <!--              <div class="my-font-size-md font-bold mb-2">供应商</div>-->
+              <!--              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>-->
+              <!--              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">供应商子项 {{n}}</div>-->
+              <!--            </div>-->
+              <div class="flex-column align-items-start p-3">
+                <div class="my-font-size-md font-bold mb-2">常用</div>
+                <div v-for="item in groupEntries" :key="item.code" class="my-font-size group-tow-child" @click="onItemClick(item)">
+                  {{ item.name }}
+                </div>
+              </div>
+            </el-space>
           </div>
         </div>
       </div>
+    </el-popover>
+  </div>
 
-      <!-- 右侧：独立滚动区 -->
-      <div class="item-second custom-scrollbar">
-        <div class="content-wrapper">
-          <el-space wrap alignment="normal" size="large">
-            <!--            <div class="flex-column align-items-start p-3">-->
-            <!--              <div class="my-font-size-md font-bold mb-2">供应商</div>-->
-            <!--              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>-->
-            <!--              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">供应商子项 {{n}}</div>-->
-            <!--            </div>-->
-            <div class="flex-column align-items-start p-3">
-              <div v-for="item in groupEntries" :key="item.code" class="my-font-size group-tow-child" @click="onItemClick(item)">
-                {{ item.name }}
-              </div>
-            </div>
-          </el-space>
-        </div>
-      </div>
-    </div>
-  </el-popover>
 </template>
 
 <style scoped>
