@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { useAppSettingsStore } from '@/stores/appSettings.js'
 
 axios.defaults.withCredentials = true
 
 // 创建axios实例
 const service = axios.create({
-  timeout: 15000
+  timeout: 15000,
 })
 
 // request拦截器
@@ -14,15 +15,17 @@ service.interceptors.request.use(
     if (import.meta.env.VITE_TEST_TOKEN_ENABLE === 'true') {
       config.headers['x-userinfo'] = import.meta.env.VITE_TEST_TOKEN
     }
+    const appSettingsStore = useAppSettingsStore()
+    config.headers['accept-language'] = appSettingsStore.lang + 'q=0.9,en;q=0.8'
     return config
   },
   (error) => {
     ElMessage({
       message: error.message,
-      type: 'error'
+      type: 'error',
     })
     return Promise.reject(error)
-  }
+  },
 )
 // respone拦截器
 service.interceptors.response.use(
@@ -34,7 +37,7 @@ service.interceptors.response.use(
     if (res !== undefined && res.status !== undefined && res.status !== 200) {
       ElMessage({
         message: res.description,
-        type: 'error'
+        type: 'error',
       })
       return Promise.reject(res)
     } else {
@@ -80,10 +83,10 @@ service.interceptors.response.use(
     }
     ElMessage({
       message: error.message,
-      type: 'error'
+      type: 'error',
     })
     return Promise.reject(error)
-  }
+  },
 )
 
 export default service

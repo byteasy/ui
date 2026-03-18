@@ -67,6 +67,10 @@ const routers = [
             path: 'schemaDefines',
             name: 'schemaDefines',
             component: () => import('../views/platform/schemaDefine/SchemaDefineList.vue')
+          }, {
+            path: 'i18nDefines',
+            name: 'i18nDefines',
+            component: () => import('../views/platform/i18n/I18nDefineList.vue')
           },
         ]
       }

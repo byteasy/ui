@@ -40,6 +40,9 @@
         <el-menu-item index="/platform/baseCommon/schemaDefines">
           <span class="my-font-size">表单设置</span>
         </el-menu-item>
+        <el-menu-item index="/platform/baseCommon/i18nDefines">
+          <span class="my-font-size">国际翻译</span>
+        </el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>
