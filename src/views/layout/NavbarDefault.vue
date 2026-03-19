@@ -30,7 +30,7 @@ function onSettingsClick(name) {
 }
 
 function onLogoutClick() {
-  window.location.href = '/platform/logout'
+  window.location.href = '/platformSvr/logout'
 }
 
 onMounted(() => {
@@ -42,14 +42,18 @@ onMounted(() => {
 
 <template>
   <div class="navbar-layout my-bg-color-page">
-    <div class="flex-row align-items-center flex-grow">
-      <img :src="theme === 'light' ? blackLogo : whiteLogo" class="system_logo" alt="" />
-      <!--      <span class="system-title">-{{ t('title') }}</span>-->
-      <div class="flex-row flex-grow align-items-center justify-content-center">
+    <div class="flex-row align-items-center flex-grow-2">
+      <div class="flex-row flex-grow align-items-center justify-content-start">
+        <img :src="theme === 'light' ? blackLogo : whiteLogo" class="system_logo" alt="" />
+        <!--      <span class="system-title">-{{ t('title') }}</span>-->
+      </div>
+      <div class="flex-row flex-grow align-items-center justify-content-start">
         <top-menu />
       </div>
     </div>
-    <div class="flex-row align-items-center">
+    <div class="flex-row align-items-center flex-grow justify-content-end">
+      <div class="flex-row align-items-center">
+
       <el-input
         v-model="searchValue"
         placeholder="Please Input"
@@ -110,6 +114,8 @@ onMounted(() => {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+
+      </div>
     </div>
   </div>
 </template>

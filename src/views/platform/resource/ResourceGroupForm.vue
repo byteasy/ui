@@ -29,7 +29,7 @@
   const resourceCategorys = ref([])
 
   onMounted(() => {
-    doHttpGet('/platform/sapi/resourceCategorys', { current: 1, size: 10000, ascColumns: ['showOrder'] }).then((res) => {
+    doHttpGet('/platformSvr/sapi/resourceCategorys', { current: 1, size: 10000, ascColumns: ['showOrder'] }).then((res) => {
       resourceCategorys.value = res.data.records
     })
   })

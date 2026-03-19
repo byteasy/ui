@@ -2,7 +2,7 @@ import request from '../../request'
 
 export function getUsers(params) {
   return request({
-    url: '/platform/sapi/users',
+    url: '/platformSvr/sapi/users',
     method: 'get',
     params: params,
   })
@@ -10,7 +10,7 @@ export function getUsers(params) {
 
 export function editPassword(passwordForm) {
   return request({
-    url: '/platform/sapi/users/password',
+    url: '/platformSvr/sapi/users/password',
     method: 'put',
     data: passwordForm,
   })
@@ -18,7 +18,7 @@ export function editPassword(passwordForm) {
 
 export function editPersonalInfo(info) {
   return request({
-    url: '/platform/sapi/users/personalInfo',
+    url: '/platformSvr/sapi/users/personalInfo',
     method: 'put',
     data: info,
   })
@@ -26,7 +26,7 @@ export function editPersonalInfo(info) {
 
 export function getLoginPersonalInfo() {
   return request({
-    url: '/platform/sapi/users/personalInfo',
+    url: '/platformSvr/sapi/users/personalInfo',
     method: 'get',
   })
 }

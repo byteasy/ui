@@ -1,8 +1,8 @@
 <template>
   <tuna-table
     ref="refTable"
-    base-url="/platform/sapi/i18ns"
-    context="platform"
+    base-url="/platformSvr/sapi/i18ns"
+    context="platformSvr"
     class-name="com.tuna.platform.entity.I18n"
     :query-params="{ ascColumns: ['code'] }"
   >

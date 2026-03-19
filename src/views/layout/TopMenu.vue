@@ -39,7 +39,7 @@ onMounted(() => {
   calculateWidth()
   window.addEventListener('resize', calculateWidth)
 
-  doHttpGet('/platform/sapi/resourceCategorys/topMenu').then((res) => {
+  doHttpGet('/platformSvr/sapi/resourceCategorys/topMenu').then((res) => {
     menuEntries.value = res.data.resourceCategoryVOS
     quickMenus.value = res.data.resourceGroups
 
@@ -88,7 +88,7 @@ function onGroupClick(category) {
 <template>
   <div class="flex-row align-items-center">
     <el-text v-for="item in quickMenus" :key="item.code" class="app-text-color ml-5" @click="onItemClick(item)"> {{ item.name }}</el-text>
-    <el-popover placement="bottom-end" :width="popoverWidth" ref="refPopWindow">
+    <el-popover placement="bottom-start" :width="popoverWidth" ref="refPopWindow">
       <template #reference>
         <div
           class="flex-row align-items-center ml-5 app-text-color my-font-size-lg"

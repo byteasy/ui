@@ -84,13 +84,13 @@ const props = defineProps<{
 const emit = defineEmits(['close'])
 
 onMounted(() => {
-  doHttpGet('/platform/sapi/schemas/com.tuna.platform.entity.I18n', {}).then((rsp) => {
+  doHttpGet('/platformSvr/sapi/schemas/com.tuna.platform.entity.I18n', {}).then((rsp) => {
     tableColumns.value = rsp.data
   })
 
   queryParam.value.code = props.code
   loading.value = true
-  doHttpGet('/platform/sapi/i18ns', queryParam.value).then((res) => {
+  doHttpGet('/platformSvr/sapi/i18ns', queryParam.value).then((res) => {
     tableData.value.records = res.data.records
     loading.value = false
   })
@@ -106,7 +106,7 @@ const onAddI18n = () => {
 }
 
 const onSave18n = () => {
-  doHttpPost('/platform/sapi/i18ns/batch', {}, tableData.value.records)
+  doHttpPost('/platformSvr/sapi/i18ns/batch', {}, tableData.value.records)
     .then((res) => {
       ElMessage.success(t('operationSuccess'))
       emit('close')

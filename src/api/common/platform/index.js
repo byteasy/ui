@@ -57,7 +57,7 @@ export function getEntitySchema(serviceContext, enumClassName) {
 
 export function putEntitySchema(className) {
   return request({
-    url: '/platform/sapi/schemaDefines/entity/' + className,
+    url: '/platformSvr/sapi/schemaDefines/entity/' + className,
     method: 'put',
   })
 }

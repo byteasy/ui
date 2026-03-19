@@ -3,8 +3,8 @@
     <el-splitter-panel size="260" :resizable="false">
       <tuna-table
         ref="refTableCategory"
-        base-url="/platform/sapi/resourceCategorys"
-        context="platform"
+        base-url="/platformSvr/sapi/resourceCategorys"
+        context="platformSvr"
         class-name="com.tuna.platform.entity.ResourceCategory"
         :query-params="{ ascColumns: ['showOrder'] }"
         :operation-column-width="0"
@@ -52,8 +52,8 @@
     <el-splitter-panel>
       <tuna-table
         ref="refTable"
-        base-url="/platform/sapi/resourceGroups"
-        context="platform"
+        base-url="/platformSvr/sapi/resourceGroups"
+        context="platformSvr"
         class-name="com.tuna.platform.entity.ResourceGroup"
         :query-params="{ ascColumns: ['showOrder'] }"
         class="pl-2"
@@ -93,7 +93,7 @@ const refTableCategory = ref(null)
 const currentCategory = ref({})
 
 function saveShowOrder(row) {
-  doHttpPost('/platform/sapi/resourceGroups', {}, row)
+  doHttpPost('/platformSvr/sapi/resourceGroups', {}, row)
     .then(() => {
       ElMessage.success(t('operationSuccess'))
       refTable.value.refresh()

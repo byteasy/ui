@@ -1,6 +1,6 @@
 <template>
   <tuna-viewer
-    context="platform"
+    context="platformSvr"
     class-name="com.tuna.platform.vo.PersonalSettingsVO"
     :entity="user"
     :title="$t('user.basic')"
@@ -8,7 +8,7 @@
     <template v-slot:view_avatar="scope">
       <el-avatar shape="square" :size="100" fit="scale-down" :src="scope.value" />
       <el-upload
-        action="/platform/sapi/files"
+        action="/platformSvr/sapi/files"
         v-if="editEnable"
         with-credentials
         :on-success="onAvatarUploadSuccess"
@@ -41,7 +41,7 @@
       />
     </template>
     <template v-slot:view_gender="scope">
-      <enum-select v-if="editEnable" code="com.tuna.enums.Gender" context="platform" v-model="user.gender" clearable/>
+      <enum-select v-if="editEnable" code="com.tuna.enums.Gender" context="platformSvr" v-model="user.gender" clearable/>
     </template>
     <template v-slot:extra>
       <el-button type="primary" @click="editEnable = !editEnable" v-if="!editEnable">{{

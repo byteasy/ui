@@ -57,7 +57,7 @@ const parentResourceGroups = ref([])
 const parentResources = ref([])
 
 onMounted(() => {
-  doHttpGet('/platform/sapi/resourceGroups', {
+  doHttpGet('/platformSvr/sapi/resourceGroups', {
     current: 1,
     size: 10000,
     ascColumns: ['showOrder'],
@@ -65,7 +65,7 @@ onMounted(() => {
     parentResourceGroups.value = res.data.records
   })
 
-  doHttpGet('/platform/sapi/resources', {
+  doHttpGet('/platformSvr/sapi/resources', {
     current: 1,
     size: 10000,
     ascColumns: ['parentId', 'showOrder'],

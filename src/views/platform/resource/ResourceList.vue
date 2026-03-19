@@ -1,8 +1,8 @@
 <template>
   <tuna-table
     ref="refTable"
-    base-url="/platform/sapi/resources"
-    context="platform"
+    base-url="/platformSvr/sapi/resources"
+    context="platformSvr"
     class-name="com.tuna.platform.entity.Resource"
     :form-component="ResourceForm"
     :query-params="{ ascColumns: ['showOrder'] }"
@@ -41,7 +41,7 @@ import { doHttpGet } from '@/api/common/platform'
 const refTable = ref(null)
 const parentResources = ref([])
 onMounted(() => {
-  doHttpGet('/platform/sapi/resourceGroups', {
+  doHttpGet('/platformSvr/sapi/resourceGroups', {
     current: 1,
     size: 10000,
     ascColumns: ['showOrder'],

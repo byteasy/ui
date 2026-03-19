@@ -60,7 +60,7 @@ export default defineConfig(({ mode }) => {
       cors: true,
       port: 7999,
       proxy: {
-        '/platform/': {
+        '/platformSvr/': {
           target: 'http://localhost:80',
           changeOrigin: true,
         },

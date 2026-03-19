@@ -1,8 +1,8 @@
 <template>
   <tuna-table
     ref="refTable"
-    base-url="/platform/sapi/schemaDefines"
-    context="platform"
+    base-url="/platformSvr/sapi/schemaDefines"
+    context="platformSvr"
     class-name="com.tuna.platform.entity.SchemaDefine"
     :query-params="{ ascColumns: ['className', 'showOrder'] }"
   >
@@ -55,7 +55,7 @@ function doResearch(row) {
 }
 
 function saveShowOrder(row) {
-  doHttpPost('/platform/sapi/schemaDefines', {}, row)
+  doHttpPost('/platformSvr/sapi/schemaDefines', {}, row)
     .then(() => {
       ElMessage.success(t('operationSuccess'))
       refTable.value.refresh()
