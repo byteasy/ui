@@ -52,13 +52,13 @@ onMounted(() => {
         console.log('path', path, arrs)
         const dynamicRoute = {
           path: '/' + arrs[1],
-          component: () => WebLayout,
+          component: WebLayout,
           redirect: router,
           children: [
             {
               path: arrs[2] + '/:path*',
               name: group.code,
-              component: () => SubAppContainer,
+              component: SubAppContainer,
             }
           ]
         }

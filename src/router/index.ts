@@ -6,7 +6,7 @@ const routers = [
   {
     path: '/',
     name: 'Home',
-    redirect: '/frame'
+    redirect: '/platformCommon'
   },
   {
     path: '/platformCommon',
