@@ -18,11 +18,6 @@ export function doHttpGet(url, params) {
 }
 
 export function doHttpPut(url, params, data) {
-  let uri =
-    url +
-    (params !== null && params !== undefined
-      ? '?' + qs.stringify(params, { arrayFormat: 'repeat' })
-      : '')
   return request({
     url: getUrl(url, params),
     method: 'put',
@@ -31,11 +26,6 @@ export function doHttpPut(url, params, data) {
 }
 
 export function doHttpPost(url, params, data) {
-  let uri =
-    url +
-    (params !== null && params !== undefined
-      ? '?' + qs.stringify(params, { arrayFormat: 'repeat' })
-      : '')
   return request({
     url: getUrl(url, params),
     method: 'post',
@@ -44,11 +34,6 @@ export function doHttpPost(url, params, data) {
 }
 
 export function doHttpDelete(url, params, data) {
-  let uri =
-    url +
-    (params !== null && params !== undefined
-      ? '?' + qs.stringify(params, { arrayFormat: 'repeat' })
-      : '')
   return request({
     url: getUrl(url, params),
     method: 'delete',
