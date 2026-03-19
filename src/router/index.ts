@@ -99,19 +99,19 @@ const routers = [
       },
     ],
   },
-  {
-    // 微应用接入路由示例
-    path: '/app',
-    component: () => import('../views/layout/WebLayout.vue'),
-    redirect: '/app/system/index',
-    children: [
-      {
-        path: 'system/:path*',
-        name: 'System',
-        component: () => import('../views/layout/SubAppContainer.vue'),
-      },
-    ],
-  },
+  // {
+  //   // 微应用接入路由示例
+  //   path: '/app',
+  //   component: () => import('../views/layout/WebLayout.vue'),
+  //   redirect: '/app/system/index',
+  //   children: [
+  //     {
+  //       path: 'system/:path*',
+  //       name: 'System',
+  //       component: () => import('../views/layout/SubAppContainer.vue'),
+  //     },
+  //   ],
+  // },
 ]
 
 const router = createRouter({
