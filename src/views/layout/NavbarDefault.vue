@@ -42,10 +42,12 @@ onMounted(() => {
 
 <template>
   <div class="navbar-layout my-bg-color-page">
-    <div class="flex-row align-items-center">
+    <div class="flex-row align-items-center flex-grow">
       <img :src="theme === 'light' ? blackLogo : whiteLogo" class="system_logo" alt="" />
-      <span class="system-title">-{{ t('title') }}</span>
-      <top-menu />
+      <!--      <span class="system-title">-{{ t('title') }}</span>-->
+      <div class="flex-row flex-grow align-items-center justify-content-center">
+        <top-menu />
+      </div>
     </div>
     <div class="flex-row align-items-center">
       <el-input

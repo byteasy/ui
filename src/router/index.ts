@@ -4,7 +4,7 @@ const routers = [
   {
     path: '/',
     name: 'Home',
-    redirect: '/app/system'
+    redirect: '/frame'
   },
   {
     path: '/frame',

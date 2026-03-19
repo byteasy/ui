@@ -71,10 +71,6 @@
   flex-grow: 1;
 }
 
-.justify-content-end {
-  justify-content: end;
-}
-
 .align-items-center {
   align-items: center !important;
 }
@@ -97,6 +93,14 @@
 
 .justify-content-right{
   justify-content: right !important;/* 水平方向居左（新增核心属性） */
+}
+
+.justify-content-end {
+  justify-content: end;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
 }
 
 .h-full {
