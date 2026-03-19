@@ -1,29 +1,29 @@
 <template>
   <div class="el-card is-always-shadow ">
     <el-menu
-      default-active="/frame/favoriteSettings/appearanceSettings"
+      default-active="/platformCommon/favoriteSettings/appearanceSettings"
       class="el-menu-border m-1"
       :router="true"
       :collapse="collapse"
       unique-opened
       ref="refMenu"
     >
-      <el-sub-menu index="/frame/favoriteSettings">
+      <el-sub-menu index="/platformCommon/favoriteSettings">
         <template #title>
           <el-icon style="color: var(--my-menu-icon-color)"><User /></el-icon>
-          <span class="my-font-size-md">{{ $t('favoriteSettings') }}</span>
+          <span class="my-font-size-md">{{ $t('platformCommon.favoriteSettings') }}</span>
         </template>
-        <el-menu-item index="/frame/favoriteSettings/appearanceSettings"
-          ><span class="my-font-size">{{ $t('appearanceSettings') }}</span></el-menu-item
+        <el-menu-item index="/platformCommon/favoriteSettings/appearanceSettings"
+          ><span class="my-font-size">{{ $t('platformCommon.appearanceSettings') }}</span></el-menu-item
         >
-        <el-menu-item index="/frame/favoriteSettings/languageSettings"
-          ><span class="my-font-size">{{ $t('languageSettings') }}</span></el-menu-item
+        <el-menu-item index="/platformCommon/favoriteSettings/languageSettings"
+          ><span class="my-font-size">{{ $t('platformCommon.languageSettings') }}</span></el-menu-item
         >
-        <el-menu-item index="/frame/favoriteSettings/personalInformation"
-          ><span class="my-font-size">{{ $t('personalInformation') }}</span></el-menu-item
+        <el-menu-item index="/platformCommon/favoriteSettings/personalInformation"
+          ><span class="my-font-size">{{ $t('platformCommon.personalInformation') }}</span></el-menu-item
         >
-        <el-menu-item index="/frame/favoriteSettings/passwordSettings"
-          ><span class="my-font-size">{{ $t('passwordSettings') }}</span></el-menu-item
+        <el-menu-item index="/platformCommon/favoriteSettings/passwordSettings"
+          ><span class="my-font-size">{{ $t('platformCommon.passwordSettings') }}</span></el-menu-item
         >
       </el-sub-menu>
       <el-sub-menu index="/platform/common">

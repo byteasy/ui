@@ -4,7 +4,7 @@
     <el-breadcrumb :separator-icon="ArrowRight" class="ml-2">
       <template v-for="item in levelList" :key="item.path">
         <el-breadcrumb-item :to="item.path">
-          {{ $t(String(item.name)) }}
+          {{ item.meta.title }}
         </el-breadcrumb-item>
       </template>
     </el-breadcrumb>
@@ -27,6 +27,7 @@ watch(
   () => route.path,
   () => {
     levelList.value = route.matched
+    console.log(levelList.value)
   },
 )
 </script>

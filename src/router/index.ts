@@ -1,4 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import i18n from '@/locales/index.ts'
+const { t } = i18n.global
 
 const routers = [
   {
@@ -7,35 +9,53 @@ const routers = [
     redirect: '/frame'
   },
   {
-    path: '/frame',
+    path: '/platformCommon',
     component: () => import('../views/layout/WebLayout.vue'),
-    name: 'frame',
-    redirect: '/frame/favoriteSettings',
+    name: 'platformCommon',
+    meta: {
+      title: t('platformCommon.title')
+    },
+    redirect: '/platformCommon/favoriteSettings',
     children: [
       {
         path: 'favoriteSettings',
         name: 'favoriteSettings',
-        redirect: '/frame/favoriteSettings/appearanceSettings',
+        redirect: '/platformCommon/favoriteSettings/appearanceSettings',
         component: () => import('../views/layout/AsideMain.vue'),
+        meta: {
+          title: t('platformCommon.favoriteSettings')
+        },
         children: [
           {
             path: 'appearanceSettings',
             name: 'appearanceSettings',
+            meta: {
+              title: t('platformCommon.appearanceSettings')
+            },
             component: () => import('../views/common/AppearanceSettings.vue')
           },
           {
             path: 'languageSettings',
             name: 'languageSettings',
+            meta: {
+              title: t('platformCommon.languageSettings')
+            },
             component: () => import('../views/common/LanguageSettings.vue')
           },
           {
             path: 'personalInformation',
             name: 'personalInformation',
+            meta: {
+              title: t('platformCommon.personalInformation')
+            },
             component: () => import('../views/common/PersonalSettings.vue')
           },
           {
             path: 'passwordSettings',
             name: 'passwordSettings',
+            meta: {
+              title: t('platformCommon.passwordSettings')
+            },
             component: () => import('../views/common/PasswordSettings.vue')
           }
         ]

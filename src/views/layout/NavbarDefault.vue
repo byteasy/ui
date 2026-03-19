@@ -26,7 +26,7 @@ const { t } = useI18n()
 const router = useRouter()
 
 function onSettingsClick(name) {
-  router.push('/frame/favoriteSettings/' + name)
+  router.push('/platformCommon/favoriteSettings/' + name)
 }
 
 function onLogoutClick() {
@@ -80,25 +80,25 @@ onMounted(() => {
             <el-dropdown-item @click="onSettingsClick('personalInformation')">
               <div class="flex-row align-items-center">
                 <IconLocalAccount style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('personalInformation') }}</span>
+                <span class="ml-2">{{ t('platformCommon.personalInformation') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item @click="onSettingsClick('passwordSettings')">
               <div class="flex-row align-items-center">
                 <IconLocalPassword style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('passwordSettings') }}</span>
+                <span class="ml-2">{{ t('platformCommon.passwordSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item divided @click="onSettingsClick('appearanceSettings')">
               <div class="flex-row align-items-center">
                 <IconLocalShowSettings style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('appearanceSettings') }}</span>
+                <span class="ml-2">{{ t('platformCommon.appearanceSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item @click="onSettingsClick('languageSettings')">
               <div class="flex-row align-items-center">
                 <IconLocalLanguage style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('languageSettings') }}</span>
+                <span class="ml-2">{{ t('platformCommon.languageSettings') }}</span>
               </div>
             </el-dropdown-item>
             <el-dropdown-item divided @click="onLogoutClick()">
