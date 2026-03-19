@@ -8,7 +8,8 @@
       @update:size="onLeftMenuSizeUpdate"
     >
       <div class="mt-1">
-        <left-menu ref="refLeftMenu"></left-menu>
+        <common-left-menu ref="refLeftMenu" v-if="route.fullPath.startsWith('/platformCommon')"></common-left-menu>
+        <left-menu ref="refLeftMenu" v-else></left-menu>
       </div>
     </el-splitter-panel>
     <el-splitter-panel :min="200">
@@ -39,17 +40,20 @@
 
 <script lang="ts" setup>
 import LeftMenu from '@/views/layout/LeftMenu.vue'
+import CommonLeftMenu from '@/views/layout/CommonLeftMenu.vue'
 import BreadCrumb from '@/components/BreadCrumb.vue'
 import TagView from '@/components/TagView.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useTagsViewStore } from '@/stores/tagsView'
+import { useRoute } from 'vue-router'
 
 const appSettingsStore = useAppSettingsStore()
 const tagsStore = useTagsViewStore()
 const { tagView } = storeToRefs(appSettingsStore)
 const refLeftMenu = ref()
+const route = useRoute()
 
 function onLeftMenuSizeUpdate(size) {
   refLeftMenu.value.closeOrOpenMenu(size)
