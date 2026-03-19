@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import i18n from '@/locales/index.ts'
 
 const { t } = i18n.global
@@ -99,23 +99,10 @@ const routers = [
       },
     ],
   },
-  // {
-  //   // 微应用接入路由示例
-  //   path: '/app',
-  //   component: () => import('../views/layout/WebLayout.vue'),
-  //   redirect: '/app/system/index',
-  //   children: [
-  //     {
-  //       path: 'system/:path*',
-  //       name: 'System',
-  //       component: () => import('../views/layout/SubAppContainer.vue'),
-  //     },
-  //   ],
-  // },
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: routers,
 })
 
