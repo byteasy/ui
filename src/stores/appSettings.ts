@@ -36,6 +36,11 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
    */
   const drawerDirection= ref(safeGet('drawerDirection') !== null ? safeGet('drawerDirection') : 'rtl')
 
+  /**
+   * 微应用的入口配置
+   */
+  const microAppConfig = ref('')
+
   function setTheme(value: string) {
     theme.value = value
     safePut('theme', value)
@@ -71,6 +76,10 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     safePut('drawerDirection', value)
   }
 
+  function setMicroAppConfig(value: string) {
+    microAppConfig.value = value
+  }
+
   return {
     theme,
     setTheme,
@@ -86,5 +95,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     setCloseOnClickModal,
     drawerDirection,
     setDrawerDirection,
+    microAppConfig,
+    setMicroAppConfig,
   }
 })

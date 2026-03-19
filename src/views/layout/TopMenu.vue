@@ -4,8 +4,10 @@ import { useRouter } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
 import SubAppContainer from '@/views/layout/SubAppContainer.vue'
 import WebLayout from '@/views/layout/WebLayout.vue'
+import { useAppSettingsStore } from '@/stores/appSettings.ts'
 
 const router = useRouter()
+const appSettingsStore = useAppSettingsStore()
 
 const popoverWidth = ref(500)
 const refPopWindow = ref()
@@ -13,7 +15,6 @@ const refPopWindow = ref()
 const quickMenus = ref([])
 const menuEntries = ref([])
 const groupEntries = ref([])
-
 const calculateWidth = () => {
   const viewportWidth = window.innerWidth
 
@@ -43,6 +44,7 @@ onMounted(() => {
     menuEntries.value = res.data.resourceCategoryVOS
     quickMenus.value = res.data.resourceGroups
 
+    const microApps = []
     for (let i = 0; i < menuEntries.value.length; i++) {
       const entry = menuEntries.value[i]
       for (let j = 0; j < entry.resourceGroups.length; j++) {
@@ -59,13 +61,25 @@ onMounted(() => {
               path: arrs[2] + '/:path*',
               name: group.code,
               component: SubAppContainer,
-            }
-          ]
+            },
+          ],
         }
         router.addRoute(dynamicRoute)
         console.log('dynamicRoute', dynamicRoute)
+        // 构建微应用的配置信息
+        const microAppConfig = {
+          name: group.code,
+          entry: group.entry,
+          container: '#sub-app-container', // 挂载子应用的dom
+          activeRule: '/' + arrs[1] + '/' + arrs[2], // 路由匹配规则
+          props: group.props ? JSON.parse(group.props) : {}
+        }
+        microApps.push(microAppConfig)
+        appSettingsStore.setMicroAppConfig(JSON.stringify(microApps))
       }
     }
+
+
   })
 })
 
@@ -87,7 +101,14 @@ function onGroupClick(category) {
 </script>
 <template>
   <div class="flex-row align-items-center">
-    <el-text v-for="item in quickMenus" :key="item.code" class="app-text-color ml-5" @click="onItemClick(item)"> {{ item.name }}</el-text>
+    <el-text
+      v-for="item in quickMenus"
+      :key="item.code"
+      class="app-text-color ml-5"
+      @click="onItemClick(item)"
+    >
+      {{ item.name }}</el-text
+    >
     <el-popover placement="bottom-start" :width="popoverWidth" ref="refPopWindow">
       <template #reference>
         <div
@@ -126,7 +147,12 @@ function onGroupClick(category) {
               <!--            </div>-->
               <div class="flex-column align-items-start p-3">
                 <div class="my-font-size-md font-bold mb-2">常用</div>
-                <div v-for="item in groupEntries" :key="item.code" class="my-font-size group-tow-child" @click="onItemClick(item)">
+                <div
+                  v-for="item in groupEntries"
+                  :key="item.code"
+                  class="my-font-size group-tow-child"
+                  @click="onItemClick(item)"
+                >
                   {{ item.name }}
                 </div>
               </div>
@@ -136,7 +162,6 @@ function onGroupClick(category) {
       </div>
     </el-popover>
   </div>
-
 </template>
 
 <style scoped>

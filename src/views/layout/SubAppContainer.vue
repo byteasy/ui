@@ -5,14 +5,15 @@
 <script lang="ts" setup>
 import { registerApps } from '@/util/qiankun'
 import { start } from 'qiankun'
-
+import { useAppSettingsStore } from '@/stores/appSettings.ts'
 console.log('sub-app-container onMounted')
 const win = window as Window & { qiankunStarted?: boolean }
+const appSettingsStore = useAppSettingsStore()
 
 if (!win.qiankunStarted) {
   console.log('qiankunStarted', win.qiankunStarted)
   win.qiankunStarted = true
-  registerApps()
+  registerApps(JSON.parse(appSettingsStore.microAppConfig))
   start({
     sandbox: {
       experimentalStyleIsolation: true, // 样式隔离
