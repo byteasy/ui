@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    base: '/platform/',
+    base: './static/',
     plugins: [
       vue(),
       vueJsx(),
@@ -57,20 +57,13 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.MODE': JSON.stringify(mode),
     },
     server: {
+      cors: true,
       port: 7999,
       proxy: {
-        '/platform/sapi': {
+        '/platform/': {
           target: 'http://localhost:80',
           changeOrigin: true,
         },
-        '/platform/papi': {
-          target: 'http://localhost:80',
-          changeOrigin: true,
-        },
-        '/platform/avatar/*': {
-          target: 'http://localhost:80',
-          changeOrigin: true,
-        }
       }
     },
     build: {

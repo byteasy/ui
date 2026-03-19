@@ -1,5 +1,5 @@
 import { registerMicroApps } from 'qiankun'
-import config from '../../micro-app-config-dev.js'
+import config from '../config.js'
 const { subApps } = config
 
 export function registerApps() {

@@ -2,8 +2,8 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
-import SubAppContainer from '@/views/layout/SubAppContainer.vue'
-import WebLayout from '@/views/layout/WebLayout.vue'
+// import SubAppContainer from '@/views/layout/SubAppContainer.vue'
+// import WebLayout from '@/views/layout/WebLayout.vue'
 
 const router = useRouter()
 
@@ -43,29 +43,29 @@ onMounted(() => {
     menuEntries.value = res.data.resourceCategoryVOS
     quickMenus.value = res.data.resourceGroups
 
-    for (let i = 0; i < menuEntries.value.length; i++) {
-      const entry = menuEntries.value[i]
-      for (let j = 0; j < entry.resourceGroups.length; j++) {
-        const group = entry.resourceGroups[j]
-        const path = group.router
-        const arrs = (path || '').split('/')
-        console.log('path', path, arrs)
-        const dynamicRoute = {
-          path: '/' + arrs[1],
-          component: WebLayout,
-          redirect: router,
-          children: [
-            {
-              path: arrs[2] + '/:path*',
-              name: group.code,
-              component: SubAppContainer,
-            }
-          ]
-        }
-        router.addRoute(dynamicRoute)
-        console.log('dynamicRoute', dynamicRoute)
-      }
-    }
+    // for (let i = 0; i < menuEntries.value.length; i++) {
+    //   const entry = menuEntries.value[i]
+    //   for (let j = 0; j < entry.resourceGroups.length; j++) {
+    //     const group = entry.resourceGroups[j]
+    //     const path = group.router
+    //     const arrs = (path || '').split('/')
+    //     console.log('path', path, arrs)
+    //     const dynamicRoute = {
+    //       path: '/' + arrs[1],
+    //       component: WebLayout,
+    //       redirect: router,
+    //       children: [
+    //         {
+    //           path: arrs[2] + '/:path*',
+    //           name: group.code,
+    //           component: SubAppContainer,
+    //         }
+    //       ]
+    //     }
+    //     router.addRoute(dynamicRoute)
+    //     console.log('dynamicRoute', dynamicRoute)
+    //   }
+    // }
   })
 })
 
@@ -74,8 +74,11 @@ onUnmounted(() => {
 })
 
 function onItemClick(group) {
+  console.log('onItemClick', group)
   router.push(group.router)
   refPopWindow.value.hide()
+
+  console.log('当前路由：', window.location.pathname)
 }
 
 function onGroupClick(category) {
