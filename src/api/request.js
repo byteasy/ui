@@ -16,7 +16,7 @@ service.interceptors.request.use(
       config.headers['x-userinfo'] = import.meta.env.VITE_TEST_TOKEN
     }
     const appSettingsStore = useAppSettingsStore()
-    config.headers['accept-language'] = appSettingsStore.lang + 'q=0.9,en;q=0.8'
+    config.headers['accept-language'] = appSettingsStore.lang + ';q=0.9,en;q=0.8'
     return config
   },
   (error) => {

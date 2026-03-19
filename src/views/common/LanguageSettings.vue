@@ -28,8 +28,8 @@ function updateFontSize() {
     <el-form label-width="auto" style="padding: 20px;">
       <el-form-item prop="delivery" :label="$t('appearanceLanguage.showLanguage')">
         <el-radio-group v-model="langValue" @change="updateFontSize">
-          <el-radio value="zh-CN,zh;">{{ $t('appearanceLanguage.zh') }}</el-radio>
-          <el-radio value="en-US,en;">{{ $t('appearanceLanguage.en') }}</el-radio>
+          <el-radio value="zh-CN">{{ $t('appearanceLanguage.zh') }}</el-radio>
+          <el-radio value="en-US">{{ $t('appearanceLanguage.en') }}</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
