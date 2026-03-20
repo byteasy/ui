@@ -109,7 +109,7 @@ function onGroupClick(category) {
     <el-text
       v-for="item in quickMenus"
       :key="item.code"
-      class="app-text-color ml-5"
+      class="app-text-color ml-1"
       @click="onItemClick(item)"
     >
       {{ item.name }}</el-text
