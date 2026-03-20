@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import i18n from '@/locales/index.ts'
+import { useAppSettingsStore } from '@/stores/appSettings.ts'
 
 const { t } = i18n.global
 
@@ -18,8 +19,13 @@ const routers = [
     children: [
       {
         path: 'loading',
-        name: 'loading',
-        component: () => import('../views/layout/MainLoading.vue'),
+        name: 'RouteLoading',
+        component: () => import('../views/layout/RouteLoading.vue'),
+      },
+      {
+        path: '404',
+        name: 'Error404',
+        component: () => import('../views/common/Error404.vue')
       },
       {
         path: 'favoriteSettings',
@@ -84,11 +90,30 @@ const routers = [
       // },
     ],
   },
+  {
+    path: '/:catchAll(.*)',
+    redirect: '/platformCommon/404'
+  }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: routers,
+})
+
+router.beforeEach(async (to, from, next) => {
+  const appSettingsStore = useAppSettingsStore
+  if (to.path === '/platformCommon/404') {
+    if (!appSettingsStore.isDynamicRoutesLoaded) {
+      const originalPath = to.redirectedFrom
+      console.log('from', originalPath)
+      next('/platformCommon/loading?redirectUrl=' + originalPath.fullPath)
+      return
+    }
+    next()
+  } else {
+    next()
+  }
 })
 
 export default router

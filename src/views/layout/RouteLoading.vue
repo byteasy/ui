@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { doHttpGet } from '@/api/common/platform'
 import router from '@/router'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
@@ -24,7 +24,10 @@ import XEUtils from 'xe-utils'
 import WebLayout from '@/views/layout/WebLayout.vue'
 import AsideMain from '@/views/layout/AsideMain.vue'
 import { rt as RouteRecordRaw } from 'vue-router/dist/router-CWoNjPRp'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
 
+const route = useRoute() // 新增：获取当前路由参数（redirect）
 const appSettingsStore = useAppSettingsStore()
 const modulesTwo = import.meta.glob('../*/*.vue', { eager: true, import: 'default' })
 const modulesThree = import.meta.glob('../*/*/*.vue', { eager: true, import: 'default' })
@@ -33,7 +36,30 @@ console.log('modulesFour', modulesFour)
 console.log('modulesThree', modulesThree)
 console.log('modulesTwo', modulesTwo)
 
+const { activeMicroApp } = storeToRefs(appSettingsStore)
+
+// 新增：获取目标跳转路由（优先级：redirect参数 > 配置的group.router）
+const getTargetRoute = () => {
+  // 从路由参数中获取redirect（刷新时的目标路由）
+  const redirect = route.query.redirectUrl as string
+  // 如果有redirect则用redirect，否则用group.router
+  return redirect || JSON.parse(appSettingsStore.activeMicroApp).router
+}
+
+watch(
+  () => activeMicroApp.value, // 关键：监听 ref 的 value
+  (newVal, oldVal) => {
+    loadRouteFromServer()
+  },
+)
+
 onMounted(() => {
+  if(activeMicroApp.value) {
+    loadRouteFromServer()
+  }
+})
+const loadRouteFromServer = () => {
+  console.log('loadRouteFromServer')
   const group = JSON.parse(appSettingsStore.activeMicroApp)
   doHttpGet('/platformSvr/sapi/resources/leftMenu?groupId=' + group.id).then((response) => {
     response.data.forEach((item) => {
@@ -42,14 +68,21 @@ onMounted(() => {
         rebuildLeftMenus(dynamicRoute, item)
         console.log('dynamicRoute', dynamicRoute)
         router.addRoute(dynamicRoute)
+        console.log('routes length:', router.getRoutes().length)
         buildPermissionSession(item)
+        appSettingsStore.setIsDynamicRoutesLoaded(true)
       } catch (err) {
         console.log(err)
       }
     })
-    router.push(group.router)
+    const targetRoute = getTargetRoute()
+    console.log('getTargetRoute', targetRoute)
+    router.push({
+      path: targetRoute,
+      replace: true, // 替换历史记录，优化体验
+    })
   })
-})
+}
 
 function buildPermissionSession(menu) {
   // sessionStore.addAuthorizedCode(menu.name)

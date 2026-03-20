@@ -44,7 +44,12 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
    * 当前激活的领域菜单
    */
-  const activeMicroApp = ref('')
+  const activeMicroApp = ref(safeGet('activeMicroApp') !== null ? safeGet('activeMicroApp') : undefined)
+
+  /**
+   * 路由是否已经完成加载
+   */
+  const isDynamicRoutesLoaded = ref(false)
 
   function setTheme(value: string) {
     theme.value = value
@@ -87,6 +92,11 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
 
   function setActiveMicroApp(value: string) {
     activeMicroApp.value = value
+    safePut('activeMicroApp', value)
+  }
+
+  function setIsDynamicRoutesLoaded(value: boolean) {
+    isDynamicRoutesLoaded.value = value
   }
 
   return {
@@ -108,5 +118,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     setMicroAppConfig,
     activeMicroApp,
     setActiveMicroApp,
+    isDynamicRoutesLoaded,
+    setIsDynamicRoutesLoaded
   }
 })

@@ -37,6 +37,7 @@ const calculateWidth = () => {
 }
 
 onMounted(() => {
+  console.log('TopMenu mounted')
   calculateWidth()
   window.addEventListener('resize', calculateWidth)
 
@@ -66,6 +67,7 @@ onMounted(() => {
             ],
           }
           router.addRoute(dynamicRoute)
+          console.log('routes length:', router.getRoutes().length)
           console.log('microappRoute', dynamicRoute)
           // 构建微应用的配置信息
           const microAppConfig = {
