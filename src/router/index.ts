@@ -54,42 +54,34 @@ const routers = [
           },
         ],
       },
-    ],
-  },
-  {
-    path: '/platform',
-    component: () => import('../views/layout/WebLayout.vue'),
-    name: 'platform',
-    redirect: '/platform/baseCommon',
-    children: [
-      {
-        path: 'baseCommon',
-        name: 'baseCommon',
-        redirect: '/platform/baseCommon/resourceGroups',
-        component: () => import('../views/layout/AsideMain.vue'),
-        children: [
-          {
-            path: 'resourceGroups',
-            name: 'resourceGroups',
-            component: () => import('../views/platform/resource/ResourceGroupList.vue'),
-          },
-          {
-            path: 'resources',
-            name: 'resources',
-            component: () => import('../views/platform/resource/ResourceList.vue'),
-          },
-          {
-            path: 'schemaDefines',
-            name: 'schemaDefines',
-            component: () => import('../views/platform/schemaDefine/SchemaDefineList.vue'),
-          },
-          {
-            path: 'i18nDefines',
-            name: 'i18nDefines',
-            component: () => import('../views/platform/i18n/I18nDefineList.vue'),
-          },
-        ],
-      },
+      // {
+      //   path: 'baseCommon',
+      //   name: 'baseCommon',
+      //   redirect: '/platform/baseCommon/resourceGroups',
+      //   component: () => import('../views/layout/AsideMain.vue'),
+      //   children: [
+      //     {
+      //       path: 'resourceGroups',
+      //       name: 'resourceGroups',
+      //       component: () => import('../views/platform/resource/ResourceGroupList.vue'),
+      //     },
+      //     {
+      //       path: 'resources',
+      //       name: 'resources',
+      //       component: () => import('../views/platform/resource/ResourceList.vue'),
+      //     },
+      //     {
+      //       path: 'schemaDefines',
+      //       name: 'schemaDefines',
+      //       component: () => import('../views/platform/schemaDefine/SchemaDefineList.vue'),
+      //     },
+      //     {
+      //       path: 'i18nDefines',
+      //       name: 'i18nDefines',
+      //       component: () => import('../views/platform/i18n/I18nDefineList.vue'),
+      //     },
+      //   ],
+      // },
     ],
   },
 ]

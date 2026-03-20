@@ -26,24 +26,6 @@
           ><span class="my-font-size">{{ $t('platformCommon.passwordSettings') }}</span></el-menu-item
         >
       </el-sub-menu>
-      <el-sub-menu index="/platform/common">
-        <template #title>
-          <el-icon style="color: var(--my-menu-icon-color)"><User /></el-icon>
-          <span class="my-font-size-md">{{ $t('platform') }}</span>
-        </template>
-        <el-menu-item index="/platform/baseCommon/resourceGroups">
-          <span class="my-font-size">资源分组</span>
-        </el-menu-item>
-        <el-menu-item index="/platform/baseCommon/resources">
-          <span class="my-font-size">平台资源</span>
-        </el-menu-item>
-        <el-menu-item index="/platform/baseCommon/schemaDefines">
-          <span class="my-font-size">表单设置</span>
-        </el-menu-item>
-        <el-menu-item index="/platform/baseCommon/i18nDefines">
-          <span class="my-font-size">国际翻译</span>
-        </el-menu-item>
-      </el-sub-menu>
     </el-menu>
   </div>
 </template>
