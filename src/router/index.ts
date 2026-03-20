@@ -13,50 +13,43 @@ const routers = [
     path: '/platformCommon',
     component: () => import('../views/layout/WebLayout.vue'),
     name: 'platformCommon',
-    meta: {
-      title: t('platformCommon.title'),
-    },
+    meta: { title: t('platformCommon.title') },
     redirect: '/platformCommon/favoriteSettings',
     children: [
+      {
+        path: 'loading',
+        name: 'loading',
+        component: () => import('../views/layout/MainLoading.vue'),
+      },
       {
         path: 'favoriteSettings',
         name: 'favoriteSettings',
         redirect: '/platformCommon/favoriteSettings/appearanceSettings',
         component: () => import('../views/layout/AsideMain.vue'),
-        meta: {
-          title: t('platformCommon.favoriteSettings'),
-        },
+        meta: { title: t('platformCommon.favoriteSettings') },
         children: [
           {
             path: 'appearanceSettings',
             name: 'appearanceSettings',
-            meta: {
-              title: t('platformCommon.appearanceSettings'),
-            },
+            meta: { title: t('platformCommon.appearanceSettings') },
             component: () => import('../views/common/AppearanceSettings.vue'),
           },
           {
             path: 'languageSettings',
             name: 'languageSettings',
-            meta: {
-              title: t('platformCommon.languageSettings'),
-            },
+            meta: { title: t('platformCommon.languageSettings') },
             component: () => import('../views/common/LanguageSettings.vue'),
           },
           {
             path: 'personalInformation',
             name: 'personalInformation',
-            meta: {
-              title: t('platformCommon.personalInformation'),
-            },
+            meta: { title: t('platformCommon.personalInformation') },
             component: () => import('../views/common/PersonalSettings.vue'),
           },
           {
             path: 'passwordSettings',
             name: 'passwordSettings',
-            meta: {
-              title: t('platformCommon.passwordSettings'),
-            },
+            meta: { title: t('platformCommon.passwordSettings') },
             component: () => import('../views/common/PasswordSettings.vue'),
           },
         ],

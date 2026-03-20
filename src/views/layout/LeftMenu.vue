@@ -1,63 +1,64 @@
 <template>
-  <div class="el-card is-always-shadow ">
+  <div class="el-card is-always-shadow">
     <el-menu
-      default-active="/platformCommon/favoriteSettings/appearanceSettings"
       class="el-menu-border m-1"
       :router="true"
       :collapse="collapse"
       unique-opened
       ref="refMenu"
     >
-      <el-sub-menu index="/platformCommon/favoriteSettings">
+      <el-sub-menu :index="root.routerUrl" v-for="root in menuTree" :key="root.code">
         <template #title>
-          <el-icon style="color: var(--my-menu-icon-color)"><User /></el-icon>
-          <span class="my-font-size-md">{{ $t('platformCommon.favoriteSettings') }}</span>
+          <el-icon style="color: var(--my-menu-icon-color)"><component :is="root.icon" /></el-icon>
+          <span class="my-font-size-md">{{ root.name }}</span>
         </template>
-        <el-menu-item index="/platformCommon/favoriteSettings/appearanceSettings"
-          ><span class="my-font-size">{{ $t('platformCommon.appearanceSettings') }}</span></el-menu-item
-        >
-        <el-menu-item index="/platformCommon/favoriteSettings/languageSettings"
-          ><span class="my-font-size">{{ $t('platformCommon.languageSettings') }}</span></el-menu-item
-        >
-        <el-menu-item index="/platformCommon/favoriteSettings/personalInformation"
-          ><span class="my-font-size">{{ $t('platformCommon.personalInformation') }}</span></el-menu-item
-        >
-        <el-menu-item index="/platformCommon/favoriteSettings/passwordSettings"
-          ><span class="my-font-size">{{ $t('platformCommon.passwordSettings') }}</span></el-menu-item
-        >
-      </el-sub-menu>
-      <el-sub-menu index="/platform/common">
-        <template #title>
-          <el-icon style="color: var(--my-menu-icon-color)"><User /></el-icon>
-          <span class="my-font-size-md">{{ $t('platform') }}</span>
+        <el-menu-item :index="root.routerUrl" v-if="root.type === 'MENU' && root.visible === 'YES'">
+          <el-icon style="color: var(--my-menu-icon-color)"
+            ><component :is="'IconLocalHome'"
+          /></el-icon>
+          <span class="pl-3">{{ root.name }}</span>
+        </el-menu-item>
+
+        <template v-else v-for="subMenu in root.childrenList" :key="subMenu.code">
+          <el-sub-menu :index="subMenu.routerUrl" v-if="subMenu.hasOwnProperty('childrenList') && subMenu.childrenList !== null && subMenu.type === 'DIRECTORY' && subMenu.visible === 'YES'">
+            <template #title>
+              <span class="pl-3">{{ subMenu.name }}</span>
+            </template>
+            <template v-for="subsubMenu in subMenu.childrenList" :key="subsubMenu.code">
+              <el-menu-item :index="subsubMenu.routerUrl">
+                <span class="pl-3">{{ subsubMenu.name }}</span>
+              </el-menu-item>
+            </template>
+          </el-sub-menu>
+          <el-menu-item :index="subMenu.routerUrl" v-if="subMenu.type === 'MENU' && subMenu.visible === 'YES'">
+            <span class="pl-3">{{ subMenu.name }}</span>
+          </el-menu-item>
         </template>
-        <el-menu-item index="/platform/baseCommon/resourceGroups">
-          <span class="my-font-size">资源分组</span>
-        </el-menu-item>
-        <el-menu-item index="/platform/baseCommon/resources">
-          <span class="my-font-size">平台资源</span>
-        </el-menu-item>
-        <el-menu-item index="/platform/baseCommon/schemaDefines">
-          <span class="my-font-size">表单设置</span>
-        </el-menu-item>
-        <el-menu-item index="/platform/baseCommon/i18nDefines">
-          <span class="my-font-size">国际翻译</span>
-        </el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { doHttpGet } from '@/api/common/platform'
+import { useAppSettingsStore } from '@/stores/appSettings.ts'
 
+const appSettingsStore = useAppSettingsStore()
 const route = useRoute()
 const refMenu = ref()
 const collapse = ref(false)
 
+const menuTree = ref([])
+
 onMounted(() => {
-  refMenu.value?.updateActiveIndex(route.fullPath)
+  doHttpGet('/platformSvr/sapi/resources/leftMenu', {
+    groupId: JSON.parse(appSettingsStore.activeMicroApp).id,
+  }).then((response) => {
+    menuTree.value = response.data
+    refMenu.value?.updateActiveIndex(route.fullPath)
+  })
 })
 
 watch(

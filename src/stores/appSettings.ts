@@ -41,6 +41,11 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
    */
   const microAppConfig = ref('')
 
+  /**
+   * 当前激活的领域菜单
+   */
+  const activeMicroApp = ref('')
+
   function setTheme(value: string) {
     theme.value = value
     safePut('theme', value)
@@ -80,6 +85,10 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     microAppConfig.value = value
   }
 
+  function setActiveMicroApp(value: string) {
+    activeMicroApp.value = value
+  }
+
   return {
     theme,
     setTheme,
@@ -97,5 +106,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     setDrawerDirection,
     microAppConfig,
     setMicroAppConfig,
+    activeMicroApp,
+    setActiveMicroApp,
   }
 })

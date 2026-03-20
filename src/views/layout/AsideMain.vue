@@ -13,8 +13,8 @@
       </div>
     </el-splitter-panel>
     <el-splitter-panel :min="200">
-      <div class="pl-1 pt-1 pr-1 full-height-container my-bg-color-blank" >
-        <div class="flex-column h-full">
+      <div class="pl-1 pt-1 pr-1 w-full h-full my-bg-color-blank" >
+        <div class="flex-column h-full w-full">
           <div class="el-card is-always-shadow p-1" style="height: 2.4rem; width: 100%">
             <bread-crumb v-if="tagView === '0'" />
             <tag-view v-else />
@@ -75,11 +75,6 @@ function onLeftMenuSizeUpdate(size) {
 /* 保持页面切换时的滚动位置 */
 .router-view-container {
   min-height: 100%;
-}
-
-.full-height-container {
-  width: 100% !important;
-  height: 100% !important;
 }
 
 </style>

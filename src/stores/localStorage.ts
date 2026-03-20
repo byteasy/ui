@@ -1,7 +1,11 @@
 // localStorage.ts
 export function safeGet(key: string): string | null {
   if (typeof window !== 'undefined') {
-    return window.localStorage.getItem(key) !== '' ? window.localStorage.getItem(key) : null;
+    const value = window.localStorage.getItem(key)
+    if(value !== null && value !== undefined && value !== '') {
+      return value
+    }
+    return null
   }
   return null;
 }

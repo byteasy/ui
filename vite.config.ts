@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => {
       vueJsx(),
       vueDevTools(),
       AutoImport({
-        resolvers: [ElementPlusResolver()]
+        resolvers: [ElementPlusResolver()],
       }),
       Components({
         resolvers: [
@@ -33,9 +33,9 @@ export default defineConfig(({ mode }) => {
           IconsResolver({
             prefix: 'icon',
             enabledCollections: ['ep', 'local'],
-          })
+          }),
         ],
-        dts: 'src/components.d.ts'
+        dts: 'src/components.d.ts',
       }),
       Icons({
         autoInstall: true, // 自动安装图标集
@@ -46,11 +46,9 @@ export default defineConfig(({ mode }) => {
         defaultClass: 'icon',
         customCollections: {
           // 本地 SVG 图标
-          'local': FileSystemIconLoader(
-            resolve(__dirname, 'src/icons')
-          )
-        }
-      })
+          local: FileSystemIconLoader(resolve(__dirname, 'src/icons')),
+        },
+      }),
     ],
     // 注入环境模式标识，让 env.d.ts 能识别当前环境
     define: {
@@ -64,24 +62,24 @@ export default defineConfig(({ mode }) => {
           target: 'http://localhost:80',
           changeOrigin: true,
         },
-      }
+      },
     },
     build: {
-      outDir: 'dist/static'
+      outDir: 'dist/static',
     },
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "src/assets/styles/global.scss";'
-        }
-      }
+          additionalData: '@import "src/assets/styles/global.scss";',
+        },
+      },
     },
     resolve: {
       extensions: ['.js', '.ts', '.json'], // 自动补全扩展名
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
       },
-    }
+    },
   }
 })

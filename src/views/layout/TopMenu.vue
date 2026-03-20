@@ -49,37 +49,37 @@ onMounted(() => {
       const entry = menuEntries.value[i]
       for (let j = 0; j < entry.resourceGroups.length; j++) {
         const group = entry.resourceGroups[j]
-        const path = group.router
-        const arrs = (path || '').split('/')
-        console.log('path', path, arrs)
-        const dynamicRoute = {
-          path: '/' + arrs[1],
-          component: WebLayout,
-          redirect: router,
-          children: [
-            {
-              path: arrs[2] + '/:path*',
-              name: group.code,
-              component: SubAppContainer,
-            },
-          ],
+        if (group.isMicroapp === 'YES') {
+          const path = group.router
+          const arrs = (path || '').split('/')
+          console.log('path', path, arrs)
+          const dynamicRoute = {
+            path: '/' + arrs[1],
+            component: WebLayout,
+            redirect: router,
+            children: [
+              {
+                path: arrs[2] + '/:path*',
+                name: group.code,
+                component: SubAppContainer,
+              },
+            ],
+          }
+          router.addRoute(dynamicRoute)
+          console.log('microappRoute', dynamicRoute)
+          // 构建微应用的配置信息
+          const microAppConfig = {
+            name: group.code,
+            entry: group.entry,
+            container: '#sub-app-container', // 挂载子应用的dom
+            activeRule: '/' + arrs[1] + '/' + arrs[2], // 路由匹配规则
+            props: group.props ? JSON.parse(group.props) : {},
+          }
+          microApps.push(microAppConfig)
         }
-        router.addRoute(dynamicRoute)
-        console.log('dynamicRoute', dynamicRoute)
-        // 构建微应用的配置信息
-        const microAppConfig = {
-          name: group.code,
-          entry: group.entry,
-          container: '#sub-app-container', // 挂载子应用的dom
-          activeRule: '/' + arrs[1] + '/' + arrs[2], // 路由匹配规则
-          props: group.props ? JSON.parse(group.props) : {}
-        }
-        microApps.push(microAppConfig)
-        appSettingsStore.setMicroAppConfig(JSON.stringify(microApps))
       }
     }
-
-
+    appSettingsStore.setMicroAppConfig(JSON.stringify(microApps))
   })
 })
 
@@ -88,16 +88,19 @@ onUnmounted(() => {
 })
 
 function onItemClick(group) {
-  console.log('onItemClick', group)
-  router.push(group.router)
+  appSettingsStore.setActiveMicroApp(JSON.stringify(group))
   refPopWindow.value.hide()
-
-  console.log('当前路由：', window.location.pathname)
+  if (group.isMicroapp === 'YES') {
+    router.push(group.router)
+  } else {
+    router.push({ path: '/platformCommon/loading' })
+  }
 }
 
 function onGroupClick(category) {
   groupEntries.value = category.resourceGroups
 }
+
 </script>
 <template>
   <div class="flex-row align-items-center">
