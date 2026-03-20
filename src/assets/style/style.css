@@ -132,6 +132,7 @@
   --my-font-size-xl: calc(var(--font-size-base) * 1.429);  /* 20px */
   --my-font-size-2xl: calc(var(--font-size-base) * 1.571); /* 22px */
   --el-table-current-row-bg-color: var(--el-color-primary-light-3);
+  --my-font-color-primay: var(--el-color-primary) !important;
 }
 
 /* 小号字体主题 */
@@ -175,6 +176,7 @@ html.green {
   --el-color-primary: #008351 !important;
   --el-color-primary-light-3: #076742 !important;
   --el-color-primary-dark-2: #0d4c35 !important;
+  --my-font-color-primay: var(--el-color-primary) !important;
 }
 
 html.blue {
@@ -223,7 +225,14 @@ html.blue {
   font-size: var(--my-font-size-2xl);
 }
 .my-font-bold {font-weight: bold;}
-
+.my-icon-color-primary {
+  color: var(--my-font-color-primay);
+  font-size: 0.9rem;
+}
+.my-icon-color-primary:hover {
+  background-color: color-mix(in srgb, var(--el-color-primary-light-5) 90%, var(--my-text-color));
+  cursor: pointer;
+}
 div.el-scrollbar__bar.is-horizontal {
   height: 10px;
 }
