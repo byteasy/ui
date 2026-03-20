@@ -47,7 +47,7 @@ const appSettingsStore = useAppSettingsStore()
 
 const { componentSize, lang } = storeToRefs(appSettingsStore)
 
-const locale = computed(() => (lang.value === 'zh-cn' ? zhCn : en))
+const locale = computed(() => (lang.value === 'zh-CN' ? zhCn : en))
 
 const { modals, close } = useModal()
 

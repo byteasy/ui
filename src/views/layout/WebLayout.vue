@@ -19,7 +19,7 @@ import { useAppSettingsStore } from '@/stores/appSettings.ts'
 
 const appSettingsStore = useAppSettingsStore()
 const { theme, componentSize, lang } = storeToRefs(appSettingsStore)
-const locale = computed(() => (lang.value === 'zh-cn' ? zhCn : en))
+const locale = computed(() => (lang.value === 'zh-CN' ? zhCn : en))
 
 onBeforeMount(() => {
   setTheme()
