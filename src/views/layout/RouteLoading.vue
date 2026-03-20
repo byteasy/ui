@@ -23,7 +23,6 @@ import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import XEUtils from 'xe-utils'
 import WebLayout from '@/views/layout/WebLayout.vue'
 import AsideMain from '@/views/layout/AsideMain.vue'
-import { rt as RouteRecordRaw } from 'vue-router/dist/router-CWoNjPRp'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
