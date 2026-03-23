@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import { registerApps } from '@/util/qiankun'
-import { start } from 'qiankun'
+import { addGlobalUncaughtErrorHandler, start } from 'qiankun'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { onUnmounted } from 'vue'
 import router from '@/router'
@@ -26,17 +26,23 @@ if (!win.qiankunStarted) {
       entry: subApp.entry,
       container: '#sub-app-container', // 挂载子应用的dom
       activeRule: (location) => {
-        return location.pathname.includes(subApp.activeRule) ||
-          location.hash.includes(subApp.activeRule)
+        return (
+          location.pathname.includes(subApp.activeRule) || location.hash.includes(subApp.activeRule)
+        )
       },
-      props: subApp.props
+      props: subApp.props,
     }
     appArray.push(cfg)
   }
   registerApps(appArray)
+
+  addGlobalUncaughtErrorHandler((event, source, lineno, colno, error) => {
+    console.log('qiankun 微应用加载错误：', event, source, lineno, colno, error)
+  })
+
   start({
     sandbox: {
-      experimentalStyleIsolation: true, // 样式隔离
+      experimentalStyleIsolation: false, // 样式隔离
     },
     // 其他配置
     prefetch: true,
@@ -48,8 +54,8 @@ if (!win.qiankunStarted) {
     console.log('[qiankun] 检测到 hash 变化：', window.location.hash)
     if (win.__QIANKUN__) {
       // 方式1：调用 qiankun 内置的路由检测方法（推荐）
+      console.log('handleRouterChange')
       win.__QIANKUN__.handleRouterChange()
-
       // 方式2：如果方式1无效，手动重新挂载激活的子应用（兜底）
       // const activeApp = win.__QIANKUN__._activeApps[0]
       // if (activeApp) win.__QIANKUN__.mountApp(activeApp)
@@ -59,6 +65,7 @@ if (!win.qiankunStarted) {
   window.addEventListener('hashchange', hashChangeHandler)
 
   router.afterEach(() => {
+    console.log('handleRouterChange')
     win.__QIANKUN__?.handleRouterChange()
   })
   console.log('qiankunStarted', 'success')

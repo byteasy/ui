@@ -129,15 +129,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type Component,
-  onBeforeMount,
-  onMounted,
-  ref,
-  defineExpose,
-  nextTick,
-  defineEmits,
-} from 'vue'
+import { type Component, onBeforeMount, onMounted, ref, defineExpose, defineEmits } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
 import { doHttpDelete, doHttpGet, getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
@@ -235,7 +227,7 @@ function onView(row) {
       context: props.context,
     }, // 传给组件的 props
     {
-      title: t('table.view') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
+      title: t('table.view') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
       width: getFormWidth(),
       onClose: (data) => {},
     },
@@ -247,7 +239,7 @@ function onAdd(row) {
     getFormComponent(), // 要显示的组件
     { columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row }, // 传给组件的 props
     {
-      title: t('add') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
+      title: t('add') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
       width: getFormWidth(),
       onClose: (data) => {
         refresh()
@@ -266,7 +258,7 @@ function onEdit(row) {
       context: props.context,
     }, // 传给组件的 props
     {
-      title: t('table.edit') + (lastRoute !== undefined ? t(String(lastRoute.name)) : ''),
+      title: t('table.edit') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
       width: getFormWidth(),
       onClose: (data) => {
         refresh()
@@ -301,6 +293,6 @@ defineExpose({
   loading,
   refresh,
   onAdd,
-  onDelete
+  onDelete,
 })
 </script>

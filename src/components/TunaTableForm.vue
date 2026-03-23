@@ -10,7 +10,7 @@
     >
       <el-space wrap direction="horizontal" style="width: 100%">
         <template v-for="col in props.columns" :key="col.name">
-          <slot :name="'formItem_' + col.name" :column="col" :props="props">
+          <slot :name="'formItem_' + col.name" :column="col" :props="props" :row="formValue">
             <el-form-item
               :label="col.displayName"
               v-if="col.isForm === 'YES'"

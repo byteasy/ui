@@ -24,7 +24,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
    * 弹窗方式
    */
-  const dialogModel = ref(safeGet('dialogModel') !== null ? safeGet('dialogModel') : '1')
+  const dialogModel = ref(safeGet('dialogModel') !== null ? safeGet('dialogModel') : '0')
 
   /**
    * 全局对话框是否允许点击外部关闭
