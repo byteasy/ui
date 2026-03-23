@@ -6,7 +6,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
    * 主题颜色
    */
-  const theme = ref(safeGet('theme') !== null ? safeGet('theme') : 'light')
+  const theme = ref(safeGet('theme') !== null ? safeGet('theme') : 'green')
   /**
    * 显示尺寸大小
    */
