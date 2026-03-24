@@ -61,3 +61,10 @@ export function putEntitySchema(className) {
     method: 'put',
   })
 }
+
+export function getDictionaryValues(code) {
+  return request({
+    url: '/platformSvr/sapi/dictionarys/codes/' + code,
+    method: 'get'
+  })
+}
