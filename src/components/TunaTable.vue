@@ -292,6 +292,8 @@ defineExpose({
   tableData,
   loading,
   refresh,
+  onView,
+  onEdit,
   onAdd,
   onDelete,
 })
