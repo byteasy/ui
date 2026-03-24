@@ -24,8 +24,8 @@
           <el-form-item>
             <slot name="formQueryButton">
               <el-button type="primary" icon="Search" @click="refresh">{{
-                $t('search')
-              }}</el-button>
+                  $t('search')
+                }}</el-button>
               <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
             </slot>
             <slot name="formQueryButtonExt"></slot>
@@ -41,7 +41,7 @@
             :data="tableData.records"
             fix
             scrollbar-always-on
-            @row-dblclick="onEdit"
+            @row-dblclick="onTableRowDoubleClick"
             @row-click="onTableRowClick"
             v-loading="loading"
             highlight-current-row
@@ -63,8 +63,8 @@
                 >
                   <template #default="scope">
                     <slot :name="'table_column_' + col.name" :row="scope.row">{{
-                      scope.row[col.name]
-                    }}</slot>
+                        scope.row[col.name]
+                      }}</slot>
                   </template>
                 </el-table-column>
                 <enum-column
@@ -91,8 +91,8 @@
               <template #default="scope">
                 <slot name="operationSlot" :row="scope.row">
                   <el-button link type="primary" @click="onView(scope.row)">{{
-                    t('table.view')
-                  }}</el-button>
+                      t('table.view')
+                    }}</el-button>
                   <el-button link type="primary" @click="onEdit(scope.row)">
                     {{ t('table.edit') }}
                   </el-button>
@@ -114,7 +114,7 @@
               </template>
             </el-table-column>
           </el-table> </template
-      ></el-auto-resizer>
+        ></el-auto-resizer>
     </template>
     <template v-slot:bottomBar v-if="props.paginationVisible !== 0">
       <el-pagination
@@ -129,7 +129,14 @@
 </template>
 
 <script lang="ts" setup>
-import { type Component, onBeforeMount, onMounted, ref, defineExpose, defineEmits } from 'vue'
+import {
+  type Component,
+  onBeforeMount,
+  onMounted,
+  ref,
+  defineExpose,
+  defineEmits,
+} from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
 import { doHttpDelete, doHttpGet, getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
@@ -151,6 +158,7 @@ const props = defineProps<{
   operationColumnWidth?: number
   paginationVisible?: number
   queryFormVisible?: number
+  rowDbClick?: (row : any) => void
 }>()
 
 const emit = defineEmits(['rowClick'])
@@ -286,6 +294,14 @@ function onTableRowClick(row) {
   emit('rowClick', row)
 }
 
+function onTableRowDoubleClick(row) {
+  if (props.rowDbClick) {
+    props.rowDbClick(row)
+  } else {
+    onEdit(row)
+  }
+}
+
 defineExpose({
   queryParam,
   tableColumns,
@@ -295,6 +311,6 @@ defineExpose({
   onView,
   onEdit,
   onAdd,
-  onDelete,
+  onDelete
 })
 </script>
