@@ -131,7 +131,6 @@
   --my-font-size-lg: calc(var(--font-size-base) * 1.286);  /* 18px */
   --my-font-size-xl: calc(var(--font-size-base) * 1.429);  /* 20px */
   --my-font-size-2xl: calc(var(--font-size-base) * 1.571); /* 22px */
-  --el-table-current-row-bg-color: var(--el-color-primary-light-3);
   --my-font-color-primay: var(--el-color-primary) !important;
 }
 
@@ -178,8 +177,9 @@ html.green {
   --el-color-primary-light-5: #4dc698 !important;
   --el-color-primary-light-7: #61cca3 !important;
   --el-color-primary-light-8: #84dcbb !important;
-  --el-color-primary-light-9: #ade6d1 !important;
+  --el-color-primary-light-9: #b6ecd8 !important;
   --el-color-primary-dark-2: #0d4c35 !important;
+  --el-fill-color-light: #d7f1e7 !important;
   --my-font-color-primay: var(--el-color-primary) !important;
 }
 
