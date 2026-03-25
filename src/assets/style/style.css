@@ -174,7 +174,11 @@ html.green {
   --my-menu-icon-color: black !important;
   --el-menu-active-color: #FFFFFF !important;
   --el-color-primary: #008351 !important;
-  --el-color-primary-light-3: #076742 !important;
+  --el-color-primary-light-3: #3db386 !important;
+  --el-color-primary-light-5: #4dc698 !important;
+  --el-color-primary-light-7: #61cca3 !important;
+  --el-color-primary-light-8: #84dcbb !important;
+  --el-color-primary-light-9: #ade6d1 !important;
   --el-color-primary-dark-2: #0d4c35 !important;
   --my-font-color-primay: var(--el-color-primary) !important;
 }
