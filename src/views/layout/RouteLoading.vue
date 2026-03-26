@@ -118,7 +118,7 @@ function rebuildLeftMenus(node, menu) {
   // 支持一级菜单
   if (menu.type === 'MENU' && menu.parentId === null && menu.parentId === undefined) {
     node.path = ''
-    node.name = undefined
+    node.name = menu.code
     node.component = WebLayout
     node.children = [
       {
@@ -150,7 +150,7 @@ function rebuildLeftMenus(node, menu) {
     node.children = []
     node.meta = { title: menu.name }
     menu.childrenList.forEach((child) => {
-      if (menu.type === 'MENU' || menu.type === 'DIRECTORY') {
+      if (child.type === 'MENU' || child.type === 'DIRECTORY') {
         if (hasChildrenMenu(child)) {
           // 构建三级路由
           const subRoute = {

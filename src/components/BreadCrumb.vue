@@ -3,7 +3,7 @@
     <IconLocalHome style="width: 0.9rem; height: 0.9rem" />
     <el-breadcrumb :separator-icon="ArrowRight" class="ml-2">
       <template v-for="item in levelList" :key="item.path">
-        <el-breadcrumb-item :to="item.path">
+        <el-breadcrumb-item :to="item.path" v-if="item.meta.title !== undefined">
           {{ item.meta.title || item.name }}
         </el-breadcrumb-item>
       </template>
