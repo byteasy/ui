@@ -12,6 +12,10 @@ const route = useRoute() // 新增：获取当前路由参数（redirect）
 
 const popoverWidth = ref(500)
 const refPopWindow = ref()
+/**
+ * 默认页面打开后，打开第一个group的router地址，如果有redirectUrl，则打开redirectUrl
+ */
+const activeGroup = ref(null)
 
 const quickMenus = ref([])
 const menuEntries = ref([])
@@ -47,10 +51,9 @@ const getRedirectRoute = () => {
 
 onMounted(() => {
   console.log('TopMenu mounted, clear active micro app')
+  appSettingsStore.setActiveMicroApp('')
+
   const redirectRoute = getRedirectRoute()
-  if (redirectRoute !== null && redirectRoute !== undefined) {
-    appSettingsStore.setActiveMicroApp('')
-  }
   calculateWidth()
   window.addEventListener('resize', calculateWidth)
 
@@ -63,6 +66,11 @@ onMounted(() => {
       const entry = menuEntries.value[i]
       for (let j = 0; j < entry.resourceGroups.length; j++) {
         const group = entry.resourceGroups[j]
+        // 默认打开第一个
+        if(activeGroup.value === null) {
+          activeGroup.value = group
+        }
+
         const path = group.router
         const arrs = (path || '').split('/')
 
@@ -99,12 +107,13 @@ onMounted(() => {
           // 重建当前活跃的micro app
           if (redirectRoute.startsWith('/' + arrs[1] + '/' + arrs[2])) {
             console.log('redirectRoute match micro app: ' + group.code)
-            appSettingsStore.setActiveMicroApp(JSON.stringify(group))
+            activeGroup.value = group
           }
         }
       }
     }
     appSettingsStore.setMicroAppConfig(JSON.stringify(microApps))
+    appSettingsStore.setActiveMicroApp(JSON.stringify(activeGroup.value))
     console.log('micro app config load complete', microApps)
   })
 })
@@ -116,6 +125,7 @@ onUnmounted(() => {
 function onItemClick(group) {
   appSettingsStore.setActiveMicroApp(JSON.stringify(group))
   refPopWindow.value.hide()
+  activeGroup.value = group
   if (group.isMicroapp === 'YES') {
     router.push(group.router)
   } else {
@@ -132,7 +142,7 @@ function onGroupClick(category) {
     <el-text
       v-for="item in quickMenus"
       :key="item.code"
-      class="app-text-color ml-1"
+      :class="{ 'app-text-color ml-1': true, 'app-text-color-active': activeGroup?.code === item.code }"
       @click="onItemClick(item)"
     >
       {{ item.name }}</el-text
@@ -201,6 +211,11 @@ function onGroupClick(category) {
 .app-text-color:hover {
   background-color: color-mix(in srgb, var(--my-bg-color) 90%, var(--my-text-color));
 }
+
+.app-text-color-active {
+  background-color: color-mix(in srgb, var(--my-bg-color) 60%, var(--my-text-color));
+}
+
 /* 容器基础布局 */
 .nav-container {
   display: flex;
