@@ -6,11 +6,6 @@ const { t } = i18n.global
 
 const routers = [
   {
-    path: '/',
-    name: 'Home',
-    redirect: '/platformCommon',
-  },
-  {
     path: '/platformCommon',
     component: () => import('../views/layout/WebLayout.vue'),
     name: 'platformCommon',

@@ -67,7 +67,7 @@ onMounted(() => {
       for (let j = 0; j < entry.resourceGroups.length; j++) {
         const group = entry.resourceGroups[j]
         // 默认打开第一个
-        if(activeGroup.value === null) {
+        if (activeGroup.value === null) {
           activeGroup.value = group
         }
 
@@ -123,6 +123,9 @@ onUnmounted(() => {
 })
 
 function onItemClick(group) {
+  if (group.code === activeGroup.value.code) {
+    return
+  }
   appSettingsStore.setActiveMicroApp(JSON.stringify(group))
   refPopWindow.value.hide()
   activeGroup.value = group
@@ -142,7 +145,10 @@ function onGroupClick(category) {
     <el-text
       v-for="item in quickMenus"
       :key="item.code"
-      :class="{ 'app-text-color ml-1': true, 'app-text-color-active': activeGroup?.code === item.code }"
+      :class="{
+        'app-text-color ml-1': true,
+        'app-text-color-active': activeGroup?.code === item.code,
+      }"
       @click="onItemClick(item)"
     >
       {{ item.name }}</el-text
