@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
 import SubAppContainer from '@/views/layout/SubAppContainer.vue'
@@ -15,7 +15,7 @@ const refPopWindow = ref()
 /**
  * 默认页面打开后，打开第一个group的router地址，如果有redirectUrl，则打开redirectUrl
  */
-const activeGroup = ref(null)
+const activeGroup = ref('')
 
 const quickMenus = ref([])
 const menuEntries = ref([])
@@ -49,6 +49,17 @@ const getRedirectRoute = () => {
   return redirect
 }
 
+watch(
+  () => route.path,
+  () => {
+    const path = activeGroup.value?.router
+    const arrs = (path || '').split('/')
+    if(!route.fullPath.startsWith('/' + arrs[1])) {
+      activeGroup.value = ''
+    }
+  },
+)
+
 onMounted(() => {
   console.log('TopMenu mounted, clear active micro app')
   appSettingsStore.setActiveMicroApp('')
@@ -67,7 +78,7 @@ onMounted(() => {
       for (let j = 0; j < entry.resourceGroups.length; j++) {
         const group = entry.resourceGroups[j]
         // 默认打开第一个
-        if (activeGroup.value === null) {
+        if (activeGroup.value === '') {
           activeGroup.value = group
         }
 
