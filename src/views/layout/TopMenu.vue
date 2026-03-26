@@ -115,6 +115,12 @@ onMounted(() => {
     appSettingsStore.setMicroAppConfig(JSON.stringify(microApps))
     appSettingsStore.setActiveMicroApp(JSON.stringify(activeGroup.value))
     console.log('micro app config load complete', microApps)
+    if (redirectRoute === '/') {
+      router.push({
+        path: activeGroup.value?.router || '/',
+        replace: true, // 替换历史记录，优化体验
+      })
+    }
   })
 })
 
@@ -129,11 +135,7 @@ function onItemClick(group) {
   appSettingsStore.setActiveMicroApp(JSON.stringify(group))
   refPopWindow.value.hide()
   activeGroup.value = group
-  if (group.isMicroapp === 'YES') {
-    router.push(group.router)
-  } else {
-    router.push({ path: '/platformCommon/loading' })
-  }
+  router.push(group.router)
 }
 
 function onGroupClick(category) {

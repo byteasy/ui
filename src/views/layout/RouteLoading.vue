@@ -65,10 +65,21 @@ onMounted(() => {
 const loadRouteFromServer = () => {
   console.log('loadRouteFromServer')
   if(appSettingsStore.activeMicroApp === '' || appSettingsStore.activeMicroApp === undefined) {
-    console.log('Loading route from server stop, because no active active micro app info, wait TopMenu init.')
+    console.log('Loading route from server stop, because no active active micro app info.')
     return
   }
   const group = JSON.parse(appSettingsStore.activeMicroApp)
+  if(group.isMicroapp === 'YES') {
+    const redirect = route.query.redirectUrl as string
+    if(redirect !== null && redirect !== undefined) {
+      console.log('loadRouteFromServer stop, because current route is micro app, try redirect.')
+      router.push({
+        path: redirect !== '/' ? redirect : group.router,
+        replace: true, // 替换历史记录，优化体验
+      })
+    }
+    return
+  }
 
   doHttpGet('/platformSvr/sapi/resources/leftMenu?groupId=' + group.id).then((response) => {
     response.data.forEach((item) => {
