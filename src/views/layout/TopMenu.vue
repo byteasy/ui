@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
 import SubAppContainer from '@/views/layout/SubAppContainer.vue'
 import WebLayout from '@/views/layout/WebLayout.vue'
@@ -8,6 +8,7 @@ import { useAppSettingsStore } from '@/stores/appSettings.ts'
 
 const router = useRouter()
 const appSettingsStore = useAppSettingsStore()
+const route = useRoute() // 新增：获取当前路由参数（redirect）
 
 const popoverWidth = ref(500)
 const refPopWindow = ref()
@@ -36,8 +37,20 @@ const calculateWidth = () => {
   }
 }
 
+// 新增：获取目标跳转路由（优先级：redirect参数 > 配置的group.router）
+const getRedirectRoute = () => {
+  // 从路由参数中获取redirect（刷新时的目标路由）
+  const redirect = route.query.redirectUrl as string
+  // 如果有redirect则用redirect，否则用group.router
+  return redirect
+}
+
 onMounted(() => {
-  console.log('TopMenu mounted')
+  console.log('TopMenu mounted, clear active micro app')
+  const redirectRoute = getRedirectRoute()
+  if (redirectRoute !== null && redirectRoute !== undefined) {
+    appSettingsStore.setActiveMicroApp('')
+  }
   calculateWidth()
   window.addEventListener('resize', calculateWidth)
 
@@ -50,9 +63,10 @@ onMounted(() => {
       const entry = menuEntries.value[i]
       for (let j = 0; j < entry.resourceGroups.length; j++) {
         const group = entry.resourceGroups[j]
+        const path = group.router
+        const arrs = (path || '').split('/')
+
         if (group.isMicroapp === 'YES') {
-          const path = group.router
-          const arrs = (path || '').split('/')
           console.log('path', path, arrs)
           const dynamicRoute = {
             path: '/' + arrs[1],
@@ -79,9 +93,19 @@ onMounted(() => {
           }
           microApps.push(microAppConfig)
         }
+
+        if (redirectRoute !== null && redirectRoute !== undefined) {
+          console.log('redirectRoute: ' + redirectRoute + ' arrs: ' + arrs[1] + '/' + arrs[2])
+          // 重建当前活跃的micro app
+          if (redirectRoute.startsWith('/' + arrs[1] + '/' + arrs[2])) {
+            console.log('redirectRoute match micro app: ' + group.code)
+            appSettingsStore.setActiveMicroApp(JSON.stringify(group))
+          }
+        }
       }
     }
     appSettingsStore.setMicroAppConfig(JSON.stringify(microApps))
+    console.log('micro app config load complete', microApps)
   })
 })
 
@@ -102,7 +126,6 @@ function onItemClick(group) {
 function onGroupClick(category) {
   groupEntries.value = category.resourceGroups
 }
-
 </script>
 <template>
   <div class="flex-row align-items-center">

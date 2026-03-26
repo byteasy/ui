@@ -48,18 +48,39 @@ const getTargetRoute = () => {
 watch(
   () => activeMicroApp.value, // 关键：监听 ref 的 value
   (newVal, oldVal) => {
+    console.log('activeMicroApp change: ', newVal)
     loadRouteFromServer()
   },
 )
 
 onMounted(() => {
+  /**
+   * F5刷新后，本地路由信息丢失，但是路由状态存储到了local storage,此时TopMenu的路由还没有构建完成。需要TopMenu构建完路由后再加载.
+   */
   if(activeMicroApp.value) {
     loadRouteFromServer()
   }
 })
+
 const loadRouteFromServer = () => {
   console.log('loadRouteFromServer')
+  if(appSettingsStore.activeMicroApp === '' || appSettingsStore.activeMicroApp === undefined) {
+    console.log('Loading route from server stop, because no active active micro app info.')
+    return
+  }
   const group = JSON.parse(appSettingsStore.activeMicroApp)
+  if(group.isMicroapp === 'YES') {
+    console.log('loadRouteFromServer stop, because current route is micro app')
+    const redirect = route.query.redirectUrl as string
+    if(redirect !== null && redirect !== undefined) {
+      router.push({
+        path: redirect,
+        replace: true, // 替换历史记录，优化体验
+      })
+    }
+    return
+  }
+
   doHttpGet('/platformSvr/sapi/resources/leftMenu?groupId=' + group.id).then((response) => {
     response.data.forEach((item) => {
       try {
