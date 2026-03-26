@@ -240,3 +240,6 @@ html.blue {
 div.el-scrollbar__bar.is-horizontal {
   height: 10px;
 }
+div.el-scrollbar__bar.is-vertical {
+  width: 10px;
+}
