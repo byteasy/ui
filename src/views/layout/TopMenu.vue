@@ -53,8 +53,12 @@ watch(
   () => route.path,
   () => {
     const path = activeGroup.value?.router
+    if (route.fullPath === '/' || route.fullPath.startsWith('/platformCommon/loading') ) {
+      return
+    }
     const arrs = (path || '').split('/')
-    if(!route.fullPath.startsWith('/' + arrs[1])) {
+    if (!route.fullPath.startsWith('/' + arrs[1])) {
+      console.log('fullPath', route.fullPath, path)
       activeGroup.value = ''
     }
   },
