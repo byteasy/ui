@@ -6,7 +6,7 @@ axios.defaults.withCredentials = true
 
 // 创建axios实例
 const service = axios.create({
-  timeout: 15000,
+  timeout: 60000,
 })
 
 // request拦截器
