@@ -61,6 +61,7 @@
     "vite": "^7.3.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-vue-devtools": "^8.0.5",
-    "vue-tsc": "^3.2.2"
+    "vue-tsc": "^3.2.2",
+    "vite-plugin-qiankun": "^1.0.15"
   }
 }
