@@ -16,7 +16,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
    * 显示语言
    */
-  const lang = ref(safeGet('lang') !== null ? safeGet('lang') : 'zh-CN,zh;')
+  const lang = ref(safeGet('lang') !== null ? safeGet('lang') : 'zh-CN')
   /**
    * 导航模式
    */
