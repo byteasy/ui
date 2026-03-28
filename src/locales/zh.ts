@@ -1,6 +1,6 @@
 // zh.ts
 export default {
-  title: '系统运营中心',
+  title: '临工农机',
   subTitle: 'LGAG',
   add: '添加',
   ok: '确定',

@@ -1,6 +1,6 @@
 // en.ts
 export default {
-  title: 'System Operation Center',
+  title: 'LGAG',
   subTitle: 'LGAG',
   add: 'Add',
   ok: 'Confirm',

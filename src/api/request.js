@@ -7,6 +7,7 @@ axios.defaults.withCredentials = true
 // 创建axios实例
 const service = axios.create({
   timeout: 60000,
+  maxRedirects: 0
 })
 
 // request拦截器
@@ -30,6 +31,15 @@ service.interceptors.request.use(
 // respone拦截器
 service.interceptors.response.use(
   (response) => {
+    // 捕获 302
+    if (response.status === 302 || response.status === 301) {
+      const redirectUrl = response.headers.location
+      if (redirectUrl && redirectUrl.includes('login')) {
+        // session 过期 → 跳登录
+        window.location.href = redirectUrl
+        return Promise.reject('session expired')
+      }
+    }
     /**
      * status [200,500) 请求为正确响应，[500, +] 响应有错误
      */

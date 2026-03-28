@@ -28,7 +28,12 @@
                 },
               ]"
             >
-              <slot :name="'formItemField_' + col.name" :row="formValue" :column="col" :props="props">
+              <slot
+                :name="'formItemField_' + col.name"
+                :row="formValue"
+                :column="col"
+                :props="props"
+              >
                 <tuna-form-field
                   :column="col"
                   :context="props.context"
@@ -53,8 +58,8 @@
         <div class="flex-row w-full justify-content-center pb-2">
           <slot name="footerButton" :props="props">
             <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
-                t('save')
-              }}</el-button>
+              t('save')
+            }}</el-button>
             <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
           </slot>
         </div>
@@ -63,7 +68,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineEmits, ref } from 'vue'
+import { defineEmits, defineExpose, ref } from 'vue'
 import TunaFormField from '@/components/TunaFormField.vue'
 import { useI18n } from 'vue-i18n'
 import { doHttpPost } from '@/api/common/platform'
@@ -103,4 +108,8 @@ function onClearForm() {
   refForm.value?.resetFields()
   emit('close')
 }
+
+defineExpose({
+  formValue
+})
 </script>
