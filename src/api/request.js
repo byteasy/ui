@@ -34,7 +34,7 @@ service.interceptors.response.use(
     // 捕获 302
     if (response.status === 302 || response.status === 301) {
       const redirectUrl = response.headers.location
-      if (redirectUrl && redirectUrl.includes('login')) {
+      if (redirectUrl && (redirectUrl.includes('login') || redirectUrl.includes('/oauth2/authorize'))) {
         // session 过期 → 跳登录
         window.location.href = redirectUrl
         return Promise.reject('session expired')
