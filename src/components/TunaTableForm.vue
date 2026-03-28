@@ -57,9 +57,9 @@
       <el-affix position="bottom" class="w-full">
         <div class="flex-row w-full justify-content-center pb-2">
           <slot name="footerButton" :props="props">
-            <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
-              t('save')
-            }}</el-button>
+            <el-button type="primary" v-debounce="onSaveClick" icon="Check" v-if="!props.readonly">{{
+                t('save')
+              }}</el-button>
             <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
           </slot>
         </div>
@@ -110,6 +110,9 @@ function onClearForm() {
 }
 
 defineExpose({
-  formValue
+  props,
+  formValue,
+  onSaveClick,
+  onClearForm
 })
 </script>
