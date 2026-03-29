@@ -7,7 +7,10 @@ axios.defaults.withCredentials = true
 // 创建axios实例
 const service = axios.create({
   timeout: 60000,
-  maxRedirects: 0
+  maxRedirects: 0,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest'
+  }
 })
 
 // request拦截器
@@ -23,21 +26,19 @@ service.interceptors.request.use(
   (error) => {
     ElMessage({
       message: error.message,
-      type: 'error',
+      type: 'error'
     })
     return Promise.reject(error)
-  },
+  }
 )
 // respone拦截器
 service.interceptors.response.use(
   (response) => {
-    // 捕获 302
-    if (response.status === 302 || response.status === 301) {
-      const redirectUrl = response.headers.location
-      if (redirectUrl && (redirectUrl.includes('login') || redirectUrl.includes('/oauth2/authorize'))) {
-        // session 过期 → 跳登录
-        window.location.href = redirectUrl
-        return Promise.reject('session expired')
+    if (response.headers['content-type']?.includes('text/html')) {
+      if (response.data?.includes('/platformSvr/login')) {
+        console.log('reload the total page.')
+        window.location.reload()
+        return Promise.reject()
       }
     }
     /**
@@ -47,7 +48,7 @@ service.interceptors.response.use(
     if (res !== undefined && res.status !== undefined && res.status !== 200) {
       ElMessage({
         message: res.description,
-        type: 'error',
+        type: 'error'
       })
       return Promise.reject(res)
     } else {
@@ -93,10 +94,10 @@ service.interceptors.response.use(
     }
     ElMessage({
       message: error.message,
-      type: 'error',
+      type: 'error'
     })
     return Promise.reject(error)
-  },
+  }
 )
 
 export default service
