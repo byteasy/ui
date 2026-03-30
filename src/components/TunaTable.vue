@@ -345,7 +345,7 @@ function onTableRowDoubleClick(row) {
   if (props.rowDbClick) {
     props.rowDbClick(row)
   } else {
-    onEdit(row)
+    onView(row)
   }
 }
 
