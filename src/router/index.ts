@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import i18n from '@/locales/index.ts'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
 const { t } = i18n.global
 
@@ -92,7 +93,9 @@ const routers = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(qiankunWindow.__POWERED_BY_QIANKUN__
+    ? '/'
+    : '/'),
   routes: routers,
 })
 

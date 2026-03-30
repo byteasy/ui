@@ -1,43 +1,27 @@
 <template>
-  <div class="app-container">
+  <div class="app-container my-bg-color-blank">
     <router-view />
-    <dialog-container />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useI18n } from 'vue-i18n'
-import DialogContainer from '@/components/dialog/DialogContainer.vue'
-
-const { t } = useI18n()
-window.document.title = t('title')
 </script>
-
 <style>
-* {
+html, body, #app {
+  height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  overflow: hidden; /* 建议由子应用内部决定滚动条 */
 }
-
-html,
-body {
+</style>
+<style scoped>
+.app-container {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-}
-</style>
-
-<style scoped>
-.app-container {
-  width: 100vw;
-  height: 100vh;
-  max-width: 100%;
-  max-height: 100%;
-  margin: 0;
-  padding: 0;
   position: relative;
-  overflow: hidden; /* 防止内部内容溢出 */
+  overflow: hidden;
 }
 </style>
