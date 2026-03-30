@@ -99,10 +99,10 @@
                       <el-button icon="More" circle />
                       <template #dropdown>
                         <el-dropdown-menu>
-                          <el-dropdown-item @click="downLoadExcelTemplate">
+                          <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">
                             {{ $t('table.downLoadExcelTemplate') }}
                           </el-dropdown-item>
-                          <el-dropdown-item @click="onExcelImportClick">
+                          <el-dropdown-item @click="onExcelImportClick" v-if="props.excelImportEnable === true">
                             {{ $t('table.importByExcel') }}
                           </el-dropdown-item>
                         </el-dropdown-menu>
@@ -183,6 +183,7 @@ const props = defineProps<{
   paginationVisible?: number
   queryFormVisible?: number
   rowDbClick?: (row : any) => void
+  excelImportEnable?: boolean
 }>()
 
 const emit = defineEmits(['rowClick'])
