@@ -10,6 +10,7 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 import '@/assets/style/style.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import i18n from './locales'
+import { debounce } from './directive/debounce'
 
 const app = createApp(App)
 
@@ -20,5 +21,6 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 app.use(ElementPlus)
+app.directive('debounce', debounce)
 
 app.mount('#app')

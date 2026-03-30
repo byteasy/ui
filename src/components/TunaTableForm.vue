@@ -58,8 +58,8 @@
         <div class="flex-row w-full justify-content-center pb-2">
           <slot name="footerButton" :props="props">
             <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
-              t('save')
-            }}</el-button>
+                t('save')
+              }}</el-button>
             <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
           </slot>
         </div>
@@ -89,7 +89,7 @@ const formValue = ref({ ...props.row })
 const { t } = useI18n() // 表单引用
 
 function onSaveClick() {
-  refForm.value.validate((valid) => {
+  refForm.value.validate((valid: boolean) => {
     if (valid) {
       doHttpPost(props.url, {}, formValue.value)
         .then(() => {
@@ -104,12 +104,24 @@ function onSaveClick() {
   })
 }
 
+const validate = (): Promise<boolean> => {
+  return new Promise((resolve) => {
+    refForm.value?.validate((valid: boolean) => {
+      resolve(valid)
+    })
+  })
+}
+
 function onClearForm() {
   refForm.value?.resetFields()
   emit('close')
 }
 
 defineExpose({
-  formValue
+  props,
+  validate,
+  formValue,
+  onSaveClick,
+  onClearForm
 })
 </script>

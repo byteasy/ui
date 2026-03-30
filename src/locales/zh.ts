@@ -139,7 +139,13 @@ export default {
     save: '保存',
     startDate: '开始时间',
     endDate: '结束时间',
-    rangeSeparator: '到'
+    rangeSeparator: '到',
+    downLoadExcelTemplate: 'Excel模板下载',
+    importByExcel: 'Excel模板导入',
+    importByExcelTip: '将文件拖入或者点击进行上传',
+    importByExcelSubmitButton: '确认导入',
+    columnWarningMessage: '校验结果',
+    importByExcelValidFailedTip: '校验失败，不允许提交'
   },
   validate: {
     minLength: '最小长度',

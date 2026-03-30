@@ -88,6 +88,29 @@
               v-if="props.operationColumnWidth !== 0"
               :min-width="props.operationColumnWidth ? props.operationColumnWidth : 160"
             >
+              <template #header>
+                <div class="flex-row align-items-center w-full">
+                  <div class="flex-grow"></div>
+                  <div class="flex-none">
+                    {{ $t('table.operation') }}
+                  </div>
+                  <div class="flex-grow flex-row justify-content-end">
+                    <el-dropdown placement="bottom-start">
+                      <el-button icon="More" circle />
+                      <template #dropdown>
+                        <el-dropdown-menu>
+                          <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">
+                            {{ $t('table.downLoadExcelTemplate') }}
+                          </el-dropdown-item>
+                          <el-dropdown-item @click="onExcelImportClick" v-if="props.excelImportEnable === true">
+                            {{ $t('table.importByExcel') }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                  </div>
+                </div>
+              </template>
               <template #default="scope">
                 <slot name="operationSlot" :row="scope.row">
                   <el-button link type="primary" @click="onView(scope.row)">{{
@@ -144,6 +167,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useModal } from '@/components/dialog/useModal.ts'
 import TunaTableForm from '@/components/TunaTableForm.vue'
+import TunaExcelImport from '@/components/TunaExcelImport.vue'
 
 const route = useRoute()
 const { t } = useI18n() // 表单引用
@@ -159,6 +183,8 @@ const props = defineProps<{
   paginationVisible?: number
   queryFormVisible?: number
   rowDbClick?: (row : any) => void
+  excelImportEnable?: boolean
+  excelImportComponent?: Component
 }>()
 
 const emit = defineEmits(['rowClick'])
@@ -215,11 +241,42 @@ function refresh() {
     })
 }
 
+function downLoadExcelTemplate() {
+  window.open(props.baseUrl + '/excel/template', '_blank')
+}
+
+function onExcelImportClick() {
+  const [lastRoute] = route.matched.slice(-1)
+  open(
+    getExcelImportComponent(),
+    {
+      columns: tableColumns.value,
+      url: props.baseUrl,
+      context: props.context
+    }, // 传给组件的 props
+    {
+      title: t('table.importByExcel') + '>' + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      width: getFormWidth(),
+      onClose: (data) => {
+        refresh()
+      }
+    }
+  )
+}
+
 function getFormComponent() {
   if (props.formComponent) {
     return props.formComponent
   } else {
     return TunaTableForm
+  }
+}
+
+function getExcelImportComponent() {
+  if (props.excelImportComponent) {
+    return props.excelImportComponent
+  } else {
+    return TunaExcelImport
   }
 }
 
@@ -298,7 +355,7 @@ function onTableRowDoubleClick(row) {
   if (props.rowDbClick) {
     props.rowDbClick(row)
   } else {
-    onEdit(row)
+    onView(row)
   }
 }
 
