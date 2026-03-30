@@ -184,6 +184,7 @@ const props = defineProps<{
   queryFormVisible?: number
   rowDbClick?: (row : any) => void
   excelImportEnable?: boolean
+  excelImportComponent?: Component
 }>()
 
 const emit = defineEmits(['rowClick'])
@@ -247,7 +248,7 @@ function downLoadExcelTemplate() {
 function onExcelImportClick() {
   const [lastRoute] = route.matched.slice(-1)
   open(
-    TunaExcelImport,
+    getExcelImportComponent(),
     {
       columns: tableColumns.value,
       url: props.baseUrl,
@@ -268,6 +269,14 @@ function getFormComponent() {
     return props.formComponent
   } else {
     return TunaTableForm
+  }
+}
+
+function getExcelImportComponent() {
+  if (props.excelImportComponent) {
+    return props.excelImportComponent
+  } else {
+    return TunaExcelImport
   }
 }
 
