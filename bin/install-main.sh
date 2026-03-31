@@ -1,4 +1,5 @@
-set VERSION=1.0.0
+VERSION=1.0.0
+echo $VERSION
 pnpm run build-only
 cd ..
 jar cvf cloud-platform-ui-$VERSION.jar -C dist .
