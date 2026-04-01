@@ -7,7 +7,7 @@
 </template>
 <script setup lang="ts">
 import { useModal } from '@/components/dialog/useModal.ts'
-import I18nForm from '@/views/platform/i18n/I18nForm.vue'
+import TunaI18NForm from "@/components/TunaI18nForm.vue";
 
 const { open } = useModal()
 const props = defineProps<{
@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const onI18nClick = () => {
   open(
-    I18nForm,
+    TunaI18NForm,
     {
       code: props.code,
     },
