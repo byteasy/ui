@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { doHttpGet } from '@/api/common/platform'
-import SubAppContainer from '@/views/layout/SubAppContainer.vue'
-import WebLayout from '@/views/layout/WebLayout.vue'
-import { useAppSettingsStore } from '@/stores/appSettings.ts'
+import {onMounted, onUnmounted, ref, watch} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {doHttpGet} from '@/api/common/platform'
+import {useAppSettingsStore} from '@/stores/appSettings.ts'
 
 const router = useRouter()
 const appSettingsStore = useAppSettingsStore()
@@ -53,7 +51,7 @@ watch(
   () => route.path,
   () => {
     const path = activeGroup.value?.router
-    if (route.fullPath === '/' || route.fullPath.startsWith('/platformCommon/loading') ) {
+    if (route.fullPath === '/' || route.fullPath.startsWith('/platformCommon/loading')) {
       return
     }
     const arrs = (path || '').split('/')
@@ -89,34 +87,6 @@ onMounted(() => {
         const path = group.router
         const arrs = (path || '').split('/')
 
-        if (group.isMicroapp === 'YES') {
-          console.log('path', path, arrs)
-          const dynamicRoute = {
-            path: '/' + arrs[1],
-            component: WebLayout,
-            redirect: router,
-            children: [
-              {
-                path: arrs[2] + '/:path*',
-                name: group.code,
-                component: SubAppContainer,
-              },
-            ],
-          }
-          router.addRoute(dynamicRoute)
-          console.log('routes length:', router.getRoutes().length)
-          console.log('microappRoute', dynamicRoute)
-          // 构建微应用的配置信息
-          const microAppConfig = {
-            name: group.code,
-            entry: group.entry,
-            container: '#sub-app-container', // 挂载子应用的dom
-            activeRule: '/' + arrs[1] + '/' + arrs[2], // 路由匹配规则
-            props: group.props ? JSON.parse(group.props) : {},
-          }
-          microApps.push(microAppConfig)
-        }
-
         if (redirectRoute !== null && redirectRoute !== undefined) {
           console.log('redirectRoute: ' + redirectRoute + ' arrs: ' + arrs[1] + '/' + arrs[2])
           // 重建当前活跃的micro app
@@ -127,7 +97,6 @@ onMounted(() => {
         }
       }
     }
-    appSettingsStore.setMicroAppConfig(JSON.stringify(microApps))
     appSettingsStore.setActiveMicroApp(JSON.stringify(activeGroup.value))
     console.log('micro app config load complete', microApps)
     if (redirectRoute === '/') {
@@ -168,7 +137,8 @@ function onGroupClick(category) {
       }"
       @click="onItemClick(item)"
     >
-      {{ item.name }}</el-text
+      {{ item.name }}
+    </el-text
     >
     <el-popover placement="bottom-start" :width="popoverWidth" ref="refPopWindow">
       <template #reference>
@@ -176,7 +146,9 @@ function onGroupClick(category) {
           class="flex-row align-items-center ml-5 app-text-color my-font-size-lg"
           style="cursor: pointer"
         >
-          <el-icon :size="20"><Menu /></el-icon>
+          <el-icon :size="20">
+            <Menu/>
+          </el-icon>
         </div>
       </template>
 
@@ -231,6 +203,7 @@ function onGroupClick(category) {
   padding: 0.4rem;
   border-radius: 0.4rem;
 }
+
 .app-text-color:hover {
   background-color: color-mix(in srgb, var(--my-bg-color) 90%, var(--my-text-color));
 }
@@ -289,6 +262,7 @@ function onGroupClick(category) {
   .item-first {
     flex: 0 0 90px;
   }
+
   .group-one {
     padding: 10px 12px;
     font-size: 12px;
@@ -306,13 +280,16 @@ function onGroupClick(category) {
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--el-border-color-lighter);
   border-radius: 10px;
 }
+
 .group-tow-child {
   padding: 0.1rem;
 }
+
 .group-tow-child:hover {
   color: var(--el-color-primary);
   cursor: pointer;

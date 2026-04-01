@@ -3,79 +3,107 @@
 </template>
 
 <script lang="ts" setup>
-import { registerApps } from '@/util/qiankun'
-import { addGlobalUncaughtErrorHandler, start } from 'qiankun'
-import { useAppSettingsStore } from '@/stores/appSettings.ts'
-import { onUnmounted } from 'vue'
+import {registerApps} from '@/util/qiankun'
+import {addGlobalUncaughtErrorHandler, start} from 'qiankun'
+import {onMounted, onUnmounted} from 'vue'
 import router from '@/router'
+import {doHttpGet} from "@/api/common/platform";
+
 console.log('sub-app-container onMounted')
 const win = window as Window & { qiankunStarted?: boolean }
-const appSettingsStore = useAppSettingsStore()
 let hashChangeHandler: () => void
 
-console.log('location.hash', location.hash)
-if (!win.qiankunStarted) {
-  console.log('qiankunStarted', win.qiankunStarted)
-  win.qiankunStarted = true
-  const subApps = JSON.parse(appSettingsStore.microAppConfig)
-  let appArray = []
-  for (let i = 0; i < subApps.length; i++) {
-    const subApp = subApps[i]
-    const cfg = {
-      name: subApp.name,
-      entry: subApp.entry,
-      container: '#sub-app-container', // 挂载子应用的dom
-      activeRule: (location) => {
-        return (
-          location.pathname.includes(subApp.activeRule) || location.hash.includes(subApp.activeRule)
-        )
-      },
-      props: subApp.props,
+onMounted(() => {
+  doHttpGet('/platformSvr/sapi/resourceCategorys/topMenu').then((res) => {
+    const microApps = []
+    for (let i = 0; i < res.data.resourceCategoryVOS.length; i++) {
+      const entry = res.data.resourceCategoryVOS[i]
+      for (let j = 0; j < entry.resourceGroups.length; j++) {
+        const group = entry.resourceGroups[j]
+
+        const path = group.router
+        const pathArrs = (path || '').split('/')
+
+        if (group.isMicroapp === 'YES') {
+          // 构建微应用的配置信息
+          const microAppConfig = {
+            name: group.code,
+            entry: group.entry,
+            container: '#sub-app-container', // 挂载子应用的dom
+            activeRule: '/' + pathArrs[1] + '/' + pathArrs[2], // 路由匹配规则
+            props: group.props ? JSON.parse(group.props) : {},
+          }
+          microApps.push(microAppConfig)
+        }
+      }
     }
-    appArray.push(cfg)
-  }
-  registerApps(appArray)
 
-  addGlobalUncaughtErrorHandler((event, source, lineno, colno, error) => {
-    console.log('qiankun 微应用加载错误：', event, source, lineno, colno, error)
-  })
+    console.log('location.hash', location.hash)
+    if (!win.qiankunStarted) {
+      console.log('qiankunStarted', win.qiankunStarted)
+      win.qiankunStarted = true
+      const subApps = microApps
+      let appArray = []
+      for (let i = 0; i < subApps.length; i++) {
+        const subApp = subApps[i]
+        const cfg = {
+          name: subApp.name,
+          entry: subApp.entry,
+          container: '#sub-app-container', // 挂载子应用的dom
+          activeRule: (location) => {
+            return (
+              location.pathname.includes(subApp.activeRule) || location.hash.includes(subApp.activeRule)
+            )
+          },
+          props: subApp.props,
+        }
+        appArray.push(cfg)
+      }
+      registerApps(appArray)
 
-  start({
-    sandbox: {
-      experimentalStyleIsolation: false, // 样式隔离
-    },
-    // 其他配置
-    prefetch: true,
-    singular: true,
-    fetch: window.fetch,
-  })
+      addGlobalUncaughtErrorHandler((event, source, lineno, colno, error) => {
+        console.log('qiankun 微应用加载错误：', event, source, lineno, colno, error)
+      })
 
-  hashChangeHandler = () => {
-    console.log('[qiankun] 检测到 hash 变化：', window.location.hash)
-    if (win.__QIANKUN__) {
-      // 方式1：调用 qiankun 内置的路由检测方法（推荐）
-      console.log('handleRouterChange')
-      win.__QIANKUN__.handleRouterChange()
-      // 方式2：如果方式1无效，手动重新挂载激活的子应用（兜底）
-      // const activeApp = win.__QIANKUN__._activeApps[0]
-      // if (activeApp) win.__QIANKUN__.mountApp(activeApp)
+      start({
+        sandbox: {
+          experimentalStyleIsolation: false, // 样式隔离
+        },
+        // 其他配置
+        prefetch: true,
+        singular: true,
+        fetch: window.fetch,
+      })
+
+      hashChangeHandler = () => {
+        console.log('[qiankun] 检测到 hash 变化：', window.location.hash)
+        if (win.__QIANKUN__) {
+          // 方式1：调用 qiankun 内置的路由检测方法（推荐）
+          console.log('handleRouterChange')
+          win.__QIANKUN__.handleRouterChange()
+          // 方式2：如果方式1无效，手动重新挂载激活的子应用（兜底）
+          // const activeApp = win.__QIANKUN__._activeApps[0]
+          // if (activeApp) win.__QIANKUN__.mountApp(activeApp)
+        }
+      }
+
+      window.addEventListener('hashchange', hashChangeHandler)
+
+      router.afterEach(() => {
+        console.log('handleRouterChange')
+        win.__QIANKUN__?.handleRouterChange()
+      })
+      console.log('qiankunStarted', 'success')
+
+      onUnmounted(() => {
+        if (hashChangeHandler) {
+          window.removeEventListener('hashchange', hashChangeHandler)
+        }
+      })
     }
-  }
-
-  window.addEventListener('hashchange', hashChangeHandler)
-
-  router.afterEach(() => {
-    console.log('handleRouterChange')
-    win.__QIANKUN__?.handleRouterChange()
   })
-  console.log('qiankunStarted', 'success')
+})
 
-  onUnmounted(() => {
-    if (hashChangeHandler) {
-      window.removeEventListener('hashchange', hashChangeHandler)
-    }
-  })
-}
 </script>
 
 <style>
@@ -83,6 +111,7 @@ if (!win.qiankunStarted) {
   width: 100% !important;
   height: 100% !important;
 }
+
 div[id^='__qiankun_microapp_wrapper'] {
   height: 100% !important;
   display: flex;

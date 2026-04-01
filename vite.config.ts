@@ -59,7 +59,7 @@ export default defineConfig(({ mode }) => {
       port: 7999,
       proxy: {
         '/platformSvr/': {
-          target: 'http://localhost:80',
+          target: 'http://localhost:18080',
           changeOrigin: true,
         },
       },
