@@ -11,7 +11,7 @@ const refPopWindow = ref()
 /**
  * 默认页面打开后，打开第一个group的router地址，如果有redirectUrl，则打开redirectUrl
  */
-const activeGroup = ref('')
+const activeGroup = ref(undefined)
 
 const quickMenus = ref([])
 const menuEntries = ref([])
@@ -37,14 +37,6 @@ const calculateWidth = () => {
   }
 }
 
-// 新增：获取目标跳转路由（优先级：redirect参数 > 配置的group.router）
-const getRedirectRoute = () => {
-  // 从路由参数中获取redirect（刷新时的目标路由）
-  const redirect = route.query.redirectUrl as string
-  // 如果有redirect则用redirect，否则用group.router
-  return redirect
-}
-
 watch(
   () => route.path,
   () => {
@@ -55,14 +47,13 @@ watch(
     const arrs = (path || '').split('/')
     if (!route.fullPath.startsWith('/' + arrs[1])) {
       console.log('fullPath', route.fullPath, path)
-      activeGroup.value = ''
+      activeGroup.value = undefined
     }
   },
 )
 
 onMounted(() => {
   console.log('TopMenu mounted, clear active micro app')
-  const redirectRoute = getRedirectRoute()
   calculateWidth()
   window.addEventListener('resize', calculateWidth)
 
@@ -70,36 +61,20 @@ onMounted(() => {
     menuEntries.value = res.data.resourceCategoryVOS
     quickMenus.value = res.data.resourceGroups
 
+    const fullPath = route.fullPath
+    const rootPath = '/' + (fullPath || '').split('/')[1]
     const microApps = []
     for (let i = 0; i < menuEntries.value.length; i++) {
       const entry = menuEntries.value[i]
       for (let j = 0; j < entry.resourceGroups.length; j++) {
         const group = entry.resourceGroups[j]
         // 默认打开第一个
-        if (activeGroup.value === '') {
+        if (group.router.startsWith(rootPath)) {
           activeGroup.value = group
-        }
-
-        const path = group.router
-        const arrs = (path || '').split('/')
-
-        if (redirectRoute !== null && redirectRoute !== undefined) {
-          console.log('redirectRoute: ' + redirectRoute + ' arrs: ' + arrs[1] + '/' + arrs[2])
-          // 重建当前活跃的micro app
-          if (redirectRoute.startsWith('/' + arrs[1] + '/' + arrs[2])) {
-            console.log('redirectRoute match micro app: ' + group.code)
-            activeGroup.value = group
-          }
         }
       }
     }
     console.log('micro app config load complete', microApps)
-    if (redirectRoute === '/') {
-      router.push({
-        path: activeGroup.value?.router || '/',
-        replace: true, // 替换历史记录，优化体验
-      })
-    }
   })
 })
 
@@ -108,7 +83,7 @@ onUnmounted(() => {
 })
 
 function onItemClick(group) {
-  if (group.code === activeGroup.value.code) {
+  if (group.code === activeGroup.value?.code) {
     return
   }
   refPopWindow.value.hide()
