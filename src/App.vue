@@ -1,6 +1,7 @@
 <template>
   <div class="app-container my-bg-color-blank">
     <router-view />
+    <dialog-container />
   </div>
 </template>
 

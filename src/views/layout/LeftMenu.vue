@@ -20,17 +20,17 @@
         </el-menu-item>
 
         <template v-else v-for="subMenu in root.childrenList" :key="subMenu.code">
-          <el-sub-menu :index="subMenu.routerUrl" v-if="subMenu.hasOwnProperty('childrenList') && subMenu.childrenList !== null && subMenu.type === 'DIRECTORY' && subMenu.visible === 'YES'">
+          <el-sub-menu :index="root.routerUrl + '/' + subMenu.routerUrl" v-if="subMenu.hasOwnProperty('childrenList') && subMenu.childrenList !== null && subMenu.type === 'DIRECTORY' && subMenu.visible === 'YES'">
             <template #title>
               <span class="pl-3">{{ subMenu.name }}</span>
             </template>
             <template v-for="subsubMenu in subMenu.childrenList" :key="subsubMenu.code">
-              <el-menu-item :index="subsubMenu.routerUrl">
+              <el-menu-item :index="root.routerUrl + '/' + subMenu.routerUrl + '/' + subsubMenu.routerUrl">
                 <span class="pl-3">{{ subsubMenu.name }}</span>
               </el-menu-item>
             </template>
           </el-sub-menu>
-          <el-menu-item :index="subMenu.routerUrl" v-if="subMenu.type === 'MENU' && subMenu.visible === 'YES'">
+          <el-menu-item :index="root.routerUrl + '/' + subMenu.routerUrl" v-if="subMenu.type === 'MENU' && subMenu.visible === 'YES'">
             <span class="pl-3">{{ subMenu.name }}</span>
           </el-menu-item>
         </template>
@@ -43,9 +43,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
-import { useAppSettingsStore } from '@/stores/appSettings.ts'
 
-const appSettingsStore = useAppSettingsStore()
 const route = useRoute()
 const refMenu = ref()
 const collapse = ref(false)
@@ -54,7 +52,7 @@ const menuTree = ref([])
 
 onMounted(() => {
   doHttpGet('/platformSvr/sapi/resources/leftMenu', {
-    groupId: JSON.parse(appSettingsStore.activeMicroApp).id,
+    fullPath: route.fullPath,
   }).then((response) => {
     menuTree.value = response.data
     refMenu.value?.updateActiveIndex(route.fullPath)

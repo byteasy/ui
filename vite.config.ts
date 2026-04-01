@@ -60,14 +60,14 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       cors: true,
-      port: 7999,
+      port: 7998,
       proxy: {
         '/platformSvr/': {
-          target: 'http://localhost:80',
+          target: 'http://localhost:18080',
           changeOrigin: true,
         },
         '/product-assistant/sapi/': {
-          target: 'http://localhost:8081',
+          target: 'http://localhost:18081/product-assistant/sapi/',
           changeOrigin: true,
         },
       },
