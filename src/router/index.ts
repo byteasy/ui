@@ -1,128 +1,159 @@
-import {createRouter, createWebHashHistory} from 'vue-router'
-import i18n from '@/locales/index.ts'
-import {doHttpGet} from "@/api/common/platform";
-import WebLayout from "@/views/layout/WebLayout.vue";
-import SubAppContainer from "@/views/layout/SubAppContainer.vue";
-
-const {t} = i18n.global
-
-const routers = [
-  {
-    path: '/platformCommon',
-    component: () => import('../views/layout/WebLayout.vue'),
-    name: 'platformCommon',
-    meta: {title: t('platformCommon.title')},
-    redirect: '/platformCommon/favoriteSettings',
-    children: [
-      {
-        path: '404',
-        name: 'Error404',
-        component: () => import('../views/common/Error404.vue')
-      },
-      {
-        path: 'favoriteSettings',
-        name: 'favoriteSettings',
-        redirect: '/platformCommon/favoriteSettings/appearanceSettings',
-        component: () => import('../views/layout/AsideMain.vue'),
-        meta: {title: t('platformCommon.favoriteSettings')},
-        children: [
-          {
-            path: 'appearanceSettings',
-            name: 'appearanceSettings',
-            meta: {title: t('platformCommon.appearanceSettings')},
-            component: () => import('../views/common/AppearanceSettings.vue'),
-          },
-          {
-            path: 'languageSettings',
-            name: 'languageSettings',
-            meta: {title: t('platformCommon.languageSettings')},
-            component: () => import('../views/common/LanguageSettings.vue'),
-          },
-          {
-            path: 'personalInformation',
-            name: 'personalInformation',
-            meta: {title: t('platformCommon.personalInformation')},
-            component: () => import('../views/common/PersonalSettings.vue'),
-          },
-          {
-            path: 'passwordSettings',
-            name: 'passwordSettings',
-            meta: {title: t('platformCommon.passwordSettings')},
-            component: () => import('../views/common/PasswordSettings.vue'),
-          },
-        ],
-      },
-    ],
-  },
-]
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
+import { doHttpGet } from '@/api/common/platform'
+import AsideMain from '@/views/layout/AsideMain.vue'
+import XEUtils from 'xe-utils'
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
-  routes: routers,
+  history: createWebHashHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/' : '/'),
+  routes: [
+  ],
 })
 
 /**
  * 基座只有静态路由，并动态加载微应用的路由入口
  */
-let isRouterLoad = false
+let isMicroAppRouterLoad = false
+const modulesTwo = import.meta.glob('../views/*/*.vue', { eager: true, import: 'default' })
+const modulesThree = import.meta.glob('../views/*/*/*.vue', { eager: true, import: 'default' })
+const modulesFour = import.meta.glob('../views/*/*/*/*.vue', { eager: true, import: 'default' })
+console.log('router component level2', modulesTwo)
+console.log('router component level3', modulesThree)
+console.log('router component level4', modulesFour)
 
 router.beforeEach(async (to, from, next) => {
-  if (!isRouterLoad) {
-    /**
-     * 从服务端加载微前端的入口路由+所有的基座路由,微前端的路由交给子应用自己去加载。
-     */
-    await doHttpGet('/platformSvr/sapi/resourceCategorys/topMenu').then((res) => {
-      let activeGroup = null
-      for (let i = 0; i < res.data.resourceCategoryVOS.length; i++) {
-        const entry = res.data.resourceCategoryVOS[i]
-        for (let j = 0; j < entry.resourceGroups.length; j++) {
-          const group = entry.resourceGroups[j]
-          // 默认打开第一个
-          if (activeGroup === null) {
-            activeGroup = group
-          }
-
-          const path = group.router
-          const pathArrs = (path || '').split('/')
-          console.log('path', path, pathArrs)
-
-          if (group.isMicroapp === 'YES') {
-            const dynamicRoute = {
-              path: '/' + pathArrs[1],
-              component: WebLayout,
-              redirect: router,
-              children: [
-                {
-                  path: pathArrs[2] + '/:path*',
-                  name: group.code,
-                  component: SubAppContainer,
-                },
-              ],
-            }
+  if (!isMicroAppRouterLoad) {
+    console.log('micro app router not init. try to init', to.fullPath)
+    await doHttpGet('/platformSvr/sapi/resources/leftMenu', { fullPath: to.fullPath }).then(
+      (response) => {
+        response.data.forEach((item) => {
+          try {
+            const dynamicRoute: RouteRecordRaw = {}
+            rebuildLeftMenus(dynamicRoute, item)
+            console.log('micro app add dynamicRoute', dynamicRoute)
             router.addRoute(dynamicRoute)
-            console.log('add microappRoute', dynamicRoute)
+            console.log('micro app routes length:', router.getRoutes().length)
+          } catch (err) {
+            console.log('micro app add router err', err)
           }
-        }
-      }
-
-      // 最后添加404
-      router.addRoute(
-        {
-          path: '/:catchAll(.*)',
-          redirect: '/platformCommon/404'
-        }
-      )
-      isRouterLoad = true
-      console.log('动态路由加载完成', isRouterLoad, to.fullPath, activeGroup.router)
-      if (to.fullPath === '/') {
-        next(activeGroup.router)
-      } else {
-        next({...to, replace: true})
-      }
-      return
-    })
+        })
+      },
+    )
+    console.log('micro app router init finished', router.getRoutes().length)
+    isMicroAppRouterLoad = true
+    next({ ...to, replace: true })
+    return
   }
+  console.log('micro app goto', to.fullPath)
   next()
 })
+
+function rebuildLeftMenus(node, menu) {
+  console.log('menu', menu)
+  // 支持一级菜单
+  if (menu.type === 'MENU' && (menu.parentId === null || menu.parentId === undefined)) {
+    const dirArrs = (menu.routerUrl || '').split('/')
+    node.path = filteredQueryParameter('/' + dirArrs[1] + '/' + dirArrs[2])
+    node.name = menu.code + 'Parent'
+    node.component = AsideMain
+    node.children = [
+      {
+        path: filteredQueryParameter('/' + dirArrs[3]),
+        name: menu.code,
+        meta: { title: menu.title },
+        component: getModule(menu.component),
+      },
+    ]
+  }
+  if (hasChildrenMenu(menu)) {
+    node.path = menu.routerUrl
+    node.name = menu.code
+    node.component = AsideMain
+    node.redirect = menu.redirectUrl
+    node.children = []
+    node.meta = { title: menu.name }
+    menu.childrenList.forEach((child) => {
+      if (child.type === 'MENU' || child.type === 'DIRECTORY') {
+        if (hasChildrenMenu(child)) {
+          child.childrenList.forEach((subChild) => {
+            if (subChild.type === 'MENU') {
+              node.children.push({
+                path: child.routerUrl + '/' + subChild.routerUrl,
+                name: subChild.name,
+                meta: {
+                  title: subChild.name,
+                  affix: subChild.affix === 'YES',
+                  noCache: !subChild.keepAlive,
+                  query: parseQueryParameter(subChild.routerUrl),
+                },
+                component: getModule(subChild.component),
+              })
+            }
+          })
+        } else {
+          node.children.push({
+            path: child.routerUrl,
+            name: child.name,
+            meta: {
+              title: child.name,
+              affix: child.affix === 'YES',
+              noCache: !child.keepAlive,
+              query: parseQueryParameter(child.routerUrl),
+            },
+            component: getModule(child.component),
+          })
+        }
+      }
+    })
+  }
+}
+
+function filteredQueryParameter(value) {
+  if (value.indexOf('?') >= 0) {
+    return value.split('?')[0]
+  } else {
+    return value
+  }
+}
+
+function parseQueryParameter(value) {
+  const index = value.indexOf('?')
+  if (index >= 0) {
+    return value.substring(index + 1)
+  } else {
+    return undefined
+  }
+}
+
+function hasChildrenMenu(menu) {
+  if (
+    XEUtils.hasOwnProp(menu, 'childrenList') &&
+    menu.childrenList !== null &&
+    menu.childrenList.length > 0
+  ) {
+    const len = menu.childrenList.length
+    for (let i = 0; i < len; i++) {
+      const child = menu.childrenList[i]
+      if (child.type === 'MENU') {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+function getModule(name) {
+  if (modulesThree['..' + name] !== undefined) {
+    return modulesThree['..' + name]
+  }
+  if (modulesTwo['..' + name] !== undefined) {
+    return modulesTwo['..' + name]
+  }
+  if (modulesFour['..' + name] !== undefined) {
+    return modulesFour['..' + name]
+  }
+  console.log(name, 'component load error')
+  return modulesTwo['./ErrorLoadComponent.vue']
+}
 
 export default router

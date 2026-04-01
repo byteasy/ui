@@ -10,6 +10,7 @@ import Icons from 'unplugin-icons/vite'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 import { resolve } from 'path'
 import IconsResolver from 'unplugin-icons/resolver'
+import qiankun from 'vite-plugin-qiankun'
 
 // https://vite.dev/config/
 // 改为带环境参数的函数形式，核心改造点
@@ -19,10 +20,13 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    base: './',
+    base: '/product-assistant',
     plugins: [
       vue(),
       vueJsx(),
+      qiankun('product-assistant', {
+        useDevMode: true
+      }),
       vueDevTools(),
       AutoImport({
         resolvers: [ElementPlusResolver()],
@@ -56,10 +60,14 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       cors: true,
-      port: 7999,
+      port: 7998,
       proxy: {
         '/platformSvr/': {
           target: 'http://localhost:18080',
+          changeOrigin: true,
+        },
+        '/product-assistant/sapi/': {
+          target: 'http://localhost:18081/product-assistant/sapi/',
           changeOrigin: true,
         },
       },
