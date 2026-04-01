@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    base: '/product-assistant',
+    base: '/platformSvr/common',
     plugins: [
       vue(),
       vueJsx(),
@@ -66,14 +66,10 @@ export default defineConfig(({ mode }) => {
           target: 'http://localhost:18080',
           changeOrigin: true,
         },
-        '/product-assistant/sapi/': {
-          target: 'http://localhost:18081/product-assistant/sapi/',
-          changeOrigin: true,
-        },
       },
     },
     build: {
-      outDir: 'dist/static',
+      outDir: 'dist/static/common',
     },
     css: {
       preprocessorOptions: {
