@@ -2,10 +2,8 @@
 import {onMounted, onUnmounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {doHttpGet} from '@/api/common/platform'
-import {useAppSettingsStore} from '@/stores/appSettings.ts'
 
 const router = useRouter()
-const appSettingsStore = useAppSettingsStore()
 const route = useRoute() // 新增：获取当前路由参数（redirect）
 
 const popoverWidth = ref(500)
@@ -64,8 +62,6 @@ watch(
 
 onMounted(() => {
   console.log('TopMenu mounted, clear active micro app')
-  appSettingsStore.setActiveMicroApp('')
-
   const redirectRoute = getRedirectRoute()
   calculateWidth()
   window.addEventListener('resize', calculateWidth)
@@ -97,7 +93,6 @@ onMounted(() => {
         }
       }
     }
-    appSettingsStore.setActiveMicroApp(JSON.stringify(activeGroup.value))
     console.log('micro app config load complete', microApps)
     if (redirectRoute === '/') {
       router.push({
@@ -116,7 +111,6 @@ function onItemClick(group) {
   if (group.code === activeGroup.value.code) {
     return
   }
-  appSettingsStore.setActiveMicroApp(JSON.stringify(group))
   refPopWindow.value.hide()
   activeGroup.value = group
   router.push(group.router)

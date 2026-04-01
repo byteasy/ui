@@ -36,21 +36,6 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
    */
   const drawerDirection= ref(safeGet('drawerDirection') !== null ? safeGet('drawerDirection') : 'rtl')
 
-  /**
-   * 微应用的入口配置
-   */
-  const microAppConfig = ref('')
-
-  /**
-   * 当前激活的领域菜单
-   */
-  const activeMicroApp = ref(safeGet('activeMicroApp') !== null ? safeGet('activeMicroApp') : undefined)
-
-  /**
-   * 路由是否已经完成加载
-   */
-  const isDynamicRoutesLoaded = ref(false)
-
   function setTheme(value: string) {
     theme.value = value
     safePut('theme', value)
@@ -86,19 +71,6 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     safePut('drawerDirection', value)
   }
 
-  function setMicroAppConfig(value: string) {
-    microAppConfig.value = value
-  }
-
-  function setActiveMicroApp(value: string) {
-    activeMicroApp.value = value
-    safePut('activeMicroApp', value)
-  }
-
-  function setIsDynamicRoutesLoaded(value: boolean) {
-    isDynamicRoutesLoaded.value = value
-  }
-
   return {
     theme,
     setTheme,
@@ -114,11 +86,5 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     setCloseOnClickModal,
     drawerDirection,
     setDrawerDirection,
-    microAppConfig,
-    setMicroAppConfig,
-    activeMicroApp,
-    setActiveMicroApp,
-    isDynamicRoutesLoaded,
-    setIsDynamicRoutesLoaded
   }
 })
