@@ -76,6 +76,7 @@ function closeOrOpenMenu(size) {
 }
 
 defineExpose({ closeOrOpenMenu })
+
 </script>
 <style scoped>
 .el-menu-border {
