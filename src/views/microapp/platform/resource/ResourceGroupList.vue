@@ -84,8 +84,8 @@ import { ref } from 'vue'
 import { doHttpPost } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import ResourceCategoryForm from '@/views/platform/resource/ResourceCategoryForm.vue'
-import ResourceGroupForm from '@/views/platform/resource/ResourceGroupForm.vue'
+import ResourceCategoryForm from '@/views/microapp/platform/resource/ResourceCategoryForm.vue'
+import ResourceGroupForm from '@/views/microapp/platform/resource/ResourceGroupForm.vue'
 const { t } = useI18n()
 
 const refTable = ref(null)
