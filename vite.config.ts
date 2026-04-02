@@ -62,7 +62,7 @@ export default defineConfig(({ mode }) => {
       cors: true,
       port: 7998,
       proxy: {
-        '/platformSvr/': {
+        '/platformSvr/sapi': {
           target: 'http://localhost:18080',
           changeOrigin: true,
         },

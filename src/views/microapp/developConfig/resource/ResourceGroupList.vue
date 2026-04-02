@@ -30,6 +30,7 @@
               <div class="flex-row align-items-center w-full">
                 <div class="flex-grow">{{ scope.row.name }}</div>
                 <div class="flex-none">
+                  <Edit style="width: 1em; height: 1em;" @click="refTableCategory.onEdit(scope.row)"/>
                   <el-popconfirm
                   :confirm-button-text="$t('ok')"
                   :cancel-button-text="$t('cancel')"
@@ -38,7 +39,7 @@
                   @confirm="refTableCategory.onDelete(scope.row)"
                 >
                   <template #reference>
-                    <el-button icon="Delete" type="danger" text circle class="ml-3" />
+                    <Delete style="width: 1em; height: 1em; margin-left: 0.3rem; color: var(--el-color-danger)" />
                   </template>
                 </el-popconfirm>
                 </div>
@@ -84,8 +85,8 @@ import { ref } from 'vue'
 import { doHttpPost } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import ResourceCategoryForm from '@/views/microapp/platform/resource/ResourceCategoryForm.vue'
-import ResourceGroupForm from '@/views/microapp/platform/resource/ResourceGroupForm.vue'
+import ResourceCategoryForm from '@/views/microapp/developConfig/resource/ResourceCategoryForm.vue'
+import ResourceGroupForm from '@/views/microapp/developConfig/resource/ResourceGroupForm.vue'
 const { t } = useI18n()
 
 const refTable = ref(null)

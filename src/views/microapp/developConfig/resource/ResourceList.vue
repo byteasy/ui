@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import ResourceForm from "@/views/microapp/platform/resource/ResourceForm.vue";
+import ResourceForm from "@/views/microapp/developConfig/resource/ResourceForm.vue";
 import { onMounted, ref } from 'vue'
 import { doHttpGet } from '@/api/common/platform'
 
