@@ -11,7 +11,7 @@ import TunaI18NForm from "@/components/TunaI18nForm.vue";
 
 const { open } = useModal()
 const props = defineProps<{
-  code: string
+  code?: string
 }>()
 
 const onI18nClick = () => {
