@@ -43,6 +43,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
+import TunaSvgIcon from '@/components/TunaSvgIcon.vue'
 
 const route = useRoute()
 const refMenu = ref()
@@ -85,11 +86,5 @@ defineExpose({ closeOrOpenMenu })
 .el-menu-item.is-active {
   color: var(--el-menu-active-color);
   background-color: var(--my-bg-menu-item-active-color);
-}
-
-.svg-icon {
-  width: 0.2rem;
-  height: 0.2rem;
-  --svg-color: var(--my-menu-icon-color);
 }
 </style>
