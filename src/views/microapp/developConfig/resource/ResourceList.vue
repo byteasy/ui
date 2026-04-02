@@ -13,6 +13,9 @@
     <template v-slot:table_column_parentId="scope">
       {{ scope.row.parentName }}
     </template>
+    <template v-slot:table_column_icon="iconScope">
+      <tuna-svg-icon :svg="iconScope.row.icon" />
+    </template>
     <template v-slot:formItemField_groupId="scope">
       <el-select
         v-model="scope.queryParam.groupId"
