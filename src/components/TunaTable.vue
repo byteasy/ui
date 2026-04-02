@@ -119,6 +119,7 @@
                   <el-button link type="primary" @click="onEdit(scope.row)">
                     {{ t('table.edit') }}
                   </el-button>
+                  <slot name="operationSlotExt" :row="scope.row"> </slot>
                   <el-popconfirm
                     :confirm-button-text="$t('ok')"
                     :cancel-button-text="$t('cancel')"
@@ -132,7 +133,6 @@
                       </el-button>
                     </template>
                   </el-popconfirm>
-                  <slot name="operationSlotExt" :row="scope.row"> </slot>
                 </slot>
               </template>
             </el-table-column>
