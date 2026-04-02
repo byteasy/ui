@@ -59,6 +59,7 @@ onMounted(() => {
         }
         appArray.push(cfg)
       }
+      console.log('micro app registerApps', appArray)
       registerApps(appArray)
 
       addGlobalUncaughtErrorHandler((event, source, lineno, colno, error) => {
