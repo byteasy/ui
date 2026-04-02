@@ -43,6 +43,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
+import TunaSvgIcon from '@/components/TunaSvgIcon.vue'
 
 const route = useRoute()
 const refMenu = ref()
