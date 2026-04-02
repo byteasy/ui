@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import {defineEmits, ref, watch} from 'vue'
+import {defineEmits, onMounted, ref, watch} from 'vue'
 import {useI18n} from "vue-i18n";
 import {ElMessage, type FilterNodeMethodFunction, type TreeInstance} from 'element-plus'
 import {doHttpGet, doHttpPost} from "@/api/common/platform";
@@ -78,20 +78,24 @@ const resetChecked = () => {
 const treeData = ref([])
 const selectedKeys = ref([])
 
+onMounted(() => {
+  loadTreeData()
+})
+
 const loadTreeData = () => {
   doHttpGet('/platformSvr/sapi/users/roles', {
-    id: props.row.id
+    userId: props.row.id
   }).then((res) => {
-    treeData.value = res.data.leftMenuVOS
-    selectedKeys.value = res.data.permissionIds
+    treeData.value = res.data.roles
+    selectedKeys.value = res.data.roleIds
     treeRef.value?.setCheckedKeys(selectedKeys.value, false)
   })
 }
 
 const doSubmit = () => {
-  doHttpPost('/platformSvr/sapi/roles/permissions', {}, {
-    roleId: props.row.id,
-    permissionIds: treeRef.value!.getCheckedKeys(false)
+  doHttpPost('/platformSvr/sapi/users/roles', {}, {
+    userId: props.row.id,
+    roleIds: treeRef.value!.getCheckedKeys(false)
   }).then(() => {
     ElMessage.success(t('operationSuccess'))
     emit('close')
