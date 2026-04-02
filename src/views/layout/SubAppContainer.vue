@@ -71,7 +71,7 @@ onMounted(() => {
           experimentalStyleIsolation: false, // 样式隔离
         },
         // 其他配置
-        prefetch: true,
+        prefetch: false,
         singular: true,
         fetch: window.fetch,
       })
