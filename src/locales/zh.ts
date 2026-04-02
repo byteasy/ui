@@ -29,6 +29,9 @@ export default {
   exit: '退出',
   help: '问题帮助',
   description: '说明',
+  keyword: '关键词',
+  selectAll: '全选',
+  clearAll: '清空',
   theme: '外观',
   layout: '布局',
   skin: '皮肤',
@@ -159,5 +162,9 @@ export default {
   user: {
     basic: '基本资料',
     realName: '姓名'
+  },
+  role: {
+    permission: '权限',
+    permissionAllocate: '权限分配'
   }
 } as const
