@@ -59,6 +59,7 @@ onMounted(() => {
         }
         appArray.push(cfg)
       }
+      console.log('micro app registerApps', appArray)
       registerApps(appArray)
 
       addGlobalUncaughtErrorHandler((event, source, lineno, colno, error) => {
@@ -70,7 +71,7 @@ onMounted(() => {
           experimentalStyleIsolation: false, // 样式隔离
         },
         // 其他配置
-        prefetch: true,
+        prefetch: false,
         singular: true,
         fetch: window.fetch,
       })

@@ -62,7 +62,8 @@ onMounted(() => {
     quickMenus.value = res.data.resourceGroups
 
     const fullPath = route.fullPath
-    const rootPath = '/' + (fullPath || '').split('/')[1]
+    const fullPathArras = (fullPath || '').split('/')
+    const rootPath = '/' + fullPathArras[1] + '/' + fullPathArras[2]
     const microApps = []
     for (let i = 0; i < menuEntries.value.length; i++) {
       const entry = menuEntries.value[i]
