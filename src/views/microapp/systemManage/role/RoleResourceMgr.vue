@@ -8,8 +8,9 @@
       class="w-full"
     >
       <el-form-item :label="$t('resourceGroup.name')">
-        <resource-group-select class="w-full" v-model="selectedGroup" select-first clearable
-                               @change="loadTreeData"></resource-group-select>
+        <resource-group-select class="w-full" v-model="selectedGroup" clearable
+                               @change="loadTreeData"
+                               :firs-row-trigger="(row) => {selectedGroup = row.id, loadTreeData()}"></resource-group-select>
       </el-form-item>
 
       <el-form-item :label="$t('keyword')">
@@ -21,20 +22,20 @@
         />
       </el-form-item>
 
-    <el-form-item :label="$t('resource.name')">
-      <el-tree
-        ref="treeRef"
-        class="filter-tree w-full"
-        :data="treeData"
-        :props="{ label: 'name', children: 'childrenList'}"
-        :default-expanded-keys="selectedKeys"
-        show-checkbox
-        default-expand-all
-        highlight-current
-        node-key="id"
-        :filter-node-method="filterNode"
-      />
-    </el-form-item>
+      <el-form-item :label="$t('resource.name')">
+        <el-tree
+          ref="treeRef"
+          class="filter-tree w-full"
+          :data="treeData"
+          :props="{ label: 'name', children: 'childrenList'}"
+          :default-expanded-keys="selectedKeys"
+          show-checkbox
+          default-expand-all
+          highlight-current
+          node-key="id"
+          :filter-node-method="filterNode"
+        />
+      </el-form-item>
     </el-form>
   </div>
   <div class="w-full flex-column mt-2">
@@ -42,7 +43,10 @@
       <div class="flex-row w-full justify-content-center pb-2">
         <el-button @click="setCheckedKeys" icon="Select">{{ t('selectAll') }}</el-button>
         <el-button @click="resetChecked" icon="Failed">{{ t('clearAll') }}</el-button>
-        <el-button @click="saveRolePermission" type="primary" icon="Check">{{ t('save') }}</el-button>
+        <el-button @click="saveRolePermission" type="primary" icon="Check">{{
+            t('save')
+          }}
+        </el-button>
         <el-button @click="emit('close')" icon="Close">{{ t('close') }}</el-button>
       </div>
     </el-affix>
