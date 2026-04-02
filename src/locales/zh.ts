@@ -161,9 +161,11 @@ export default {
   },
   user: {
     basic: '基本资料',
-    realName: '姓名'
+    realName: '姓名',
+    roleAllocate: '角色分配'
   },
   role: {
+    name: '角色',
     permission: '权限',
     permissionAllocate: '权限分配'
   },

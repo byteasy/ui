@@ -8,9 +8,7 @@
       class="w-full"
     >
       <el-form-item :label="$t('resourceGroup.name')">
-        <resource-group-select class="w-full" v-model="selectedGroup" clearable
-                               @change="loadTreeData"
-                               :firs-row-trigger="(row) => {selectedGroup = row.id, loadTreeData()}"></resource-group-select>
+        <resource-group-select class="w-full" v-model="selectedGroup" clearable @change="loadTreeData" :firs-row-trigger="firstRowTrigger"></resource-group-select>
       </el-form-item>
 
       <el-form-item :label="$t('keyword')">
@@ -43,7 +41,7 @@
       <div class="flex-row w-full justify-content-center pb-2">
         <el-button @click="setCheckedKeys" icon="Select">{{ t('selectAll') }}</el-button>
         <el-button @click="resetChecked" icon="Failed">{{ t('clearAll') }}</el-button>
-        <el-button @click="saveRolePermission" type="primary" icon="Check">{{
+        <el-button v-debounce="doSubmit" type="primary" icon="Check">{{
             t('save')
           }}
         </el-button>
@@ -111,12 +109,18 @@ const loadTreeData = () => {
   }
 }
 
-const saveRolePermission = () => {
+const doSubmit = () => {
   doHttpPost('/platformSvr/sapi/roles/permissions', {}, {
+    groupId: selectedGroup.value,
     roleId: props.row.id,
     permissionIds: treeRef.value!.getCheckedKeys(false)
   }).then(() => {
     ElMessage.success(t('operationSuccess'))
   })
+}
+
+const firstRowTrigger = (row) => {
+  selectedGroup.value = row.id
+  loadTreeData()
 }
 </script>
