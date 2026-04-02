@@ -166,5 +166,11 @@ export default {
   role: {
     permission: '权限',
     permissionAllocate: '权限分配'
+  },
+  resource: {
+    name: '菜单'
+  },
+  resourceGroup: {
+    name: '分组'
   }
 } as const
