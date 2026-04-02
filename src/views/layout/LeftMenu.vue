@@ -9,7 +9,7 @@
     >
       <el-sub-menu :index="root.routerUrl" v-for="root in menuTree" :key="root.code">
         <template #title>
-          <el-icon style="color: var(--my-menu-icon-color)"><component :is="root.icon" /></el-icon>
+          <tuna-svg-icon :svg="root.icon" />
           <span class="my-font-size-md">{{ root.name }}</span>
         </template>
         <el-menu-item :index="root.routerUrl" v-if="root.type === 'MENU' && root.visible === 'YES'">
@@ -76,6 +76,7 @@ function closeOrOpenMenu(size) {
 }
 
 defineExpose({ closeOrOpenMenu })
+
 </script>
 <style scoped>
 .el-menu-border {
