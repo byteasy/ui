@@ -52,13 +52,13 @@ function rebuildLeftMenus(node, menu) {
   console.log('menu', menu)
   // 支持一级菜单
   if (menu.type === 'MENU' && (menu.parentId === null || menu.parentId === undefined)) {
-    const dirArrs = (menu.routerUrl || '').split('/')
-    node.path = filteredQueryParameter('/' + dirArrs[1] + '/' + dirArrs[2])
+    const idx = (menu.routerUrl || '').lastIndexOf('/')
+    node.path = filteredQueryParameter(menu.routerUrl.substring(0, idx))
     node.name = menu.code + 'Parent'
     node.component = AsideMain
     node.children = [
       {
-        path: filteredQueryParameter('/' + dirArrs[3]),
+        path: filteredQueryParameter(menu.routerUrl.substring(idx)),
         name: menu.code,
         meta: { title: menu.title },
         component: getModule(menu.component),
