@@ -113,10 +113,20 @@ const doSubmit = () => {
   doHttpPost('/platformSvr/sapi/roles/permissions', {}, {
     groupId: selectedGroup.value,
     roleId: props.row.id,
-    permissionIds: treeRef.value!.getCheckedKeys(false)
+    permissionIds: getAllCheckedKeys()
   }).then(() => {
     ElMessage.success(t('operationSuccess'))
   })
+}
+
+const getAllCheckedKeys = () => {
+  // 1. 获取【真正选中】的节点
+  const checkedKeys = treeRef.value!.getCheckedKeys(false)
+  // 2. 获取【半选中】的父节点（因为子选中，父会半选）
+  const halfCheckedKeys = treeRef.value!.getHalfCheckedKeys()
+
+  // 3. 合并去重 → 就是你要的：所有选中节点 + 所有父节点
+  return [...new Set([...halfCheckedKeys, ...checkedKeys])]
 }
 
 const firstRowTrigger = (row) => {
