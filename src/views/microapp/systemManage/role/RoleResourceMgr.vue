@@ -93,6 +93,22 @@ const treeData = ref([])
 const selectedKeys = ref([])
 const selectedGroup = ref(undefined)
 
+const getAllLeafIds = (list) => {
+  let leafIds = []
+  const traverse = (items) => {
+    items.forEach(item => {
+      // 没有子节点 → 叶子
+      if (!item.childrenList || item.childrenList.length === 0) {
+        leafIds.push(item.id)
+      } else {
+        traverse(item.childrenList)
+      }
+    })
+  }
+  traverse(list)
+  return leafIds
+}
+
 const loadTreeData = () => {
   if (selectedGroup.value) {
     doHttpGet('/platformSvr/sapi/roles/permissions', {
@@ -101,7 +117,13 @@ const loadTreeData = () => {
     }).then((res) => {
       treeData.value = res.data.leftMenuVOS
       selectedKeys.value = res.data.permissionIds
-      treeRef.value?.setCheckedKeys(selectedKeys.value, false)
+
+      // 拿到所有叶子ID
+      const leafIds = getAllLeafIds(treeData.value)
+      // 只保留后端返回的叶子节点（过滤掉父节点）
+      const onlyLeafKeys = selectedKeys.value.filter(id => leafIds.includes(id))
+      // 只设置叶子 → 父自动半选
+      treeRef.value?.setCheckedKeys(onlyLeafKeys, false)
     })
   } else {
     treeData.value = []
