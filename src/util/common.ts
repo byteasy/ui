@@ -1,0 +1,14 @@
+export async function copyToClipboard(text: string) {
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(text)
+  }
+  // 方案B：兼容旧浏览器 / 开发环境 / 不安全域名
+  else {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
+  }
+}
