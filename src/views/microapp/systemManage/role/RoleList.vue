@@ -1,17 +1,15 @@
 <template>
-  <tuna-table
+  <tuna-table-v2
     ref="refTable"
     base-url="/platformSvr/sapi/roles"
     context="platformSvr"
     class-name="com.tuna.platform.entity.Role"
     :query-params="{ ascColumns: ['code'] }"
   >
-    <template v-slot:operationSlotExt="powerScope">
-      <el-button link type="primary" @click="onPermissionEdit(powerScope.row)">
-        {{ t('role.permission') }}
-      </el-button>
+    <template v-slot:table-operation-extra="powerScope">
+      <el-link underline="never" type="primary" class="pl-1" @click="onPermissionEdit(powerScope.row)">{{ t('role.permission') }}</el-link>
     </template>
-  </tuna-table>
+  </tuna-table-v2>
 </template>
 
 <script lang="ts" setup>

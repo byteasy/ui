@@ -35,6 +35,7 @@ export default {
   theme: '外观',
   layout: '布局',
   skin: '皮肤',
+  more: '更多',
   fullscreenTooltip: '全屏显示',
   columnVisibleSet: '自定义列显示',
   exitFullscreenTooltip: '退出全屏显示',
@@ -162,7 +163,9 @@ export default {
   user: {
     basic: '基本资料',
     realName: '姓名',
-    roleAllocate: '角色分配'
+    roleAllocate: '角色分配',
+    enable: '启用',
+    disable: '禁用',
   },
   role: {
     name: '角色',
