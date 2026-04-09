@@ -40,6 +40,7 @@
             :height="height"
             :data="tableData.records"
             fix
+            border
             scrollbar-always-on
             @row-dblclick="onTableRowDoubleClick"
             @row-click="onTableRowClick"
@@ -57,6 +58,7 @@
                   :prop="col.name"
                   stripe
                   highlight-current-row
+                  resizable
                   v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
                   :min-width="col.width === 0 ? undefined : col.width"
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
