@@ -5,6 +5,7 @@
     context="platformSvr"
     class-name="com.tuna.platform.entity.User"
     :form-component="UserEditForm"
+    :excel-import-enable="true"
     :query-params="{ descColumns: ['createdTime', 'updatedTime'] }"
   >
     <template v-slot:table-cell-avatar="avatarScode">

@@ -102,11 +102,20 @@
                       <el-button icon="More" circle text />
                       <template #dropdown>
                         <el-dropdown-menu>
-                          <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">
+                          <el-dropdown-item>
+                            {{ $t('table.viewModel') }}
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            {{ $t('table.customColumn') }}
+                          </el-dropdown-item>
+                          <el-dropdown-item divided @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">
                             {{ $t('table.downLoadExcelTemplate') }}
                           </el-dropdown-item>
                           <el-dropdown-item @click="onExcelImportClick" v-if="props.excelImportEnable === true">
                             {{ $t('table.importByExcel') }}
+                          </el-dropdown-item>
+                          <el-dropdown-item v-if="props.excelImportEnable === true">
+                            {{ $t('table.exportToExcel') }}
                           </el-dropdown-item>
                         </el-dropdown-menu>
                       </template>

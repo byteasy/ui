@@ -147,9 +147,12 @@ export default {
     downLoadExcelTemplate: 'Excel模板下载',
     importByExcel: 'Excel模板导入',
     importByExcelTip: '将文件拖入或者点击进行上传',
+    exportToExcel: 'Excel导出',
     importByExcelSubmitButton: '确认导入',
     columnWarningMessage: '校验结果',
-    importByExcelValidFailedTip: '校验失败，不允许提交'
+    importByExcelValidFailedTip: '校验失败，不允许提交',
+    viewModel: '视图切换',
+    customColumn: '自定义列',
   },
   validate: {
     minLength: '最小长度',
