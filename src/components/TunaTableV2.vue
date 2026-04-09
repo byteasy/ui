@@ -115,12 +115,8 @@
               </template>
               <template #default="scope">
                 <slot name="table-operation" :row="scope.row">
-                  <el-button link type="primary" @click="onView(scope.row)">{{
-                      t('table.view')
-                    }}</el-button>
-                  <el-button link type="primary" @click="onEdit(scope.row)">
-                    {{ t('table.edit') }}
-                  </el-button>
+                  <el-link underline="never" @click="onView(scope.row)" type="primary" class="pl-1">{{ t('table.view') }}</el-link>
+                  <el-link underline="never" @click="onEdit(scope.row)" type="primary" class="pl-1">{{ t('table.edit') }}</el-link>
                   <slot name="table-operation-extra" :row="scope.row"> </slot>
                   <el-popconfirm
                     :confirm-button-text="$t('ok')"
@@ -130,9 +126,7 @@
                     @confirm="onDelete(scope.row)"
                   >
                     <template #reference>
-                      <el-button link type="danger">
-                        {{ t('table.delete') }}
-                      </el-button>
+                      <el-link underline="never" type="danger" class="pl-1">{{ t('table.delete') }}</el-link>
                     </template>
                   </el-popconfirm>
                 </slot>
