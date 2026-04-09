@@ -88,6 +88,7 @@
               fixed="right"
               :label="$t('table.operation')"
               v-if="props.operationColumnWidth !== 0"
+              align="center"
               :min-width="props.operationColumnWidth ? props.operationColumnWidth : 160"
             >
               <template #header>
@@ -98,7 +99,7 @@
                   </div>
                   <div class="flex-grow flex-row justify-content-end">
                     <el-dropdown placement="bottom-start">
-                      <el-button icon="More" circle />
+                      <el-button icon="More" circle text />
                       <template #dropdown>
                         <el-dropdown-menu>
                           <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">
@@ -129,6 +130,7 @@
                       <el-link underline="never" type="danger" class="pl-1">{{ t('table.delete') }}</el-link>
                     </template>
                   </el-popconfirm>
+                  <slot name="table-operation-end-extra" :row="scope.row"> </slot>
                 </slot>
               </template>
             </el-table-column>

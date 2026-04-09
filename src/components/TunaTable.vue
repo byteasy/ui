@@ -98,7 +98,7 @@
                   </div>
                   <div class="flex-grow flex-row justify-content-end">
                     <el-dropdown placement="bottom-start">
-                      <el-button icon="More" circle />
+                      <el-button icon="More" circle text />
                       <template #dropdown>
                         <el-dropdown-menu>
                           <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">
