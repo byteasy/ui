@@ -1,9 +1,8 @@
 <template>
-  <div class="w-full flex-column">
+  <div class="w-full h-full flex-column">
     <el-form
-      :inline="false"
       ref="refForm"
-      label-width="200"
+      label-width="auto"
       label-position="top"
       class="w-full"
     >
@@ -22,8 +21,6 @@
         />
       </el-form-item>
     </el-form>
-  </div>
-  <div class="w-full flex-column mt-2">
     <el-affix position="bottom" class="w-full">
       <div class="flex-row w-full justify-content-center pb-2">
         <el-button @click="setCheckedKeys" icon="Select">{{ t('selectAll') }}</el-button>

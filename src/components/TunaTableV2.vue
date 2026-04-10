@@ -46,6 +46,7 @@
             @row-dblclick="onTableRowDoubleClick"
             @row-click="onTableRowClick"
             v-loading="loading"
+            stripe
             highlight-current-row
             @header-dragend="onHeaderDrag"
           >
@@ -58,8 +59,6 @@
                   :fixed="col.isFixed === 'YES'"
                   :label="col.displayName"
                   :prop="col.name"
-                  stripe
-                  highlight-current-row
                   resizable
                   v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
                   :min-width="col.width === 0 ? undefined : col.width"
@@ -111,7 +110,7 @@
                             </el-icon>
                             {{ $t('table.viewModel') }}
                           </el-dropdown-item>
-                          <el-dropdown-item>
+                          <el-dropdown-item @click="onColumnDefineClick">
                             <el-icon>
                               <SetUp/>
                             </el-icon>
@@ -203,6 +202,7 @@ import {
   defineEmits,
 } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
+import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
 import {doHttpDelete, doHttpGet, getEntitySchema} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
@@ -251,32 +251,40 @@ const mergeQueryParams = () => {
 }
 
 onBeforeMount(() => {
-  const fieldsDefine = appSettingsStore.getStorageObject(props.className + '.fields')
+  loadTableColumns()
+})
+
+function loadTableColumns() {
   getEntitySchema(props.context, props.className)
     .then((response) => {
-      tableColumns.value = response.data
-      if (fieldsDefine !== undefined) {
-        tableColumns.value.forEach((column) => {
-          if (fieldsDefine[column.name] !== undefined) {
-            const fieldCustomDefine = fieldsDefine[column.name]
-            console.log(props.className, 'customFieldDefine', fieldCustomDefine)
-            putValueIfValid(column, 'width', fieldCustomDefine.width)
-            putValueIfValid(column, 'showOrder', fieldCustomDefine.showOrder)
-            putValueIfValid(column, 'isShow', fieldCustomDefine.isShow)
-            putValueIfValid(column, 'isSort', fieldCustomDefine.isSort)
-            putValueIfValid(column, 'isOverflow', fieldCustomDefine.isOverflow)
-            putValueIfValid(column, 'isSearch', fieldCustomDefine.isSearch)
-            putValueIfValid(column, 'align', fieldCustomDefine.align)
-          }
-        })
-      }
+      tableColumns.value = mergeLocalStorage(response.data)
+
       mergeQueryParams();
     })
     .catch((error) => {
       console.log(error)
       ElMessage.error(t('table.loadingTableColumnsError'))
     })
-})
+}
+
+function mergeLocalStorage(data: Array<never>) {
+  const fieldsDefine = appSettingsStore.getStorageObject(props.className + '.fields')
+  if (fieldsDefine !== undefined) {
+    data.forEach((column) => {
+      if (fieldsDefine[column.name] !== undefined) {
+        const fieldCustomDefine = fieldsDefine[column.name]
+        putValueIfValid(column, 'width', fieldCustomDefine.width)
+        putValueIfValid(column, 'showOrder', fieldCustomDefine.showOrder)
+        putValueIfValid(column, 'isShow', fieldCustomDefine.isShow)
+        putValueIfValid(column, 'isSort', fieldCustomDefine.isSort)
+        putValueIfValid(column, 'isOverflow', fieldCustomDefine.isOverflow)
+        putValueIfValid(column, 'isSearch', fieldCustomDefine.isSearch)
+        putValueIfValid(column, 'align', fieldCustomDefine.align)
+      }
+    })
+  }
+  return data
+}
 
 onMounted(() => {
   mergeQueryParams()
@@ -406,6 +414,23 @@ function onDelete(row) {
       console.log(err)
       ElMessage.error(t('operationFailed'))
     })
+}
+
+function onColumnDefineClick() {
+  open(
+    TunaColumnDefine,
+    {
+      columns: mergeLocalStorage(tableColumns.value),
+      className: props.className,
+    }, // 传给组件的 props
+    {
+      title: t('table.customColumn'),
+      width: getFormWidth(),
+      onClose: (data) => {
+        loadTableColumns()
+      },
+    },
+  )
 }
 
 function getFormWidth() {
