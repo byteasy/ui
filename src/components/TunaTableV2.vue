@@ -19,13 +19,14 @@
                 />
               </slot>
             </el-form-item>
-            <slot name="form-query-extra" :queryParam="queryParam" />
+            <slot name="form-query-extra" :queryParam="queryParam"/>
           </template>
           <el-form-item>
             <slot name="form-query-buttons">
               <el-button type="primary" icon="Search" @click="refresh">{{
                   $t('search')
-                }}</el-button>
+                }}
+              </el-button>
               <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
             </slot>
             <slot name="form-query-buttons-extra"></slot>
@@ -46,6 +47,7 @@
             @row-click="onTableRowClick"
             v-loading="loading"
             highlight-current-row
+            @header-dragend="onHeaderDrag"
           >
             <template v-for="col in tableColumns" :key="col.name">
               <slot :name="'table-column-def-' + col.name" :column="col">
@@ -66,7 +68,8 @@
                   <template #default="scope">
                     <slot :name="'table-cell-' + col.name" :row="scope.row">{{
                         scope.row[col.name]
-                      }}</slot>
+                      }}
+                    </slot>
                   </template>
                 </el-table-column>
                 <enum-column
@@ -99,22 +102,45 @@
                   </div>
                   <div class="flex-grow flex-row justify-content-end">
                     <el-dropdown placement="bottom-start">
-                      <el-button icon="More" circle text />
+                      <el-button icon="More" circle text/>
                       <template #dropdown>
                         <el-dropdown-menu>
                           <el-dropdown-item>
+                            <el-icon>
+                              <List/>
+                            </el-icon>
                             {{ $t('table.viewModel') }}
                           </el-dropdown-item>
                           <el-dropdown-item>
+                            <el-icon>
+                              <SetUp/>
+                            </el-icon>
                             {{ $t('table.customColumn') }}
                           </el-dropdown-item>
-                          <el-dropdown-item divided @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">
+                          <el-dropdown-item>
+                            <el-icon>
+                              <DCaret/>
+                            </el-icon>
+                            {{ $t('table.customSort') }}
+                          </el-dropdown-item>
+                          <el-dropdown-item divided @click="downLoadExcelTemplate"
+                                            v-if="props.excelImportEnable === true">
+                            <el-icon>
+                              <Download/>
+                            </el-icon>
                             {{ $t('table.downLoadExcelTemplate') }}
                           </el-dropdown-item>
-                          <el-dropdown-item @click="onExcelImportClick" v-if="props.excelImportEnable === true">
+                          <el-dropdown-item @click="onExcelImportClick"
+                                            v-if="props.excelImportEnable === true">
+                            <el-icon>
+                              <IconLocalExcel/>
+                            </el-icon>
                             {{ $t('table.importByExcel') }}
                           </el-dropdown-item>
                           <el-dropdown-item v-if="props.excelImportEnable === true">
+                            <el-icon>
+                              <IconLocalExcelExport/>
+                            </el-icon>
                             {{ $t('table.exportToExcel') }}
                           </el-dropdown-item>
                         </el-dropdown-menu>
@@ -125,9 +151,13 @@
               </template>
               <template #default="scope">
                 <slot name="table-operation" :row="scope.row">
-                  <el-link underline="never" @click="onView(scope.row)" type="primary" class="pl-1">{{ t('table.view') }}</el-link>
-                  <el-link underline="never" @click="onEdit(scope.row)" type="primary" class="pl-1">{{ t('table.edit') }}</el-link>
-                  <slot name="table-operation-extra" :row="scope.row"> </slot>
+                  <el-link underline="never" @click="onView(scope.row)" type="primary" class="pl-1">
+                    {{ t('table.view') }}
+                  </el-link>
+                  <el-link underline="never" @click="onEdit(scope.row)" type="primary" class="pl-1">
+                    {{ t('table.edit') }}
+                  </el-link>
+                  <slot name="table-operation-extra" :row="scope.row"></slot>
                   <el-popconfirm
                     :confirm-button-text="$t('ok')"
                     :cancel-button-text="$t('cancel')"
@@ -136,15 +166,20 @@
                     @confirm="onDelete(scope.row)"
                   >
                     <template #reference>
-                      <el-link underline="never" type="danger" class="pl-1">{{ t('table.delete') }}</el-link>
+                      <el-link underline="never" type="danger" class="pl-1">{{
+                          t('table.delete')
+                        }}
+                      </el-link>
                     </template>
                   </el-popconfirm>
-                  <slot name="table-operation-end-extra" :row="scope.row"> </slot>
+                  <slot name="table-operation-end-extra" :row="scope.row"></slot>
                 </slot>
               </template>
             </el-table-column>
-          </el-table> </template
-        ></el-auto-resizer>
+          </el-table>
+        </template
+        >
+      </el-auto-resizer>
     </template>
     <template v-slot:bottomBar v-if="props.paginationVisible !== 0">
       <el-pagination
@@ -168,16 +203,19 @@ import {
   defineEmits,
 } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
-import { doHttpDelete, doHttpGet, getEntitySchema } from '@/api/common/platform'
-import { ElMessage } from 'element-plus'
-import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
-import { useModal } from '@/components/dialog/useModal.ts'
+import {doHttpDelete, doHttpGet, getEntitySchema} from '@/api/common/platform'
+import {ElMessage, type TableColumnCtx} from 'element-plus'
+import {useI18n} from 'vue-i18n'
+import {useRoute} from 'vue-router'
+import {useModal} from '@/components/dialog/useModal.ts'
 import TunaTableForm from '@/components/TunaTableForm.vue'
 import TunaExcelImport from '@/components/TunaExcelImport.vue'
+import {useAppSettingsStore} from '@/stores/appSettings.ts'
+import {putValueIfValid} from "@/util/common.ts";
 
+const appSettingsStore = useAppSettingsStore()
 const route = useRoute()
-const { t } = useI18n() // 表单引用
+const {t} = useI18n() // 表单引用
 
 const props = defineProps<{
   baseUrl: string
@@ -189,7 +227,7 @@ const props = defineProps<{
   operationColumnWidth?: number
   paginationVisible?: number
   queryFormVisible?: number
-  rowDbClick?: (row : any) => void
+  rowDbClick?: (row: any) => void
   excelImportEnable?: boolean
   excelImportComponent?: Component
 }>()
@@ -197,10 +235,10 @@ const props = defineProps<{
 const emit = defineEmits(['rowClick'])
 
 const tableColumns = ref([])
-const tableData = ref({ total: '0' })
+const tableData = ref({total: '0'})
 const loading = ref(false)
-const queryParam = ref({ current: 1, size: 20, descColumns: [] })
-const { open } = useModal()
+const queryParam = ref({current: 1, size: 20, descColumns: []})
+const {open} = useModal()
 
 const mergeQueryParams = () => {
   if (props.queryParams && typeof props.queryParams === 'object') {
@@ -213,10 +251,26 @@ const mergeQueryParams = () => {
 }
 
 onBeforeMount(() => {
+  const fieldsDefine = appSettingsStore.getStorageObject(props.className + '.fields')
   getEntitySchema(props.context, props.className)
     .then((response) => {
       tableColumns.value = response.data
-      mergeQueryParams()
+      if (fieldsDefine !== undefined) {
+        tableColumns.value.forEach((column) => {
+          if (fieldsDefine[column.name] !== undefined) {
+            const fieldCustomDefine = fieldsDefine[column.name]
+            console.log(props.className, 'customFieldDefine', fieldCustomDefine)
+            putValueIfValid(column, 'width', fieldCustomDefine.width)
+            putValueIfValid(column, 'showOrder', fieldCustomDefine.showOrder)
+            putValueIfValid(column, 'isShow', fieldCustomDefine.isShow)
+            putValueIfValid(column, 'isSort', fieldCustomDefine.isSort)
+            putValueIfValid(column, 'isOverflow', fieldCustomDefine.isOverflow)
+            putValueIfValid(column, 'isSearch', fieldCustomDefine.isSearch)
+            putValueIfValid(column, 'align', fieldCustomDefine.align)
+          }
+        })
+      }
+      mergeQueryParams();
     })
     .catch((error) => {
       console.log(error)
@@ -301,15 +355,17 @@ function onView(row) {
     {
       title: t('table.view') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
       width: getFormWidth(),
-      onClose: (data) => {},
+      onClose: (data) => {
+      },
     },
   )
 }
+
 function onAdd(row) {
   const [lastRoute] = route.matched.slice(-1)
   open(
     getFormComponent(), // 要显示的组件
-    { columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row }, // 传给组件的 props
+    {columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row}, // 传给组件的 props
     {
       title: t('add') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
       width: getFormWidth(),
@@ -319,6 +375,7 @@ function onAdd(row) {
     },
   )
 }
+
 function onEdit(row) {
   const [lastRoute] = route.matched.slice(-1)
   open(
@@ -338,6 +395,7 @@ function onEdit(row) {
     },
   )
 }
+
 function onDelete(row) {
   doHttpDelete(props.baseUrl + '/' + row.id)
     .then((rsp) => {
@@ -364,6 +422,19 @@ function onTableRowDoubleClick(row) {
   } else {
     onView(row)
   }
+}
+
+function onHeaderDrag(newWidth: number, oldWidth: number, column: TableColumnCtx<T>, event: MouseEvent) {
+  let fieldsDefine = appSettingsStore.getStorageObject(props.className + '.fields')
+  if (fieldsDefine === undefined) {
+    fieldsDefine = {}
+  }
+  if (fieldsDefine[column.property] === undefined) {
+    fieldsDefine[column.property] = {}
+  }
+  fieldsDefine[column.property].width = newWidth
+  console.log(column, column.property, 'newWidth', newWidth)
+  appSettingsStore.putStorageObject(props.className + '.fields', fieldsDefine)
 }
 
 defineExpose({
