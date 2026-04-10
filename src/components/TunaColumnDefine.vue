@@ -1,6 +1,6 @@
 <template>
-  <el-table height="80vh" :data="tableData" fix border scrollbar-always-on highlight-current-row>
-    <el-table-column :label="$t('table.columnNo')" type="index" resizable show-overflow-tooltip
+  <el-table height="80vh" :data="tableData" scrollbar-always-on highlight-current-row border>
+    <el-table-column :label="$t('table.columnNo')" type="index"  show-overflow-tooltip
                      width="60"></el-table-column>
     <el-table-column :label="$t('table.columnLabel')" prop="displayName" resizable
                      show-overflow-tooltip></el-table-column>

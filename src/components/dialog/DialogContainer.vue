@@ -38,7 +38,7 @@
             </div>
           </template>
           <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)"
-                     class="pt-5 pl-5 pr-5 my-bg-color-blank"/>
+                     class="pt-3 pl-3 pr-3 my-bg-color-blank"/>
         </el-dialog>
         <el-drawer
           v-else
