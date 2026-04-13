@@ -18,10 +18,10 @@
           body-class="my-bg-color-blank"
           align-center>
           <template #header="{ close, titleId, titleClass }">
-            <div class="flex-row align-items-center w-full">
+            <div class="flex-row w-full">
               <div class="flex-grow">
-                <el-icon>
-                  <CopyDocument/>
+                <el-icon class="my-icon-color-primary">
+                  <CopyDocument />
                 </el-icon>
                 <el-text style="font-size: var(--el-font-size-large)" class="ml-2 font-bold">
                   {{ item.title }}
@@ -37,8 +37,7 @@
               </div>
             </div>
           </template>
-          <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)"
-                     class="pt-3 pl-3 pr-3 my-bg-color-blank"/>
+          <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)" />
         </el-dialog>
         <el-drawer
           v-else
@@ -88,5 +87,6 @@ function onFullscreenClick(item) {
   } else {
     item.fullscreen = true
   }
+  item.props.fullscreen = item.fullscreen
 }
 </script>

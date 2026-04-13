@@ -164,6 +164,9 @@ export default {
     columnAlign: '对齐',
     columnWidth: '宽度',
     columnShowOrder: '顺序',
+    alignLeft: '居左',
+    alignCenter: '居中',
+    alignRight: '居右',
   },
   validate: {
     minLength: '最小长度',
