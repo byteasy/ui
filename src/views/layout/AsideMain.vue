@@ -9,7 +9,8 @@
         @update:size="onLeftMenuSizeUpdate"
       >
         <div class="mt-1">
-          <left-menu ref="refLeftMenu"></left-menu>
+          <common-left-menu ref="refLeftMenu" v-if="route.fullPath.startsWith('/platformCommon')"></common-left-menu>
+          <left-menu ref="refLeftMenu" v-else></left-menu>
         </div>
       </el-splitter-panel>
       <el-splitter-panel :min="200">
@@ -42,11 +43,13 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import en from 'element-plus/dist/locale/en.mjs'
 import LeftMenu from '@/views/layout/LeftMenu.vue'
 import BreadCrumb from '@/components/BreadCrumb.vue'
-import TagView from '@/components/TagView.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { useTagsViewStore } from '@/stores/tagsView'
+import CommonLeftMenu from "@/views/layout/CommonLeftMenu.vue";
+import {useRoute} from "vue-router";
+const route = useRoute()
 
 const appSettingsStore = useAppSettingsStore()
 const { componentSize, lang } = storeToRefs(appSettingsStore)
