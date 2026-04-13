@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex-column">
+  <div class="w-full flex-column" style="height: 90vh !important;">
     <el-upload
       class="w-full"
       drag
