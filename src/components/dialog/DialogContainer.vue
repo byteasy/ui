@@ -37,7 +37,9 @@
               </div>
             </div>
           </template>
-          <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)" />
+          <div style="max-height: 90vh !important; overflow: auto;">
+            <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)" />
+          </div>
         </el-dialog>
         <el-drawer
           v-else
