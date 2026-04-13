@@ -257,7 +257,8 @@ onBeforeMount(() => {
 function loadTableColumns() {
   getEntitySchema(props.context, props.className)
     .then((response) => {
-      tableColumns.value = mergeLocalStorage(response.data)
+      const arrs = sortColumnsByShowOrder(mergeLocalStorage(response.data))
+      tableColumns.value = arrs
 
       mergeQueryParams();
     })
@@ -265,6 +266,10 @@ function loadTableColumns() {
       console.log(error)
       ElMessage.error(t('table.loadingTableColumnsError'))
     })
+}
+
+function sortColumnsByShowOrder(columns) {
+  return columns.sort((a, b) => a.showOrder - b.showOrder)
 }
 
 function mergeLocalStorage(data: Array<never>) {

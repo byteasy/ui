@@ -1,5 +1,6 @@
 <template>
-  <div :style="{height: props.fullscreen === true ? '90vh !important' : '60vh !important', width: '100%'}">
+  <div
+    :style="{height: props.fullscreen === true ? '90vh !important' : '60vh !important', width: '100%'}">
     <el-table height="100%" :data="tableData" scrollbar-always-on highlight-current-row border fit
               table-layout="auto">
       <el-table-column :label="$t('table.columnNo')" type="index" width="60"/>
@@ -45,7 +46,12 @@
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.columnShowOrder')" prop="showOrder"
-                       resizable></el-table-column>
+                       resizable>
+        <template #default="scope">
+          <el-input-number v-model="scope.row.showOrder" :min="0" :step="1"
+                           @change="onFieldSetClick(scope.row)"/>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -68,12 +74,16 @@ onMounted(() => {
 })
 
 function onFieldSetClick(row) {
-  console.log(row)
   let fieldsDefine = appSettingsStore.getStorageObject(props.className + '.fields')
   if (fieldsDefine === undefined) {
     fieldsDefine = {}
   }
   fieldsDefine[row.name] = row
   appSettingsStore.putStorageObject(props.className + '.fields', fieldsDefine)
+  sortColumnsByShowOrder()
+}
+
+function sortColumnsByShowOrder() {
+  return props.columns.sort((a, b) => a.showOrder - b.showOrder)
 }
 </script>
