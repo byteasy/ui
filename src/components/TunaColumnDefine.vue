@@ -1,6 +1,4 @@
 <template>
-  <div
-    :style="{height: props.fullscreen === true ? '90vh !important' : '60vh !important', width: '100%'}">
     <el-table height="100%" :data="tableData" scrollbar-always-on highlight-current-row border fit
               table-layout="auto">
       <el-table-column :label="$t('table.columnNo')" type="index" width="60"/>
@@ -53,7 +51,6 @@
         </template>
       </el-table-column>
     </el-table>
-  </div>
 </template>
 <script lang="ts" setup>
 
@@ -63,7 +60,6 @@ import {useAppSettingsStore} from '@/stores/appSettings.ts'
 const props = defineProps<{
   className: string,
   columns: Array<never>,
-  fullscreen?: boolean
 }>()
 const appSettingsStore = useAppSettingsStore()
 
