@@ -40,6 +40,7 @@
             :height="height"
             :data="tableData.records"
             fix
+            border
             scrollbar-always-on
             @row-dblclick="onTableRowDoubleClick"
             @row-click="onTableRowClick"
@@ -57,6 +58,7 @@
                   :prop="col.name"
                   stripe
                   highlight-current-row
+                  resizable
                   v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
                   :min-width="col.width === 0 ? undefined : col.width"
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
@@ -96,7 +98,7 @@
                   </div>
                   <div class="flex-grow flex-row justify-content-end">
                     <el-dropdown placement="bottom-start">
-                      <el-button icon="More" circle />
+                      <el-button icon="More" circle text />
                       <template #dropdown>
                         <el-dropdown-menu>
                           <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">

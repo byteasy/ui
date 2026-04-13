@@ -12,3 +12,11 @@ export async function copyToClipboard(text: string) {
     document.body.removeChild(textArea)
   }
 }
+
+export function putValueIfValid(target: object, key: string, value: any) {
+  if (value === null || value === undefined) {
+    return false
+  }
+  target[key] = value
+  return true
+}

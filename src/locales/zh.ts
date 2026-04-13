@@ -29,9 +29,13 @@ export default {
   exit: '退出',
   help: '问题帮助',
   description: '说明',
+  keyword: '关键词',
+  selectAll: '全选',
+  clearAll: '清空',
   theme: '外观',
   layout: '布局',
   skin: '皮肤',
+  more: '更多',
   fullscreenTooltip: '全屏显示',
   columnVisibleSet: '自定义列显示',
   exitFullscreenTooltip: '退出全屏显示',
@@ -140,12 +144,29 @@ export default {
     startDate: '开始时间',
     endDate: '结束时间',
     rangeSeparator: '到',
-    downLoadExcelTemplate: 'Excel模板下载',
-    importByExcel: 'Excel模板导入',
+    downLoadExcelTemplate: '模板下载',
+    importByExcel: 'Excel导入',
+    exportToExcel: 'Excel导出',
     importByExcelTip: '将文件拖入或者点击进行上传',
     importByExcelSubmitButton: '确认导入',
     columnWarningMessage: '校验结果',
-    importByExcelValidFailedTip: '校验失败，不允许提交'
+    importByExcelValidFailedTip: '校验失败，不允许提交',
+    viewModel: '视图切换',
+    customColumn: '自定义列',
+    customSort: '默认排序',
+    columnNo: '编号',
+    columnLabel: '名称',
+    columnFieldName: '字段',
+    columnIsShow: '显示',
+    columnIsSort: '排序',
+    columnIsOverflow: '省略',
+    columnIsSearch: '筛选',
+    columnAlign: '对齐',
+    columnWidth: '宽度',
+    columnShowOrder: '顺序',
+    alignLeft: '居左',
+    alignCenter: '居中',
+    alignRight: '居右',
   },
   validate: {
     minLength: '最小长度',
@@ -158,6 +179,20 @@ export default {
   },
   user: {
     basic: '基本资料',
-    realName: '姓名'
+    realName: '姓名',
+    roleAllocate: '角色分配',
+    enable: '启用',
+    disable: '禁用',
+  },
+  role: {
+    name: '角色',
+    permission: '权限',
+    permissionAllocate: '权限分配'
+  },
+  resource: {
+    name: '菜单'
+  },
+  resourceGroup: {
+    name: '分组'
   }
 } as const

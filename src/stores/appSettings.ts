@@ -34,7 +34,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
    * 抽屉展示方向
    */
-  const drawerDirection= ref(safeGet('drawerDirection') !== null ? safeGet('drawerDirection') : 'rtl')
+  const drawerDirection = ref(safeGet('drawerDirection') !== null ? safeGet('drawerDirection') : 'rtl')
 
   function setTheme(value: string) {
     theme.value = value
@@ -71,6 +71,27 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     safePut('drawerDirection', value)
   }
 
+  function getValue(key: string) {
+    return safeGet(key)
+  }
+
+  function getStorageObject(key: string) {
+    const value = safeGet(key)
+    if (value === null) {
+      return undefined
+    } else {
+      return JSON.parse(value)
+    }
+  }
+
+  function putValue(key: string, value: string) {
+    safePut(key, value)
+  }
+
+  function putStorageObject(key: string, value: any) {
+    safePut(key, JSON.stringify(value))
+  }
+
   return {
     theme,
     setTheme,
@@ -86,5 +107,9 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     setCloseOnClickModal,
     drawerDirection,
     setDrawerDirection,
+    getValue,
+    putValue,
+    getStorageObject,
+    putStorageObject,
   }
 })

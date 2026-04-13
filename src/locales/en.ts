@@ -1,45 +1,48 @@
-// en.ts
 export default {
-  title: 'LGAG',
+  title: 'Lingong Agricultural Machinery',
   subTitle: 'LGAG',
   add: 'Add',
-  ok: 'Confirm',
+  ok: 'OK',
   save: 'Save',
   close: 'Close',
   cancel: 'Cancel',
   search: 'Search',
-  deleteWarn: 'Are you sure to delete this record?',
+  deleteWarn: 'Are you sure you want to delete this record?',
   warning: 'Warning',
   platform: 'Platform Settings',
   platformCommon: {
     title: 'Platform General',
-    favoriteSettings: 'Preference Settings',
-    personalInformation: 'Personal Information',
+    favoriteSettings: 'Preferences',
+    personalInformation: 'Profile',
     passwordSettings: 'Password Settings',
-    appearanceSettings: 'Appearance Settings',
+    appearanceSettings: 'Display Settings',
     languageSettings: 'Language Settings',
   },
   platformGroup: {
-    syncSchema: 'Sync Generate',
+    syncSchema: 'Sync & Generate',
   },
   baseCommon: 'Common Functions',
   resourceGroups: 'Resource Groups',
   resources: 'Platform Resources',
   schemaDefines: 'Form Settings',
   exit: 'Exit',
-  help: 'Help & Support',
+  help: 'Help & Feedback',
   description: 'Description',
+  keyword: 'Keyword',
+  selectAll: 'Select All',
+  clearAll: 'Clear All',
   theme: 'Theme',
   layout: 'Layout',
   skin: 'Skin',
+  more: 'More',
   fullscreenTooltip: 'Full Screen',
-  columnVisibleSet: 'Customize Column Display',
+  columnVisibleSet: 'Custom Column Display',
   exitFullscreenTooltip: 'Exit Full Screen',
-  error404: 'The accessed page does not exist',
-  errorAuthorizeFailed: 'You do not have permission to access this page. Please contact the administrator if needed.',
+  error404: 'The page you visited does not exist',
+  errorAuthorizeFailed: 'You do not have permission to access this page. Please contact the administrator if you need access.',
   errorLoadComponent: 'Please check if the front-end component path configuration is correct',
   goBackHome: 'Back to Home',
-  goBackLastPage: 'Back to Previous Page',
+  goBackLastPage: 'Go Back',
   operationSuccess: 'Operation Successful',
   operationFailed: 'Operation Failed',
   appearanceSettingsTheme: 'Theme Settings',
@@ -55,19 +58,19 @@ export default {
   appearanceFontSize: {
     small: 'Small',
     default: 'Medium',
-    defaultWarn: 'Recommended for displays with resolution above 1400',
+    defaultWarn: 'Recommended for monitors with resolution above 1400',
     large: 'Large',
-    largeWarn: 'Recommended for displays with resolution above 1600',
+    largeWarn: 'Recommended for monitors with resolution above 1600',
   },
   appearanceLayout: {
-    tagView: 'Tab View Navigation Mode',
+    tagView: 'Tag View Navigation Mode',
     breadCrumbView: 'Breadcrumb Navigation Mode',
   },
   appearanceLanguage: {
     showLanguage: 'Display Language',
-    zh: 'Chinese (Simplified)',
+    zh: '简体中文',
     en: 'English',
-    changeWarn: 'Refresh browser to apply language changes?',
+    changeWarn: 'Do you want to refresh the browser to apply the language change?',
   },
   appearanceFavorite: {
     popupMode: 'Form Popup Mode',
@@ -79,17 +82,17 @@ export default {
     drawerDirectionTtb: 'Top',
     drawerDirectionBtt: 'Bottom',
     closeOnClickModal: 'Form Close Method',
-    closeOnClickModalEnable: 'Close on click outside',
-    closeOnClickModalDisabled: 'Do not close on click outside',
+    closeOnClickModalEnable: 'Close by clicking outside',
+    closeOnClickModalDisabled: 'Do not close by clicking outside',
   },
   passwordModify: {
-    oldPasswordLabel: "Original Password",
+    oldPasswordLabel: "Current Password",
     newPasswordLabel: "New Password",
     confirmPasswordLabel: "Confirm Password",
     placeholders: {
-      oldPassword: "Please enter original password",
+      oldPassword: "Please enter current password",
       newPassword: "Please enter new password (8-20 characters, including letters and numbers)",
-      confirmPassword: "Please re-enter new password"
+      confirmPassword: "Please enter new password again"
     },
     buttons: {
       submit: "Submit Modification"
@@ -105,21 +108,21 @@ export default {
       tips: {
         "0": "Please enter password",
         "1": "Password strength is too low, please increase length or complexity",
-        "2": "Password strength is medium, add special characters to improve strength",
+        "2": "Password strength is medium, special characters can be added to improve strength",
         "3": "Password strength is excellent, high security"
       }
     },
     validateRules: {
-      requiredOldPwd: "Please enter original password",
+      requiredOldPwd: "Please enter current password",
       requiredNewPwd: "Please enter new password",
       requiredConfirmPwd: "Please confirm new password",
-      passwordLength: "Password length must be 8 to 20 characters",
+      passwordLength: "Password length is 8 to 20 characters",
       passwordComplexity: "Password must contain letters and numbers",
-      passwordNotMatch: "The two passwords entered do not match"
+      passwordNotMatch: "The passwords entered twice do not match"
     },
     messages: {
       modifySuccess: "Password modified successfully!",
-      validateError: "Validation failed, please check your input!"
+      validateError: "Verification failed, please check your input!"
     }
   },
   pager: {
@@ -127,31 +130,68 @@ export default {
     row: 'items',
   },
   table: {
-    loadingTableColumnsError: 'Failed to load table metadata',
+    loadingTableColumnsError: 'Failed to load data table metadata',
     loadingTableDataError: 'Failed to load data',
     loading: 'Loading',
-    emptyText: 'No data available',
-    operation: 'Operations',
+    emptyText: 'No Data',
+    operation: 'Operation',
     view: 'View',
     edit: 'Edit',
     delete: 'Delete',
     role: 'Role',
     save: 'Save',
-    startDate: 'Start Date',
-    endDate: 'End Date',
-    rangeSeparator: 'to'
+    startDate: 'Start Time',
+    endDate: 'End Time',
+    rangeSeparator: 'to',
+    downLoadExcelTemplate: 'Download Template',
+    importByExcel: 'Excel Import',
+    exportToExcel: 'Excel Export',
+    importByExcelTip: 'Drag the file here or click to upload',
+    importByExcelSubmitButton: 'Confirm Import',
+    columnWarningMessage: 'Validation Result',
+    importByExcelValidFailedTip: 'Validation failed, submission not allowed',
+    viewModel: 'Switch View',
+    customColumn: 'Custom Columns',
+    customSort: 'Default Sort',
+    columnNo: 'ID',
+    columnLabel: 'Name',
+    columnFieldName: 'Field',
+    columnIsShow: 'Show',
+    columnIsSort: 'Sort',
+    columnIsOverflow: 'Ellipsis',
+    columnIsSearch: 'Filter',
+    columnAlign: 'Align',
+    columnWidth: 'Width',
+    columnShowOrder: 'Order',
+    alignLeft: 'Left',
+    alignCenter: 'Center',
+    alignRight: 'Right',
   },
   validate: {
-    minLength: 'Minimum Length',
-    maxLength: 'Maximum Length',
+    minLength: 'Minimum length',
+    maxLength: 'Maximum length',
     min: 'Minimum',
     max: 'Maximum',
     required: 'Required',
     email: 'Invalid email format',
-    noChinese: 'Chinese characters are not allowed'
+    noChinese: 'Cannot contain Chinese characters'
   },
   user: {
-    basic: 'Basic Information',
-    realName: 'Full Name'
+    basic: 'Basic Info',
+    realName: 'Name',
+    roleAllocate: 'Role Assignment',
+    enable: 'Enable',
+    disable: 'Disable',
+  },
+  role: {
+    name: 'Role',
+    permission: 'Permission',
+    permissionAllocate: 'Permission Assignment'
+  },
+  resource: {
+    name: 'Menu'
+  },
+  resourceGroup: {
+    name: 'Group'
   }
 } as const

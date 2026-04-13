@@ -13,8 +13,6 @@ import { getEnumValues } from '@/api/common/platform'
 import XEUtils from 'xe-utils'
 
 const enumMap = ref({})
-const typeMap = ref({})
-const typeArray = ['primary', 'success', 'info', 'warning', 'danger']
 
 const props = defineProps<{
   code: string
@@ -24,14 +22,8 @@ const props = defineProps<{
 
 onMounted(() => {
   getEnumValues(props.context, props.code).then((rsp) => {
-    let idx = 0
     rsp.data.forEach((item) => {
       enumMap.value[XEUtils.toString(item.value)] = item
-      typeMap.value[XEUtils.toString(item.value)] = typeArray[idx]
-      idx = idx + 1
-      if (idx >= typeArray.length) {
-        idx = 0
-      }
     })
   })
 })
@@ -45,8 +37,8 @@ function parseLabel(value) {
 }
 
 function parseType(value) {
-  if (typeMap.value[XEUtils.toString(value)] !== undefined) {
-    return typeMap.value[XEUtils.toString(value)]
+  if (enumMap.value[XEUtils.toString(value)] !== undefined) {
+    return enumMap.value[XEUtils.toString(value)].css
   } else {
     return 'primary'
   }

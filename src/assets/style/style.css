@@ -33,6 +33,18 @@
 .p-3 { padding: 0.75rem !important; }
 .p-4 { padding: 1rem !important; }
 .p-5 { padding: 1.5rem !important; }
+.pt-3 { padding-top: 0.75rem !important; }
+.pl-3 { padding-left: 0.75rem !important; }
+.pr-3 { padding-right: 0.75rem !important; }
+.pb-3 { padding-bottom: 0.75rem !important; }
+.pt-4 { padding-top: 1rem !important; }
+.pl-4 { padding-left: 1rem !important; }
+.pr-4 { padding-right: 1rem !important; }
+.pb-4 { padding-bottom: 1rem !important; }
+.pt-5 { padding-top: 1.5rem !important; }
+.pl-5 { padding-left: 1.5rem !important; }
+.pr-5 { padding-right: 1.5rem !important; }
+.pb-5 { padding-bottom: 1.5rem !important; }
 
 .height-1 { height: 1rem !important; }
 .height-1-2 { height: 1.5rem !important; }
@@ -235,7 +247,7 @@ html.blue {
 .my-font-bold {font-weight: bold;}
 .my-icon-color-primary {
   color: var(--my-font-color-primay);
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 .my-icon-color-primary:hover {
   background-color: color-mix(in srgb, var(--el-color-primary-light-5) 90%, var(--my-text-color));
