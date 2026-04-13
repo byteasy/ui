@@ -37,7 +37,7 @@
               </div>
             </div>
           </template>
-          <div style="max-height: 90vh !important; overflow: auto;">
+          <div style="max-height: 90vh !important; overflow: auto;" class="pl-3 pt-3 pr-3 my-bg-color-blank">
             <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)" />
           </div>
         </el-dialog>
