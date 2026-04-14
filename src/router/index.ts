@@ -14,10 +14,13 @@ const routers = [
     meta: {title: t('platformCommon.title')},
     redirect: '/platformCommon/favoriteSettings',
     children: [
-      {
-        path: '404',
+      { path: '404',
         name: 'Error404',
         component: () => import('../views/common/Error404.vue')
+      },
+      { path: 'authenticationEmpty',
+        name: 'AuthenticationEmpty',
+        component: () => import('../views/common/AuthenticationEmpty.vue')
       },
       {
         path: 'favoriteSettings',
@@ -113,9 +116,12 @@ router.beforeEach(async (to, from, next) => {
         }
       )
       isRouterLoad = true
-      console.log('动态路由加载完成', isRouterLoad, to.fullPath, activeGroup.router)
       if (to.fullPath === '/') {
-        next(activeGroup.router)
+        if (activeGroup === null) {
+          next('/platformCommon/authenticationEmpty')
+        } else {
+          next(activeGroup.router)
+        }
       } else {
         next({...to, replace: true})
       }
