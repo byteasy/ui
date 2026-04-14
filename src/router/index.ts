@@ -79,7 +79,7 @@ function rebuildLeftMenus(node, menu) {
             if (subChild.type === 'MENU') {
               node.children.push({
                 path: child.routerUrl + '/' + subChild.routerUrl,
-                name: subChild.name,
+                name: subChild.code,
                 meta: {
                   title: subChild.name,
                   affix: subChild.affix === 'YES',
@@ -93,7 +93,7 @@ function rebuildLeftMenus(node, menu) {
         } else {
           node.children.push({
             path: child.routerUrl,
-            name: child.name,
+            name: child.code,
             meta: {
               title: child.name,
               affix: child.affix === 'YES',
