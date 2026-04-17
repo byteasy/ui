@@ -18,7 +18,7 @@
           <div class="flex-column h-full w-full">
             <div class="el-card is-always-shadow p-1" style="height: 2.4rem; width: 100%">
               <bread-crumb v-if="tagView === '0'" />
-              <tag-view v-else />
+              <tuna-tag-view v-else />
             </div>
             <div class="el-card is-always-shadow p-2 mt-1 flex-grow" style="width: 100%">
               <div class="h-full">
@@ -48,6 +48,7 @@ import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { useTagsViewStore } from '@/stores/tagsView'
 import CommonLeftMenu from "@/views/layout/CommonLeftMenu.vue";
+import TunaTagView from "@/components/TunaTagView.vue";
 import {useRoute} from "vue-router";
 const route = useRoute()
 
