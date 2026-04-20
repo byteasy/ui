@@ -1,7 +1,6 @@
 // zh.ts
 export default {
   title: '临工农机',
-  subTitle: 'LGAG',
   add: '添加',
   ok: '确定',
   save: '保存',
@@ -11,6 +10,8 @@ export default {
   deleteWarn: '确定要删除这条记录？',
   warning: '提醒',
   platform: '平台设置',
+  authenticationEmptyTitle: '访问失败',
+  authenticationEmptyTips: '无权限访问相关资源，请联系管理人员授予权限',
   platformCommon: {
     title: '平台通用',
     favoriteSettings: '偏好设置',

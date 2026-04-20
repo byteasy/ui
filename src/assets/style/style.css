@@ -249,8 +249,13 @@ html.blue {
   color: var(--my-font-color-primay);
   font-size: 1rem;
 }
+.text-gray {
+  color: var(--el-text-color-placeholder);
+}
 .my-icon-color-primary:hover {
   background-color: color-mix(in srgb, var(--el-color-primary-light-5) 90%, var(--my-text-color));
+}
+.cursor-pointer {
   cursor: pointer;
 }
 div.el-scrollbar__bar.is-horizontal {

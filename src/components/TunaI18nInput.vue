@@ -1,7 +1,7 @@
 <template>
   <el-input>
     <template #append>
-      <el-icon @click="onI18nClick" class="my-icon-color-primary"><IconLocalLanguage  /></el-icon>
+      <el-icon @click="onI18nClick" class="my-icon-color-primary cursor-pointer"><IconLocalLanguage  /></el-icon>
     </template>
   </el-input>
 </template>

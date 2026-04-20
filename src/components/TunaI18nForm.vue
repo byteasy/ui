@@ -43,14 +43,17 @@
             v-model="scope.row[col.name]"
             @change="edited = true"
           >
-            <el-option label="中文简体" value="zh_CN" />
-            <el-option label="中文繁體" value="zh_TW" />
-            <el-option label="English" value="en" />
-            <el-option label="Français" value="fr" />
-            <el-option label="Deutsch" value="de" />
-            <el-option label="Italiano" value="it" />
-            <el-option label="日本語" value="ja" />
-            <el-option label="한국어" value="ko" />
+            <el-option label="中文简体" value="zh_CN" :disabled="langExist('zh_CN')" />  <!-- 中文简体 -->
+            <el-option label="中文繁體" value="zh_TW" :disabled="langExist('zh_TW')"/>  <!-- 中文繁体 -->
+            <el-option label="English" value="en" :disabled="langExist('en')"/>      <!-- 英语 -->
+            <el-option label="Русский" value="ru" :disabled="langExist('ru')"/>      <!-- 俄语 -->
+            <el-option label="Português" value="pt" :disabled="langExist('pt')"/>    <!-- 葡萄牙语 -->
+            <el-option label="Español" value="es" :disabled="langExist('es')"/>      <!-- 西班牙语 -->
+            <el-option label="Français" value="fr" :disabled="langExist('fr')"/>     <!-- 法语 -->
+            <el-option label="Deutsch" value="de" :disabled="langExist('de')"/>      <!-- 德语 -->
+            <el-option label="Italiano" value="it" :disabled="langExist('it')"/>     <!-- 意大利语 -->
+            <el-option label="日本語" value="ja" :disabled="langExist('ja')"/>       <!-- 日语 -->
+            <el-option label="한국어" value="ko" :disabled="langExist('ko')"/>       <!-- 韩语 -->
           </el-select>
           <el-input
             v-else
@@ -115,5 +118,9 @@ const onSave18n = () => {
       console.log(err)
       ElMessage.error(t('operationFailed'))
     })
+}
+
+const langExist = (lang) => {
+  return tableData.value.records.some(item => item.lang === lang)
 }
 </script>

@@ -1,6 +1,5 @@
 export default {
-  title: 'Lingong Agricultural Machinery',
-  subTitle: 'LGAG',
+  title: 'LGAG',
   add: 'Add',
   ok: 'OK',
   save: 'Save',
