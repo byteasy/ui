@@ -147,10 +147,6 @@
   --my-font-size-lg: calc(var(--font-size-base) * 1.286);  /* 18px */
   --my-font-size-xl: calc(var(--font-size-base) * 1.429);  /* 20px */
   --my-font-size-2xl: calc(var(--font-size-base) * 1.571); /* 22px */
-  --my-font-size-3xl: calc(var(--font-size-base) * 2); /* 22px */
-  --my-font-size-4xl: calc(var(--font-size-base) * 3); /* 22px */
-  --my-font-size-5xl: calc(var(--font-size-base) * 4); /* 22px */
-  --my-font-size-6xl: calc(var(--font-size-base) * 5); /* 22px */
   --my-font-color-primay: var(--el-color-primary) !important;
 }
 
@@ -248,31 +244,18 @@ html.blue {
 .my-font-size-2xl {
   font-size: var(--my-font-size-2xl);
 }
-.my-font-size-3xl {
-  font-size: var(--my-font-size-3xl);
-}
-.my-font-size-4xl {
-  font-size: var(--my-font-size-4xl);
-}
-.my-font-size-5xl {
-  font-size: var(--my-font-size-5xl);
-}
-.my-font-size-6xl {
-  font-size: var(--my-font-size-6xl);
-}
-.my-font-color-primary {
-  color: var(--my-font-color-primay);
-}
-.my-font-color-error {
-  color: var(--el-color-error);
-}
 .my-font-bold {font-weight: bold;}
 .my-icon-color-primary {
   color: var(--my-font-color-primay);
   font-size: 1rem;
 }
+.text-gray {
+  color: var(--el-text-color-placeholder);
+}
 .my-icon-color-primary:hover {
   background-color: color-mix(in srgb, var(--el-color-primary-light-5) 90%, var(--my-text-color));
+}
+.cursor-pointer {
   cursor: pointer;
 }
 div.el-scrollbar__bar.is-horizontal {

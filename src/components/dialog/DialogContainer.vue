@@ -20,7 +20,7 @@
           <template #header="{ close, titleId, titleClass }">
             <div class="flex-row w-full">
               <div class="flex-grow">
-                <el-icon class="my-icon-color-primary">
+                <el-icon class="my-icon-color-primary cursor-pointer">
                   <CopyDocument />
                 </el-icon>
                 <el-text style="font-size: var(--el-font-size-large)" class="ml-2 font-bold">
@@ -28,17 +28,17 @@
                 </el-text>
               </div>
               <div class="flex-none">
-                <el-icon class="my-icon-color-primary" @click="onFullscreenClick(item)">
+                <el-icon class="my-icon-color-primary cursor-pointer" @click="onFullscreenClick(item)">
                   <FullScreen/>
                 </el-icon>
-                <el-icon class="ml-2 my-icon-color-primary" @click="close()" style="">
+                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()" style="">
                   <Close/>
                 </el-icon>
               </div>
             </div>
           </template>
           <div style="max-height: 90vh !important; overflow: auto;" class="pl-3 pt-3 pr-3 my-bg-color-blank">
-            <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)" />
+            <component :is="item.component" v-bind="item.props" @close="(data) => handleClose(item.id, data)" />
           </div>
         </el-dialog>
         <el-drawer
@@ -52,7 +52,7 @@
           @close="handleClose(item.id)"
           :direction="item.direction"
         >
-          <component :is="item.component" v-bind="item.props" @close="handleClose(item.id)"/>
+          <component ref="componentRef" :is="item.component" v-bind="item.props" @close="(data) => handleClose(item.id, data)"/>
         </el-drawer>
       </div>
     </el-config-provider>
@@ -63,11 +63,12 @@
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import en from 'element-plus/dist/locale/en.mjs'
 import {useModal} from './useModal.ts'
-import {computed} from 'vue'
+import {computed, ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 
 const appSettingsStore = useAppSettingsStore()
+const componentRef = ref(null)
 
 const {componentSize, lang} = storeToRefs(appSettingsStore)
 
@@ -79,7 +80,7 @@ const {modals, close} = useModal()
 console.log('DialogContainer 渲染，弹窗数量：', modals.length)
 
 const handleClose = (id: symbol, data?: unknown) => {
-  console.log('关闭弹窗：', id)
+  console.log('关闭弹窗：', id, data)
   close(id, data)
 }
 
