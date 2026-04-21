@@ -55,13 +55,6 @@ export function getEntitySchema(serviceContext, enumClassName) {
   })
 }
 
-export function putEntitySchema(className) {
-  return request({
-    url: '/platformSvr/sapi/schemaDefines/entity/' + className,
-    method: 'put',
-  })
-}
-
 export function getDictionaryValues(code) {
   return request({
     url: '/platformSvr/sapi/dictionarys/codes/' + code,

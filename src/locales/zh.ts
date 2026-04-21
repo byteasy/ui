@@ -9,7 +9,6 @@ export default {
   search: '查询',
   deleteWarn: '确定要删除这条记录？',
   warning: '提醒',
-  platform: '平台设置',
   authenticationEmptyTitle: '访问失败',
   authenticationEmptyTips: '无权限访问相关资源，请联系管理人员授予权限',
   platformCommon: {
@@ -19,9 +18,6 @@ export default {
     passwordSettings: '密码设置',
     appearanceSettings: '显示设置',
     languageSettings: '语言设置',
-  },
-  platformGroup: {
-    syncSchema: '同步生成',
   },
   baseCommon: '常用功能',
   resourceGroups: '资源分组',
@@ -176,7 +172,14 @@ export default {
     max: '最大',
     required: '必须填写',
     email: '邮箱格式不正确',
-    noChinese: '不能含有中文字符'
+    noChinese: '不能含有中文字符',
+    paramMissing: '参数缺失'
+  },
+  platform: {
+    schemaDefine: {
+      serviceTreeSearchTip: '输入关键词搜索',
+      syncSchema: '同步生成',
+    }
   },
   user: {
     basic: '基本资料',

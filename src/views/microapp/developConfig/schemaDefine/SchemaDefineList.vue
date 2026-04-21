@@ -1,55 +1,108 @@
 <template>
-  <tuna-table
-    ref="refTable"
-    base-url="/platformSvr/sapi/schemaDefines"
-    context="platformSvr"
-    class-name="com.tuna.platform.entity.SchemaDefine"
-    :query-params="{ ascColumns: ['className', 'showOrder'] }"
-  >
-    <template v-slot:formQueryButtonExt
-      ><el-button type="primary" icon="Loading" @click="onSyncSchemaClick">{{
-        $t('platformGroup.syncSchema')
-      }}</el-button></template
-    >
-    <template v-slot:table_column_className="scope"
-      ><el-link @click="doResearch(scope.row)">{{ scope.row.className }}</el-link></template
-    >
-    <template v-slot:table_column_showOrder="scope"
+  <el-splitter>
+    <el-splitter-panel size="400" collapsible :min="300" :max="600">
+      <service-class-tree ref="refTree" @tree-node-click="onTreeNodeClick"/>
+    </el-splitter-panel>
+    <el-splitter-panel :min="200">
+      <tuna-table-v2
+        ref="refTable"
+        base-url="/platformSvr/sapi/schemaDefines"
+        context="platformSvr"
+        class-name="com.tuna.platform.entity.SchemaDefine"
+        :query-params="{ ascColumns: ['className', 'showOrder'] }"
+        class="pl-2"
       >
-        <el-input-number
-          v-model="scope.row.showOrder"
-          :min="1"
-          :max="60000"
-          size="small"
-          @change="saveShowOrder(scope.row)"
-        />
-    </template>
-  </tuna-table>
+        <template v-slot:form-query-field-serviceName="serviceNameScope">
+          <el-select v-model="serviceNameScope.queryParam.serviceName" style="width: 180px;" clearable @change="refTable.refresh()">
+            <el-option v-for="item in services" :key="item" :label="item" :value="item" />
+          </el-select>
+        </template>
+        <template v-slot:form-query-buttons-extra
+        ><el-button type="primary" icon="Loading" @click="onSyncSchemaClick">{{
+            $t('platform.schemaDefine.syncSchema')
+          }}</el-button></template
+        >
+        <template v-slot:table-cell-className="scope"
+        ><el-link @click="doResearch(scope.row)">{{ scope.row.className }}</el-link></template
+        >
+        <template v-slot:table-cell-showOrder="scope"
+        >
+          <el-input-number
+            v-model="scope.row.showOrder"
+            :min="1"
+            :max="60000"
+            size="small"
+            @change="saveShowOrder(scope.row)"
+          />
+        </template>
+      </tuna-table-v2>
+    </el-splitter-panel>
+  </el-splitter>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { doHttpPost, putEntitySchema } from '@/api/common/platform'
+import {onMounted, ref} from 'vue'
+import {doHttpGet, doHttpPost, doHttpPut } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import ServiceClassTree from "@/views/microapp/developConfig/schemaDefine/ServiceClassTree.vue";
 const { t } = useI18n() // 表单引用
 
 const refTable = ref(null)
+const refTree = ref(null)
+const services = ref([])
+
+onMounted(() => {
+  loadServices()
+})
 
 function onSyncSchemaClick() {
-  const queryParam = refTable.value.queryParam
-  putEntitySchema(queryParam.className)
-    .then((response) => {
-      ElMessage.success(t('operationSuccess'))
-      refTable.value.refresh()
+  const serviceName = refTable.value?.queryParam.serviceName
+  const className = refTable.value?.queryParam.className
+  if(serviceName == null) {
+    ElMessage.warning(t('validate.paramMissing'))
+    return
+  }
+  if(className == null) {
+    ElMessage.warning(t('validate.paramMissing'))
+    return
+  }
+  doHttpGet('/platformSvr/sapi/schemaDefines/services/' + serviceName + '/context').then(res1 => {
+    const ctxPath = res1.data
+    doHttpGet(ctxPath + '/sapi/schemas/src/' + className).then(res2 => {
+      const columns = res2.data
+      if(columns.length > 0) {
+        doHttpPut('/platformSvr/sapi/schemaDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {
+          ElMessage.success(t('operationSuccess'))
+          refTable.value?.refresh()
+          refTree.value?.refresh()
+        })
+      } else {
+        ElMessage.warning(t('table.emptyText'))
+        return
+      }
     })
-    .catch((error) => {
-      console.log(error)
-      ElMessage.error(t('operationFailed'))
-    })
+  })
+}
+
+function loadServices() {
+  doHttpGet('/platformSvr/sapi/schemaDefines/services', {}).then(res1 => {
+    services.value = res1.data
+  })
+}
+
+function onTreeNodeClick(node) {
+  if(node.name.startsWith('com')) {
+    doResearch({ className: node.name })
+  } else {
+    refTable.value.queryParam.serviceName = node.name
+    refTable.value.queryParam.className = undefined
+    refTable.value.refresh()
+  }
 }
 
 function doResearch(row) {
+  refTable.value.queryParam.serviceName = undefined
   refTable.value.queryParam.className = row.className
   refTable.value.refresh()
 }
