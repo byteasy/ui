@@ -1,5 +1,5 @@
 <template>
-  <el-input v-model="currentLangInput" @input="handleDirectInput" :disabled="props.disabled">
+  <el-input v-model="currentLangInput" @input="handleDirectInput" v-bind="bindAttrs">
     <template #append>
       <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }"
                @click="onI18nClick">
@@ -10,20 +10,21 @@
 </template>
 
 <script setup lang="ts">
-import {computed, defineExpose} from 'vue'
-import { useModal } from '@/components/dialog/useModal.ts'
+
+import {computed, defineExpose, defineOptions, useAttrs} from 'vue'
+import {useModal} from '@/components/dialog/useModal.ts'
 import TunaI18nDynamicForm from "@/components/TunaI18nDynamicForm.vue"
-import { useI18n } from 'vue-i18n'
-import { langMap } from "@/locales/common.ts"
+import {useI18n} from 'vue-i18n'
+import {langMap} from "@/locales/common.ts"
 
-const { locale } = useI18n()
-const { open } = useModal()
-const { t } = useI18n()
+const {locale} = useI18n()
+const {open} = useModal()
+const {t} = useI18n()
 
+const bindAttrs = useAttrs()
 // 🔥 核心修改：modelValue 改成 string 类型
 const props = defineProps<{
   modelValue?: string
-  disabled?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -71,7 +72,7 @@ function handleDirectInput(val: string) {
  * 3. 点击图标打开多语言弹窗
  */
 const onI18nClick = () => {
-  if (props.disabled === true) return
+  if (bindAttrs.disabled === true) return
 
   open(
     TunaI18nDynamicForm,

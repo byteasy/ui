@@ -1,15 +1,13 @@
 <template>
-  <template v-if="props.column.type === 'STRING'">
-    <tuna-i18n-dynamic-input v-if="props.column.isI18n === 'YES'" type="text"
-                             :maxlength="props.column.maxLength"
-                             :minlength="props.column.minLength"/>
-    <el-input
-      type="text"
-      :maxlength="props.column.maxLength"
-      :minlength="props.column.minLength"
-      v-else
-    />
-  </template>
+  <tuna-i18n-dynamic-input v-if="props.column.isI18n === 'YES' && props.column.type === 'STRING'"
+                           :maxlength="props.column.maxLength"
+                           :minlength="props.column.minLength"/>
+  <el-input
+    type="text"
+    :maxlength="props.column.maxLength"
+    :minlength="props.column.minLength"
+    v-else-if="props.column.isI18n === 'NO' && props.column.type === 'STRING'"
+  />
   <el-input
     v-else-if="
       props.column.type === 'BYTE' ||

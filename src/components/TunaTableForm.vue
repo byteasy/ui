@@ -37,9 +37,6 @@
                     :disabled="props.readonly"
                     v-model="formValue[col.name]"
                     style="min-width: 300px"
-                    :align="
-                    col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
-                  "
                   />
                 </slot>
               </el-form-item>

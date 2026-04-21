@@ -33,6 +33,7 @@ export default {
   layout: '布局',
   skin: '皮肤',
   more: '更多',
+  i18nEdit: '多语言编辑',
   fullscreenTooltip: '全屏显示',
   columnVisibleSet: '自定义列显示',
   exitFullscreenTooltip: '退出全屏显示',
