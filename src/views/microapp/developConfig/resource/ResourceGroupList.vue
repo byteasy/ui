@@ -1,6 +1,6 @@
 <template>
   <el-splitter>
-    <el-splitter-panel size="260" :resizable="false">
+    <el-splitter-panel size="250" collapsible :min="200" :max="600">
       <resource-category-tree @tree-node-click="onCategoryTableRowClick"/>
     </el-splitter-panel>
     <el-splitter-panel>
