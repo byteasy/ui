@@ -31,6 +31,19 @@ const langList = [
   {label: 'Español', value: 'es'},
 ]
 
+export function getLangText(text: any, currentLocale: string): string {
+  if (!text) return ''
+
+  const lang = langMap[currentLocale] || currentLocale
+
+  try {
+    const obj = JSON.parse(text)
+    return obj[lang] || text
+  } catch {
+    return text
+  }
+}
+
 export {
   langMap, langList
 }

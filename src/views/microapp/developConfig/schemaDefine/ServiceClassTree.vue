@@ -154,8 +154,10 @@ function onTreeNodeDeleteClick() {
       const con = {}
       if(activeContextMenuNode.value?.name.startsWith('com')) {
         con.className = activeContextMenuNode.value.name
+        con.classNameQueryType = 'eq'
       } else {
         con.serviceName = activeContextMenuNode.value.name
+        con.serviceNameQueryType = 'eq'
       }
       doHttpDelete('/platformSvr/sapi/schemaDefines', con, {}).then(res => {
         loadTreeData()

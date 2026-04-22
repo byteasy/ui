@@ -203,19 +203,20 @@ import {
 } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
 import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
+import TunaTableForm from '@/components/TunaTableForm.vue'
+import TunaExcelImport from '@/components/TunaExcelImport.vue'
 import {doHttpDelete, doHttpGet, getEntitySchema} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
 import {useModal} from '@/components/dialog/useModal.ts'
-import TunaTableForm from '@/components/TunaTableForm.vue'
-import TunaExcelImport from '@/components/TunaExcelImport.vue'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {putValueIfValid} from "@/util/common.ts";
+import {getLangText} from "@/locales/common.ts";
 
 const appSettingsStore = useAppSettingsStore()
 const route = useRoute()
-const {t} = useI18n() // 表单引用
+const {t, locale} = useI18n()
 
 const props = defineProps<{
   baseUrl: string
@@ -357,6 +358,7 @@ function getExcelImportComponent() {
 
 function onView(row) {
   const [lastRoute] = route.matched.slice(-1)
+  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
   open(
     getFormComponent(), // 要显示的组件
     {
@@ -367,7 +369,7 @@ function onView(row) {
       context: props.context,
     }, // 传给组件的 props
     {
-      title: t('table.view') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.view') + title,
       width: getFormWidth(),
       dialogModel: props.dialogModel,
       onClose: (data) => {

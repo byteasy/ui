@@ -3,8 +3,8 @@
 </template>
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
-import {langMap} from "@/locales/common.ts"
 import {computed} from "vue"
+import {getLangText} from "@/locales/common.ts";
 
 const {locale} = useI18n()
 
@@ -14,16 +14,9 @@ const props = defineProps<{
 }>()
 
 // 最终正确的语言（zh_CN）
-const currentLang = computed(() => langMap[locale.value] || locale.value)
 const currentLangValue = computed({
   get() {
-    if (props.modelValue === undefined || props.modelValue === null) {
-      return ''
-    }
-    if (props.modelValue.startsWith('{')) {
-      return JSON.parse(props.modelValue || '{}')[currentLang.value]
-    }
-    return props.modelValue
+    return getLangText(props.modelValue, locale.value)
   },
   set() {
   }
