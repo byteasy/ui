@@ -4,7 +4,7 @@
       <resource-category-tree @tree-node-click="onCategoryTableRowClick"/>
     </el-splitter-panel>
     <el-splitter-panel>
-      <tuna-table
+      <tuna-table-v2
         ref="refTable"
         base-url="/platformSvr/sapi/resourceGroups"
         context="platformSvr"
@@ -13,14 +13,14 @@
         class="pl-2"
         :form-component="ResourceGroupForm"
       >
-        <template v-slot:formQueryButton>
+        <template v-slot:form-query-buttons>
           <el-button type="primary" icon="Search" @click="refTable.refresh()">{{
               $t('search')
             }}
           </el-button>
           <el-button type="primary" @click="onGroupAddClick" icon="Plus">{{ $t('add') }}</el-button>
         </template>
-        <template v-slot:table_column_showOrder="scope">
+        <template v-slot:table-cell-showOrder="scope">
           <el-input-number
             v-model="scope.row.showOrder"
             :min="1"
@@ -29,7 +29,7 @@
             @change="saveShowOrder(scope.row)"
           />
         </template>
-      </tuna-table>
+      </tuna-table-v2>
     </el-splitter-panel>
   </el-splitter>
 </template>
