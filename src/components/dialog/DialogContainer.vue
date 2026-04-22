@@ -37,8 +37,8 @@
               </div>
             </div>
           </template>
-          <div style="max-height: 90vh !important; overflow: auto;" class="pl-3 pt-3 pr-3 my-bg-color-blank">
-            <component :is="item.component" v-bind="item.props" @close="(data) => handleClose(item.id, data)" />
+          <div style="max-height: 90vh !important; max-width: 100vw !important; overflow: auto;">
+            <component :is="item.component" v-bind="item.props" @close="(data) => handleClose(item.id, data)" :style="{ height: item.fullscreen ? 'calc(90vh - 1.5rem) !important' : 'calc(50vh - 1.5rem) !important' }" class="p-3 my-bg-color-blank" />
           </div>
         </el-dialog>
         <el-drawer
