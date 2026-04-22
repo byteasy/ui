@@ -1,54 +1,7 @@
 <template>
   <el-splitter>
     <el-splitter-panel size="260" :resizable="false">
-      <tuna-table
-        ref="refTableCategory"
-        base-url="/platformSvr/sapi/resourceCategorys"
-        context="platformSvr"
-        class-name="com.tuna.platform.entity.ResourceCategory"
-        :query-params="{ ascColumns: ['showOrder'] }"
-        :operation-column-width="0"
-        :pagination-visible="0"
-        :query-form-visible="0"
-        :form-component="ResourceCategoryForm"
-        @row-click="onCategoryTableRowClick"
-      >
-        <template v-slot:columnsSlot_name="scope">
-          <el-table-column align="center" :prop="scope.column.name" stripe highlight-current-row>
-            <template #header>
-              <div class="flex-row align-items-center w-full">
-                <div class="flex-grow"></div>
-                <div class="flex-none">
-                  {{ scope.column.displayName }}
-                </div>
-                <div class="flex-grow flex-row justify-content-end">
-                  <el-button icon="Plus" circle @click="refTableCategory.onAdd()" />
-                </div>
-              </div>
-            </template>
-            <template #default="scope">
-              <div class="flex-row align-items-center w-full">
-                <div class="flex-grow">{{ scope.row.name }}</div>
-                <div class="flex-none">
-                  <Edit style="width: 1em; height: 1em;" @click="refTableCategory.onEdit(scope.row)"/>
-                  <el-popconfirm
-                  :confirm-button-text="$t('ok')"
-                  :cancel-button-text="$t('cancel')"
-                  :title="$t('deleteWarn')"
-                  :hide-after="10"
-                  @confirm="refTableCategory.onDelete(scope.row)"
-                >
-                  <template #reference>
-                    <Delete style="width: 1em; height: 1em; margin-left: 0.3rem; color: var(--el-color-danger)" />
-                  </template>
-                </el-popconfirm>
-                </div>
-              </div>
-
-            </template>
-          </el-table-column>
-        </template>
-      </tuna-table>
+      <resource-category-tree @tree-node-click="onCategoryTableRowClick"/>
     </el-splitter-panel>
     <el-splitter-panel>
       <tuna-table
@@ -63,7 +16,8 @@
         <template v-slot:formQueryButton>
           <el-button type="primary" icon="Search" @click="refTable.refresh()">{{
               $t('search')
-            }}</el-button>
+            }}
+          </el-button>
           <el-button type="primary" @click="onGroupAddClick" icon="Plus">{{ $t('add') }}</el-button>
         </template>
         <template v-slot:table_column_showOrder="scope">
@@ -81,16 +35,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { doHttpPost } from '@/api/common/platform'
-import { ElMessage } from 'element-plus'
-import { useI18n } from 'vue-i18n'
-import ResourceCategoryForm from '@/views/microapp/developConfig/resource/ResourceCategoryForm.vue'
+import {ref} from 'vue'
+import {doHttpPost} from '@/api/common/platform'
+import {ElMessage} from 'element-plus'
+import {useI18n} from 'vue-i18n'
 import ResourceGroupForm from '@/views/microapp/developConfig/resource/ResourceGroupForm.vue'
-const { t } = useI18n()
+import ResourceCategoryTree from "@/views/microapp/developConfig/resource/ResourceCategoryTree.vue";
+
+const {t} = useI18n()
 
 const refTable = ref(null)
-const refTableCategory = ref(null)
 const currentCategory = ref({})
 
 function saveShowOrder(row) {
@@ -107,11 +61,17 @@ function saveShowOrder(row) {
 
 const onCategoryTableRowClick = (row) => {
   currentCategory.value = row
-  refTable.value.queryParam.categoryId = row.id
+  refTable.value.queryParam.categoryId = [row.id]
+  if (row.children !== undefined && row.children !== null) {
+    row.children.forEach(item => {
+      refTable.value?.queryParam.categoryId.push(item.id)
+    })
+  }
+  refTable.value.queryParam.categoryIdQueryType = 'in'
   refTable.value.refresh()
 }
 
 const onGroupAddClick = () => {
-  refTable.value.onAdd({ categoryId: currentCategory.value.id })
+  refTable.value.onAdd({categoryId: currentCategory.value.id})
 }
 </script>
