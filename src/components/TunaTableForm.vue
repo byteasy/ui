@@ -1,9 +1,9 @@
 <template>
   <div class="w-full h-full flex-column">
-    <el-scrollbar max-height="80vh" always class="w-full">
-      <el-form ref="refForm" label-width="auto" label-position="right" class="w-ful "
+    <el-scrollbar max-height="80vh" always>
+      <el-form ref="refForm" label-width="auto" label-position="right" class="w-full"
                :model="formValue">
-        <el-space wrap :direction="props.direction === undefined ? 'horizontal' : props.direction" class="w-full">
+        <el-space wrap direction="horizontal" style="width: 100%">
           <template v-for="col in props.columns" :key="col.name">
             <slot :name="'formItem_' + col.name" :column="col" :props="props" :row="formValue">
               <el-form-item
@@ -36,7 +36,7 @@
                     clearable
                     :disabled="props.readonly"
                     v-model="formValue[col.name]"
-                    style="min-width: 300px"
+                    style="width: 300px"
                     :align="
                     col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
                   "
@@ -81,7 +81,6 @@ const props = defineProps<{
   columns: Array<any>
   row?: any
   readonly?: boolean
-  direction?: string
 }>()
 const formValue = ref({...props.row})
 const {t} = useI18n() // 表单引用
