@@ -65,9 +65,9 @@
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
                 >
                   <template #default="scope">
-                    <slot :name="'table-cell-' + col.name" :row="scope.row">{{
-                        scope.row[col.name]
-                      }}
+                    <slot :name="'table-cell-' + col.name" :row="scope.row">
+                      <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]" />
+                      <span v-else>{{ scope.row[col.name] }}</span>
                     </slot>
                   </template>
                 </el-table-column>
@@ -230,6 +230,7 @@ const props = defineProps<{
   rowDbClick?: (row: any) => void
   excelImportEnable?: boolean
   excelImportComponent?: Component
+  dialogModel?: boolean
 }>()
 
 const emit = defineEmits(['rowClick'])
@@ -368,6 +369,7 @@ function onView(row) {
     {
       title: t('table.view') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
       width: getFormWidth(),
+      dialogModel: props.dialogModel,
       onClose: (data) => {
       },
     },
@@ -382,6 +384,7 @@ function onAdd(row) {
     {
       title: t('add') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
       width: getFormWidth(),
+      dialogModel: props.dialogModel,
       onClose: (data) => {
         refresh()
       },
@@ -402,6 +405,7 @@ function onEdit(row) {
     {
       title: t('table.edit') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
       width: getFormWidth(),
+      dialogModel: props.dialogModel,
       onClose: (data) => {
         refresh()
       },

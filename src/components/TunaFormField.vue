@@ -1,9 +1,12 @@
 <template>
+  <tuna-i18n-dynamic-input v-if="props.column.isI18n === 'YES' && props.column.type === 'STRING'"
+                           :maxlength="props.column.maxLength"
+                           :minlength="props.column.minLength"/>
   <el-input
-    v-if="props.column.type === 'STRING'"
     type="text"
     :maxlength="props.column.maxLength"
     :minlength="props.column.minLength"
+    v-else-if="props.column.isI18n === 'NO' && props.column.type === 'STRING'"
   />
   <el-input
     v-else-if="
@@ -17,7 +20,8 @@
     :max="props.column.max"
   />
   <el-input
-    v-else-if="props.column.type === 'FLOAT' || props.column.type === 'DOUBLE'" :precision="props.column.precision" :min="props.column.min"
+    v-else-if="props.column.type === 'FLOAT' || props.column.type === 'DOUBLE'"
+    :precision="props.column.precision" :min="props.column.min"
     :max="props.column.max"
     type="number"
   />
@@ -31,14 +35,16 @@
     type="datetime"
     value-format="YYYY-MM-DD HH:mm:ss"
   />
-  <enum-select :code="props.column.typeClassName" :context="props.context" v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword :multiple="props.column.multiple === 'YES'"
-               />
+  <enum-select :code="props.column.typeClassName" :context="props.context"
+               v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
+               :multiple="props.column.multiple === 'YES'"
+  />
 </template>
 
 <script lang="ts" setup>
-import { useI18n } from 'vue-i18n'
+import {useI18n} from 'vue-i18n'
 
-const { t } = useI18n()
+const {t} = useI18n()
 
 const props = defineProps<{
   context: string
