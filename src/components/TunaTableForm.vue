@@ -4,7 +4,7 @@
       <el-form ref="refForm" label-width="auto" label-position="right" class="w-ful "
                :model="formValue">
         <el-space wrap :direction="props.direction === undefined ? 'horizontal' : props.direction" class="w-full">
-          <template v-for="col in props.columns" :key="col.name">
+          <template v-for="col in tableColumns" :key="col.name">
             <slot :name="'formItem_' + col.name" :column="col" :props="props" :row="formValue">
               <el-form-item
                 :label="col.displayName"
@@ -62,29 +62,75 @@
   </div>
 </template>
 <script setup lang="ts">
-import {defineEmits, defineExpose, ref} from 'vue'
+import {defineEmits, defineExpose, onMounted, ref} from 'vue'
 import TunaFormField from '@/components/TunaFormField.vue'
 import {useI18n} from 'vue-i18n'
-import {doHttpPost} from '@/api/common/platform'
+import {doHttpPost, getEntitySchema} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
 import {validateColumnRule} from '@/util/validateUtils.ts'
+import {putValueIfValid} from "@/util/common.ts";
+import {useAppSettingsStore} from "@/stores/appSettings.ts";
 
+const {t} = useI18n() // 表单引用
 const emit = defineEmits(['close'])
 const refForm = ref(null)
+const appSettingsStore = useAppSettingsStore()
 
 const props = defineProps<{
   url: string
   context: string
-  columns: Array<any>
+  columns?: Array<any>
+  className?: string
   row?: any
   readonly?: boolean
   direction?: string
 }>()
 const formValue = ref({...props.row})
-const {t} = useI18n() // 表单引用
+const tableColumns = ref(props.columns ?? [])
+
+onMounted(() => {
+  if(props.columns === undefined) {
+    loadTableColumns()
+  }
+})
+
+function loadTableColumns() {
+  getEntitySchema(props.context, props.className)
+    .then((response) => {
+      const arrs = sortColumnsByShowOrder(mergeLocalStorage(response.data))
+      tableColumns.value = arrs
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage.error(t('table.loadingTableColumnsError'))
+    })
+}
+
+function sortColumnsByShowOrder(columns) {
+  return columns.sort((a, b) => a.showOrder - b.showOrder)
+}
+
+function mergeLocalStorage(data: Array<never>) {
+  const fieldsDefine = appSettingsStore.getStorageObject(props.className + '.fields')
+  if (fieldsDefine !== undefined) {
+    data.forEach((column) => {
+      if (fieldsDefine[column.name] !== undefined) {
+        const fieldCustomDefine = fieldsDefine[column.name]
+        putValueIfValid(column, 'width', fieldCustomDefine.width)
+        putValueIfValid(column, 'showOrder', fieldCustomDefine.showOrder)
+        putValueIfValid(column, 'isShow', fieldCustomDefine.isShow)
+        putValueIfValid(column, 'isSort', fieldCustomDefine.isSort)
+        putValueIfValid(column, 'isOverflow', fieldCustomDefine.isOverflow)
+        putValueIfValid(column, 'isSearch', fieldCustomDefine.isSearch)
+        putValueIfValid(column, 'align', fieldCustomDefine.align)
+      }
+    })
+  }
+  return data
+}
 
 function onSaveClick() {
-  refForm.value.validate((valid: boolean) => {
+  refForm.value?.validate((valid: boolean) => {
     if (valid) {
       doHttpPost(props.url, {}, formValue.value)
         .then(() => {
