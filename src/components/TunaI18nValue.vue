@@ -20,7 +20,10 @@ const currentLangValue = computed({
     if (props.modelValue === undefined || props.modelValue === null) {
       return ''
     }
-    return JSON.parse(props.modelValue || '{}')[currentLang.value]
+    if (props.modelValue.startsWith('{')) {
+      return JSON.parse(props.modelValue || '{}')[currentLang.value]
+    }
+    return props.modelValue
   },
   set() {
   }
