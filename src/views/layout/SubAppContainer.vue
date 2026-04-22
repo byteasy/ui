@@ -17,23 +17,26 @@ onMounted(() => {
   doHttpGet('/platformSvr/sapi/resourceCategorys/topMenu').then((res) => {
     const microApps = []
     for (let i = 0; i < res.data.resourceCategoryVOS.length; i++) {
-      const entry = res.data.resourceCategoryVOS[i]
-      for (let j = 0; j < entry.resourceGroups.length; j++) {
-        const group = entry.resourceGroups[j]
+      const parent = res.data.resourceCategoryVOS[i]
+      for (let m = 0; m < parent.children.length; m++) {
+        const entry = parent.children[m]
+        for (let j = 0; j < entry.resourceGroups.length; j++) {
+          const group = entry.resourceGroups[j]
 
-        const path = group.router
-        const pathArrs = (path || '').split('/')
+          const path = group.router
+          const pathArrs = (path || '').split('/')
 
-        if (group.isMicroapp === 'YES') {
-          // 构建微应用的配置信息
-          const microAppConfig = {
-            name: group.code,
-            entry: group.entry,
-            container: '#sub-app-container', // 挂载子应用的dom
-            activeRule: '/' + pathArrs[1] + '/' + pathArrs[2], // 路由匹配规则
-            props: group.props ? JSON.parse(group.props) : {},
+          if (group.isMicroapp === 'YES') {
+            // 构建微应用的配置信息
+            const microAppConfig = {
+              name: group.code,
+              entry: group.entry,
+              container: '#sub-app-container', // 挂载子应用的dom
+              activeRule: '/' + pathArrs[1] + '/' + pathArrs[2], // 路由匹配规则
+              props: group.props ? JSON.parse(group.props) : {},
+            }
+            microApps.push(microAppConfig)
           }
-          microApps.push(microAppConfig)
         }
       }
     }
@@ -43,7 +46,7 @@ onMounted(() => {
       console.log('qiankunStarted', win.qiankunStarted)
       win.qiankunStarted = true
       const subApps = microApps
-      let appArray = []
+      const appArray = []
       for (let i = 0; i < subApps.length; i++) {
         const subApp = subApps[i]
         const cfg = {

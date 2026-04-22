@@ -77,33 +77,36 @@ router.beforeEach(async (to, from, next) => {
     await doHttpGet('/platformSvr/sapi/resourceCategorys/topMenu').then((res) => {
       let activeGroup = null
       for (let i = 0; i < res.data.resourceCategoryVOS.length; i++) {
-        const entry = res.data.resourceCategoryVOS[i]
-        for (let j = 0; j < entry.resourceGroups.length; j++) {
-          const group = entry.resourceGroups[j]
-          // 默认打开第一个
-          if (activeGroup === null) {
-            activeGroup = group
-          }
-
-          const path = group.router
-          const pathArrs = (path || '').split('/')
-          console.log('path', path, pathArrs)
-
-          if (group.isMicroapp === 'YES') {
-            const dynamicRoute = {
-              path: '/' + pathArrs[1],
-              component: WebLayout,
-              redirect: router,
-              children: [
-                {
-                  path: pathArrs[2] + '/:path*',
-                  name: group.code,
-                  component: SubAppContainer,
-                },
-              ],
+        const parent = res.data.resourceCategoryVOS[i]
+        for (let j = 0; j < parent.children.length; j++) {
+          const entry = parent.children[j]
+          for (let m = 0; m < entry.resourceGroups.length; m++) {
+            const group = entry.resourceGroups[m]
+            // 默认打开第一个
+            if (activeGroup === null) {
+              activeGroup = group
             }
-            router.addRoute(dynamicRoute)
-            console.log('add microappRoute', dynamicRoute)
+
+            const path = group.router
+            const pathArrs = (path || '').split('/')
+            console.log('path', path, pathArrs)
+
+            if (group.isMicroapp === 'YES') {
+              const dynamicRoute = {
+                path: '/' + pathArrs[1],
+                component: WebLayout,
+                redirect: router,
+                children: [
+                  {
+                    path: pathArrs[2] + '/:path*',
+                    name: group.code,
+                    component: SubAppContainer,
+                  },
+                ],
+              }
+              router.addRoute(dynamicRoute)
+              console.log('add microappRoute', dynamicRoute)
+            }
           }
         }
       }

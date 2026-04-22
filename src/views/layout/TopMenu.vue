@@ -66,12 +66,15 @@ onMounted(() => {
     const rootPath = '/' + fullPathArras[1] + '/' + fullPathArras[2]
     const microApps = []
     for (let i = 0; i < menuEntries.value.length; i++) {
-      const entry = menuEntries.value[i]
-      for (let j = 0; j < entry.resourceGroups.length; j++) {
-        const group = entry.resourceGroups[j]
-        // 默认打开第一个
-        if (group.router.startsWith(rootPath)) {
-          activeGroup.value = group
+      const parent = menuEntries.value[i]
+      for (let j = 0; j < parent.children.length; j++) {
+        const entry = parent.children[j]
+        for (let m = 0; m < entry.resourceGroups.length; m++) {
+          const group = entry.resourceGroups[j]
+          // 默认打开第一个
+          if (group.router.startsWith(rootPath)) {
+            activeGroup.value = group
+          }
         }
       }
     }
@@ -93,7 +96,7 @@ function onItemClick(group) {
 }
 
 function onGroupClick(category) {
-  groupEntries.value = category.resourceGroups
+  groupEntries.value = category.children
 }
 </script>
 <template>
@@ -107,7 +110,7 @@ function onGroupClick(category) {
       }"
       @click="onItemClick(item)"
     >
-      {{ item.name }}
+      <tuna-i18n-value :model-value="item.name" />
     </el-text
     >
     <el-popover placement="bottom-start" :width="popoverWidth" ref="refPopWindow">
@@ -134,7 +137,7 @@ function onGroupClick(category) {
               class="group-one"
               @mouseenter="onGroupClick(item)"
             >
-              {{ item.name }}
+              <tuna-i18n-value :model-value="item.name" />
             </div>
           </div>
         </div>
@@ -148,15 +151,15 @@ function onGroupClick(category) {
               <!--              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>-->
               <!--              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">供应商子项 {{n}}</div>-->
               <!--            </div>-->
-              <div class="flex-column align-items-start p-3">
-                <div class="my-font-size-md font-bold mb-2">常用</div>
+              <div class="flex-column align-items-start p-3" v-for="group in groupEntries" :key="group.id">
+                <div class="my-font-size-md font-bold mb-2"><tuna-i18n-value :model-value="group.name" /></div>
                 <div
-                  v-for="item in groupEntries"
+                  v-for="item in group.resourceGroups"
                   :key="item.code"
                   class="my-font-size group-tow-child"
                   @click="onItemClick(item)"
                 >
-                  {{ item.name }}
+                  <tuna-i18n-value :model-value="item.name" />
                 </div>
               </div>
             </el-space>
