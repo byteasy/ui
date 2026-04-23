@@ -390,7 +390,7 @@ function onAdd(row) {
     getFormComponent(), // 要显示的组件
     {columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row}, // 传给组件的 props
     {
-      title: t('add') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('add') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: getFormWidth(),
       dialogModel: props.dialogModel,
       onClose: (data) => {
@@ -411,7 +411,7 @@ function onEdit(row) {
       context: props.context,
     }, // 传给组件的 props
     {
-      title: t('table.edit') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.edit') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: getFormWidth(),
       dialogModel: props.dialogModel,
       onClose: (data) => {
