@@ -5,7 +5,7 @@
         v-model="filterText"
         class=""
         clearable
-        :placeholder="$t('platform.schemaDefine.serviceTreeSearchTip')"
+        :placeholder="$t('platform.searchTip')"
         suffix-icon="search"
       />
       <el-button type="primary" icon="plus" class="ml-1" @click="onTreeNodeAddClick('add')">
@@ -77,9 +77,10 @@ import {doHttpDelete, doHttpGet} from "@/api/common/platform";
 import {useI18n} from "vue-i18n"
 import {useModal} from '@/components/dialog/useModal.ts'
 import {useRoute} from "vue-router";
+import {getLangText} from "@/locales/common.ts";
 
 const {open} = useModal()
-const {t} = useI18n()
+const {t, locale} = useI18n()
 const activeContextMenuNode = ref(undefined)
 const route = useRoute()
 
@@ -154,7 +155,7 @@ function onTreeNodeAddClick(action) {
       row: obj
     },
     {
-      title: t('add') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('add') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: '50%',
       onClose: (data) => {
         refresh()
@@ -174,7 +175,7 @@ function onTreeNodeEditClick() {
       row: activeContextMenuNode.value
     }, // 传给组件的 props
     {
-      title: t('table.edit') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.edit') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: '50%',
       onClose: (data) => {
         refresh()

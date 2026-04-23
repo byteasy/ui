@@ -48,6 +48,9 @@
             v-loading="loading"
             stripe
             highlight-current-row
+            :row-key="props.rowKey"
+            :tree-props="props.treeProps"
+            :default-expand-all="props.defaultExpandAll"
             @header-dragend="onHeaderDrag"
           >
             <template v-for="col in tableColumns" :key="col.name">
@@ -232,6 +235,9 @@ const props = defineProps<{
   excelImportEnable?: boolean
   excelImportComponent?: Component
   dialogModel?: boolean
+  rowKey?: string
+  defaultExpandAll?: boolean
+  treeProps?: object
 }>()
 
 const emit = defineEmits(['rowClick'])

@@ -173,8 +173,8 @@ export default {
     paramMissing: '参数缺失'
   },
   platform: {
+    searchTip: '输入关键词搜索',
     schemaDefine: {
-      serviceTreeSearchTip: '输入关键词搜索',
       syncSchema: '同步生成',
     }
   },

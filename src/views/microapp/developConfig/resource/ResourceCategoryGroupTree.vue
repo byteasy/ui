@@ -5,7 +5,7 @@
         v-model="filterText"
         class=""
         clearable
-        :placeholder="$t('platform.schemaDefine.serviceTreeSearchTip')"
+        :placeholder="$t('platform.searchTip')"
         suffix-icon="search"
       />
 <!--      <el-button type="primary" icon="plus" class="ml-1" @click="onTreeNodeAddClick('add')">-->
@@ -23,8 +23,8 @@
       @node-contextmenu="onContextMenuClick"
       highlight-current
       default-expand-all
-      :check-strictly="false"
-      :expand-on-click-node="false"
+      :check-strictly="true"
+      :expand-on-click-node="true"
       :filter-node-method="filterNode"
     >
       <template #default="{ node, data }">

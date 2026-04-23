@@ -5,7 +5,7 @@
         v-model="filterText"
         class=""
         clearable
-        :placeholder="$t('platform.schemaDefine.serviceTreeSearchTip')"
+        :placeholder="$t('platform.searchTip')"
         suffix-icon="search"
       />
 <!--      <el-button type="primary" icon="plus" class="ml-1" @click="onTreeNodeAddClick">-->
