@@ -60,7 +60,7 @@ function rebuildLeftMenus(node, menu) {
       {
         path: filteredQueryParameter(menu.routerUrl.substring(idx)),
         name: menu.code,
-        meta: { title: menu.title },
+        meta: { title: menu.title, noCache: menu.keepAlive === 'NO' },
         component: getModule(menu.component),
       },
     ]
@@ -83,7 +83,7 @@ function rebuildLeftMenus(node, menu) {
                 meta: {
                   title: subChild.name,
                   affix: subChild.affix === 'YES',
-                  noCache: !subChild.keepAlive,
+                  noCache: subChild.keepAlive === 'NO',
                   query: parseQueryParameter(subChild.routerUrl),
                 },
                 component: getModule(subChild.component),
@@ -97,7 +97,7 @@ function rebuildLeftMenus(node, menu) {
             meta: {
               title: child.name,
               affix: child.affix === 'YES',
-              noCache: !child.keepAlive,
+              noCache: child.keepAlive === 'NO',
               query: parseQueryParameter(child.routerUrl),
             },
             component: getModule(child.component),
