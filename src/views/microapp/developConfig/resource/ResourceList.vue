@@ -1,9 +1,7 @@
 <template>
   <el-splitter>
     <el-splitter-panel size="250" collapsible :max="600">
-      <resource-category-group-tree />
-    </el-splitter-panel>
-    <el-splitter-panel size="250" collapsible :max="600">
+      <resource-category-group-tree @tree-node-click="onGroupClick"/>
     </el-splitter-panel>
     <el-splitter-panel>
       <tuna-table-v2
@@ -12,17 +10,16 @@
         context="platformSvr"
         class-name="com.tuna.platform.entity.Resource"
         :form-component="ResourceForm"
-        :query-params="{ ascColumns: ['showOrder'] }"
+        :row-key="'id'"
+        :tree-props="{ children: 'childrenList' }"
+        :default-expand-all="true"
         class="pl-1"
+        :row-db-click="row => {}"
+        :pagination-visible="0"
       >
-        <template v-slot:table-cell-groupId="scope">
-          <tuna-i18n-value :model-value="scope.row.groupName" />
-        </template>
-        <template v-slot:table-cell-parentId="scope">
-          <tuna-i18n-value :model-value="scope.row.parentName" />
-        </template>
         <template v-slot:table-cell-icon="iconScope">
-          <tuna-svg-icon :svg="iconScope.row.icon" />
+          <tuna-svg-icon :svg="iconScope.row.icon" v-if="iconScope.row.icon"/>
+          <span v-else>-</span>
         </template>
       </tuna-table-v2>
     </el-splitter-panel>
@@ -30,10 +27,17 @@
 </template>
 
 <script lang="ts" setup>
-import ResourceForm from "@/views/microapp/developConfig/resource/ResourceForm.vue";
-import ResourceGroupSelect from "@/views/microapp/developConfig/resource/ResourceGroupSelect.vue";
-import ResourceCategoryGroupTree from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTree.vue";
 import {ref} from "vue";
+import ResourceForm from "@/views/microapp/developConfig/resource/ResourceForm.vue";
+import ResourceCategoryGroupTree
+  from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTree.vue";
 
 const refTable = ref(null)
+
+function onGroupClick(treeNode) {
+  if(!(treeNode.children && treeNode.children.length > 0)) {
+    refTable.value.queryParam.groupId = treeNode.id
+    refTable.value?.refresh()
+  }
+}
 </script>

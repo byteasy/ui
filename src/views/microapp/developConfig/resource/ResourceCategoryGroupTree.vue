@@ -24,7 +24,7 @@
       highlight-current
       default-expand-all
       :check-strictly="true"
-      :expand-on-click-node="true"
+      :expand-on-click-node="false"
       :filter-node-method="filterNode"
     >
       <template #default="{ node, data }">
