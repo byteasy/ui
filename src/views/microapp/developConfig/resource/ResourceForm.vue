@@ -2,7 +2,7 @@
   <tuna-table-form ref="refForm">
     <template v-slot:formItemField_groupId="scope">
       <div style="width: 300px">
-        <resource-category-group-tree-select v-model="scope.row.groupId"/>
+        <resource-category-group-tree-select v-model="scope.row.groupId" @change="loadParentTree"/>
       </div>
     </template>
     <template v-slot:formItemField_parentId="scope">
@@ -14,18 +14,19 @@
 </template>
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import {useI18n} from "vue-i18n";
 import ResourceCategoryGroupTreeSelect
   from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTreeSelect.vue";
 import ResourceTreeSelect from "@/views/microapp/developConfig/resource/ResourceTreeSelect.vue";
-
-const {locale} = useI18n()
 
 const refParentTree = ref(null)
 const refForm = ref(null)
 
 onMounted(() => {
+  loadParentTree()
+})
+
+function loadParentTree() {
   refParentTree.value.queryParams.groupId = refForm.value.formValue.groupId
   refParentTree.value.refresh()
-})
+}
 </script>

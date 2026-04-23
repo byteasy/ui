@@ -7,7 +7,10 @@
       class="w-full"
     >
       <el-form-item :label="$t('resourceGroup.name')">
-        <resource-group-select class="w-full" v-model="selectedGroup" clearable @change="loadTreeData" :firs-row-trigger="firstRowTrigger"></resource-group-select>
+        <resource-category-group-tree-select v-model="selectedGroup" clearable @change="loadTreeData" />
+<!--        <resource-group-select class="w-full" v-model="selectedGroup" clearable-->
+<!--                               @change="loadTreeData"-->
+<!--                               :firs-row-trigger="firstRowTrigger"></resource-group-select>-->
       </el-form-item>
 
       <el-form-item :label="$t('keyword')">
@@ -30,8 +33,11 @@
           default-expand-all
           highlight-current
           node-key="id"
-          :filter-node-method="filterNode"
-        />
+          :filter-node-method="filterNode">
+          <template #default="{ node, data }">
+            <tuna-i18n-value :model-value="data.name" class="pl-1"/>
+          </template>
+        </el-tree>
       </el-form-item>
     </el-form>
     <el-affix position="bottom" class="w-full">
@@ -54,6 +60,8 @@ import {useI18n} from "vue-i18n";
 import {ElMessage, type FilterNodeMethodFunction, type TreeInstance} from 'element-plus'
 import {doHttpGet, doHttpPost} from "@/api/common/platform";
 import ResourceGroupSelect from "@/views/microapp/developConfig/resource/ResourceGroupSelect.vue";
+import ResourceCategoryGroupTreeSelect
+  from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTreeSelect.vue";
 
 const {t} = useI18n() // 表单引用
 const emit = defineEmits(['close'])
@@ -91,7 +99,7 @@ const selectedKeys = ref([])
 const selectedGroup = ref(undefined)
 
 const getAllLeafIds = (list) => {
-  let leafIds = []
+  const leafIds = []
   const traverse = (items) => {
     items.forEach(item => {
       // 没有子节点 → 叶子

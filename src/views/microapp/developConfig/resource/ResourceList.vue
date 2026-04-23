@@ -17,6 +17,13 @@
         :row-db-click="row => {}"
         :pagination-visible="0"
       >
+        <template v-slot:form-query-buttons>
+          <el-button type="primary" icon="Search" @click="refTable?.refresh()">{{
+              $t('search')
+            }}
+          </el-button>
+          <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
+        </template>
         <template v-slot:table-cell-icon="iconScope">
           <tuna-svg-icon :svg="iconScope.row.icon" v-if="iconScope.row.icon"/>
           <span v-else>-</span>
@@ -39,5 +46,9 @@ function onGroupClick(treeNode) {
     refTable.value.queryParam.groupId = treeNode.id
     refTable.value?.refresh()
   }
+}
+
+function onAdd() {
+  refTable.value?.onAdd({ groupId: refTable.value.queryParam.groupId })
 }
 </script>
