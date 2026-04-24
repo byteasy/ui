@@ -18,7 +18,11 @@
           highlight-current
           node-key="id"
           :filter-node-method="filterNode"
-        />
+        >
+          <template #default="{ node, data }">
+            <tuna-i18n-value :model-value="data.name" class="pl-1"/>
+          </template>
+        </el-tree>
       </el-form-item>
     </el-form>
     <el-affix position="bottom" class="w-full">

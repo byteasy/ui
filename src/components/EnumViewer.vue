@@ -7,7 +7,10 @@
 import { onMounted, ref } from 'vue'
 import { getEnumValues } from '@/api/common/platform'
 import XEUtils from 'xe-utils'
+import {getLangText} from "@/locales/common.ts";
+import {useI18n} from "vue-i18n";
 
+const {t, locale} = useI18n()
 const enumMap = ref({})
 const typeMap = ref({})
 const typeArray = ['primary', 'success', 'info', 'warning', 'danger']
@@ -34,7 +37,7 @@ onMounted(() => {
 
 function parseLabel(value) {
   if (enumMap.value[XEUtils.toString(value)] !== undefined) {
-    return enumMap.value[XEUtils.toString(value)]['displayName']
+    return getLangText(enumMap.value[XEUtils.toString(value)]['displayName'], locale.value)
   } else {
     return value
   }
