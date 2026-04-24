@@ -3,7 +3,7 @@
     ref="refTable"
     base-url="/platformSvr/sapi/users"
     context="platformSvr"
-    class-name="com.tuna.platform.entity.User"
+    class-name="com.tuna.platform.vo.PersonalSettingsVO"
     :form-component="UserEditForm"
     :excel-import-enable="true"
     :query-params="{ descColumns: ['createdTime', 'updatedTime'] }"
