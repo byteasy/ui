@@ -4,7 +4,7 @@
       <el-form ref="refForm" label-width="auto" label-position="right" class="w-full">
         <el-form-item :label="lang.label" :prop="lang.label" v-for="lang in langList"
                       :key="lang.value">
-          <el-input v-model="i18nForm[lang.value]" type="textarea" :rows="1"/>
+          <el-input v-model="i18nForm[lang.value]" type="textarea" :rows="1" :maxlength="props.maxlength" show-word-limit/>
         </el-form-item>
       </el-form>
     </el-scrollbar>
@@ -32,6 +32,7 @@ import { langList as langDefileList } from "@/locales/common.ts"
 // 接收父组件传入的参数（JSON 格式多语言）
 const props = defineProps<{
   i18nData?: Record<string, string>
+  maxlength?: number
 }>()
 
 // 弹窗关闭、返回数据

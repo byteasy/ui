@@ -1,17 +1,17 @@
 <template>
-  <el-input v-model="currentLangInput" @input="handleDirectInput" v-bind="bindAttrs">
-    <template #append>
-      <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }"
-               @click="onI18nClick">
-        <IconLocalLanguage/>
-      </el-icon>
-    </template>
-  </el-input>
+    <el-input ref="refInput" v-model="currentLangInput" @input="handleDirectInput" v-bind="bindAttrs">
+      <template #append>
+        <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }"
+                 @click="onI18nClick">
+          <IconLocalLanguage/>
+        </el-icon>
+      </template>
+    </el-input>
 </template>
 
 <script setup lang="ts">
 
-import {computed, defineExpose, defineOptions, useAttrs} from 'vue'
+import {computed, defineExpose, onMounted, ref, useAttrs} from 'vue'
 import {useModal} from '@/components/dialog/useModal.ts'
 import TunaI18nDynamicForm from "@/components/TunaI18nDynamicForm.vue"
 import {useI18n} from 'vue-i18n'
@@ -20,6 +20,7 @@ import {langMap} from "@/locales/common.ts"
 const {locale} = useI18n()
 const {open} = useModal()
 const {t} = useI18n()
+const refInput = ref(null)
 
 const bindAttrs = useAttrs()
 // 🔥 核心修改：modelValue 改成 string 类型
@@ -30,6 +31,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [val: string]
 }>()
+
+onMounted(() => {
+  const input = refInput.value?.input
+  if (input) {
+    input.maxLength = 1024
+  }
+})
 
 // 最终正确的语言（zh_CN）
 const currentLang = computed(() => langMap[locale.value] || locale.value)
@@ -79,6 +87,7 @@ const onI18nClick = () => {
     {
       // 把 string 解析成对象传给弹窗
       i18nData: safeParseJson(props.modelValue) || {},
+      maxlength: bindAttrs.maxlength
     },
     {
       title: t('i18nEdit'),
