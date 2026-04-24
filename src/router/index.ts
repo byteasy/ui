@@ -30,7 +30,7 @@ router.beforeEach(async (to, from, next) => {
           try {
             const dynamicRoute: RouteRecordRaw = {}
             rebuildLeftMenus(dynamicRoute, item)
-            console.log('micro app add dynamicRoute', dynamicRoute)
+            console.log('micro app add dynamicRoute', dynamicRoute, item)
             router.addRoute(dynamicRoute)
             console.log('micro app routes length:', router.getRoutes().length)
           } catch (err) {
@@ -126,15 +126,15 @@ function parseQueryParameter(value) {
 }
 
 function hasChildrenMenu(menu) {
-  if (
-    XEUtils.hasOwnProp(menu, 'childrenList') &&
-    menu.childrenList !== null &&
-    menu.childrenList.length > 0
-  ) {
+  if (XEUtils.hasOwnProp(menu, 'childrenList') && menu.childrenList !== null && menu.childrenList.length > 0) {
     const len = menu.childrenList.length
     for (let i = 0; i < len; i++) {
       const child = menu.childrenList[i]
       if (child.type === 'MENU') {
+        return true
+      }
+      const childHasChildren = hasChildrenMenu(child)
+      if (childHasChildren === true) {
         return true
       }
     }
