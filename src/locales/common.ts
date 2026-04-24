@@ -18,17 +18,17 @@ const langMap = {
 }
 
 const langList = [
-  {label: '中文简体', value: 'zh_CN'},
-  {label: 'English', value: 'en'},
-  {label: '中文繁體', value: 'zh_TW'},
-  {label: 'Français', value: 'fr'},
-  {label: 'Deutsch', value: 'de'},
-  {label: 'Italiano', value: 'it'},
-  {label: '日本語', value: 'ja'},
-  {label: '한국어', value: 'ko'},
-  {label: 'Русский', value: 'ru'},
-  {label: 'Português', value: 'pt'},
-  {label: 'Español', value: 'es'},
+  {label: '中文简体', value: 'zh-CN', description: '中文简体'},
+  {label: 'English', value: 'en-US', description: '英语'},
+  {label: '中文繁體', value: 'zh_TW', description: '中文繁体'},
+  {label: 'Français', value: 'fr', description: '法语'},
+  {label: 'Deutsch', value: 'de', description: '德语'},
+  {label: 'Italiano', value: 'it', description: '意大利语'},
+  {label: '日本語', value: 'ja', description: '日语'},
+  {label: '한국어', value: 'ko', description: '韩语'},
+  {label: 'Русский', value: 'ru', description: '俄语'},
+  {label: 'Português', value: 'pt', description: '葡萄牙语'},
+  {label: 'Español', value: 'es', description: '西班牙语'},
 ]
 
 export function getLangText(text: any, currentLocale: string): string {
