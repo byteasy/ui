@@ -104,6 +104,7 @@ function onTreeNodeClick(node) {
 function doResearch(row) {
   refTable.value.queryParam.serviceName = undefined
   refTable.value.queryParam.className = row.className
+  refTable.value.queryParam.classNameQueryType = 'eq'
   refTable.value.refresh()
 }
 

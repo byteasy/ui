@@ -4,12 +4,12 @@
       <el-form :inline="true" v-if="props.queryFormVisible !== 0">
         <slot name="from-query">
           <template v-for="col in tableColumns" :key="col.name">
-            <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
+            <el-form-item :label="getLangText(col.displayName, locale)" v-if="col.isSearch === 'YES'">
               <slot :name="'form-query-field-' + col.name" :column="col" :queryParam="queryParam">
                 <tuna-query-field
                   :column="col"
                   :context="props.context"
-                  :placeholder="col.displayName"
+                  :placeholder="getLangText(col.displayName, locale)"
                   v-model="queryParam[col.name]"
                   clearable
                   @change="refresh"
@@ -60,7 +60,7 @@
                     col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
                   "
                   :fixed="col.isFixed === 'YES'"
-                  :label="col.displayName"
+                  :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
                   resizable
                   v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
@@ -81,7 +81,7 @@
                   :code="col.typeClassName"
                   :context="props.context"
                   :fixed="col.isFixed === 'YES'"
-                  :label="col.displayName"
+                  :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
                   v-if="col.isShow === 'YES' && col.type === 'ENUM'"
                   :min-width="col.width === 0 ? undefined : col.width"

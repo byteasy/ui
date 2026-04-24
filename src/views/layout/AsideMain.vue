@@ -5,7 +5,7 @@
         size="220"
         collapsible
         :min="80"
-        :max="220"
+        :max="500"
         @update:size="onLeftMenuSizeUpdate"
       >
         <div class="mt-1">

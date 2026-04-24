@@ -7,13 +7,13 @@
           <template v-for="col in tableColumns" :key="col.name">
             <slot :name="'formItem_' + col.name" :column="col" :props="props" :row="formValue">
               <el-form-item
-                :label="col.displayName"
+                :label="getLangText(col.displayName, locale)"
                 v-if="col.isForm === 'YES'"
                 :prop="col.name"
                 :rules="[
                 {
                   required: col.isRequire === 'YES',
-                  message: col.displayName + t('validate.required'),
+                  message: getLangText(col.displayName, locale) + t('validate.required'),
                 },
                 {
                   validator: (rule, value, callback) => {
@@ -32,7 +32,7 @@
                   <tuna-form-field
                     :column="col"
                     :context="props.context"
-                    :placeholder="col.displayName"
+                    :placeholder="getLangText(col.displayName, locale)"
                     clearable
                     :disabled="props.readonly"
                     v-model="formValue[col.name]"
@@ -70,8 +70,9 @@ import {ElMessage} from 'element-plus'
 import {validateColumnRule} from '@/util/validateUtils.ts'
 import {putValueIfValid} from "@/util/common.ts";
 import {useAppSettingsStore} from "@/stores/appSettings.ts";
+import {getLangText} from "@/locales/common.ts";
 
-const {t} = useI18n() // 表单引用
+const {t, locale} = useI18n() // 表单引用
 const emit = defineEmits(['close'])
 const refForm = ref(null)
 const appSettingsStore = useAppSettingsStore()
