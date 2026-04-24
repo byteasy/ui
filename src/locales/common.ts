@@ -18,8 +18,8 @@ const langMap = {
 }
 
 const langList = [
-  {label: '中文简体', value: 'zh-CN', description: '中文简体'},
-  {label: 'English', value: 'en-US', description: '英语'},
+  {label: '中文简体', value: 'zh_CN', description: '中文简体'},
+  {label: 'English', value: 'en', description: '英语'},
   {label: '中文繁體', value: 'zh_TW', description: '中文繁体'},
   {label: 'Français', value: 'fr', description: '法语'},
   {label: 'Deutsch', value: 'de', description: '德语'},

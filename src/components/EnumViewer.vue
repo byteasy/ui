@@ -12,8 +12,6 @@ import {useI18n} from "vue-i18n";
 
 const {t, locale} = useI18n()
 const enumMap = ref({})
-const typeMap = ref({})
-const typeArray = ['primary', 'success', 'info', 'warning', 'danger']
 
 const props = defineProps<{
   code: string
@@ -23,29 +21,26 @@ const props = defineProps<{
 
 onMounted(() => {
   getEnumValues(props.context, props.code).then((rsp) => {
-    let idx = 0
     rsp.data.forEach((item) => {
       enumMap.value[XEUtils.toString(item.value)] = item
-      typeMap.value[XEUtils.toString(item.value)] = typeArray[idx]
-      idx = idx + 1
-      if (idx >= typeArray.length) {
-        idx = 0
-      }
     })
   })
 })
 
 function parseLabel(value) {
   if (enumMap.value[XEUtils.toString(value)] !== undefined) {
-    return getLangText(enumMap.value[XEUtils.toString(value)]['displayName'], locale.value)
+    return getLangText(enumMap.value[XEUtils.toString(value)]['label'], locale.value)
   } else {
-    return value
+    return getLangText(value, locale.value)
   }
 }
 
 function parseType(value) {
-  if (typeMap.value[XEUtils.toString(value)] !== undefined) {
-    return typeMap.value[XEUtils.toString(value)]
+  // 统一转字符串，解决数字/布尔值找不到 key 的问题
+  const key = XEUtils.toString(value)
+
+  if (enumMap.value[key] !== undefined) {
+    return enumMap.value[key].css
   } else {
     return 'primary'
   }
