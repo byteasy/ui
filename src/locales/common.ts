@@ -19,8 +19,8 @@ const langMap = {
 
 const langList = [
   {label: '中文简体', value: 'zh_CN'},
-  {label: '中文繁體', value: 'zh_TW'},
   {label: 'English', value: 'en'},
+  {label: '中文繁體', value: 'zh_TW'},
   {label: 'Français', value: 'fr'},
   {label: 'Deutsch', value: 'de'},
   {label: 'Italiano', value: 'it'},
@@ -30,6 +30,19 @@ const langList = [
   {label: 'Português', value: 'pt'},
   {label: 'Español', value: 'es'},
 ]
+
+export function getLangText(text: any, currentLocale: string): string {
+  if (!text) return ''
+
+  const lang = langMap[currentLocale] || currentLocale
+
+  try {
+    const obj = JSON.parse(text)
+    return obj[lang] || text
+  } catch {
+    return text
+  }
+}
 
 export {
   langMap, langList

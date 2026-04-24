@@ -4,12 +4,12 @@
       <el-form :inline="true" v-if="props.queryFormVisible !== 0">
         <slot name="from-query">
           <template v-for="col in tableColumns" :key="col.name">
-            <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
+            <el-form-item :label="getLangText(col.displayName, locale)" v-if="col.isSearch === 'YES'">
               <slot :name="'form-query-field-' + col.name" :column="col" :queryParam="queryParam">
                 <tuna-query-field
                   :column="col"
                   :context="props.context"
-                  :placeholder="col.displayName"
+                  :placeholder="getLangText(col.displayName, locale)"
                   v-model="queryParam[col.name]"
                   clearable
                   @change="refresh"
@@ -48,6 +48,9 @@
             v-loading="loading"
             stripe
             highlight-current-row
+            :row-key="props.rowKey"
+            :tree-props="props.treeProps"
+            :default-expand-all="props.defaultExpandAll"
             @header-dragend="onHeaderDrag"
           >
             <template v-for="col in tableColumns" :key="col.name">
@@ -57,7 +60,7 @@
                     col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
                   "
                   :fixed="col.isFixed === 'YES'"
-                  :label="col.displayName"
+                  :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
                   resizable
                   v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
@@ -78,7 +81,7 @@
                   :code="col.typeClassName"
                   :context="props.context"
                   :fixed="col.isFixed === 'YES'"
-                  :label="col.displayName"
+                  :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
                   v-if="col.isShow === 'YES' && col.type === 'ENUM'"
                   :min-width="col.width === 0 ? undefined : col.width"
@@ -203,19 +206,20 @@ import {
 } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
 import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
+import TunaTableForm from '@/components/TunaTableForm.vue'
+import TunaExcelImport from '@/components/TunaExcelImport.vue'
 import {doHttpDelete, doHttpGet, getEntitySchema} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
 import {useModal} from '@/components/dialog/useModal.ts'
-import TunaTableForm from '@/components/TunaTableForm.vue'
-import TunaExcelImport from '@/components/TunaExcelImport.vue'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {putValueIfValid} from "@/util/common.ts";
+import {getLangText} from "@/locales/common.ts";
 
 const appSettingsStore = useAppSettingsStore()
 const route = useRoute()
-const {t} = useI18n() // 表单引用
+const {t, locale} = useI18n()
 
 const props = defineProps<{
   baseUrl: string
@@ -231,6 +235,9 @@ const props = defineProps<{
   excelImportEnable?: boolean
   excelImportComponent?: Component
   dialogModel?: boolean
+  rowKey?: string
+  defaultExpandAll?: boolean
+  treeProps?: object
 }>()
 
 const emit = defineEmits(['rowClick'])
@@ -357,6 +364,7 @@ function getExcelImportComponent() {
 
 function onView(row) {
   const [lastRoute] = route.matched.slice(-1)
+  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
   open(
     getFormComponent(), // 要显示的组件
     {
@@ -367,7 +375,7 @@ function onView(row) {
       context: props.context,
     }, // 传给组件的 props
     {
-      title: t('table.view') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.view') + title,
       width: getFormWidth(),
       dialogModel: props.dialogModel,
       onClose: (data) => {
@@ -382,7 +390,7 @@ function onAdd(row) {
     getFormComponent(), // 要显示的组件
     {columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row}, // 传给组件的 props
     {
-      title: t('add') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('add') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: getFormWidth(),
       dialogModel: props.dialogModel,
       onClose: (data) => {
@@ -403,7 +411,7 @@ function onEdit(row) {
       context: props.context,
     }, // 传给组件的 props
     {
-      title: t('table.edit') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.edit') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: getFormWidth(),
       dialogModel: props.dialogModel,
       onClose: (data) => {

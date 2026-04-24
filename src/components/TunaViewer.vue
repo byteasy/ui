@@ -1,12 +1,12 @@
 <template>
-  <el-descriptions border>
+  <el-descriptions border :column="props.columns">
     <template #extra>
       <slot name="extra">
         <el-button type="primary" @click="onClick">{{ $t('table.edit') }}</el-button>
       </slot>
     </template>
     <template v-for="col in columns" :key="col.name">
-      <el-descriptions-item :label="col.displayName" v-if="col.isShow === 'YES'">
+      <el-descriptions-item :label="getLangText(col.displayName, locale)" v-if="col.isShow === 'YES'">
         <slot :name="'view_' + col.name" :value="props.entity[col.name]">
           <enum-viewer
             v-if="col.type === 'ENUM'"
@@ -27,14 +27,16 @@ import { defineEmits, ref } from 'vue'
 import { getEntitySchema } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import {getLangText} from "@/locales/common.ts";
 
-const { t } = useI18n() // 表单引用
+const { t, locale } = useI18n() // 表单引用
 
 const props = defineProps<{
   className: string
   context: string
   entity: any
   onEditClick?: (data?: unknown) => void
+  columns?: number
 }>()
 const emit = defineEmits(['editClick'])
 

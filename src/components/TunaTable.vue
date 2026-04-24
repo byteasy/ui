@@ -4,12 +4,12 @@
       <el-form :inline="true" v-if="props.queryFormVisible !== 0">
         <slot name="formQuery">
           <template v-for="col in tableColumns" :key="col.name">
-            <el-form-item :label="col.displayName" v-if="col.isSearch === 'YES'">
+            <el-form-item :label="getLangText(col.displayName, locale)" v-if="col.isSearch === 'YES'">
               <slot :name="'formItemField_' + col.name" :column="col" :queryParam="queryParam">
                 <tuna-query-field
                   :column="col"
                   :context="props.context"
-                  :placeholder="col.displayName"
+                  :placeholder="getLangText(col.displayName, locale)"
                   v-model="queryParam[col.name]"
                   clearable
                   @change="refresh"
@@ -54,7 +54,7 @@
                     col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
                   "
                   :fixed="col.isFixed === 'YES'"
-                  :label="col.displayName"
+                  :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
                   stripe
                   highlight-current-row
@@ -76,7 +76,7 @@
                   :code="col.typeClassName"
                   :context="props.context"
                   :fixed="col.isFixed === 'YES'"
-                  :label="col.displayName"
+                  :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
                   v-if="col.isShow === 'YES' && col.type === 'ENUM'"
                   :min-width="col.width === 0 ? undefined : col.width"
@@ -170,9 +170,10 @@ import { useRoute } from 'vue-router'
 import { useModal } from '@/components/dialog/useModal.ts'
 import TunaTableForm from '@/components/TunaTableForm.vue'
 import TunaExcelImport from '@/components/TunaExcelImport.vue'
+import {getLangText} from "@/locales/common.ts";
 
 const route = useRoute()
-const { t } = useI18n() // 表单引用
+const { t, locale } = useI18n() // 表单引用
 
 const props = defineProps<{
   baseUrl: string
@@ -257,7 +258,7 @@ function onExcelImportClick() {
       context: props.context
     }, // 传给组件的 props
     {
-      title: t('table.importByExcel') + '>' + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.importByExcel') + '>' + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: getFormWidth(),
       onClose: (data) => {
         refresh()
@@ -294,7 +295,7 @@ function onView(row) {
       context: props.context,
     }, // 传给组件的 props
     {
-      title: t('table.view') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.view') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: getFormWidth(),
       onClose: (data) => {},
     },
@@ -306,7 +307,7 @@ function onAdd(row) {
     getFormComponent(), // 要显示的组件
     { columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row }, // 传给组件的 props
     {
-      title: t('add') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('add') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: getFormWidth(),
       onClose: (data) => {
         refresh()
@@ -325,7 +326,7 @@ function onEdit(row) {
       context: props.context,
     }, // 传给组件的 props
     {
-      title: t('table.edit') + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.edit') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
       width: getFormWidth(),
       onClose: (data) => {
         refresh()
