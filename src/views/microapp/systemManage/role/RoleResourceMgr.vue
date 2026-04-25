@@ -6,23 +6,23 @@
       label-position="top"
       class="w-full"
     >
-      <el-form-item :label="$t('resourceGroup.name')">
+      <el-form-item :label="$t('platform.resourceGroup.name')">
         <resource-category-group-tree-select v-model="selectedGroup" clearable @change="loadTreeData" />
 <!--        <resource-group-select class="w-full" v-model="selectedGroup" clearable-->
 <!--                               @change="loadTreeData"-->
 <!--                               :firs-row-trigger="firstRowTrigger"></resource-group-select>-->
       </el-form-item>
 
-      <el-form-item :label="$t('keyword')">
+      <el-form-item :label="$t('platform.searchTip')">
         <el-input
           v-model="filterText"
           class="w-60 mb-2"
-          :placeholder="$t('keyword')"
+          :placeholder="$t('platform.searchTip')"
           clearable
         />
       </el-form-item>
 
-      <el-form-item :label="$t('resource.name')">
+      <el-form-item :label="$t('platform.resource.name')">
         <el-tree
           ref="treeRef"
           class="filter-tree w-full"
@@ -42,8 +42,8 @@
     </el-form>
     <el-affix position="bottom" class="w-full">
       <div class="flex-row w-full justify-content-center pb-2">
-        <el-button @click="setCheckedKeys" icon="Select">{{ t('selectAll') }}</el-button>
-        <el-button @click="resetChecked" icon="Failed">{{ t('clearAll') }}</el-button>
+        <el-button @click="setCheckedKeys" icon="Select">{{ t('platform.selectAll') }}</el-button>
+        <el-button @click="resetChecked" icon="Failed">{{ t('platform.clearAll') }}</el-button>
         <el-button v-debounce="doSubmit" type="primary" icon="Check">{{
             t('save')
           }}
@@ -59,7 +59,6 @@ import {defineEmits, ref, watch} from 'vue'
 import {useI18n} from "vue-i18n";
 import {ElMessage, type FilterNodeMethodFunction, type TreeInstance} from 'element-plus'
 import {doHttpGet, doHttpPost} from "@/api/common/platform";
-import ResourceGroupSelect from "@/views/microapp/developConfig/resource/ResourceGroupSelect.vue";
 import ResourceCategoryGroupTreeSelect
   from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTreeSelect.vue";
 

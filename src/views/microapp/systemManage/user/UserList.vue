@@ -14,12 +14,12 @@
     </template>
     <template v-slot:table-operation-extra="powerScope">
       <el-link underline="never" type="primary" class="pl-1"
-               @click="onPermissionEdit(powerScope.row)">{{ t('role.name') }}
+               @click="onPermissionEdit(powerScope.row)">{{ t('platform.role.name') }}
       </el-link>
     </template>
     <template v-slot:table-operation-end-extra="scope">
       <el-dropdown placement="bottom-start" class="pl-1">
-        <el-link type="primary" underline="never" class="pt-1">{{ $t('more') }}</el-link>
+        <el-link type="primary" underline="never" class="pt-1">{{ $t('platform.more') }}</el-link>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item v-if="scope.row.status === 'DISABLE'"

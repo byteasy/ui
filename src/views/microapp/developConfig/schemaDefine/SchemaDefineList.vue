@@ -60,11 +60,11 @@ function onSyncSchemaClick() {
   const serviceName = refTable.value?.queryParam.serviceName
   const className = refTable.value?.queryParam.className
   if(serviceName == null) {
-    ElMessage.warning(t('validate.paramMissing'))
+    ElMessage.warning(t('platform.serviceNameMissing'))
     return
   }
   if(className == null) {
-    ElMessage.warning(t('validate.paramMissing'))
+    ElMessage.warning(t('platform.classNameMissing'))
     return
   }
   doHttpGet('/platformSvr/sapi/schemaDefines/services/' + serviceName + '/context').then(res1 => {

@@ -6,7 +6,7 @@
       label-position="top"
       class="w-full"
     >
-      <el-form-item :label="$t('role.name')">
+      <el-form-item :label="$t('platform.role.name')">
         <el-tree
           ref="treeRef"
           class="filter-tree w-full"
@@ -27,8 +27,8 @@
     </el-form>
     <el-affix position="bottom" class="w-full">
       <div class="flex-row w-full justify-content-center pb-2">
-        <el-button @click="setCheckedKeys" icon="Select">{{ t('selectAll') }}</el-button>
-        <el-button @click="resetChecked" icon="Failed">{{ t('clearAll') }}</el-button>
+        <el-button @click="setCheckedKeys" icon="Select">{{ t('platform.selectAll') }}</el-button>
+        <el-button @click="resetChecked" icon="Failed">{{ t('platform.clearAll') }}</el-button>
         <el-button v-debounce="doSubmit" type="primary" icon="Check">{{
             t('save')
           }}

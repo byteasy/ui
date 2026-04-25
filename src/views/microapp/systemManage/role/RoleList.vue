@@ -7,7 +7,7 @@
     :query-params="{ ascColumns: ['code'] }"
   >
     <template v-slot:table-operation-extra="powerScope">
-      <el-link underline="never" type="primary" class="pl-1" @click="onPermissionEdit(powerScope.row)">{{ t('role.permission') }}</el-link>
+      <el-link underline="never" type="primary" class="pl-1" @click="onPermissionEdit(powerScope.row)">{{ t('platform.role.permission') }}</el-link>
     </template>
   </tuna-table-v2>
 </template>
@@ -29,7 +29,7 @@ function onPermissionEdit(row) {
       row: row
     },
     {
-      title: t('role.permissionAllocate'),
+      title: t('platform.role.permissionAllocate'),
       width: '60%',
       onClose: (data) => {
       },
