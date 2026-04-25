@@ -44,12 +44,14 @@ import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
 import TunaSvgIcon from '@/components/TunaSvgIcon.vue'
+import { useSessionStore } from '@/stores/session.ts'
 
 const route = useRoute()
 const refMenu = ref()
 const collapse = ref(false)
 
 const menuTree = ref([])
+const sessionStore = useSessionStore()
 
 onMounted(() => {
   doHttpGet('/platformSvr/sapi/resources/leftMenu', {
@@ -57,6 +59,14 @@ onMounted(() => {
   }).then((response) => {
     menuTree.value = response.data
     refMenu.value?.updateActiveIndex(route.fullPath)
+  })
+
+  doHttpGet('/platformSvr/sapi/resources/leftMenu/permissions', {
+    fullPath: route.fullPath,
+  }).then((response) => {
+    response.data.forEach((item) => {
+      sessionStore.addAuthorizedCode(item)
+    })
   })
 })
 

@@ -26,7 +26,7 @@
               <el-button type="primary" icon="Search" @click="refresh">{{
                   $t('search')
                 }}</el-button>
-              <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
+              <el-button type="primary" @click="onAdd" icon="Plus" v-permission="props.className + '.Add'">{{ $t('add') }}</el-button>
             </slot>
             <slot name="formQueryButtonExt"></slot>
           </el-form-item>
@@ -101,10 +101,10 @@
                       <el-button icon="More" circle text />
                       <template #dropdown>
                         <el-dropdown-menu>
-                          <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true">
+                          <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true" v-permission="props.className + '.Import'">
                             {{ $t('table.downLoadExcelTemplate') }}
                           </el-dropdown-item>
-                          <el-dropdown-item @click="onExcelImportClick" v-if="props.excelImportEnable === true">
+                          <el-dropdown-item @click="onExcelImportClick" v-if="props.excelImportEnable === true" v-permission="props.className + '.Import'">
                             {{ $t('table.importByExcel') }}
                           </el-dropdown-item>
                         </el-dropdown-menu>
@@ -118,10 +118,10 @@
                   <el-button link type="primary" @click="onView(scope.row)">{{
                       t('table.view')
                     }}</el-button>
-                  <el-button link type="primary" @click="onEdit(scope.row)">
+                  <el-button link type="primary" @click="onEdit(scope.row)" v-permission="props.className + '.Edit'">
                     {{ t('table.edit') }}
                   </el-button>
-                  <slot name="operationSlotExt" :row="scope.row"> </slot>
+                  <slot name="operationSlotExt" :row="scope.row" > </slot>
                   <el-popconfirm
                     :confirm-button-text="$t('ok')"
                     :cancel-button-text="$t('cancel')"
@@ -130,7 +130,7 @@
                     @confirm="onDelete(scope.row)"
                   >
                     <template #reference>
-                      <el-button link type="danger">
+                      <el-button link type="danger" v-permission="props.className + '.Delete'">
                         {{ t('table.delete') }}
                       </el-button>
                     </template>

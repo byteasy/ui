@@ -42,6 +42,8 @@
               </el-form-item>
             </slot>
           </template>
+          <slot name="formExtra" :props="props" :row="formValue">
+          </slot>
         </el-space>
       </el-form>
     </el-scrollbar>
@@ -88,6 +90,7 @@ const props = defineProps<{
 }>()
 const formValue = ref({...props.row})
 const tableColumns = ref(props.columns ?? [])
+const queryParam = ref({})
 
 onMounted(() => {
   if(props.columns === undefined) {
@@ -133,7 +136,7 @@ function mergeLocalStorage(data: Array<never>) {
 function onSaveClick() {
   refForm.value?.validate((valid: boolean) => {
     if (valid) {
-      doHttpPost(props.url, {}, formValue.value)
+      doHttpPost(props.url, queryParam.value, formValue.value)
         .then(() => {
           ElMessage.success(t('operationSuccess'))
           emit('close')
@@ -162,6 +165,7 @@ function onClearForm() {
 defineExpose({
   props,
   validate,
+  queryParam,
   formValue,
   onSaveClick,
   onClearForm

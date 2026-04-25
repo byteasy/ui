@@ -11,8 +11,11 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 import '@/assets/style/style.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import i18n from './locales'
-import { debounce } from './directive/debounce'
 import App from './App.vue'
+
+import { debounce } from './directive/debounce'
+import { focus } from './directive/focus'
+import { permission } from './directive/permission'
 
 let app
 
@@ -26,6 +29,8 @@ const render = (container) => {
   app.use(i18n)
   app.use(ElementPlus)
   app.directive('debounce', debounce)
+  app.directive('focus', focus)
+  app.directive('permission', permission)
 
   app.mount(container ? container.querySelector('#app') : '#app')
 }

@@ -18,7 +18,8 @@ export default {
       name: '分组'
     },
     resource: {
-      name: '菜单'
+      name: '菜单',
+      standardPermission: '标准权限'
     }
   }
 } as const

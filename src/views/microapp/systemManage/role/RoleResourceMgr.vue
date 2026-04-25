@@ -1,45 +1,48 @@
 <template>
   <div class="w-full h-full flex-column">
-    <el-form
-      ref="refForm"
-      label-width="auto"
-      label-position="top"
-      class="w-full"
-    >
-      <el-form-item :label="$t('platform.resourceGroup.name')">
-        <resource-category-group-tree-select v-model="selectedGroup" clearable @change="loadTreeData" />
-<!--        <resource-group-select class="w-full" v-model="selectedGroup" clearable-->
-<!--                               @change="loadTreeData"-->
-<!--                               :firs-row-trigger="firstRowTrigger"></resource-group-select>-->
-      </el-form-item>
+    <el-scrollbar max-height="85vh" always class="w-full">
+      <el-form
+        ref="refForm"
+        label-width="auto"
+        label-position="top"
+        class="w-full"
+      >
+        <el-form-item :label="$t('platform.resourceGroup.name')">
+          <resource-category-group-tree-select v-model="selectedGroup" clearable
+                                               @change="loadTreeData"/>
+          <!--        <resource-group-select class="w-full" v-model="selectedGroup" clearable-->
+          <!--                               @change="loadTreeData"-->
+          <!--                               :firs-row-trigger="firstRowTrigger"></resource-group-select>-->
+        </el-form-item>
 
-      <el-form-item :label="$t('platform.searchTip')">
-        <el-input
-          v-model="filterText"
-          class="w-60 mb-2"
-          :placeholder="$t('platform.searchTip')"
-          clearable
-        />
-      </el-form-item>
+        <el-form-item :label="$t('platform.searchTip')">
+          <el-input
+            v-model="filterText"
+            class="w-60 mb-2"
+            :placeholder="$t('platform.searchTip')"
+            clearable
+          />
+        </el-form-item>
 
-      <el-form-item :label="$t('platform.resource.name')">
-        <el-tree
-          ref="treeRef"
-          class="filter-tree w-full"
-          :data="treeData"
-          :props="{ label: 'name', children: 'childrenList'}"
-          :default-expanded-keys="selectedKeys"
-          show-checkbox
-          default-expand-all
-          highlight-current
-          node-key="id"
-          :filter-node-method="filterNode">
-          <template #default="{ node, data }">
-            <tuna-i18n-value :model-value="data.name" class="pl-1"/>
-          </template>
-        </el-tree>
-      </el-form-item>
-    </el-form>
+        <el-form-item :label="$t('platform.resource.name')">
+          <el-tree
+            ref="treeRef"
+            class="filter-tree w-full"
+            :data="treeData"
+            :props="{ label: 'name', children: 'childrenList'}"
+            :default-expanded-keys="selectedKeys"
+            show-checkbox
+            default-expand-all
+            highlight-current
+            node-key="id"
+            :filter-node-method="filterNode">
+            <template #default="{ node, data }">
+              <tuna-i18n-value :model-value="data.name" class="pl-1"/>
+            </template>
+          </el-tree>
+        </el-form-item>
+      </el-form>
+    </el-scrollbar>
     <el-affix position="bottom" class="w-full">
       <div class="flex-row w-full justify-content-center pb-2">
         <el-button @click="setCheckedKeys" icon="Select">{{ t('platform.selectAll') }}</el-button>

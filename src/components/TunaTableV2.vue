@@ -27,7 +27,7 @@
                   $t('search')
                 }}
               </el-button>
-              <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
+              <el-button type="primary" @click="onAdd" icon="Plus" v-permission="props.className + '.Add'">{{ $t('add') }}</el-button>
             </slot>
             <slot name="form-query-buttons-extra"></slot>
           </el-form-item>
@@ -126,21 +126,21 @@
                             {{ $t('table.customSort') }}
                           </el-dropdown-item>
                           <el-dropdown-item divided @click="downLoadExcelTemplate"
-                                            v-if="props.excelImportEnable === true">
-                            <el-icon>
+                                            v-if="props.excelImportEnable === true" >
+                            <el-icon v-permission="props.className + '.Import'">
                               <Download/>
                             </el-icon>
                             {{ $t('table.downLoadExcelTemplate') }}
                           </el-dropdown-item>
                           <el-dropdown-item @click="onExcelImportClick"
-                                            v-if="props.excelImportEnable === true">
-                            <el-icon>
+                                            v-if="props.excelImportEnable === true" >
+                            <el-icon v-permission="props.className + '.Import'">
                               <IconLocalExcel/>
                             </el-icon>
                             {{ $t('table.importByExcel') }}
                           </el-dropdown-item>
-                          <el-dropdown-item v-if="props.excelImportEnable === true">
-                            <el-icon>
+                          <el-dropdown-item v-if="props.excelImportEnable === true" >
+                            <el-icon v-permission="props.className + '.Export'">
                               <IconLocalExcelExport/>
                             </el-icon>
                             {{ $t('table.exportToExcel') }}
@@ -156,7 +156,7 @@
                   <el-link underline="never" @click="onView(scope.row)" type="primary" class="pl-1">
                     {{ t('table.view') }}
                   </el-link>
-                  <el-link underline="never" @click="onEdit(scope.row)" type="primary" class="pl-1">
+                  <el-link underline="never" @click="onEdit(scope.row)" type="primary" class="pl-1" v-permission="props.className + '.Edit'">
                     {{ t('table.edit') }}
                   </el-link>
                   <slot name="table-operation-extra" :row="scope.row"></slot>
@@ -168,7 +168,7 @@
                     @confirm="onDelete(scope.row)"
                   >
                     <template #reference>
-                      <el-link underline="never" type="danger" class="pl-1">{{
+                      <el-link underline="never" type="danger" class="pl-1" v-permission="props.className + '.Delete'">{{
                           t('table.delete')
                         }}
                       </el-link>
