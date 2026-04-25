@@ -10,16 +10,15 @@
 </template>
 
 <script lang="ts" setup>
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import en from 'element-plus/dist/locale/en.mjs'
 import { computed, onBeforeMount, watch } from 'vue'
 import NavbarDefault from '@/views/layout/NavbarDefault.vue'
 import { storeToRefs } from 'pinia'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
+import { elementLocales } from '@/locales/common.ts'
 
 const appSettingsStore = useAppSettingsStore()
 const { theme, componentSize, lang } = storeToRefs(appSettingsStore)
-const locale = computed(() => (lang.value === 'zh-CN' ? zhCn : en))
+const locale = computed(() => elementLocales[lang.value])
 
 onBeforeMount(() => {
   setTheme()

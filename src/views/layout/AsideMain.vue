@@ -5,7 +5,7 @@
         size="220"
         collapsible
         :min="80"
-        :max="500"
+        :max="220"
         @update:size="onLeftMenuSizeUpdate"
       >
         <div class="mt-1">
@@ -39,14 +39,14 @@
 </template>
 
 <script lang="ts" setup>
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import en from 'element-plus/dist/locale/en.mjs'
 import LeftMenu from '@/views/layout/LeftMenu.vue'
 import BreadCrumb from '@/components/BreadCrumb.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { useTagsViewStore } from '@/stores/tagsView'
+import { elementLocales } from '@/locales/common.ts'
+
 import CommonLeftMenu from "@/views/layout/CommonLeftMenu.vue";
 import TunaTagView from "@/components/TunaTagView.vue";
 import {useRoute} from "vue-router";
@@ -54,7 +54,7 @@ const route = useRoute()
 
 const appSettingsStore = useAppSettingsStore()
 const { componentSize, lang } = storeToRefs(appSettingsStore)
-const locale = computed(() => (lang.value === 'zh-CN' ? zhCn : en))
+const locale = computed(() => elementLocales[lang.value])
 const tagsStore = useTagsViewStore()
 const { tagView } = storeToRefs(appSettingsStore)
 const refLeftMenu = ref()

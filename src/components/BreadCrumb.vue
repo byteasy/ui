@@ -27,7 +27,6 @@ watch(
   () => route.path,
   () => {
     levelList.value = route.matched
-    console.log(levelList.value)
   },
 )
 </script>

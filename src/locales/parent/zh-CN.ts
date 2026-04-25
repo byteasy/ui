@@ -1,6 +1,4 @@
-// zh.ts
 export default {
-  title: '临工农机',
   add: '添加',
   ok: '确定',
   save: '保存',
@@ -9,6 +7,7 @@ export default {
   search: '查询',
   deleteWarn: '确定要删除这条记录？',
   warning: '提醒',
+  i18nEditTitle: '多语言设置',
   authenticationEmptyTitle: '访问失败',
   authenticationEmptyTips: '无权限访问相关资源，请联系管理人员授予权限',
   platformCommon: {
@@ -21,21 +20,7 @@ export default {
   },
   exit: '退出',
   help: '问题帮助',
-  description: '说明',
-  keyword: '关键词',
-  selectAll: '全选',
-  clearAll: '清空',
-  theme: '外观',
-  layout: '布局',
-  skin: '皮肤',
-  more: '更多',
-  i18nEdit: '多语言编辑',
-  fullscreenTooltip: '全屏显示',
-  columnVisibleSet: '自定义列显示',
-  exitFullscreenTooltip: '退出全屏显示',
   error404: '访问的页面不存在',
-  errorAuthorizeFailed: '你没有权限访问此页面,如需访问,请联系管理员',
-  errorLoadComponent: '请检查前端组件路径配置是否正确',
   goBackHome: '返回首页',
   goBackLastPage: '返回上一级',
   operationSuccess: '操作成功',
@@ -63,8 +48,6 @@ export default {
   },
   appearanceLanguage: {
     showLanguage: '显示语言',
-    zh: '中文简体',
-    en: 'English',
     changeWarn: '是否刷新浏览器设置使语言切换生效?',
   },
   appearanceFavorite: {
@@ -120,10 +103,6 @@ export default {
       validateError: "校验失败，请检查输入！"
     }
   },
-  pager: {
-    total: '共',
-    row: '条',
-  },
   table: {
     loadingTableColumnsError: '加载数据表元数据失败',
     loadingTableDataError: '加载数据失败',
@@ -169,14 +148,7 @@ export default {
     max: '最大',
     required: '必须填写',
     email: '邮箱格式不正确',
-    noChinese: '不能含有中文字符',
-    paramMissing: '参数缺失'
-  },
-  platform: {
-    searchTip: '输入关键词搜索',
-    schemaDefine: {
-      syncSchema: '同步生成',
-    }
+    noChinese: '不能含有中文字符'
   },
   user: {
     basic: '基本资料',
@@ -184,16 +156,5 @@ export default {
     roleAllocate: '角色分配',
     enable: '启用',
     disable: '禁用',
-  },
-  role: {
-    name: '角色',
-    permission: '权限',
-    permissionAllocate: '权限分配'
-  },
-  resource: {
-    name: '菜单'
-  },
-  resourceGroup: {
-    name: '分组'
   }
 } as const

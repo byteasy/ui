@@ -90,7 +90,7 @@ const onI18nClick = () => {
       maxlength: bindAttrs.maxlength
     },
     {
-      title: t('i18nEdit'),
+      title: t('i18nEditTitle'),
       width: '60%',
       dialogModel: true,
       onClose: (data) => {

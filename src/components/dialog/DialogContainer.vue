@@ -60,19 +60,18 @@
 </template>
 
 <script setup lang="ts">
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import en from 'element-plus/dist/locale/en.mjs'
 import {useModal} from './useModal.ts'
 import {computed, ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
+import { elementLocales } from '@/locales/common.ts'
 
 const appSettingsStore = useAppSettingsStore()
 const componentRef = ref(null)
 
 const {componentSize, lang} = storeToRefs(appSettingsStore)
 
-const locale = computed(() => (lang.value === 'zh-CN' ? zhCn : en))
+const locale = computed(() => elementLocales[lang.value])
 
 const {modals, close} = useModal()
 
