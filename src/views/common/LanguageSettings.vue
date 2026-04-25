@@ -6,13 +6,14 @@ import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import {langList} from "@/locales/common.ts";
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const appSettingsStore = useAppSettingsStore()
 const { lang } = storeToRefs(appSettingsStore)
 const langValue = ref(lang.value!)
 
 function updateFontSize() {
   appSettingsStore.setLang(langValue.value!)
+  locale.value = langValue.value!
   ElMessageBox.confirm(t('appearanceLanguage.changeWarn'), t('warning'), {
     confirmButtonText: t('ok'),
     cancelButtonText: t('cancel'),
