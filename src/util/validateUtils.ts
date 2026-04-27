@@ -1,4 +1,5 @@
 import i18n from '@/locales/index.ts'
+import { safeParseJson } from "@/util/common.ts";
 
 export function isEmail(value: string) {
   const reg = /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
@@ -190,9 +191,22 @@ export function validateColumnRule(col: any, rule: any, value: any, callback: an
         return
       }
     }
-    if (value !== null && value !== undefined && value.length > col.maxLength) {
-      callback(new Error(col.displayName + t('validate.maxLength') + col.maxLength))
-      return
+    if (col.isI18n === 'YES') {
+      const json = safeParseJson(value)
+      for (const key in json) {
+        if (json.hasOwnProperty(key)) {
+          const i18nValue = json[key as keyof typeof json];
+          if (i18nValue !== null && i18nValue !== undefined && i18nValue.length > col.maxLength) {
+            callback(new Error(col.displayName + t('validate.maxLength') + col.maxLength))
+            return
+          }
+        }
+      }
+    } else {
+      if (value !== null && value !== undefined && value.length > col.maxLength) {
+        callback(new Error(col.displayName + t('validate.maxLength') + col.maxLength))
+        return
+      }
     }
   }
   if (

@@ -20,3 +20,12 @@ export function putValueIfValid(target: object, key: string, value: any) {
   target[key] = value
   return true
 }
+
+export const safeParseJson = (str: string | null | undefined): Record<string, string> => {
+  if (!str) return {}
+  try {
+    return JSON.parse(str)
+  } catch {
+    return {}
+  }
+}
