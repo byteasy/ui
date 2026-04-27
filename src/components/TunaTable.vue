@@ -101,10 +101,10 @@
                       <el-button icon="More" circle text />
                       <template #dropdown>
                         <el-dropdown-menu>
-                          <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true" v-permission="props.className + '.Import'">
+                          <el-dropdown-item @click="downLoadExcelTemplate" v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
                             {{ $t('table.downLoadExcelTemplate') }}
                           </el-dropdown-item>
-                          <el-dropdown-item @click="onExcelImportClick" v-if="props.excelImportEnable === true" v-permission="props.className + '.Import'">
+                          <el-dropdown-item @click="onExcelImportClick" v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
                             {{ $t('table.importByExcel') }}
                           </el-dropdown-item>
                         </el-dropdown-menu>
@@ -171,9 +171,11 @@ import { useModal } from '@/components/dialog/useModal.ts'
 import TunaTableForm from '@/components/TunaTableForm.vue'
 import TunaExcelImport from '@/components/TunaExcelImport.vue'
 import {getLangText} from "@/locales/common.ts";
+import { useSessionStore } from '@/stores/session.ts'
 
 const route = useRoute()
 const { t, locale } = useI18n() // 表单引用
+const sessionStore = useSessionStore()
 
 const props = defineProps<{
   baseUrl: string

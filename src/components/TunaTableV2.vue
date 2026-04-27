@@ -126,21 +126,21 @@
                             {{ $t('table.customSort') }}
                           </el-dropdown-item>
                           <el-dropdown-item divided @click="downLoadExcelTemplate"
-                                            v-if="props.excelImportEnable === true" >
-                            <el-icon v-permission="props.className + '.Import'">
+                                            v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')" >
+                            <el-icon>
                               <Download/>
                             </el-icon>
                             {{ $t('table.downLoadExcelTemplate') }}
                           </el-dropdown-item>
                           <el-dropdown-item @click="onExcelImportClick"
-                                            v-if="props.excelImportEnable === true" >
-                            <el-icon v-permission="props.className + '.Import'">
+                                            v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')" >
+                            <el-icon>
                               <IconLocalExcel/>
                             </el-icon>
                             {{ $t('table.importByExcel') }}
                           </el-dropdown-item>
-                          <el-dropdown-item v-if="props.excelImportEnable === true" >
-                            <el-icon v-permission="props.className + '.Export'">
+                          <el-dropdown-item v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')" >
+                            <el-icon>
                               <IconLocalExcelExport/>
                             </el-icon>
                             {{ $t('table.exportToExcel') }}
@@ -214,10 +214,12 @@ import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
 import {useModal} from '@/components/dialog/useModal.ts'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
+import { useSessionStore } from '@/stores/session.ts'
 import {putValueIfValid} from "@/util/common.ts";
 import {getLangText} from "@/locales/common.ts";
 
 const appSettingsStore = useAppSettingsStore()
+const sessionStore = useSessionStore()
 const route = useRoute()
 const {t, locale} = useI18n()
 
