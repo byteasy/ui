@@ -19,19 +19,17 @@
     </template>
     <template v-slot:table-operation-end-extra="scope">
       <el-dropdown placement="bottom-start" class="pl-1">
-        <el-link type="primary" underline="never" class="pt-1" v-permission="'com.tuna.platform.vo.PersonalSettingsVO.Enable'">{{ $t('platform.more') }}</el-link>
+        <el-link type="primary" underline="never" class="pt-1" >{{ $t('platform.more') }}</el-link>
         <template #dropdown>
           <el-dropdown-menu>
-            <template v-permission="'com.tuna.platform.vo.PersonalSettingsVO.Enable'">
-              <el-dropdown-item v-if="scope.row.status === 'DISABLE'"
+              <el-dropdown-item v-if="scope.row.status === 'DISABLE' && sessionStore.authorize('com.tuna.platform.vo.PersonalSettingsVO.Enable')"
                                 @click="onEditUserStatusClick(scope.row, 'NORMAL')" >
                 {{ $t('user.enable') }}
               </el-dropdown-item>
-              <el-dropdown-item v-if="scope.row.status === 'NORMAL'"
+              <el-dropdown-item v-if="scope.row.status === 'NORMAL' && sessionStore.authorize('com.tuna.platform.vo.PersonalSettingsVO.Enable')"
                                 @click="onEditUserStatusClick(scope.row, 'DISABLE')" >
                 {{ $t('user.disable') }}
               </el-dropdown-item>
-            </template>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -47,10 +45,12 @@ import UserRoleMgr from "@/views/microapp/systemManage/user/UserRoleMgr.vue";
 import UserEditForm from "@/views/microapp/systemManage/user/UserEditForm.vue";
 import {doHttpPut} from "@/api/common/platform";
 import {ElMessage} from "element-plus";
+import {useSessionStore} from "@/stores/session.ts";
 
 const {t} = useI18n() // 表单引用
 const {open} = useModal()
 const refTable = ref(null)
+const sessionStore = useSessionStore()
 
 function onPermissionEdit(row) {
   open(
