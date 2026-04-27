@@ -26,6 +26,7 @@ const bindAttrs = useAttrs()
 // 🔥 核心修改：modelValue 改成 string 类型
 const props = defineProps<{
   modelValue?: string
+  lang?: string
 }>()
 
 const emit = defineEmits<{
@@ -40,7 +41,7 @@ onMounted(() => {
 })
 
 // 最终正确的语言（zh_CN）
-const currentLang = computed(() => langMap[locale.value] || locale.value)
+const currentLang = computed(() => props.lang !== undefined ? props.lang : (langMap[locale.value] || locale.value))
 
 // 工具方法：安全解析 JSON 字符串
 const safeParseJson = (str: string | null | undefined): Record<string, string> => {
@@ -107,7 +108,16 @@ const setCurrentLangValue = (value) => {
   handleDirectInput(value)
 }
 
+const setLanguageValue = (lang, value) => {
+  // 解析原字符串 -> 修改 -> 重新转成字符串
+  const jsonObj = safeParseJson(props.modelValue)
+  jsonObj[lang] = value
+  // 🔥  emit 出去的是 string 类型
+  emit('update:modelValue', JSON.stringify(jsonObj))
+}
+
 defineExpose({
-  setCurrentLangValue
+  setCurrentLangValue,
+  setLanguageValue
 })
 </script>

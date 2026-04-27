@@ -19,8 +19,8 @@
                 />
               </slot>
             </el-form-item>
-            <slot name="form-query-extra" :queryParam="queryParam"/>
           </template>
+          <slot name="form-query-extra" :queryParam="queryParam"/>
           <el-form-item>
             <slot name="form-query-buttons">
               <el-button type="primary" icon="Search" @click="refresh">{{
@@ -69,7 +69,7 @@
                 >
                   <template #default="scope">
                     <slot :name="'table-cell-' + col.name" :row="scope.row">
-                      <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]" />
+                      <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]" :lang="props.showLang" />
                       <span v-else>{{ scope.row[col.name] }}</span>
                     </slot>
                   </template>
@@ -238,6 +238,7 @@ const props = defineProps<{
   rowKey?: string
   defaultExpandAll?: boolean
   treeProps?: object
+  showLang?: string
 }>()
 
 const emit = defineEmits(['rowClick'])

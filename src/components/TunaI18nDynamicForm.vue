@@ -2,7 +2,7 @@
   <div class="w-full flex-column" style="overflow: hidden;">
     <el-scrollbar max-height="70vh" always class="w-full">
       <el-form ref="refForm" label-width="auto" label-position="right" class="w-full">
-        <el-form-item :label="lang.label" :prop="lang.label" v-for="lang in langList"
+        <el-form-item :label="lang.label + '(' + lang.description + ')'" :prop="lang.label" v-for="lang in langList"
                       :key="lang.value">
           <el-input v-model="i18nForm[lang.value]" type="textarea" :rows="1" :maxlength="props.maxlength" show-word-limit/>
         </el-form-item>
