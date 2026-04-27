@@ -25,7 +25,7 @@
                 <router-view v-slot="{ Component }">
                   <transition name="fade" mode="out-in">
                     <keep-alive :include="tagsStore.cachedViews">
-                      <component :is="Component" :key="$route.path" />
+                      <component :is="Component" :key="$route.path" v-if="permissionLoaded" />
                     </keep-alive>
                   </transition>
                 </router-view>
@@ -43,14 +43,19 @@ import LeftMenu from '@/views/layout/LeftMenu.vue'
 import BreadCrumb from '@/components/BreadCrumb.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import {computed, onBeforeMount, ref} from 'vue'
 import { useTagsViewStore } from '@/stores/tagsView'
 import { elementLocales } from '@/locales/common.ts'
 
 import CommonLeftMenu from "@/views/layout/CommonLeftMenu.vue";
 import TunaTagView from "@/components/TunaTagView.vue";
 import {useRoute} from "vue-router";
+import {doHttpGet} from "@/api/common/platform";
+import {useSessionStore} from "@/stores/session.ts";
+const sessionStore = useSessionStore()
 const route = useRoute()
+const permissionLoaded = ref(false)
+
 
 const appSettingsStore = useAppSettingsStore()
 const { componentSize, lang } = storeToRefs(appSettingsStore)
@@ -62,6 +67,17 @@ const refLeftMenu = ref()
 function onLeftMenuSizeUpdate(size) {
   refLeftMenu.value.closeOrOpenMenu(size)
 }
+
+onBeforeMount((hook) => {
+  doHttpGet('/platformSvr/sapi/resources/leftMenu/permissions', {
+    fullPath: route.fullPath,
+  }).then((response) => {
+    response.data.forEach((item) => {
+      sessionStore.addAuthorizedCode(item)
+    })
+    permissionLoaded.value = true
+  })
+})
 </script>
 
 <style scoped>
