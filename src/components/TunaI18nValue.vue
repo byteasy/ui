@@ -1,5 +1,6 @@
 <template>
-  <span>{{ currentLangValue }}</span>
+  <el-text v-if="props.truncated" truncated> {{ currentLangValue }}</el-text>
+  <span v-else>{{ currentLangValue }}</span>
 </template>
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
@@ -12,6 +13,7 @@ const {locale} = useI18n()
 const props = defineProps<{
   modelValue: string | null | undefined
   lang?: string
+  truncated?: boolean
 }>()
 
 // 最终正确的语言（zh_CN）

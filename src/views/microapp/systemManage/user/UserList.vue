@@ -13,13 +13,13 @@
                 :zoom-rate="1.0"/>
     </template>
     <template v-slot:table-operation-extra="powerScope">
-      <el-link underline="never" type="primary" class="pl-1" v-permission="'com.tuna.platform.vo.PersonalSettingsVO.RoleAssign'"
+      <el-link underline="never" type="primary" v-permission="'com.tuna.platform.vo.PersonalSettingsVO.RoleAssign'"
                @click="onPermissionEdit(powerScope.row)">{{ t('platform.role.name') }}
       </el-link>
     </template>
     <template v-slot:table-operation-end-extra="scope">
-      <el-dropdown placement="bottom-start" class="pl-1">
-        <el-link type="primary" underline="never" class="pt-1" >{{ $t('platform.more') }}</el-link>
+      <el-dropdown placement="bottom-start">
+        <el-link type="primary" underline="never" v-permission="'com.tuna.platform.vo.PersonalSettingsVO.Enable'">{{ $t('platform.more') }}</el-link>
         <template #dropdown>
           <el-dropdown-menu>
               <el-dropdown-item v-if="scope.row.status === 'DISABLE' && sessionStore.authorize('com.tuna.platform.vo.PersonalSettingsVO.Enable')"
