@@ -19,12 +19,12 @@
               </el-icon>
               {{ $t('table.customColumn') }}
             </el-dropdown-item>
-            <el-dropdown-item>
-              <el-icon>
-                <DCaret/>
-              </el-icon>
-              {{ $t('table.customSort') }}
-            </el-dropdown-item>
+<!--            <el-dropdown-item>-->
+<!--              <el-icon>-->
+<!--                <DCaret/>-->
+<!--              </el-icon>-->
+<!--              {{ $t('table.customSort') }}-->
+<!--            </el-dropdown-item>-->
             <el-dropdown-item divided @click="downLoadExcelTemplate"
                               v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
               <el-icon>
