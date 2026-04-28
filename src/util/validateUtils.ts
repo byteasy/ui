@@ -1,5 +1,6 @@
 import i18n from '@/locales/index.ts'
 import { safeParseJson } from "@/util/common.ts";
+import {getLangText} from "@/locales/common.ts";
 
 export function isEmail(value: string) {
   const reg = /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
@@ -177,17 +178,17 @@ export function validateHighStrengthPassword(password: string) {
   return regex.test(password)
 }
 
-export function validateColumnRule(col: any, rule: any, value: any, callback: any) {
+export function validateColumnRule(col: any, rule: any, value: any, locale, callback: any) {
   const { t } = i18n.global
 
   if (!value && col.isRequire === 'YES') {
-    callback(new Error(col.displayName + t('validate.required')))
+    callback(new Error(getLangText(col.displayName, locale)  + ' ' + t('validate.required')))
     return
   }
   if (col.type === 'STRING') {
     if (col.minLength > 0) {
       if (!value || value.length < col.minLength) {
-        callback(new Error(col.displayName + t('validate.minLength') + col.minLength))
+        callback(new Error(getLangText(col.displayName, locale)  + ' ' + t('validate.minLength')   + ' ' + col.minLength))
         return
       }
     }
@@ -197,14 +198,14 @@ export function validateColumnRule(col: any, rule: any, value: any, callback: an
         if (json.hasOwnProperty(key)) {
           const i18nValue = json[key as keyof typeof json];
           if (i18nValue !== null && i18nValue !== undefined && i18nValue.length > col.maxLength) {
-            callback(new Error(col.displayName + t('validate.maxLength') + col.maxLength))
+            callback(new Error(getLangText(col.displayName, locale)  + ' ' + t('validate.maxLength')   + ' ' + col.maxLength))
             return
           }
         }
       }
     } else {
       if (value !== null && value !== undefined && value.length > col.maxLength) {
-        callback(new Error(col.displayName + t('validate.maxLength') + col.maxLength))
+        callback(new Error(getLangText(col.displayName, locale)  + ' ' + t('validate.maxLength')   + ' ' + col.maxLength))
         return
       }
     }
@@ -218,11 +219,11 @@ export function validateColumnRule(col: any, rule: any, value: any, callback: an
     col.type === 'DOUBLE'
   ) {
     if (parseInt(value) < col.min) {
-      callback(new Error(col.displayName + t('validate.min') + col.min))
+      callback(new Error(getLangText(col.displayName, locale) + ' ' +  t('validate.min')   + ' ' + col.min))
       return
     }
     if (parseInt(value) > col.max) {
-      callback(new Error(col.displayName + t('validate.max') + col.max))
+      callback(new Error(getLangText(col.displayName, locale)  + ' ' + t('validate.max')   + ' ' + col.max))
       return
     }
 

@@ -13,11 +13,11 @@
                 :rules="[
                 {
                   required: col.isRequire === 'YES',
-                  message: getLangText(col.displayName, locale) + t('validate.required'),
+                  message: getLangText(col.displayName, locale) + ' ' + t('validate.required'),
                 },
                 {
                   validator: (rule, value, callback) => {
-                    validateColumnRule(col, rule, value, callback)
+                    validateColumnRule(col, rule, value, locale, callback)
                   },
                   trigger: 'blur',
                 },

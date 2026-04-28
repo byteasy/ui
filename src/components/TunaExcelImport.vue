@@ -10,7 +10,7 @@
           loading = true
         }
       "
-      :action="props.url + '/excel/importPreview'"
+      :action="props.url + '/excel/importPreview?lang=' + locale"
     >
       <el-icon class="el-icon--upload">
         <upload-filled />
@@ -46,8 +46,8 @@
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
                 >
                   <template #default="scope">
-                    <slot :name="'table_column_' + col.name" :row="scope.row"
-                      >{{ scope.row[col.name] }}
+                    <slot :name="'table_column_' + col.name" :row="scope.row">
+                      <tuna-i18n-value :model-value="scope.row[col.name]" />
                     </slot>
                   </template>
                 </el-table-column>

@@ -327,11 +327,12 @@ function refresh() {
 }
 
 function downLoadExcelTemplate() {
-  window.open(props.baseUrl + '/excel/template', '_blank')
+  window.open(props.baseUrl + '/excel/template?lang=' + appSettingsStore.lang, '_blank')
 }
 
 function onExcelImportClick() {
   const [lastRoute] = route.matched.slice(-1)
+  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
   open(
     getExcelImportComponent(),
     {
@@ -340,7 +341,7 @@ function onExcelImportClick() {
       context: props.context
     }, // 传给组件的 props
     {
-      title: t('table.importByExcel') + '>' + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.importByExcel') + '>' + title,
       width: getFormWidth(),
       onClose: (data) => {
         refresh()

@@ -1,7 +1,7 @@
 <template>
   <tuna-table-form>
     <template v-slot:formItemField_categoryId="scope">
-      <resource-category-tree-select v-model="scope.row.categoryId" style="min-width: 300px" clearable filterable :placeholder="scope.column.displayName"
+      <resource-category-tree-select v-model="scope.row.categoryId" style="min-width: 300px" clearable filterable :placeholder="getLangText(scope.column.displayName, locale)"
                                      :disabled="scope.props.readonly"/>
     </template>
   </tuna-table-form>
@@ -11,6 +11,9 @@ import { onMounted, ref } from 'vue'
 import { doHttpGet } from '@/api/common/platform'
 import ResourceCategoryTreeSelect
   from "@/views/microapp/developConfig/resource/ResourceCategoryTreeSelect.vue";
+import {useI18n} from "vue-i18n";
+import {getLangText} from "@/locales/common.ts";
+const {t, locale} = useI18n()
 
 const resourceCategorys = ref([])
 

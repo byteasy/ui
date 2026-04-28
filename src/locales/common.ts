@@ -65,12 +65,11 @@ const langList = [
 
 export function getLangText(text: any, currentLocale: string): string {
   if (!text) return ''
-
   const lang = langMap[currentLocale] || currentLocale
 
   try {
     const obj = JSON.parse(text)
-    return obj[lang] || text
+    return obj[lang] || obj['zh_CN'] || obj['en'] || text
   } catch {
     return text
   }
