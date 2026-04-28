@@ -10,7 +10,7 @@
           loading = true
         }
       "
-      :action="props.url + '/excel/importPreview'"
+      :action="props.url + '/excel/importPreview?lang=' + locale"
     >
       <el-icon class="el-icon--upload">
         <upload-filled />
@@ -37,7 +37,7 @@
                     col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
                   "
                   :fixed="col.isFixed === 'YES'"
-                  :label="col.displayName"
+                  :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
                   stripe
                   highlight-current-row
@@ -46,8 +46,8 @@
                   :show-overflow-tooltip="col.isOverflow === 'YES'"
                 >
                   <template #default="scope">
-                    <slot :name="'table_column_' + col.name" :row="scope.row"
-                      >{{ scope.row[col.name] }}
+                    <slot :name="'table_column_' + col.name" :row="scope.row">
+                      <tuna-i18n-value :model-value="scope.row[col.name]" />
                     </slot>
                   </template>
                 </el-table-column>
@@ -58,7 +58,7 @@
                   :code="col.typeClassName"
                   :context="props.context"
                   :fixed="col.isFixed === 'YES'"
-                  :label="col.displayName"
+                  :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
                   v-if="col.isForm === 'YES' && col.type === 'ENUM'"
                   :min-width="col.width === 0 ? undefined : col.width"
@@ -106,6 +106,7 @@ import { defineEmits, defineExpose, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { doHttpPost } from '@/api/common/platform'
+import {getLangText} from "@/locales/common.ts";
 
 const props = defineProps<{
   url: string
@@ -117,7 +118,7 @@ const tableData = ref({ total: '0', records: [] })
 const loading = ref<boolean>(false)
 const emit = defineEmits(['close'])
 const validSuccess = ref(false)
-const { t } = useI18n() // 表单引用
+const { t, locale } = useI18n() // 表单引用
 
 const closeForm = () => {
   emit('close')

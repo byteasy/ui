@@ -2,7 +2,11 @@
     <el-table height="100%" :data="tableData" scrollbar-always-on highlight-current-row border fit
               table-layout="auto">
       <el-table-column :label="$t('table.columnNo')" type="index" width="60"/>
-      <el-table-column :label="$t('table.columnLabel')" prop="displayName" resizable/>
+      <el-table-column :label="$t('table.columnLabel')" prop="displayName" resizable>
+        <template #default="scope">
+          <tuna-i18n-value :model-value="scope.row.displayName" />
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('table.columnFieldName')" prop="name" resizable/>
       <el-table-column :label="$t('table.columnIsShow')" prop="isShow" resizable>
         <template #default="scope">

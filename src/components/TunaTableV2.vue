@@ -19,15 +19,15 @@
                 />
               </slot>
             </el-form-item>
-            <slot name="form-query-extra" :queryParam="queryParam"/>
           </template>
+          <slot name="form-query-extra" :queryParam="queryParam"/>
           <el-form-item>
             <slot name="form-query-buttons">
               <el-button type="primary" icon="Search" @click="refresh">{{
                   $t('search')
                 }}
               </el-button>
-              <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
+              <el-button type="primary" @click="onAdd" icon="Plus" v-permission="props.className + '.Add'">{{ $t('add') }}</el-button>
             </slot>
             <slot name="form-query-buttons-extra"></slot>
           </el-form-item>
@@ -69,7 +69,7 @@
                 >
                   <template #default="scope">
                     <slot :name="'table-cell-' + col.name" :row="scope.row">
-                      <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]" />
+                      <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]" :lang="props.showLang" />
                       <span v-else>{{ scope.row[col.name] }}</span>
                     </slot>
                   </template>
@@ -126,20 +126,20 @@
                             {{ $t('table.customSort') }}
                           </el-dropdown-item>
                           <el-dropdown-item divided @click="downLoadExcelTemplate"
-                                            v-if="props.excelImportEnable === true">
+                                            v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')" >
                             <el-icon>
                               <Download/>
                             </el-icon>
                             {{ $t('table.downLoadExcelTemplate') }}
                           </el-dropdown-item>
                           <el-dropdown-item @click="onExcelImportClick"
-                                            v-if="props.excelImportEnable === true">
+                                            v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')" >
                             <el-icon>
                               <IconLocalExcel/>
                             </el-icon>
                             {{ $t('table.importByExcel') }}
                           </el-dropdown-item>
-                          <el-dropdown-item v-if="props.excelImportEnable === true">
+                          <el-dropdown-item v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')" >
                             <el-icon>
                               <IconLocalExcelExport/>
                             </el-icon>
@@ -156,7 +156,7 @@
                   <el-link underline="never" @click="onView(scope.row)" type="primary" class="pl-1">
                     {{ t('table.view') }}
                   </el-link>
-                  <el-link underline="never" @click="onEdit(scope.row)" type="primary" class="pl-1">
+                  <el-link underline="never" @click="onEdit(scope.row)" type="primary" class="pl-1" v-permission="props.className + '.Edit'">
                     {{ t('table.edit') }}
                   </el-link>
                   <slot name="table-operation-extra" :row="scope.row"></slot>
@@ -168,7 +168,7 @@
                     @confirm="onDelete(scope.row)"
                   >
                     <template #reference>
-                      <el-link underline="never" type="danger" class="pl-1">{{
+                      <el-link underline="never" type="danger" class="pl-1" v-permission="props.className + '.Delete'">{{
                           t('table.delete')
                         }}
                       </el-link>
@@ -214,10 +214,12 @@ import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
 import {useModal} from '@/components/dialog/useModal.ts'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
+import { useSessionStore } from '@/stores/session.ts'
 import {putValueIfValid} from "@/util/common.ts";
 import {getLangText} from "@/locales/common.ts";
 
 const appSettingsStore = useAppSettingsStore()
+const sessionStore = useSessionStore()
 const route = useRoute()
 const {t, locale} = useI18n()
 
@@ -238,6 +240,7 @@ const props = defineProps<{
   rowKey?: string
   defaultExpandAll?: boolean
   treeProps?: object
+  showLang?: string
 }>()
 
 const emit = defineEmits(['rowClick'])
@@ -324,11 +327,12 @@ function refresh() {
 }
 
 function downLoadExcelTemplate() {
-  window.open(props.baseUrl + '/excel/template', '_blank')
+  window.open(props.baseUrl + '/excel/template?lang=' + appSettingsStore.lang, '_blank')
 }
 
 function onExcelImportClick() {
   const [lastRoute] = route.matched.slice(-1)
+  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
   open(
     getExcelImportComponent(),
     {
@@ -337,7 +341,7 @@ function onExcelImportClick() {
       context: props.context
     }, // 传给组件的 props
     {
-      title: t('table.importByExcel') + '>' + (lastRoute !== undefined ? lastRoute.meta.title : ''),
+      title: t('table.importByExcel') + '>' + title,
       width: getFormWidth(),
       onClose: (data) => {
         refresh()
