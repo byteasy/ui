@@ -1,75 +1,129 @@
 <template>
-  <!-- 替换 el-space，使用 CSS 网格布局（最稳、最整齐） -->
-  <div class="card-grid p-2 pt-4">
-    <div
-      class="card-item"
-      v-for="entity in props.data"
-      :key="entity.id"
-    >
-      <el-descriptions border :column="2" class="el-card w-full h-full">
-        <template #extra>
-          <div class="mt-3">
-            <el-space direction="horizontal" :size="4" class="mt-1 mr-2">
-              <slot name="table-operation" :row="entity">
-                <el-link underline="never" @click="onView(entity)" type="primary">
-                  {{ t('table.view') }}
-                </el-link>
-                <el-link underline="never" @click="onEdit(entity)" type="primary"
-                         v-permission="props.className + '.Edit'">
-                  {{ t('table.edit') }}
-                </el-link>
-                <slot name="table-operation-extra" :row="entity"></slot>
-                <el-popconfirm
-                  :confirm-button-text="$t('ok')"
-                  :cancel-button-text="$t('cancel')"
-                  :title="$t('deleteWarn')"
-                  :hide-after="10"
-                  @confirm="onDelete(entity)"
-                >
-                  <template #reference>
-                    <el-link underline="never" type="danger"
-                             v-permission="props.className + '.Delete'">{{
-                        t('table.delete')
-                      }}
-                    </el-link>
-                  </template>
-                </el-popconfirm>
-                <slot name="table-operation-end-extra" :row="entity"></slot>
+  <!-- 外层容器：相对定位，用于右上角定位 -->
+  <div class="card-grid-wrapper p-2 pt-3 relative">
+    <!-- 右上角：更多 文字 -->
+    <div class="card-grid-more">
+      <el-dropdown placement="bottom-start">
+        <el-button icon="More" circle text/>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="emit('switchView')">
+              <el-icon>
+                <List/>
+              </el-icon>
+              {{ $t('table.viewModel') }}
+            </el-dropdown-item>
+            <el-dropdown-item @click="onColumnDefineClick">
+              <el-icon>
+                <SetUp/>
+              </el-icon>
+              {{ $t('table.customColumn') }}
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <el-icon>
+                <DCaret/>
+              </el-icon>
+              {{ $t('table.customSort') }}
+            </el-dropdown-item>
+            <el-dropdown-item divided @click="downLoadExcelTemplate"
+                              v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
+              <el-icon>
+                <Download/>
+              </el-icon>
+              {{ $t('table.downLoadExcelTemplate') }}
+            </el-dropdown-item>
+            <el-dropdown-item @click="onExcelImportClick"
+                              v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
+              <el-icon>
+                <IconLocalExcel/>
+              </el-icon>
+              {{ $t('table.importByExcel') }}
+            </el-dropdown-item>
+            <el-dropdown-item
+              v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')">
+              <el-icon>
+                <IconLocalExcelExport/>
+              </el-icon>
+              {{ $t('table.exportToExcel') }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
+
+    <!-- 卡片网格 -->
+    <div class="card-grid">
+      <div
+        class="card-item"
+        v-for="entity in props.data"
+        :key="entity.id"
+      >
+        <el-descriptions border :column="2" class="el-card w-full h-full">
+          <template #extra>
+            <div class="mt-3">
+              <el-space direction="horizontal" :size="4" class="mt-1 mr-2">
+                <slot name="table-operation" :row="entity">
+                  <el-link underline="never" @click="onView(entity)" type="primary">
+                    {{ t('table.view') }}
+                  </el-link>
+                  <el-link underline="never" @click="onEdit(entity)" type="primary"
+                           v-permission="props.className + '.Edit'">
+                    {{ t('table.edit') }}
+                  </el-link>
+                  <slot name="table-operation-extra" :row="entity"></slot>
+                  <el-popconfirm
+                    :confirm-button-text="$t('ok')"
+                    :cancel-button-text="$t('cancel')"
+                    :title="$t('deleteWarn')"
+                    :hide-after="10"
+                    @confirm="onDelete(entity)"
+                  >
+                    <template #reference>
+                      <el-link underline="never" type="danger"
+                               v-permission="props.className + '.Delete'">{{
+                          t('table.delete')
+                        }}
+                      </el-link>
+                    </template>
+                  </el-popconfirm>
+                  <slot name="table-operation-end-extra" :row="entity"></slot>
+                </slot>
+              </el-space>
+            </div>
+          </template>
+          <template #title>
+            <div class="mt-3">
+              <el-link type="primary" @click="onView(entity)" class="ml-3">
+                <el-text size="large" class="">
+                  <tuna-i18n-value :model-value="entity[props.titleColumnName || 'name' ]"></tuna-i18n-value>
+                </el-text>
+              </el-link>
+            </div>
+          </template>
+          <template v-for="col in props.tableColumns" :key="col.name">
+            <el-descriptions-item
+              :label="getLangText(col.displayName, locale)"
+              v-if="col.isShow === 'YES' && col.name !== props.titleColumnName"
+            >
+              <slot :name="'table-cell-' + col.name" :row="entity">
+                <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="entity[col.name]"
+                                 :lang="props.showLang"/>
+                <enum-viewer
+                  v-else-if="col.type === 'ENUM'"
+                  :prop="entity[col.name]"
+                  :context="props.context"
+                  :code="col.typeClassName"
+                />
+                <span v-else>{{ entity[col.name] }}</span>
               </slot>
-            </el-space>
-          </div>
-        </template>
-        <template #title>
-          <div class="mt-3">
-            <el-link type="primary" @click="onView(entity)" class="ml-3">
-              <el-text size="large" class="">
-                <tuna-i18n-value :model-value="entity[props.titleColumnName || 'name' ]"></tuna-i18n-value>
-              </el-text>
-            </el-link>
-          </div>
-        </template>
-        <template v-for="col in props.tableColumns" :key="col.name">
-          <el-descriptions-item
-            :label="getLangText(col.displayName, locale)"
-            v-if="col.isShow === 'YES' && col.name !== props.titleColumnName"
-          >
-            <slot :name="'table-cell-' + col.name" :row="entity">
-              <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="entity[col.name]"
-                               :lang="props.showLang"/>
-              <enum-viewer
-                v-else-if="col.type === 'ENUM'"
-                :prop="entity[col.name]"
-                :context="props.context"
-                :code="col.typeClassName"
-              />
-              <span v-else>{{ entity[col.name] }}</span>
-            </slot>
-          </el-descriptions-item>
-        </template>
-      </el-descriptions>
+            </el-descriptions-item>
+          </template>
+        </el-descriptions>
+      </div>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
@@ -273,48 +327,59 @@ defineExpose({
   onDelete
 })
 </script>
+
 <style scoped>
-/* 基础网格布局 */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 默认超大屏：一行 4 个 */
-  gap: 16px;
+/* 外层容器：用于定位右上角 */
+.card-grid-wrapper {
+  position: relative;
 }
 
-/* 屏幕 < 2000px → 一行 3 个 */
+/* 右上角更多文字：不明显、低调、可点击 */
+.card-grid-more {
+  position: absolute;
+  top: 1px;
+  right: 7px;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+/* 卡片网格布局 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  padding-top: 12px; /* 给右上角文字留出空间 */
+}
+
+/* 响应式 */
 @media (max-width: 2600px) {
   .card-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-
-/* 屏幕 < 2000px → 一行 3 个 */
 @media (max-width: 2000px) {
   .card-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-
-/* 屏幕 < 1500px → 一行 2 个 */
 @media (max-width: 1500px) {
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
-/* 屏幕 < 768px → 一行 1 个 */
 @media (max-width: 900px) {
   .card-grid {
     grid-template-columns: repeat(1, 1fr);
   }
 }
 
-/* 卡片强制占满格子 */
 .card-item {
   width: 100%;
 }
 
-/* el-descriptions 永远 100% 宽度、内容不溢出 */
 :deep(.el-descriptions) {
   width: 100% !important;
   table-layout: fixed;

@@ -6,6 +6,7 @@
     class-name="com.tuna.platform.vo.PersonalSettingsVO"
     :form-component="UserEditForm"
     :excel-import-enable="true"
+    :title-column-name="'realName'"
     :query-params="{ descColumns: ['createdTime', 'updatedTime'] }"
   >
     <template v-slot:table-cell-avatar="avatarScode">
