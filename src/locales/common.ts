@@ -45,7 +45,7 @@ const langMap = {
   'ko': 'ko',
   'ru': 'ru',
   'pt': 'pt',
-  'pt_br': 'pt-br',
+  'pt_br': 'pt_br',
   'es': 'es',
 }
 
