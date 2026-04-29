@@ -45,7 +45,6 @@ service.interceptors.response.use(
      * status [200,500) 请求为正确响应，[500, +] 响应有错误
      */
     const res = response.data
-    console.log('res', res)
     if (res !== undefined && res.status !== undefined && res.status !== 200) {
       ElMessage({
         message: res.description,
