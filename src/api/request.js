@@ -20,7 +20,9 @@ service.interceptors.request.use(
       config.headers['x-userinfo'] = import.meta.env.VITE_TEST_TOKEN
     }
     const appSettingsStore = useAppSettingsStore()
-    config.headers['accept-language'] = appSettingsStore.lang + ';q=0.9,en;q=0.8'
+    if (appSettingsStore.lang) {
+      config.headers['accept-language'] = appSettingsStore.lang.replace('_', '-') + ';q=0.9,en;q=0.8'
+    }
     return config
   },
   (error) => {
@@ -54,7 +56,7 @@ service.interceptors.response.use(
     } else {
       // 判断如果是Excel导出文件类操作，把整个response返给调用函数
       const disposition = response.headers['content-disposition']
-      if(disposition !== undefined && disposition.includes('attachment')) {
+      if (disposition !== undefined && disposition.includes('attachment')) {
         return response
       } else {
         return response.data

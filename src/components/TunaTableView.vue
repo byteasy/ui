@@ -243,10 +243,6 @@ function onDelete(row) {
       ElMessage.success(t('operationSuccess'))
       props.refresh()
     })
-    .catch((err) => {
-      console.log(err)
-      ElMessage.error(t('operationFailed'))
-    })
 }
 
 function getFormComponent() {

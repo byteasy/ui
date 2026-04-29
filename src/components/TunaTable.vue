@@ -342,10 +342,6 @@ function onDelete(row) {
       ElMessage.success(t('operationSuccess'))
       refresh()
     })
-    .catch((err) => {
-      console.log(err)
-      ElMessage.error(t('operationFailed'))
-    })
 }
 
 function getFormWidth() {
