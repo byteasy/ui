@@ -39,7 +39,7 @@
               </el-icon>
               {{ $t('table.importByExcel') }}
             </el-dropdown-item>
-            <el-dropdown-item
+            <el-dropdown-item @click="onExcelExportClick"
               v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')">
               <el-icon>
                 <IconLocalExcelExport/>
@@ -137,6 +137,7 @@ import {putValueIfValid} from "@/util/common.ts";
 import {useRoute} from "vue-router";
 import {useSessionStore} from "@/stores/session.ts";
 import TunaExcelImport from "@/components/TunaExcelImport.vue";
+import TunaExcelExport from "@/components/TunaExcelExport.vue";
 import {useModal} from "@/components/dialog/useModal.ts";
 
 const appSettingsStore = useAppSettingsStore()
@@ -158,10 +159,12 @@ const props = defineProps<{
   showLang?: string
   formComponent?: Component
   excelImportComponent?: Component
+  excelExportComponent?: Component
   formWidth?: string | number
   dialogModel?: boolean
   operationColumnWidth?: number
   titleColumnName?: string
+  queryParam?: any
 }>()
 
 const emit = defineEmits(['switchView'])
@@ -296,7 +299,7 @@ function onExcelImportClick() {
   const [lastRoute] = route.matched.slice(-1)
   const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
   open(
-    getExcelImportComponent(),
+    props.excelImportComponent || TunaExcelImport,
     {
       columns: props.tableColumns,
       url: props.baseUrl,
@@ -312,12 +315,24 @@ function onExcelImportClick() {
   )
 }
 
-function getExcelImportComponent() {
-  if (props.excelImportComponent) {
-    return props.excelImportComponent
-  } else {
-    return TunaExcelImport
-  }
+function onExcelExportClick() {
+  const [lastRoute] = route.matched.slice(-1)
+  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
+  open(
+    props.excelExportComponent || TunaExcelExport,
+    {
+      columns: props.tableColumns,
+      url: props.baseUrl,
+      queryParam: props.queryParam,
+    },
+    {
+      title: t('table.exportToExcel') + '>' + title,
+      width: getFormWidth(),
+      onClose: (data) => {
+        props.refresh()
+      }
+    }
+  )
 }
 
 defineExpose({

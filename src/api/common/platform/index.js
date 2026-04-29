@@ -25,11 +25,12 @@ export function doHttpPut(url, params, data) {
   })
 }
 
-export function doHttpPost(url, params, data) {
+export function doHttpPost(url, params, data, config = {}) {
   return request({
     url: getUrl(url, params),
     method: 'post',
     data: data,
+    ...config,
   })
 }
 

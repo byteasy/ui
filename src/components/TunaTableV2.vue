@@ -66,6 +66,7 @@
             :default-expand-all="props.defaultExpandAll"
             @header-dragend="onHeaderDrag"
             @switch-view="switchViewModel"
+            :query-param="queryParam"
           >
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
@@ -98,6 +99,7 @@
                                :default-expand-all="props.defaultExpandAll"
                                @header-dragend="onHeaderDrag"
                                @switch-view="switchViewModel"
+                               :query-param="queryParam"
           >
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
