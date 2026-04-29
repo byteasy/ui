@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
-import { useAppSettingsStore } from '@/stores/appSettings.js'
+import {ElMessage} from 'element-plus'
+import {useAppSettingsStore} from '@/stores/appSettings.js'
 
 axios.defaults.withCredentials = true
 
@@ -52,7 +52,13 @@ service.interceptors.response.use(
       })
       return Promise.reject(res)
     } else {
-      return response.data
+      // 判断如果是Excel导出文件类操作，把整个response返给调用函数
+      const disposition = response.headers['content-disposition']
+      if(disposition !== undefined && disposition.includes('attachment')) {
+        return response
+      } else {
+        return response.data
+      }
     }
   },
   (error) => {
