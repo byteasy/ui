@@ -160,7 +160,7 @@ const emit = defineEmits(['rowClick'])
 const tableColumns = ref([])
 const tableData = ref({total: '0'})
 const loading = ref(false)
-const viewModel = ref('table')
+const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
 const queryParam = ref({current: 1, size: 20, descColumns: []})
 const refTunaTableView = ref(null)
 
@@ -170,6 +170,7 @@ function switchViewModel() {
   } else {
     viewModel.value = 'table'
   }
+  appSettingsStore.putValue(props.className + '.viewModel', viewModel.value)
 }
 
 const mergeQueryParams = () => {

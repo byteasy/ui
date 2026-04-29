@@ -155,7 +155,7 @@ const props = defineProps<{
   context: string
   refresh: () => void
   loadTableColumns: () => void
-  data: Array<any>
+  data: Array<any> | undefined
   showLang?: string
   formComponent?: Component
   excelImportComponent?: Component
