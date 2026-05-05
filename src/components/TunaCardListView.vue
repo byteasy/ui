@@ -19,12 +19,12 @@
               </el-icon>
               {{ $t('table.customColumn') }}
             </el-dropdown-item>
-<!--            <el-dropdown-item>-->
-<!--              <el-icon>-->
-<!--                <DCaret/>-->
-<!--              </el-icon>-->
-<!--              {{ $t('table.customSort') }}-->
-<!--            </el-dropdown-item>-->
+            <!--            <el-dropdown-item>-->
+            <!--              <el-icon>-->
+            <!--                <DCaret/>-->
+            <!--              </el-icon>-->
+            <!--              {{ $t('table.customSort') }}-->
+            <!--            </el-dropdown-item>-->
             <el-dropdown-item divided @click="downLoadExcelTemplate"
                               v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
               <el-icon>
@@ -40,7 +40,7 @@
               {{ $t('table.importByExcel') }}
             </el-dropdown-item>
             <el-dropdown-item @click="onExcelExportClick"
-              v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')">
+                              v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')">
               <el-icon>
                 <IconLocalExcelExport/>
               </el-icon>
@@ -52,7 +52,7 @@
     </div>
 
     <!-- 卡片网格 -->
-    <div class="card-grid">
+    <div class="card-grid" v-if="props.data?.length && props.data.length > 0">
       <div
         class="card-item"
         v-for="entity in props.data"
@@ -93,11 +93,14 @@
           </template>
           <template #title>
             <div class="mt-3">
-              <el-link type="primary" @click="onView(entity)" class="ml-3">
-                <el-text size="large" class="">
-                  <tuna-i18n-value :model-value="entity[props.titleColumnName || 'name' ]"></tuna-i18n-value>
-                </el-text>
-              </el-link>
+              <slot name="table-column-title" :row="entity">
+                <el-link type="primary" @click="onView(entity)" class="ml-3">
+                  <el-text size="large" class="my-font-bold">
+                    <tuna-i18n-value
+                      :model-value="entity[props.titleColumnName || 'name' ]"></tuna-i18n-value>
+                  </el-text>
+                </el-link>
+              </slot>
             </div>
           </template>
           <template v-for="col in props.tableColumns" :key="col.name">
@@ -120,6 +123,9 @@
           </template>
         </el-descriptions>
       </div>
+    </div>
+    <div class="w-full flex-row justify-content-right" v-else>
+      <el-empty class="w-full"/>
     </div>
   </div>
 </template>
@@ -371,16 +377,19 @@ defineExpose({
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
 @media (max-width: 2000px) {
   .card-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
 @media (max-width: 1500px) {
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (max-width: 900px) {
   .card-grid {
     grid-template-columns: repeat(1, 1fr);
