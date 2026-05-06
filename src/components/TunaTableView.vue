@@ -166,7 +166,7 @@ const props = defineProps<{
   excelImportComponent?: Component
   excelExportComponent?: Component
   formWidth?: string | number
-  dialogModel?: boolean
+  dialogModel?: any
   operationColumnWidth?: number
   queryParam?: any
 }>()

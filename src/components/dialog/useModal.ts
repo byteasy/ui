@@ -54,6 +54,7 @@ export const useModal = () => {
       visible: true,
       ...defaultOptions, // 先应用默认值
       ...options,
+      dialogModel: options?.dialogModel ?? defaultOptions.dialogModel
     })
     console.log(state.items)
 

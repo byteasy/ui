@@ -148,7 +148,7 @@ const props = defineProps<{
   rowDbClick?: (row: any) => void
   excelImportEnable?: boolean
   excelImportComponent?: Component
-  dialogModel?: boolean
+  dialogModel?: any
   rowKey?: string
   defaultExpandAll?: boolean
   treeProps?: object
