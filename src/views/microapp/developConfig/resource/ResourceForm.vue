@@ -79,6 +79,7 @@
     </template>
     <template v-slot:formItemField_routerUrl="scope">
       <tuna-form-field
+        v-model="scope.row.routerUrl"
         :column="scope.column"
         :context="scope.props.context"
         :placeholder="getLangText(scope.column.displayName, locale)"
