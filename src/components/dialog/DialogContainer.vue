@@ -46,13 +46,36 @@
           v-else
           v-model="item.visible"
           :title="item.title"
-          :size="item.width"
+          :size="getDrawlerWidth(item)"
+          :show-close="false"
           :resizable="item.draggable"
           :close-on-click-modal="item.closeOnClickModal"
           body-class="my-bg-color-blank"
           @close="handleClose(item.id)"
           :direction="item.direction"
         >
+          <template #header="{ close }">
+            <div class="flex-row w-full">
+              <div class="flex-grow">
+                <el-icon class="my-icon-color-primary cursor-pointer">
+                  <Document/>
+                </el-icon>
+                <el-text style="font-size: var(--el-font-size-large)" class="ml-2 font-bold">
+                  {{ item.title }}
+                </el-text>
+              </div>
+              <div class="flex-none">
+                <el-icon class="my-icon-color-primary cursor-pointer"
+                         @click="setDrawerFullscreen(item)">
+                  <FullScreen/>
+                </el-icon>
+                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
+                         style="">
+                  <Close/>
+                </el-icon>
+              </div>
+            </div>
+          </template>
           <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true" @close="(data) => handleClose(item.id, data)"/>
         </el-drawer>
       </div>
@@ -65,19 +88,17 @@ import {useModal} from './useModal.ts'
 import {computed, ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
-import {elementLocales} from '@/locales/common.ts'
+import {elementLocales, getLangText} from '@/locales/common.ts'
 
 const appSettingsStore = useAppSettingsStore()
 const componentRef = ref(null)
+const drawerWidthMap = ref({})
 
 const {componentSize, lang} = storeToRefs(appSettingsStore)
 
 const locale = computed(() => elementLocales[lang.value])
 
 const {modals, close} = useModal()
-
-// 添加调试
-console.log('DialogContainer 渲染，弹窗数量：', modals.length)
 
 const handleClose = (id: symbol, data?: unknown) => {
   console.log('关闭弹窗：', id, data)
@@ -91,5 +112,17 @@ function onFullscreenClick(item) {
     item.fullscreen = true
   }
   item.props.fullscreen = item.fullscreen
+}
+
+const getDrawlerWidth = (item: any) => {
+  return drawerWidthMap.value[item.id] || item.width || '50%'
+}
+
+const setDrawerFullscreen = (item) => {
+  if(drawerWidthMap.value[item.id]) {
+    drawerWidthMap.value[item.id] = undefined
+  } else {
+    drawerWidthMap.value[item.id] = '98%'
+  }
 }
 </script>
