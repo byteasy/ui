@@ -29,11 +29,13 @@
     v-else-if="props.column.type === 'LOCAL_DATE'"
     type="date"
     value-format="YYYY-MM-DD"
+    class="w-full"
   />
   <el-date-picker
     v-else-if="props.column.type === 'LOCAL_DATE_TIME'"
     type="datetime"
     value-format="YYYY-MM-DD HH:mm:ss"
+    class="w-full"
   />
   <enum-select :code="props.column.typeClassName" :context="props.context"
                v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword

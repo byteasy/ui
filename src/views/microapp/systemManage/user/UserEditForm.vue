@@ -2,7 +2,7 @@
   <tuna-table-form ref="refForm">
     <template v-slot:formItemField_username="scope">
       <el-input v-model="scope.row.username" :disabled="scope.row.id !== undefined"
-                style="width: 300px" type="text"/>
+                type="text"/>
     </template>
   </tuna-table-form>
 </template>

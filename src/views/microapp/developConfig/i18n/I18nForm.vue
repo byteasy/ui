@@ -1,9 +1,7 @@
 <template>
   <tuna-table-form ref="refForm">
     <template v-slot:formItemField_groupId="scope">
-      <div style="width: 300px">
-        <resource-category-group-tree-select v-model="scope.row.groupId" />
-      </div>
+      <resource-category-group-tree-select v-model="scope.row.groupId" />
     </template>
   </tuna-table-form>
 </template>

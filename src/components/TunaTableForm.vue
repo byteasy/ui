@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full flex-column">
-    <el-scrollbar max-height="80vh" always class="w-full">
-      <el-form ref="refForm" label-width="auto" label-position="right" class="w-full"
+  <div class="form-container" :class="{ fullscreen: props.fullscreen }">
+    <div class="form-scroll-wrap">
+      <el-form ref="refForm" label-width="auto" label-position="right" class="form-root"
                :model="formValue">
-        <el-space wrap :direction="props.direction === undefined ? 'horizontal' : props.direction" class="w-full">
+        <div class="form-grid">
           <template v-for="col in tableColumns" :key="col.name">
             <slot :name="'formItem_' + col.name" :column="col" :props="props" :row="formValue">
               <el-form-item
@@ -11,24 +11,12 @@
                 v-if="col.isForm === 'YES'"
                 :prop="col.name"
                 :rules="[
-                {
-                  required: col.isRequire === 'YES',
-                  message: getLangText(col.displayName, locale) + ' ' + t('validate.required'),
-                },
-                {
-                  validator: (rule, value, callback) => {
-                    validateColumnRule(col, rule, value, locale, callback)
-                  },
-                  trigger: 'blur',
-                },
-              ]"
+                    { required: col.isRequire === 'YES', message: getLangText(col.displayName, locale) + ' ' + t('validate.required') },
+                    { validator: (rule, value, callback) => validateColumnRule(col, rule, value, locale, callback), trigger: 'blur' }
+                  ]"
               >
-                <slot
-                  :name="'formItemField_' + col.name"
-                  :row="formValue"
-                  :column="col"
-                  :props="props"
-                >
+                <slot :name="'formItemField_' + col.name" :row="formValue" :column="col"
+                      :props="props">
                   <tuna-form-field
                     :column="col"
                     :context="props.context"
@@ -36,33 +24,32 @@
                     clearable
                     :disabled="props.readonly"
                     v-model="formValue[col.name]"
-                    style="min-width: 300px"
                   />
                 </slot>
               </el-form-item>
             </slot>
           </template>
-          <slot name="formExtra" :props="props" :row="formValue">
-          </slot>
-        </el-space>
-      </el-form>
-    </el-scrollbar>
-    <el-divider/>
-    <div class="w-full flex-column">
-      <el-affix position="bottom" class="w-full">
-        <div class="flex-row w-full justify-content-center pb-2">
-          <slot name="footerButton" :props="props">
-            <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">{{
-                t('save')
-              }}
-            </el-button>
-            <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
-          </slot>
+
+          <slot name="formExtra" :props="props" :row="formValue"/>
         </div>
-      </el-affix>
+      </el-form>
+    </div>
+
+    <!-- 底部按钮固定 -->
+    <div class="form-footer">
+      <el-divider class="m-0"/>
+      <div class="footer-buttons">
+        <slot name="footerButton" :props="props">
+          <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">
+            {{ t('save') }}
+          </el-button>
+          <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
+        </slot>
+      </div>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import {defineEmits, defineExpose, onMounted, ref} from 'vue'
 import TunaFormField from '@/components/TunaFormField.vue'
@@ -70,11 +57,11 @@ import {useI18n} from 'vue-i18n'
 import {doHttpPost, getEntitySchema} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
 import {validateColumnRule} from '@/util/validateUtils.ts'
-import {putValueIfValid} from "@/util/common.ts";
-import {useAppSettingsStore} from "@/stores/appSettings.ts";
-import {getLangText} from "@/locales/common.ts";
+import {putValueIfValid} from '@/util/common.ts'
+import {useAppSettingsStore} from '@/stores/appSettings.ts'
+import {getLangText} from '@/locales/common.ts'
 
-const {t, locale} = useI18n() // 表单引用
+const {t, locale} = useI18n()
 const emit = defineEmits(['close'])
 const refForm = ref(null)
 const appSettingsStore = useAppSettingsStore()
@@ -87,15 +74,15 @@ const props = defineProps<{
   row?: any
   readonly?: boolean
   direction?: string
+  fullscreen?: boolean
 }>()
+
 const formValue = ref({...props.row})
 const tableColumns = ref(props.columns ?? [])
 const queryParam = ref({})
 
 onMounted(() => {
-  if(props.columns === undefined) {
-    loadTableColumns()
-  }
+  if (!props.columns) loadTableColumns()
 })
 
 function loadTableColumns() {
@@ -104,52 +91,46 @@ function loadTableColumns() {
       const arrs = sortColumnsByShowOrder(mergeLocalStorage(response.data))
       tableColumns.value = arrs
     })
-    .catch((error) => {
-      console.log(error)
-      ElMessage.error(t('table.loadingTableColumnsError'))
-    })
+    .catch(() => ElMessage.error(t('table.loadingTableColumnsError')))
 }
 
 function sortColumnsByShowOrder(columns) {
-  return columns.sort((a, b) => a.showOrder - b.showOrder)
+  return [...columns].sort((a, b) => a.showOrder - b.showOrder)
 }
 
-function mergeLocalStorage(data: Array<never>) {
-  const fieldsDefine = appSettingsStore.getStorageObject(props.className + '.fields')
-  if (fieldsDefine !== undefined) {
-    data.forEach((column) => {
-      if (fieldsDefine[column.name] !== undefined) {
-        const fieldCustomDefine = fieldsDefine[column.name]
-        putValueIfValid(column, 'width', fieldCustomDefine.width)
-        putValueIfValid(column, 'showOrder', fieldCustomDefine.showOrder)
-        putValueIfValid(column, 'isShow', fieldCustomDefine.isShow)
-        putValueIfValid(column, 'isSort', fieldCustomDefine.isSort)
-        putValueIfValid(column, 'isOverflow', fieldCustomDefine.isOverflow)
-        putValueIfValid(column, 'isSearch', fieldCustomDefine.isSearch)
-        putValueIfValid(column, 'align', fieldCustomDefine.align)
-      }
-    })
-  }
+function mergeLocalStorage(data) {
+  const fields = appSettingsStore.getStorageObject(props.className + '.fields')
+  if (!fields) return data
+
+  data.forEach(col => {
+    const custom = fields[col.name]
+    if (custom) {
+      putValueIfValid(col, 'width', custom.width)
+      putValueIfValid(col, 'showOrder', custom.showOrder)
+      putValueIfValid(col, 'isShow', custom.isShow)
+      putValueIfValid(col, 'isSort', custom.isSort)
+      putValueIfValid(col, 'isOverflow', custom.isOverflow)
+      putValueIfValid(col, 'isSearch', custom.isSearch)
+      putValueIfValid(col, 'align', custom.align)
+    }
+  })
   return data
 }
 
 function onSaveClick() {
-  refForm.value?.validate((valid: boolean) => {
-    if (valid) {
-      doHttpPost(props.url, queryParam.value, formValue.value)
-        .then(() => {
-          ElMessage.success(t('operationSuccess'))
-          emit('close')
-        })
-    }
+  refForm.value?.validate(valid => {
+    if (!valid) return
+    doHttpPost(props.url, queryParam.value, formValue.value)
+      .then(() => {
+        ElMessage.success(t('operationSuccess'))
+        emit('close')
+      })
   })
 }
 
-const validate = (): Promise<boolean> => {
-  return new Promise((resolve) => {
-    refForm.value?.validate((valid: boolean) => {
-      resolve(valid)
-    })
+const validate = () => {
+  return new Promise(resolve => {
+    refForm.value?.validate(valid => resolve(valid))
   })
 }
 
@@ -158,17 +139,115 @@ function onClearForm() {
   emit('close')
 }
 
-defineExpose({
-  props,
-  validate,
-  queryParam,
-  formValue,
-  onSaveClick,
-  onClearForm
-})
+defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
 </script>
 <style scoped>
-.tuna-form-height {
-  max-height: 80vh !important;
+/* 整体容器：高度100% 自适应 */
+.form-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 全屏模式内边距 */
+.form-container.fullscreen {
+  padding: 12px;
+}
+
+/* 滚动区域：自动填充高度 */
+.form-scroll-wrap {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 表单根容器 */
+.form-root {
+  width: 100%;
+  padding: 8px;
+}
+
+/* ===================================== */
+/* ✅ 核心：响应式网格布局（自动排列） */
+/* ===================================== */
+.form-grid {
+  display: grid;
+  gap: 16px 20px;
+  width: 100%;
+}
+
+/* ———————————————————————————————————— */
+/* 【普通弹窗模式】你原来的适配规则 */
+/* ———————————————————————————————————— */
+:not(.fullscreen) .form-grid {
+  /* 手机/超小屏幕：1列 */
+  @media (max-width: 820px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  /* 平板/小笔记本：2列 */
+  @media (min-width: 821px) and (max-width: 1499px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* 标准屏幕：3列 */
+  @media (min-width: 1500px) and (max-width: 2499px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* 2K：4列 */
+  @media (min-width: 2500px) and (max-width: 3839px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  /* 4K：5列 */
+  @media (min-width: 3840px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* ———————————————————————————————————— */
+/* 【✅ 全屏模式】自动 +1列 / 空间更大列更多 */
+/* ———————————————————————————————————— */
+.fullscreen .form-grid {
+  @media (max-width: 520px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  /* 小屏幕全屏：2列 */
+  @media (min-width: 521px) and (max-width: 820px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* 中屏全屏：3列 */
+  @media (min-width: 821px) and (max-width: 1499px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* 标准屏全屏：4列 */
+  @media (min-width: 1500px) and (max-width 2499px) {
+  grid-template-columns: repeat(4, 1fr);
+}
+  /* 2K全屏：5列 */
+  @media (min-width: 2500px) and (max-width: 3839px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  /* 4K全屏：6列 */
+  @media (min-width: 3840px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* 表单项自动充满网格，不挤压 */
+:deep(.el-form-item) {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.form-footer {
+  flex-shrink: 0;
+}
+
+.footer-buttons {
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 </style>

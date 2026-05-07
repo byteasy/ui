@@ -1,7 +1,7 @@
 <template>
   <tuna-table-form>
       <template v-slot:formItemField_parentId="scope">
-        <resource-category-tree-select v-model="scope.row.parentId" style="min-width: 300px" clearable
+        <resource-category-tree-select v-model="scope.row.parentId" clearable
                                        :disabled="scope.props.readonly"/>
       </template>
   </tuna-table-form>

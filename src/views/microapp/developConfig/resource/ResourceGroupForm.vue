@@ -1,7 +1,7 @@
 <template>
   <tuna-table-form>
     <template v-slot:formItemField_categoryId="scope">
-      <resource-category-tree-select v-model="scope.row.categoryId" style="min-width: 300px" clearable filterable :placeholder="getLangText(scope.column.displayName, locale)"
+      <resource-category-tree-select v-model="scope.row.categoryId" clearable filterable :placeholder="getLangText(scope.column.displayName, locale)"
                                      :disabled="scope.props.readonly"/>
     </template>
   </tuna-table-form>

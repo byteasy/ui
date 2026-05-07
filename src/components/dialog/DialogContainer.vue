@@ -21,25 +21,26 @@
             <div class="flex-row w-full">
               <div class="flex-grow">
                 <el-icon class="my-icon-color-primary cursor-pointer">
-                  <Document />
+                  <Document/>
                 </el-icon>
                 <el-text style="font-size: var(--el-font-size-large)" class="ml-2 font-bold">
                   {{ item.title }}
                 </el-text>
               </div>
               <div class="flex-none">
-                <el-icon class="my-icon-color-primary cursor-pointer" @click="onFullscreenClick(item)">
+                <el-icon class="my-icon-color-primary cursor-pointer"
+                         @click="onFullscreenClick(item)">
                   <FullScreen/>
                 </el-icon>
-                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()" style="">
+                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
+                         style="">
                   <Close/>
                 </el-icon>
               </div>
             </div>
           </template>
-          <div style="max-height: 90vh !important; max-width: 100vw !important; overflow: auto;">
-            <component :is="item.component" v-bind="item.props" @close="(data) => handleClose(item.id, data)" :style="{ height: item.fullscreen ? 'calc(90vh - 1.5rem) !important' : 'calc(50vh - 1.5rem) !important' }" class="p-3 my-bg-color-blank" />
-          </div>
+          <el-scrollbar always class="w-full" max-height="75vh">
+            <component :is="item.component" v-bind="item.props" @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank"/> </el-scrollbar>
         </el-dialog>
         <el-drawer
           v-else
@@ -52,7 +53,8 @@
           @close="handleClose(item.id)"
           :direction="item.direction"
         >
-          <component ref="componentRef" :is="item.component" v-bind="item.props" @close="(data) => handleClose(item.id, data)"/>
+          <component ref="componentRef" :is="item.component" v-bind="item.props"
+                     @close="(data) => handleClose(item.id, data)"/>
         </el-drawer>
       </div>
     </el-config-provider>
@@ -64,7 +66,7 @@ import {useModal} from './useModal.ts'
 import {computed, ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
-import { elementLocales } from '@/locales/common.ts'
+import {elementLocales} from '@/locales/common.ts'
 
 const appSettingsStore = useAppSettingsStore()
 const componentRef = ref(null)
