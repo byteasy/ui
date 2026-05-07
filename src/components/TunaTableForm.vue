@@ -36,6 +36,7 @@
     </div>
 
     <!-- 底部按钮固定 -->
+    <el-affix position="bottom" :offset="12" class="w-full">
     <div class="form-footer">
       <el-divider class="m-0"/>
       <div class="footer-buttons">
@@ -47,6 +48,7 @@
         </slot>
       </div>
     </div>
+    </el-affix>
   </div>
 </template>
 
@@ -260,7 +262,7 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
 }
 
 .footer-buttons {
-  padding: 12px 0;
+  padding-bottom: 12px;
   display: flex;
   justify-content: center;
   gap: 12px;

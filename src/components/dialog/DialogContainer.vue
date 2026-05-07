@@ -31,7 +31,7 @@
                 <el-icon class="my-icon-color-primary cursor-pointer"
                          @click="onFullscreenClick(item)">
                   <FullScreen v-if="item.fullscreen === false"/>
-                  <IconLocalExitFullscreen v-else />
+                  <IconLocalExitFullscreen v-else/>
                 </el-icon>
                 <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
                          style="">
@@ -71,7 +71,7 @@
                 <el-icon class="my-icon-color-primary cursor-pointer"
                          @click="onFullscreenClick(item)">
                   <FullScreen v-if="item.fullscreen === false"/>
-                  <IconLocalExitFullscreen v-else />
+                  <IconLocalExitFullscreen v-else/>
                 </el-icon>
                 <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
                          style="">
@@ -80,8 +80,10 @@
               </div>
             </div>
           </template>
-          <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true"
-                     @close="(data) => handleClose(item.id, data)"/>
+          <el-scrollbar always class="w-full" max-height="95vh">
+            <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true"
+                       @close="(data) => handleClose(item.id, data)"/>
+          </el-scrollbar>
         </el-drawer>
       </div>
     </el-config-provider>
@@ -105,7 +107,6 @@ const locale = computed(() => elementLocales[lang.value])
 const {modals, close} = useModal()
 
 const handleClose = (id: symbol, data?: unknown) => {
-  console.log('关闭弹窗：', id, data)
   close(id, data)
 }
 
