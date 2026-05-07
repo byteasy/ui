@@ -30,7 +30,8 @@
               <div class="flex-none">
                 <el-icon class="my-icon-color-primary cursor-pointer"
                          @click="onFullscreenClick(item)">
-                  <FullScreen/>
+                  <FullScreen v-if="item.fullscreen === false"/>
+                  <IconLocalExitFullscreen v-else />
                 </el-icon>
                 <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
                          style="">
@@ -69,7 +70,8 @@
               <div class="flex-none">
                 <el-icon class="my-icon-color-primary cursor-pointer"
                          @click="onFullscreenClick(item)">
-                  <FullScreen/>
+                  <FullScreen v-if="item.fullscreen === false"/>
+                  <IconLocalExitFullscreen v-else />
                 </el-icon>
                 <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
                          style="">
