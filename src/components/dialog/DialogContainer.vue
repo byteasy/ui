@@ -40,9 +40,9 @@
               </div>
             </div>
           </template>
-          <el-scrollbar always class="w-full" max-height="75vh">
+          <el-scrollbar always class="w-full" max-height="95vh">
             <component :is="item.component" v-bind="item.props"
-                       @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank"/>
+                       @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank" :height="calcDialogHeight(item)"/>
           </el-scrollbar>
         </el-dialog>
         <el-drawer
@@ -80,8 +80,8 @@
               </div>
             </div>
           </template>
-          <el-scrollbar always class="w-full" max-height="95vh">
-            <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true"
+          <el-scrollbar always class="w-full" :style="{ maxHeight: 'calc(100vh - 130px)' }">
+            <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true" :height="calcDrawlerHeight()"
                        @close="(data) => handleClose(item.id, data)"/>
           </el-scrollbar>
         </el-drawer>
@@ -121,5 +121,20 @@ function onFullscreenClick(item) {
 
 const getDrawlerWidth = (item: any) => {
   return (item.fullscreen ? '98%' : undefined) || item.width
+}
+
+const calcDrawlerHeight = () => {
+  const vh100 = window.innerHeight
+  return vh100 - 130
+}
+
+const calcDialogHeight = (item: any) => {
+  if (item.fullscreen === true) {
+    const vh100 = window.innerHeight
+    return vh100 - 80
+  } else {
+    const vh100 = Math.round(window.innerHeight / 3 * 2)
+    return vh100 - 80
+  }
 }
 </script>
