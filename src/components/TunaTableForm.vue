@@ -172,7 +172,7 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
 /* 表单根容器 */
 .form-root {
   width: 100%;
-  padding: 8px;
+  padding: 16px;
 }
 
 /* ===================================== */
