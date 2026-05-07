@@ -256,7 +256,7 @@ function getFormComponent() {
 }
 
 function getFormWidth() {
-  return props.formWidth !== undefined ? props.formWidth : '50%'
+  return props.formWidth !== undefined ? props.formWidth : undefined
 }
 
 function onColumnDefineClick() {

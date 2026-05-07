@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full h-full flex-column">
+  <div class="w-full flex-column">
     <el-scrollbar max-height="80vh" always class="w-full">
-      <el-form ref="refForm" label-width="auto" label-position="right" class="w-ful "
+      <el-form ref="refForm" label-width="auto" label-position="right" class="w-full"
                :model="formValue">
         <el-space wrap :direction="props.direction === undefined ? 'horizontal' : props.direction" class="w-full">
           <template v-for="col in tableColumns" :key="col.name">

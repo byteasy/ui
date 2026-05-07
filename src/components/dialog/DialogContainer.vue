@@ -21,7 +21,7 @@
             <div class="flex-row w-full">
               <div class="flex-grow">
                 <el-icon class="my-icon-color-primary cursor-pointer">
-                  <CopyDocument />
+                  <Document />
                 </el-icon>
                 <el-text style="font-size: var(--el-font-size-large)" class="ml-2 font-bold">
                   {{ item.title }}
