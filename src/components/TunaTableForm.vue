@@ -1,5 +1,5 @@
 <template>
-  <div class="form-container" :class="{ fullscreen: props.fullscreen }">
+  <div class="form-container" :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }" style="container-type: inline-size;">
     <div class="form-scroll-wrap">
       <el-form ref="refForm" label-width="auto" label-position="right" class="form-root"
                :model="formValue">
@@ -75,6 +75,7 @@ const props = defineProps<{
   readonly?: boolean
   direction?: string
   fullscreen?: boolean
+  isDrawer?: boolean
 }>()
 
 const formValue = ref({...props.row})
@@ -141,6 +142,7 @@ function onClearForm() {
 
 defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
 </script>
+
 <style scoped>
 /* 整体容器：高度100% 自适应 */
 .form-container {
@@ -149,6 +151,7 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  container-type: inline-size; /* ✅ 容器查询必须写在这里才生效 */
 }
 
 /* 全屏模式内边距 */
@@ -171,7 +174,7 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
 }
 
 /* ===================================== */
-/* ✅ 核心：响应式网格布局（自动排列） */
+/* 基础网格 */
 /* ===================================== */
 .form-grid {
   display: grid;
@@ -179,58 +182,70 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
   width: 100%;
 }
 
-/* ———————————————————————————————————— */
-/* 【普通弹窗模式】你原来的适配规则 */
-/* ———————————————————————————————————— */
-:not(.fullscreen) .form-grid {
-  /* 手机/超小屏幕：1列 */
-  @media (max-width: 820px) {
-    grid-template-columns: repeat(1, 1fr);
+/* ===================================== */
+/* 【弹窗模式】普通/全屏 → 按屏幕宽度 */
+/* ===================================== */
+.form-container:not(.drawer-mode) .form-grid {
+  /* 普通弹窗 */
+  .form-container:not(.fullscreen) & {
+    @media (max-width: 820px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    @media (min-width: 821px) and (max-width: 1499px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 1500px) and (max-width: 2499px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 2500px) and (max-width: 3839px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (min-width: 3840px) {
+      grid-template-columns: repeat(5, 1fr);
+    }
   }
-  /* 平板/小笔记本：2列 */
-  @media (min-width: 821px) and (max-width: 1499px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  /* 标准屏幕：3列 */
-  @media (min-width: 1500px) and (max-width: 2499px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  /* 2K：4列 */
-  @media (min-width: 2500px) and (max-width: 3839px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  /* 4K：5列 */
-  @media (min-width: 3840px) {
-    grid-template-columns: repeat(5, 1fr);
+
+  /* 弹窗全屏 */
+  .form-container.fullscreen & {
+    @media (max-width: 520px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    @media (min-width: 521px) and (max-width: 820px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 821px) and (max-width: 1499px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 1500px) and (max-width: 2499px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (min-width: 2500px) and (max-width: 3839px) {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    @media (min-width: 3840px) {
+      grid-template-columns: repeat(6, 1fr);
+    }
   }
 }
 
-/* ———————————————————————————————————— */
-/* 【✅ 全屏模式】自动 +1列 / 空间更大列更多 */
-/* ———————————————————————————————————— */
-.fullscreen .form-grid {
-  @media (max-width: 520px) {
-    grid-template-columns: repeat(1, 1fr);
+/* ===================================== */
+/* ✅ 【抽屉模式】按自身宽度响应（100%生效） */
+/* ===================================== */
+.form-container.drawer-mode .form-grid {
+  @container (max-width: 520px) {
+    grid-template-columns: repeat(1, 1fr) !important;
   }
-  /* 小屏幕全屏：2列 */
-  @media (min-width: 521px) and (max-width: 820px) {
-    grid-template-columns: repeat(2, 1fr);
+  @container (min-width: 521px) and (max-width: 820px) {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
-  /* 中屏全屏：3列 */
-  @media (min-width: 821px) and (max-width: 1499px) {
-    grid-template-columns: repeat(3, 1fr);
+  @container (min-width: 821px) and (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr) !important;
   }
-  /* 标准屏全屏：4列 */
-  @media (min-width: 1500px) and (max-width 2499px) {
-  grid-template-columns: repeat(4, 1fr);
-}
-  /* 2K全屏：5列 */
-  @media (min-width: 2500px) and (max-width: 3839px) {
-    grid-template-columns: repeat(5, 1fr);
+  @container (min-width: 1201px) and (max-width: 1800px) {
+    grid-template-columns: repeat(4, 1fr) !important;
   }
-  /* 4K全屏：6列 */
-  @media (min-width: 3840px) {
-    grid-template-columns: repeat(6, 1fr);
+  @container (min-width: 1801px) {
+    grid-template-columns: repeat(5, 1fr) !important;
   }
 }
 

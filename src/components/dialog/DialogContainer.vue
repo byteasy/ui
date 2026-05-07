@@ -53,8 +53,7 @@
           @close="handleClose(item.id)"
           :direction="item.direction"
         >
-          <component ref="componentRef" :is="item.component" v-bind="item.props"
-                     @close="(data) => handleClose(item.id, data)"/>
+          <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true" @close="(data) => handleClose(item.id, data)"/>
         </el-drawer>
       </div>
     </el-config-provider>
