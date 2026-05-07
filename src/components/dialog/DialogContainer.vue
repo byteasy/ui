@@ -40,7 +40,9 @@
             </div>
           </template>
           <el-scrollbar always class="w-full" max-height="75vh">
-            <component :is="item.component" v-bind="item.props" @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank"/> </el-scrollbar>
+            <component :is="item.component" v-bind="item.props"
+                       @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank"/>
+          </el-scrollbar>
         </el-dialog>
         <el-drawer
           v-else
@@ -66,7 +68,7 @@
               </div>
               <div class="flex-none">
                 <el-icon class="my-icon-color-primary cursor-pointer"
-                         @click="setDrawerFullscreen(item)">
+                         @click="onFullscreenClick(item)">
                   <FullScreen/>
                 </el-icon>
                 <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
@@ -76,7 +78,8 @@
               </div>
             </div>
           </template>
-          <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true" @close="(data) => handleClose(item.id, data)"/>
+          <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true"
+                     @close="(data) => handleClose(item.id, data)"/>
         </el-drawer>
       </div>
     </el-config-provider>
@@ -88,11 +91,10 @@ import {useModal} from './useModal.ts'
 import {computed, ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
-import {elementLocales, getLangText} from '@/locales/common.ts'
+import {elementLocales} from '@/locales/common.ts'
 
 const appSettingsStore = useAppSettingsStore()
 const componentRef = ref(null)
-const drawerWidthMap = ref({})
 
 const {componentSize, lang} = storeToRefs(appSettingsStore)
 
@@ -115,14 +117,6 @@ function onFullscreenClick(item) {
 }
 
 const getDrawlerWidth = (item: any) => {
-  return drawerWidthMap.value[item.id] || item.width || '50%'
-}
-
-const setDrawerFullscreen = (item) => {
-  if(drawerWidthMap.value[item.id]) {
-    drawerWidthMap.value[item.id] = undefined
-  } else {
-    drawerWidthMap.value[item.id] = '98%'
-  }
+  return (item.fullscreen ? '98%' : undefined) || item.width
 }
 </script>
