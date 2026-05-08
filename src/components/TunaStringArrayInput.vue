@@ -19,7 +19,7 @@
         @click="handleDelete(index)"
         circle
         size="small"
-        class="flex-none ml-2"
+        class="flex-none ml-1"
       />
 
       <el-button
@@ -29,7 +29,7 @@
         circle
         :disabled="loading"
         @click="handleAdd"
-        class="flex-none"
+        class="flex-none ml-1"
       />
     </div>
   </div>
@@ -73,13 +73,7 @@ function handleDelete(index: number) {
 .dynamic-array-input {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   align-items: flex-start;
-}
-
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: 2px;
 }
 </style>

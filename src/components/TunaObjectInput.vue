@@ -11,7 +11,7 @@
         @click="handleDelete(index)"
         circle
         size="small"
-        class="flex-none ml-2"
+        class="flex-none ml-1"
       />
 
       <el-button
@@ -21,7 +21,7 @@
         circle
         :disabled="loading"
         @click="handleAdd"
-        class="flex-none"
+        class="flex-none ml-1"
       />
     </div>
   </div>
