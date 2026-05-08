@@ -81,10 +81,10 @@
       />
     </template>
     <template v-slot:formItemField_groupId="scope">
-      <resource-category-group-tree-select v-model="scope.row.groupId" @change="loadParentTree"/>
+      <resource-category-group-tree-select v-model="scope.row.groupId" @change="loadParentTree" :disabled="scope.props.readonly"/>
     </template>
     <template v-slot:formItemField_parentId="scope">
-        <resource-tree-select v-model="scope.row.parentId" ref="refParentTree"/>
+        <resource-tree-select v-model="scope.row.parentId" ref="refParentTree" :disabled="scope.props.readonly"/>
     </template>
     <template v-slot:formExtra="scope">
       <el-form-item :label="$t('platform.resource.standardPermission')" v-if="scope.row.type === 'BUTTON'">
