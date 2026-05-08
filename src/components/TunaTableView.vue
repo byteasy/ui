@@ -18,6 +18,14 @@
             <slot :name="'table-cell-' + col.name" :row="scope.row">
               <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
                                :lang="props.showLang"/>
+              <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
+                <template #active-action>
+                  <span>T</span>
+                </template>
+                <template #inactive-action>
+                  <span>F</span>
+                </template>
+              </el-switch>
               <span v-else>{{ scope.row[col.name] }}</span>
             </slot>
           </template>

@@ -19,6 +19,14 @@
     :min="props.column.min"
     :max="props.column.max"
   />
+  <el-switch v-else-if="props.column.type === 'BOOL'">
+    <template #active-action>
+      <span>T</span>
+    </template>
+    <template #inactive-action>
+      <span>F</span>
+    </template>
+  </el-switch>
   <el-input
     v-else-if="props.column.type === 'FLOAT' || props.column.type === 'DOUBLE'"
     :precision="props.column.precision" :min="props.column.min"

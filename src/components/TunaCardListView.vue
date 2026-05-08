@@ -111,6 +111,14 @@
               <slot :name="'table-cell-' + col.name" :row="entity">
                 <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="entity[col.name]"
                                  :lang="props.showLang"/>
+                <el-switch v-model="entity[col.name]" v-else-if="col.type === 'BOOL'" disabled>
+                  <template #active-action>
+                    <span>T</span>
+                  </template>
+                  <template #inactive-action>
+                    <span>F</span>
+                  </template>
+                </el-switch>
                 <enum-viewer
                   v-else-if="col.type === 'ENUM'"
                   :prop="entity[col.name]"
