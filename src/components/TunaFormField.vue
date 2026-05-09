@@ -49,7 +49,7 @@
                v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
                :multiple="props.column.multiple === 'YES'"
   />
-  <tuna-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" :context="props.context" />
+  <tuna-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" :context="props.context" v-bind="$attrs" />
 </template>
 
 <script lang="ts" setup>
