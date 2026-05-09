@@ -13,6 +13,7 @@
           v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
           :min-width="col.width === 0 ? undefined : col.width"
           :show-overflow-tooltip="col.isOverflow === 'YES'"
+          :sortable="col.isSort === 'YES'"
         >
           <template #default="scope">
             <slot :name="'table-cell-' + col.name" :row="scope.row">
@@ -146,7 +147,7 @@ import {useAppSettingsStore} from "@/stores/appSettings.ts";
 import {doHttpDelete} from "@/api/common/platform";
 import {ElMessage} from "element-plus";
 import TunaTableForm from "@/components/TunaTableForm.vue";
-import {type Component, defineEmits, defineExpose} from "vue";
+import {type Component, defineEmits, defineExpose, ref} from "vue";
 import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
 import {putValueIfValid} from "@/util/common.ts";
 import {useRoute} from "vue-router";

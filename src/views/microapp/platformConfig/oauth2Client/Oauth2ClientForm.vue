@@ -31,6 +31,10 @@
     <template v-slot:formItemField_scopes="scope">
       <tuna-string-array-input v-model="scope.row.scopes" />
     </template>
+    <template v-slot:formItemField_clientSecret="scope">
+      <el-input type="text" v-model="scope.row.clientSecret" :disabled="scope.props.readonly" v-if="!scope.row.id" :placeholder="getLangText(scope.column.displayName, locale)"/>
+      <div v-else>****</div>
+    </template>
     <template v-slot:form-json-tokenEndpointAuthenticationSigningAlgorithm="tokenEndpointAuthenticationSigningAlgorithmScope">
       <el-select v-model="tokenEndpointAuthenticationSigningAlgorithmScope.row.tokenEndpointAuthenticationSigningAlgorithm">
         <!-- MacAlgorithm -->
@@ -54,6 +58,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
 import {useI18n} from "vue-i18n";
+import {getLangText} from "@/locales/common.ts";
 
 const {t, locale} = useI18n()
 
