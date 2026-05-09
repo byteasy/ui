@@ -2,7 +2,7 @@
   <div class="dynamic-object-input">
     <div v-for="(item, index) in localList" :key="index" class="flex-row">
       <el-input v-model="item.key" @input="syncToParent"/>
-      <span style="margin:0 8px">=</span>
+      <span style="margin:0 4px">=</span>
       <el-input v-model="item.value" @input="syncToParent"/>
       <el-button
         type="danger"
