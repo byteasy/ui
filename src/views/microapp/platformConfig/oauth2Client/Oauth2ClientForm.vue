@@ -12,7 +12,7 @@
       </el-select>
     </template>
     <template v-slot:formItemField_authorizationGrantTypes="scope">
-      <el-select v-model="scope.row.authorizationGrantTypes" multiple :disabled="scope.props.readonly">
+      <el-select v-model="scope.row.authorizationGrantTypes" multiple :disabled="scope.props.readonly" >
         <el-option label="AUTHORIZATION_CODE" value="authorization_code"/>
         <el-option label="REFRESH_TOKEN" value="refresh_token"/>
         <el-option label="CLIENT_CREDENTIALS" value="client_credentials"/>
@@ -23,13 +23,13 @@
       </el-select>
     </template>
     <template v-slot:formItemField_redirectUris="scope">
-      <tuna-string-array-input v-model="scope.row.redirectUris" />
+      <tuna-string-array-input v-model="scope.row.redirectUris" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
     </template>
     <template v-slot:formItemField_postLogoutRedirectUris="scope">
-      <tuna-string-array-input v-model="scope.row.postLogoutRedirectUris" />
+      <tuna-string-array-input v-model="scope.row.postLogoutRedirectUris" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
     </template>
     <template v-slot:formItemField_scopes="scope">
-      <tuna-string-array-input v-model="scope.row.scopes" />
+      <tuna-string-array-input v-model="scope.row.scopes" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
     </template>
     <template v-slot:formItemField_clientSecret="scope">
       <el-input type="text" v-model="scope.row.clientSecret" :disabled="scope.props.readonly" v-if="!scope.row.id" :placeholder="getLangText(scope.column.displayName, locale)"/>

@@ -7,10 +7,10 @@
     >
       <el-input
         v-model="localList[index]"
-        placeholder="请输入内容"
         :disabled="loading"
         class="flex-grow"
         @blur="syncParent"
+        v-bind="$attrs"
       />
 
       <el-button
