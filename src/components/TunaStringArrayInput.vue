@@ -1,15 +1,16 @@
 <template>
   <div class="dynamic-array-input w-full h-full">
     <div
-      v-for="(item, index) in safeList"
+      v-for="(item, index) in localList"
       :key="index"
-      class="flex-row justify-content-start align-items-center w-full"
+      class="flex-row justify-content-start align-items-center w-full mb-1"
     >
       <el-input
-        v-model="safeList[index]"
+        v-model="localList[index]"
         placeholder="请输入内容"
         :disabled="loading"
         class="flex-grow"
+        @blur="syncParent"
       />
 
       <el-button
@@ -36,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref} from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps<{
   modelValue?: string[] | null
@@ -48,24 +49,34 @@ const emit = defineEmits<{
 
 const loading = ref(false)
 
-// 安全处理 + 空值时默认显示一个输入框
-const safeList = computed(() => {
-  const list = props.modelValue || []
-  // 数组为空时，默认返回 [ '' ]，自动显示一个输入框
-  return list.length === 0 ? [''] : list
-})
+// 本地列表（只在组件内自由修改，不触发递归）
+const localList = ref<string[]>([])
+
+// 父组件 → 子组件（只同步一次初始值 + 外部强制更新）
+watch(
+  () => props.modelValue,
+  (val) => {
+    const list = val ?? []
+    localList.value = list.length ? [...list] : ['']
+  },
+  { immediate: true }
+)
+
+// 子组件 → 父组件（手动 emit，不深度监听！避免递归）
+function syncParent() {
+  emit('update:modelValue', [...localList.value])
+}
 
 // 新增
 function handleAdd() {
-  const newArr = [...safeList.value, '']
-  emit('update:modelValue', newArr)
+  localList.value.push('')
+  syncParent()
 }
 
 // 删除
 function handleDelete(index: number) {
-  const newArr = [...safeList.value]
-  newArr.splice(index, 1)
-  emit('update:modelValue', newArr)
+  localList.value.splice(index, 1)
+  syncParent()
 }
 </script>
 
