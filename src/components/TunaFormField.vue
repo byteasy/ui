@@ -6,7 +6,7 @@
     type="text"
     :maxlength="props.column.maxLength"
     :minlength="props.column.minLength"
-    v-else-if="props.column.isI18n === 'NO' && props.column.type === 'STRING'"
+    v-else-if="(props.column.isI18n === 'NO' || !props.column.isI18n) && props.column.type === 'STRING'"
   />
   <el-input
     v-else-if="
@@ -49,7 +49,11 @@
                v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
                :multiple="props.column.multiple === 'YES'"
   />
-  <tuna-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" :context="props.context" v-bind="$attrs" />
+  <tuna-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" :context="props.context" v-bind="$attrs">
+    <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
+      <slot :name="name" v-bind="slotProps"></slot>
+    </template>
+  </tuna-bean-input>
 </template>
 
 <script lang="ts" setup>

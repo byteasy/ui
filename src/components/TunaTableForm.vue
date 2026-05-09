@@ -3,7 +3,7 @@
     <div class="form-scroll-wrap">
       <el-form ref="refForm" label-width="auto" label-position="right" class="form-root"
                :model="formValue">
-        <div class="form-grid">
+        <div class="form-grid w-full">
           <template v-for="col in tableColumns" :key="col.name">
             <slot :name="'formItem_' + col.name" :column="col" :props="props" :row="formValue">
               <el-form-item
@@ -24,7 +24,11 @@
                     clearable
                     :disabled="props.readonly"
                     v-model="formValue[col.name]"
-                  />
+                  >
+                    <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
+                      <slot :name="name" v-bind="slotProps"></slot>
+                    </template>
+                  </tuna-form-field>
                 </slot>
               </el-form-item>
             </slot>
@@ -180,8 +184,7 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
 /* ===================================== */
 .form-grid {
   display: grid;
-  gap: 16px 20px;
-  width: 100%;
+  gap: 0.5rem 0.5rem;
   align-items: flex-start;
 }
 
@@ -235,16 +238,16 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
 /* ✅ 【抽屉模式】按自身宽度响应（100%生效） */
 /* ===================================== */
 .form-container.drawer-mode .form-grid {
-  @container (max-width: 520px) {
+  @container (max-width: 620px) {
     grid-template-columns: repeat(1, 1fr) !important;
   }
-  @container (min-width: 521px) and (max-width: 820px) {
+  @container (min-width: 621px) and (max-width: 920px) {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-  @container (min-width: 821px) and (max-width: 1200px) {
+  @container (min-width: 921px) and (max-width: 1300px) {
     grid-template-columns: repeat(3, 1fr) !important;
   }
-  @container (min-width: 1201px) and (max-width: 1800px) {
+  @container (min-width: 1301px) and (max-width: 1800px) {
     grid-template-columns: repeat(4, 1fr) !important;
   }
   @container (min-width: 1801px) {
