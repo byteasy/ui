@@ -31,11 +31,23 @@
     <template v-slot:formItemField_scopes="scope">
       <tuna-string-array-input v-model="scope.row.scopes" />
     </template>
-    <template v-slot:formItemField_clientSettings="scope">
-      <tuna-object-input v-model="scope.row.clientSettings" />
-    </template>
-    <template v-slot:formItemField_tokenSettings="scope">
-      <tuna-object-input v-model="scope.row.tokenSettings" />
+    <template v-slot:form-json-tokenEndpointAuthenticationSigningAlgorithm="tokenEndpointAuthenticationSigningAlgorithmScope">
+      <el-select v-model="tokenEndpointAuthenticationSigningAlgorithmScope.row.tokenEndpointAuthenticationSigningAlgorithm">
+        <!-- MacAlgorithm -->
+        <el-option label="HS256" value="HS256" />
+        <el-option label="HS384" value="HS384" />
+        <el-option label="HS512" value="HS512" />
+        <!-- SignatureAlgorithm -->
+        <el-option label="RS256" value="RS256" />
+        <el-option label="RS384" value="RS384" />
+        <el-option label="RS512" value="RS512" />
+        <el-option label="ES256" value="ES256" />
+        <el-option label="ES384" value="ES384" />
+        <el-option label="ES512" value="ES512" />
+        <el-option label="PS256" value="PS256" />
+        <el-option label="PS384" value="PS384" />
+        <el-option label="PS512" value="PS512" />
+      </el-select>
     </template>
   </tuna-table-form>
 </template>
