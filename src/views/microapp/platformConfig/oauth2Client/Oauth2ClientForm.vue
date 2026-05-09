@@ -36,7 +36,7 @@
       <div v-else>****</div>
     </template>
     <template v-slot:form-json-tokenEndpointAuthenticationSigningAlgorithm="tokenEndpointAuthenticationSigningAlgorithmScope">
-      <el-select v-model="tokenEndpointAuthenticationSigningAlgorithmScope.row.tokenEndpointAuthenticationSigningAlgorithm">
+      <el-select v-model="tokenEndpointAuthenticationSigningAlgorithmScope.row.tokenEndpointAuthenticationSigningAlgorithm" :disabled="tokenEndpointAuthenticationSigningAlgorithmScope.props.disabled">
         <!-- MacAlgorithm -->
         <el-option label="HS256" value="HS256" />
         <el-option label="HS384" value="HS384" />
