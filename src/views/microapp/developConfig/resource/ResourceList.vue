@@ -12,7 +12,6 @@
         :form-component="ResourceForm"
         :row-key="'id'"
         :tree-props="{ children: 'childrenList' }"
-        :default-expand-all="true"
         class="pl-1"
         :row-db-click="row => {}"
         :pagination-visible="0"

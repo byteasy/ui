@@ -32,23 +32,19 @@ onMounted(() => {
   metaData.value.baseUrl = params.baseUrl
   metaData.value.context = params.context
   metaData.value.className = params.className
-  metaData.value.queryParams = JSON.parse(params.queryParams || "{}")
+  try {
+    metaData.value.queryParams = JSON.parse(decodeURIComponent(params.queryParams || ""))
+  } catch (err) {
+    console.log(err)
+  }
   metaData.value.excelEnable = params.excelEnable
   metaData.value.titleColumnName = params.titleColumnName
   metaData.value.operationColumnWidth = params.operationColumnWidth
   metaData.value.dialogModel = params.dialogModel
   metaData.value.paginationVisible = params.paginationVisible
   loading.value = false
+  // const obj = { descColumns: ['updatedTime','createdTime'] };
+  // const param = encodeURIComponent(JSON.stringify(obj));
+  // console.log('queryParams with descColumns', param)
 })
-
-function queryStringToObj(queryString) {
-  // 去掉开头的 ?
-  const str = queryString.startsWith('?') ? queryString.slice(1) : queryString;
-
-  return str.split('&').reduce((obj, item) => {
-    const [key, val] = item.split('=');
-    if (key) obj[key] = decodeURIComponent(val || '');
-    return obj;
-  }, {});
-}
 </script>
