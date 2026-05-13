@@ -1,0 +1,55 @@
+<template>
+  <tuna-table-v2
+    ref="refTable"
+    :base-url="metaData.baseUrl"
+    :context="metaData.context"
+    :class-name="metaData.className"
+    :query-params="metaData.queryParams"
+    :excel-import-enable="metaData.excelEnable || true"
+    :title-column-name="metaData.titleColumnName || 'name'"
+    :operation-column-width="metaData.operationColumnWidth"
+    :dialog-model="metaData.dialogModel"
+    :pagination-visible="metaData.paginationVisible"
+    v-loading="loading"
+  >
+  </tuna-table-v2>
+</template>
+
+<script lang="ts" setup>
+import {onMounted, ref} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useRoute} from "vue-router";
+
+const {t, locale} = useI18n()
+const refTable = ref(null)
+const metaData = ref({
+})
+const loading = ref(true)
+const route = useRoute()
+
+onMounted(() => {
+  const params = queryStringToObj(route.query)
+  metaData.value.baseUrl = params.baseUrl
+  metaData.value.context = params.context
+  metaData.value.className = params.className
+  metaData.value.queryParams = JSON.parse(params.queryParams || "{}")
+  metaData.value.excelEnable = params.excelEnable
+  metaData.value.titleColumnName = params.titleColumnName
+  metaData.value.operationColumnWidth = params.operationColumnWidth
+  metaData.value.dialogModel = params.dialogModel
+  metaData.value.paginationVisible = params.paginationVisible
+  console.log(metaData.value)
+  loading.value = false
+})
+
+function queryStringToObj(queryString) {
+  // 去掉开头的 ?
+  const str = queryString.startsWith('?') ? queryString.slice(1) : queryString;
+
+  return str.split('&').reduce((obj, item) => {
+    const [key, val] = item.split('=');
+    if (key) obj[key] = decodeURIComponent(val || '');
+    return obj;
+  }, {});
+}
+</script>

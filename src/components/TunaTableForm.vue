@@ -184,7 +184,7 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
 /* ===================================== */
 .form-grid {
   display: grid;
-  gap: 0.5rem 0.5rem;
+  gap: 1rem 1rem;
   align-items: flex-start;
 }
 
