@@ -66,7 +66,7 @@ function rebuildLeftMenus(node, menu) {
     ]
   }
   if (hasChildrenMenu(menu)) {
-    node.path = menu.routerUrl
+    node.path = filteredQueryParameter(menu.routerUrl)
     node.name = menu.code
     node.component = AsideMain
     node.redirect = menu.redirectUrl
@@ -78,7 +78,7 @@ function rebuildLeftMenus(node, menu) {
           child.childrenList.forEach((subChild) => {
             if (subChild.type === 'MENU') {
               node.children.push({
-                path: child.routerUrl + '/' + subChild.routerUrl,
+                path: filteredQueryParameter(child.routerUrl) + '/' + filteredQueryParameter(subChild.routerUrl),
                 name: subChild.code,
                 meta: {
                   title: subChild.name,
@@ -92,7 +92,7 @@ function rebuildLeftMenus(node, menu) {
           })
         } else {
           node.children.push({
-            path: child.routerUrl,
+            path: filteredQueryParameter(child.routerUrl),
             name: child.code,
             meta: {
               title: child.name,
