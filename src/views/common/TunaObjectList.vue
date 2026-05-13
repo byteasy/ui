@@ -10,9 +10,10 @@
     :operation-column-width="metaData.operationColumnWidth"
     :dialog-model="metaData.dialogModel"
     :pagination-visible="metaData.paginationVisible"
-    v-loading="loading"
+    v-if="loading === false"
   >
   </tuna-table-v2>
+  <el-skeleton :rows="5" animated v-else />
 </template>
 
 <script lang="ts" setup>
@@ -22,13 +23,12 @@ import {useRoute} from "vue-router";
 
 const {t, locale} = useI18n()
 const refTable = ref(null)
-const metaData = ref({
-})
+const metaData = ref({})
 const loading = ref(true)
 const route = useRoute()
 
 onMounted(() => {
-  const params = queryStringToObj(route.query)
+  const params = route.query
   metaData.value.baseUrl = params.baseUrl
   metaData.value.context = params.context
   metaData.value.className = params.className
@@ -38,7 +38,6 @@ onMounted(() => {
   metaData.value.operationColumnWidth = params.operationColumnWidth
   metaData.value.dialogModel = params.dialogModel
   metaData.value.paginationVisible = params.paginationVisible
-  console.log(metaData.value)
   loading.value = false
 })
 
