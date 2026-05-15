@@ -19,7 +19,9 @@ export default {
     },
     resource: {
       name: '菜单',
-      standardPermission: '标准权限'
+      standardPermission: '标准权限',
+      queryParams: 'URL参数',
+      standardTableComponent: '标准模板'
     }
   }
 } as const

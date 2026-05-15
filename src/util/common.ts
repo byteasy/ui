@@ -29,3 +29,15 @@ export const safeParseJson = (str: string | null | undefined): Record<string, st
     return {}
   }
 }
+
+export const jsonToQueryString = (obj) => {
+  const params = new URLSearchParams();
+  for (const key in obj) {
+    let value = obj[key];
+    if (typeof value === "object" && value !== null) {
+      value = JSON.stringify(value);
+    }
+    params.append(key, value);
+  }
+  return params.toString();
+}
