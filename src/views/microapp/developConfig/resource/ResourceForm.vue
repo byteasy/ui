@@ -143,10 +143,9 @@ function initStandComponent() {
   queryParams.value.baseUrl = ''
   queryParams.value.context = ''
   queryParams.value.className = ''
-  queryParams.value.queryParams = ''
   queryParams.value.titleColumnName = ''
   queryParams.value.excelEnable = true
-  queryParams.value.descColumns = "[\"updatedTime\", \"createdTime\"]"
+  queryParams.value.queryParams = "{\"descColumns\":[\"updatedTime\", \"createdTime\"]}"
   refForm.value.formValue.component = '/views/common/TunaObjectList.vue'
 }
 
