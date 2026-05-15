@@ -2,7 +2,7 @@
   <div class="el-card is-always-shadow">
     <el-menu
       class="el-menu-border m-1"
-      :router="true"
+      :router="false"
       :collapse="collapse"
       unique-opened
       ref="refMenu"
@@ -12,7 +12,9 @@
           <tuna-svg-icon :svg="root.icon"/>
           <tuna-i18n-value :model-value="root.name" class="my-font-size-md"/>
         </template>
-        <el-menu-item :index="getUrl(root.routerUrl)" v-if="root.type === 'MENU' && root.visible === 'YES'" :route="root.routerUrl">
+        <el-menu-item :index="getUrl(root.routerUrl)"
+                      v-if="root.type === 'MENU' && root.visible === 'YES'"
+                      @click="openResource(root.routerUrl, root)">
           <el-icon style="color: var(--my-menu-icon-color)"
           >
             <component :is="'IconLocalHome'"
@@ -22,17 +24,21 @@
         </el-menu-item>
 
         <template v-else v-for="subMenu in root.childrenList" :key="subMenu.code">
-          <el-sub-menu :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)" v-if="subMenu.hasOwnProperty('childrenList') && subMenu.childrenList !== null && subMenu.type === 'DIRECTORY' && subMenu.visible === 'YES'">
+          <el-sub-menu :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)"
+                       v-if="subMenu.hasOwnProperty('childrenList') && subMenu.childrenList !== null && subMenu.type === 'DIRECTORY' && subMenu.visible === 'YES'">
             <template #title>
               <tuna-i18n-value :model-value="subMenu.name" class="pl-3"/>
             </template>
             <template v-for="subsubMenu in subMenu.childrenList" :key="subsubMenu.code">
-              <el-menu-item :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl) + '/' + getUrl(subsubMenu.routerUrl)" :route="root.routerUrl + '/' + subMenu.routerUrl + '/' + subsubMenu.routerUrl">
+              <el-menu-item
+                :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl) + '/' + getUrl(subsubMenu.routerUrl)"
+                @click="openResource(root.routerUrl + '/' + subMenu.routerUrl + '/' + subsubMenu.routerUrl, subsubMenu)">
                 <tuna-i18n-value :model-value="subsubMenu.name" class="pl-3"/>
               </el-menu-item>
             </template>
           </el-sub-menu>
-          <el-menu-item :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)" :route="root.routerUrl + '/' + subMenu.routerUrl"
+          <el-menu-item :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)"
+                        @click="openResource(root.routerUrl + '/' + subMenu.routerUrl, subMenu)"
                         v-if="subMenu.type === 'MENU' && subMenu.visible === 'YES'">
             <tuna-i18n-value :model-value="subMenu.name" class="pl-3"/>
           </el-menu-item>
@@ -47,6 +53,7 @@ import {onMounted, ref, watch} from 'vue'
 import {useRoute} from 'vue-router'
 import {doHttpGet} from '@/api/common/platform'
 import TunaSvgIcon from '@/components/TunaSvgIcon.vue'
+import router from "@/router";
 
 const route = useRoute()
 const refMenu = ref()
@@ -82,6 +89,19 @@ function closeOrOpenMenu(size) {
     collapse.value = true
   } else {
     collapse.value = false
+  }
+}
+
+function openResource(fullPath, resource) {
+  if (resource.openTab === 'YES') {
+    if (resource.routerUrl.startsWith('http')) {
+      window.open(resource.routerUrl, '_blank');
+    } else {
+      const baseUrl = window.location.origin + window.location.pathname
+      window.open(baseUrl + '#' + resource.routerUrl, '_blank');
+    }
+  } else {
+    router.push(fullPath)
   }
 }
 
