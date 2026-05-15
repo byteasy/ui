@@ -22,11 +22,17 @@
             </div>
             <div class="el-card is-always-shadow p-2 mt-1 flex-grow" style="width: 100%">
               <div class="h-full">
-                <router-view v-slot="{ Component }">
+                <router-view v-slot="{ Component, route }">
                   <transition name="fade" mode="out-in">
-                    <keep-alive :include="tagsStore.cachedViews">
-                      <component :is="Component" :key="$route.path" v-if="permissionLoaded" />
+                    <!-- include 会受组件名称的限制，必须保持平台配置的路由信息和前端组件一致，否则缓存不生效，另外通用的模板组件的组件名称是一样的，多个业务板块会共用，所以没有办法用组件名做缓存 -->
+                    <keep-alive>
+                      <component :is="Component" :key="route.path"
+                                 v-if="permissionLoaded && !route.meta.noCache"/>
                     </keep-alive>
+                  </transition>
+                  <transition name="fade" mode="out-in">
+                    <component :is="Component" :key="route.path"
+                               v-if="permissionLoaded && route.meta.noCache === true"/>
                   </transition>
                 </router-view>
               </div>

@@ -153,6 +153,13 @@ export default {
     email: '邮箱格式不正确',
     noChinese: '不能含有中文字符'
   },
+  tagView: {
+    closeSelectedTag: '关闭当前',
+    closeLeftTags: '关闭左侧',
+    closeRightTags: '关闭右侧',
+    closeOthersTags: '关闭其他',
+    closeAllTags: '全部关闭',
+  },
   user: {
     basic: '基本资料',
     realName: '姓名',

@@ -1,6 +1,6 @@
 <template>
   <div class="tags-view-container">
-    <el-scrollbar>
+    <el-scrollbar ref="scrollbarRef">
       <div class="flex-row items-center h-full px-2">
         <el-tag
           v-for="tag in visitedViews"
@@ -9,7 +9,7 @@
           :type="isActive(tag) ?  'primary' : 'info'"
           :effect="isActive(tag) ? 'dark' : 'plain'"
           class="tag-item"
-          @click="router.push(tag.path!)"
+          @click="(e) => onTagClick(e, tag)"
           @close="closeSelectedTag(tag)"
           @contextmenu.prevent="openMenu(tag, $event)"
         >
@@ -20,11 +20,11 @@
 
     <!-- 右键菜单 -->
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <li @click="closeSelectedTag(selectedTag)">关闭当前</li>
-      <li @click="closeLeftTags">关闭左侧</li>
-      <li @click="closeRightTags">关闭右侧</li>
-      <li @click="closeOthersTags">关闭其他</li>
-      <li @click="closeAllTags">全部关闭</li>
+      <li @click="closeSelectedTag(selectedTag)">{{$t('tagView.closeSelectedTag')}}</li>
+      <li @click="closeLeftTags">{{$t('tagView.closeLeftTags')}}</li>
+      <li @click="closeRightTags">{{$t('tagView.closeRightTags')}}</li>
+      <li @click="closeOthersTags">{{$t('tagView.closeOthersTags')}}</li>
+      <li @click="closeAllTags">{{$t('tagView.closeAllTags')}}</li>
     </ul>
   </div>
 </template>
@@ -33,6 +33,7 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useTagsViewStore, type TagView } from '@/stores/tagsView'
+import type {ScrollbarInstance} from "element-plus";
 
 const route = useRoute()
 const router = useRouter()
@@ -41,6 +42,7 @@ const tagsStore = useTagsViewStore()
 const visible = ref(false)
 const top = ref(0)
 const left = ref(0)
+const scrollbarRef = ref<ScrollbarInstance>()
 const selectedTag = ref<TagView>({})
 
 const visitedViews = computed(() => tagsStore.visitedViews)
@@ -84,6 +86,13 @@ const closeOthersTags = () => tagsStore.delOthersViews(selectedTag.value)
 const closeAllTags = () => {
   tagsStore.delAllViews()
   router.push('/')
+}
+
+function onTagClick(e, tag) {
+  router.push(tag.fullPath!)
+  const tagEl = e.currentTarget;
+  const offsetLeft = tagEl.offsetLeft;
+  scrollbarRef.value.setScrollLeft(offsetLeft)
 }
 </script>
 
