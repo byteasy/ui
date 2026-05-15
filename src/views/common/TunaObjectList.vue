@@ -37,14 +37,12 @@ onMounted(() => {
   } catch (err) {
     console.log(err)
   }
-  metaData.value.excelEnable = params.excelEnable
+  metaData.value.excelEnable = params.excelEnable === 'true'
   metaData.value.titleColumnName = params.titleColumnName
   metaData.value.operationColumnWidth = params.operationColumnWidth
   metaData.value.dialogModel = params.dialogModel
   metaData.value.paginationVisible = params.paginationVisible
+  console.log(metaData.value)
   loading.value = false
-  // const obj = { descColumns: ['updatedTime','createdTime'] };
-  // const param = encodeURIComponent(JSON.stringify(obj));
-  // console.log('queryParams with descColumns', param)
 })
 </script>
