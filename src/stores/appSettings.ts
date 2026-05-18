@@ -36,6 +36,11 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
    */
   const drawerDirection = ref(safeGet('drawerDirection') !== null ? safeGet('drawerDirection') : 'rtl')
 
+  /**
+   * 是否开启前端组件缓存，默认开启
+   */
+  const componentCacheEnable = ref(safeGet('componentCacheEnable') !== null ? safeGet('componentCacheEnable') : '1')
+
   function setTheme(value: string) {
     theme.value = value
     safePut('theme', value)
@@ -69,6 +74,11 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   function setDrawerDirection(value: string) {
     drawerDirection.value = value
     safePut('drawerDirection', value)
+  }
+
+  function setComponentCacheEnable(value: string) {
+    componentCacheEnable.value = value
+    safePut('componentCacheEnable', value)
   }
 
   function getValue(key: string) {
@@ -111,5 +121,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     putValue,
     getStorageObject,
     putStorageObject,
+    componentCacheEnable,
+    setComponentCacheEnable
   }
 })
