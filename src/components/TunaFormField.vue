@@ -6,7 +6,7 @@
     type="text"
     :maxlength="props.column.maxLength"
     :minlength="props.column.minLength"
-    v-else-if="props.column.isI18n === 'NO' && props.column.type === 'STRING'"
+    v-else-if="(props.column.isI18n === 'NO' || !props.column.isI18n) && props.column.type === 'STRING'"
   />
   <el-input
     v-else-if="
@@ -19,6 +19,14 @@
     :min="props.column.min"
     :max="props.column.max"
   />
+  <el-switch v-else-if="props.column.type === 'BOOL'">
+    <template #active-action>
+      <span>T</span>
+    </template>
+    <template #inactive-action>
+      <span>F</span>
+    </template>
+  </el-switch>
   <el-input
     v-else-if="props.column.type === 'FLOAT' || props.column.type === 'DOUBLE'"
     :precision="props.column.precision" :min="props.column.min"
@@ -29,16 +37,23 @@
     v-else-if="props.column.type === 'LOCAL_DATE'"
     type="date"
     value-format="YYYY-MM-DD"
+    class="w-full"
   />
   <el-date-picker
     v-else-if="props.column.type === 'LOCAL_DATE_TIME'"
     type="datetime"
     value-format="YYYY-MM-DD HH:mm:ss"
+    class="w-full"
   />
   <enum-select :code="props.column.typeClassName" :context="props.context"
                v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
                :multiple="props.column.multiple === 'YES'"
   />
+  <tuna-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" :context="props.context" v-bind="$attrs">
+    <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
+      <slot :name="name" v-bind="slotProps"></slot>
+    </template>
+  </tuna-bean-input>
 </template>
 
 <script lang="ts" setup>

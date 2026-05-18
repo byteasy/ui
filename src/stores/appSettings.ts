@@ -1,6 +1,6 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-import { safeGet, safePut } from '@/stores/localStorage.ts'
+import {ref} from 'vue'
+import {defineStore} from 'pinia'
+import {safeGet, safePut} from '@/stores/localStorage.ts'
 
 export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
@@ -16,7 +16,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   /**
    * 显示语言
    */
-  const lang = ref(safeGet('lang') !== null ? safeGet('lang') : 'zh-CN')
+  const lang = ref(safeGet('lang') !== null ? safeGet('lang') : 'zh_CN')
   /**
    * 导航模式
    */
@@ -35,6 +35,11 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
    * 抽屉展示方向
    */
   const drawerDirection = ref(safeGet('drawerDirection') !== null ? safeGet('drawerDirection') : 'rtl')
+
+  /**
+   * 是否开启前端组件缓存，默认开启
+   */
+  const componentCacheEnable = ref(safeGet('componentCacheEnable') !== null ? safeGet('componentCacheEnable') : '1')
 
   function setTheme(value: string) {
     theme.value = value
@@ -69,6 +74,11 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
   function setDrawerDirection(value: string) {
     drawerDirection.value = value
     safePut('drawerDirection', value)
+  }
+
+  function setComponentCacheEnable(value: string) {
+    componentCacheEnable.value = value
+    safePut('componentCacheEnable', value)
   }
 
   function getValue(key: string) {
@@ -111,5 +121,7 @@ export const useAppSettingsStore = defineStore('appSettingsStore', () => {
     putValue,
     getStorageObject,
     putStorageObject,
+    componentCacheEnable,
+    setComponentCacheEnable
   }
 })

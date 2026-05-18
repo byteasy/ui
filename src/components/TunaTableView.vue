@@ -13,11 +13,20 @@
           v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
           :min-width="col.width === 0 ? undefined : col.width"
           :show-overflow-tooltip="col.isOverflow === 'YES'"
+          :sortable="col.isSort === 'YES'"
         >
           <template #default="scope">
             <slot :name="'table-cell-' + col.name" :row="scope.row">
               <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
                                :lang="props.showLang"/>
+              <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
+                <template #active-action>
+                  <span>T</span>
+                </template>
+                <template #inactive-action>
+                  <span>F</span>
+                </template>
+              </el-switch>
               <span v-else>{{ scope.row[col.name] }}</span>
             </slot>
           </template>
@@ -138,7 +147,7 @@ import {useAppSettingsStore} from "@/stores/appSettings.ts";
 import {doHttpDelete} from "@/api/common/platform";
 import {ElMessage} from "element-plus";
 import TunaTableForm from "@/components/TunaTableForm.vue";
-import {type Component, defineEmits, defineExpose} from "vue";
+import {type Component, defineEmits, defineExpose, ref} from "vue";
 import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
 import {putValueIfValid} from "@/util/common.ts";
 import {useRoute} from "vue-router";
@@ -166,7 +175,7 @@ const props = defineProps<{
   excelImportComponent?: Component
   excelExportComponent?: Component
   formWidth?: string | number
-  dialogModel?: boolean
+  dialogModel?: any
   operationColumnWidth?: number
   queryParam?: any
 }>()
@@ -243,10 +252,6 @@ function onDelete(row) {
       ElMessage.success(t('operationSuccess'))
       props.refresh()
     })
-    .catch((err) => {
-      console.log(err)
-      ElMessage.error(t('operationFailed'))
-    })
 }
 
 function getFormComponent() {
@@ -258,7 +263,7 @@ function getFormComponent() {
 }
 
 function getFormWidth() {
-  return props.formWidth !== undefined ? props.formWidth : '50%'
+  return props.formWidth !== undefined ? props.formWidth : undefined
 }
 
 function onColumnDefineClick() {
@@ -270,7 +275,7 @@ function onColumnDefineClick() {
     }, // 传给组件的 props
     {
       title: t('table.customColumn'),
-      width: getFormWidth(),
+      width: getFormWidth() || "50%",
       onClose: (data) => {
         // TODO
         // loadTableColumns()

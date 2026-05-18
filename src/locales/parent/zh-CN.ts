@@ -62,6 +62,9 @@ export default {
     closeOnClickModal: '表单关闭方式',
     closeOnClickModalEnable: '点击窗外关闭',
     closeOnClickModalDisabled: '点击窗外不关闭',
+    componentCacheEnable: '开启前端缓存',
+    componentCacheEnableOpen: '开启',
+    componentCacheEnableClose: '关闭',
   },
   passwordModify: {
     oldPasswordLabel: "原始密码",
@@ -152,6 +155,13 @@ export default {
     required: '必须填写',
     email: '邮箱格式不正确',
     noChinese: '不能含有中文字符'
+  },
+  tagView: {
+    closeSelectedTag: '关闭当前',
+    closeLeftTags: '关闭左侧',
+    closeRightTags: '关闭右侧',
+    closeOthersTags: '关闭其他',
+    closeAllTags: '全部关闭',
   },
   user: {
     basic: '基本资料',

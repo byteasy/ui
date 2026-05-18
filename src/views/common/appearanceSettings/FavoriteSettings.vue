@@ -4,10 +4,11 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
 const appSettingsStore = useAppSettingsStore()
-const { dialogModel, closeOnClickModal, drawerDirection } = storeToRefs(appSettingsStore)
+const { dialogModel, closeOnClickModal, drawerDirection, componentCacheEnable } = storeToRefs(appSettingsStore)
 const dialogModelValue = ref(dialogModel.value!)
 const closeOnClickModalValue = ref(closeOnClickModal.value!)
 const drawerDirectionValue = ref(drawerDirection.value!)
+const componentCacheEnableValue = ref(componentCacheEnable.value!)
 
 function updateDialogModel() {
   appSettingsStore.setDialogModel(dialogModelValue.value!)
@@ -19,6 +20,10 @@ function updateCloseOnClickModalValue() {
 
 function updateDrawerDirectionValue() {
   appSettingsStore.setDrawerDirection(drawerDirectionValue.value!)
+}
+
+function updateComponentCacheEnableValue() {
+  appSettingsStore.setComponentCacheEnable(componentCacheEnableValue.value!)
 }
 </script>
 
@@ -43,6 +48,12 @@ function updateDrawerDirectionValue() {
           <el-radio value="ltr">{{ $t('appearanceFavorite.drawerDirectionLtr') }}</el-radio>
           <el-radio value="ttb">{{ $t('appearanceFavorite.drawerDirectionTtb') }}</el-radio>
           <el-radio value="btt">{{ $t('appearanceFavorite.drawerDirectionBtt') }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item :label="$t('appearanceFavorite.componentCacheEnable')" prop="delivery">
+        <el-radio-group v-model="componentCacheEnableValue" @change="updateComponentCacheEnableValue">
+          <el-radio value="1">{{ $t('appearanceFavorite.componentCacheEnableOpen') }}</el-radio>
+          <el-radio value="0">{{ $t('appearanceFavorite.componentCacheEnableClose') }}</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>

@@ -11,6 +11,7 @@ import '@/assets/style/style.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import i18n from './locales'
 import { debounce } from './directive/debounce'
+import { focus } from './directive/focus'
 
 const app = createApp(App)
 
@@ -22,5 +23,6 @@ app.use(router)
 app.use(i18n)
 app.use(ElementPlus)
 app.directive('debounce', debounce)
+app.directive('focus', focus)
 
 app.mount('#app')

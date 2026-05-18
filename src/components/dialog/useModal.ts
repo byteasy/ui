@@ -54,10 +54,8 @@ export const useModal = () => {
       visible: true,
       ...defaultOptions, // 先应用默认值
       ...options,
+      dialogModel: options?.dialogModel ?? defaultOptions.dialogModel
     })
-    console.log(state.items)
-
-    console.log('弹窗已添加，当前数量：', state.items.length) // 调试用
     return id
   }
 
@@ -76,7 +74,6 @@ export const useModal = () => {
       if (currentIndex > -1) {
         modal.onClose?.(data)
         state.items.splice(currentIndex, 1)
-        console.log('弹窗已移除，当前数量：', state.items.length) // 调试用
       }
     }, 300)
   }

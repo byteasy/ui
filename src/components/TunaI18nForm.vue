@@ -114,10 +114,6 @@ const onSave18n = () => {
       ElMessage.success(t('operationSuccess'))
       emit('close')
     })
-    .catch((err) => {
-      console.log(err)
-      ElMessage.error(t('operationFailed'))
-    })
 }
 
 const langExist = (lang) => {

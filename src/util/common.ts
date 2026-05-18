@@ -20,3 +20,24 @@ export function putValueIfValid(target: object, key: string, value: any) {
   target[key] = value
   return true
 }
+
+export const safeParseJson = (str: string | null | undefined): Record<string, string> => {
+  if (!str) return {}
+  try {
+    return JSON.parse(str)
+  } catch {
+    return {}
+  }
+}
+
+export const jsonToQueryString = (obj) => {
+  const params = new URLSearchParams();
+  for (const key in obj) {
+    let value = obj[key];
+    if (typeof value === "object" && value !== null) {
+      value = JSON.stringify(value);
+    }
+    params.append(key, value);
+  }
+  return params.toString();
+}
