@@ -62,6 +62,9 @@ export default {
     closeOnClickModal: 'Form Close Method',
     closeOnClickModalEnable: 'Close on click outside',
     closeOnClickModalDisabled: 'Do not close on click outside',
+    componentCacheEnable: 'Enable component cache',
+    componentCacheEnableOpen: 'Open',
+    componentCacheEnableClose: 'Close',
   },
   passwordModify: {
     oldPasswordLabel: "Current Password",

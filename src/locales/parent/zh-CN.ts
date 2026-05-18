@@ -62,6 +62,9 @@ export default {
     closeOnClickModal: '表单关闭方式',
     closeOnClickModalEnable: '点击窗外关闭',
     closeOnClickModalDisabled: '点击窗外不关闭',
+    componentCacheEnable: '开启前端缓存',
+    componentCacheEnableOpen: '开启',
+    componentCacheEnableClose: '关闭',
   },
   passwordModify: {
     oldPasswordLabel: "原始密码",
