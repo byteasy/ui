@@ -41,3 +41,10 @@ export const jsonToQueryString = (obj) => {
   }
   return params.toString();
 }
+
+export const getClassFieldName = (className: string) => {
+  if (!className) return '';
+  const arrs = className.split('.')
+  const simpleName = arrs[arrs.length - 1]
+  return simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1)
+}

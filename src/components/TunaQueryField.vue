@@ -56,7 +56,6 @@ const props = defineProps<{
   column: {
     className: string
     name: string
-    cnName: string
     displayName: string
     type: string // 若值固定（如 STRING/Number），可改为 "STRING" | "NUMBER" 限定
     typeClassName: string
@@ -70,6 +69,17 @@ const props = defineProps<{
     align: 'LEFT' | 'CENTER' | 'RIGHT' // 对齐方式限定
     width: number
     showOrder: number
+    minLength: number
+    maxLength: number
+    min: number
+    max: number
+    precision: number
+    multiple: 'YES' | 'NO'
+    relationType: 'EXTERNAL_KEY' | 'DETAIL_TABLE' | null | undefined
+    externalClass: string | null | undefined
+    externalClassPrimaryField: string | null | undefined
+    externalClassDisplayField: string | null | undefined
+    uiComponent: string | null | undefined
   }
 }>()
 </script>

@@ -17,7 +17,12 @@
         >
           <template #default="scope">
             <slot :name="'table-cell-' + col.name" :row="scope.row">
-              <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
+              <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'"><tuna-i18n-value  :model-value="scope.row[col.name]"
+                                                          :lang="props.showLang"/></el-link>
+<!--              <el-link underline="never" type="primary" v-else-if="col.relationType === 'EXTERNAL_KEY'"><tuna-i18n-value  :model-value="scope.row[getClassFieldName(col.externalClass)][col.externalClassDisplayField]"-->
+<!--                                                                                                                     :lang="props.showLang"/></el-link>-->
+              <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]" :column="col" :lang="props.showLang" v-else-if="col.relationType === 'EXTERNAL_KEY'" />
+              <tuna-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
                                :lang="props.showLang"/>
               <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
                 <template #active-action>
@@ -149,7 +154,7 @@ import {ElMessage} from "element-plus";
 import TunaTableForm from "@/components/TunaTableForm.vue";
 import {type Component, defineEmits, defineExpose, ref} from "vue";
 import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
-import {putValueIfValid} from "@/util/common.ts";
+import {getClassFieldName, putValueIfValid} from "@/util/common.ts";
 import {useRoute} from "vue-router";
 import {useSessionStore} from "@/stores/session.ts";
 import TunaExcelImport from "@/components/TunaExcelImport.vue";
