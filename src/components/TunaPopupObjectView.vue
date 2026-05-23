@@ -1,10 +1,10 @@
 <template>
   <el-popover width="40%" @before-enter="init" trigger="click"
-              popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;">
+              popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;" v-if="props.modelValue">
     <template #reference>
-      <el-link underline="never" type="primary">
+      <el-link underline="never" type="primary" >
         <tuna-i18n-value :model-value="showValue[props.column.externalClassDisplayField]"
-                         :lang="props.lang"/>
+                         :lang="props.lang" />
       </el-link>
     </template>
     <template #default>
@@ -19,7 +19,9 @@
                 :context="svrContext"
                 :code="col.typeClassName"
               />
-              <tuna-popup-object-view :model-value="showValue[getClassFieldName(col.externalClass)]" :column="col" :lang="props.lang" v-else-if="col.relationType === 'EXTERNAL_KEY'" />
+              <tuna-popup-object-view :model-value="showValue[getClassFieldName(col.externalClass)]"
+                                      :column="col" :lang="props.lang"
+                                      v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
               <span v-else>{{ getLangText(showValue[col.name], props.lang) }}</span>
             </slot>
           </el-descriptions-item>
@@ -32,7 +34,7 @@
 
 <script setup lang="ts">
 
-import {ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import {doHttpGet, getEntitySchema} from '@/api/common/platform'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
@@ -47,10 +49,14 @@ const props = defineProps<{
   cols?: number
 }>()
 
-const showValue = ref({...props.modelValue})
+const showValue = ref({...props.modelValue })
 const svrContext = ref('')
 
 const columns = ref([])
+
+onMounted(() => {
+  showValue.value = props.modelValue
+})
 
 function init() {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {})

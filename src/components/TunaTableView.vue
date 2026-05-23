@@ -19,8 +19,6 @@
             <slot :name="'table-cell-' + col.name" :row="scope.row">
               <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'"><tuna-i18n-value  :model-value="scope.row[col.name]"
                                                           :lang="props.showLang"/></el-link>
-<!--              <el-link underline="never" type="primary" v-else-if="col.relationType === 'EXTERNAL_KEY'"><tuna-i18n-value  :model-value="scope.row[getClassFieldName(col.externalClass)][col.externalClassDisplayField]"-->
-<!--                                                                                                                     :lang="props.showLang"/></el-link>-->
               <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]" :column="col" :lang="props.showLang" v-else-if="col.relationType === 'EXTERNAL_KEY'" />
               <tuna-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
                                :lang="props.showLang"/>
