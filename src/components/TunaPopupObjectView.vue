@@ -53,7 +53,6 @@ const svrContext = ref('')
 const columns = ref([])
 
 function init() {
-  console.log('111', showValue.value)
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {})
     .then((response) => {
       const contextPath = response.serviceInstance.contextPath

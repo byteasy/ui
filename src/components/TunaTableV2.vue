@@ -1,41 +1,11 @@
 <template>
   <tuna-container>
     <template v-slot:topBar>
-      <el-form :inline="true" v-if="props.queryFormVisible !== 0">
-        <slot name="from-query">
-          <template v-for="col in tableColumns" :key="col.name">
-            <el-form-item :label="getLangText(col.displayName, locale)"
-                          v-if="col.isSearch === 'YES'">
-              <slot :name="'form-query-field-' + col.name" :column="col" :queryParam="queryParam">
-                <tuna-query-field
-                  :column="col"
-                  :context="props.context"
-                  :placeholder="getLangText(col.displayName, locale)"
-                  v-model="queryParam[col.name]"
-                  clearable
-                  @change="refresh"
-                  :align="
-                    col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
-                  "
-                />
-              </slot>
-            </el-form-item>
-          </template>
-          <slot name="form-query-extra" :queryParam="queryParam"/>
-          <el-form-item>
-            <slot name="form-query-buttons">
-              <el-button type="primary" icon="Search" @click="refresh">{{
-                  $t('search')
-                }}
-              </el-button>
-              <el-button type="primary" @click="onAdd" icon="Plus"
-                         v-permission="props.className + '.Add'">{{ $t('add') }}
-              </el-button>
-            </slot>
-            <slot name="form-query-buttons-extra"></slot>
-          </el-form-item>
-        </slot>
-      </el-form>
+      <tuna-query-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0" :fields="tableColumns" class="w-full" :query-param="queryParam" :context="props.context" @refresh="refresh()" @add="onAdd">
+        <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
+          <slot :name="name" v-bind="slotProps"></slot>
+        </template>
+      </tuna-query-bar>
     </template>
     <template v-slot:mainContent>
       <el-auto-resizer>
@@ -129,7 +99,6 @@ import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {putValueIfValid} from "@/util/common.ts";
-import {getLangText} from "@/locales/common.ts";
 
 const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
