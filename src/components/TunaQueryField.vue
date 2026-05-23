@@ -1,6 +1,7 @@
 <template>
+  <tuna-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }" :column="props.column" />
   <el-input
-    v-if="props.column.type === 'STRING'"
+    v-else-if="props.column.type === 'STRING'"
     type="text"
     :maxlength="props.column.maxLength"
     :minlength="props.column.minLength"
@@ -79,7 +80,7 @@ const props = defineProps<{
     externalClass: string | null | undefined
     externalClassPrimaryField: string | null | undefined
     externalClassDisplayField: string | null | undefined
-    uiComponent: string | null | undefined
+    uiComponent: 'SELECT' | 'RADIO' | 'TABLE'
   }
 }>()
 </script>

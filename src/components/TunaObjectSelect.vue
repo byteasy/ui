@@ -1,123 +1,94 @@
 <template>
-    <el-input ref="refInput" v-model="currentLangInput" @input="handleDirectInput" v-bind="bindAttrs">
-      <template #append>
-        <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }"
-                 @click="onAppendIconClick">
-          <IconLocalSelect />
-        </el-icon>
-      </template>
-    </el-input>
+  <el-input ref="refInput"
+            :model-value="getLangText(selectedObject[props.column.externalClassDisplayField || 'name'], locale)"
+            readonly v-bind="bindAttrs">
+    <template #append>
+      <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !bindAttrs.disabled }"
+               @click="onAppendIconClick">
+        <IconLocalSelect/>
+      </el-icon>
+    </template>
+  </el-input>
 </template>
 
 <script setup lang="ts">
 
-import {computed, defineExpose, onMounted, ref, useAttrs} from 'vue'
+import {defineExpose, ref, useAttrs} from 'vue'
 import {useModal} from '@/components/dialog/useModal.ts'
-import TunaI18nDynamicForm from "@/components/TunaI18nDynamicForm.vue"
 import {useI18n} from 'vue-i18n'
-import {langMap} from "@/locales/common.ts"
+import {getLangText} from "@/locales/common.ts";
+import {doHttpGet} from "@/api/common/platform";
+import TunaObjectSelectDetail from "@/components/TunaObjectSelectDetail.vue";
 
-const {locale} = useI18n()
-const {open} = useModal()
-const {t} = useI18n()
-const refInput = ref(null)
-
-const bindAttrs = useAttrs()
-// 🔥 核心修改：modelValue 改成 string 类型
 const props = defineProps<{
   modelValue?: any
   lang?: string
+  column: {
+    className: string
+    name: string
+    displayName: string
+    type: string // 若值固定（如 STRING/Number），可改为 "STRING" | "NUMBER" 限定
+    typeClassName: string
+    isShow: 'YES' | 'NO' // 枚举值用联合类型限定
+    isSort: 'YES' | 'NO'
+    isOverflow: 'YES' | 'NO'
+    isSearch: 'YES' | 'NO'
+    isFixed: 'YES' | 'NO'
+    isRequire: 'YES' | 'NO'
+    isForm: 'YES' | 'NO'
+    align: 'LEFT' | 'CENTER' | 'RIGHT' // 对齐方式限定
+    width: number
+    showOrder: number
+    minLength: number
+    maxLength: number
+    min: number
+    max: number
+    precision: number
+    multiple: 'YES' | 'NO'
+    relationType: 'EXTERNAL_KEY' | 'DETAIL_TABLE' | null | undefined
+    externalClass: any
+    externalClassPrimaryField: any
+    externalClassDisplayField: any
+    uiComponent: 'SELECT' | 'RADIO' | 'TABLE'
+  }
 }>()
 
+const {open} = useModal()
+const {t, locale} = useI18n()
+const refInput = ref(null)
+const bindAttrs = useAttrs()
 const emit = defineEmits<{
   'update:modelValue': [val: string]
+  'change': [val: string]
 }>()
+const selectedObject = ref({})
 
-onMounted(() => {
-  const input = refInput.value?.input
-  if (input) {
-    input.maxLength = 1024
-  }
-})
-
-// 最终正确的语言（zh_CN）
-const currentLang = computed(() => props.lang !== undefined ? props.lang : (langMap[locale.value] || locale.value))
-
-// 工具方法：安全解析 JSON 字符串
-const safeParseJson = (str: string | null | undefined): Record<string, string> => {
-  if (!str) return {}
-  try {
-    return JSON.parse(str)
-  } catch {
-    return {}
-  }
-}
-
-/**
- * 1. 输入框显示当前语言的值（自动解析 string 类型的 JSON）
- */
-const currentLangInput = computed({
-  get() {
-    const jsonObj = safeParseJson(props.modelValue)
-    return jsonObj[currentLang.value] || ''
-  },
-  set(val) {
-    handleDirectInput(val)
-  }
-})
-
-/**
- * 2. 用户直接输入 → 只更新当前语言
- */
-function handleDirectInput(val: string) {
-  // 解析原字符串 -> 修改 -> 重新转成字符串
-  const jsonObj = safeParseJson(props.modelValue)
-  jsonObj[currentLang.value] = val
-  // 🔥  emit 出去的是 string 类型
-  emit('update:modelValue', JSON.stringify(jsonObj))
-}
-
-/**
- * 3. 点击图标打开多语言弹窗
- */
 const onAppendIconClick = () => {
   if (bindAttrs.disabled === true) return
-
-  open(
-    TunaI18nDynamicForm,
-    {
-      // 把 string 解析成对象传给弹窗
-      i18nData: safeParseJson(props.modelValue) || {},
-      maxlength: bindAttrs.maxlength
-    },
-    {
-      title: t('i18nEditTitle'),
-      width: '60%',
-      dialogModel: true,
-      onClose: (data) => {
-        if (data) {
-          // 🔥 弹窗返回对象，这里转成 string 再 emit
-          emit('update:modelValue', JSON.stringify(data))
-        }
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {}).then(response => {
+    const entityDefine = response
+    open(
+      TunaObjectSelectDetail,
+      {
+        modelValue: selectedObject.value[props.column.externalClassPrimaryField || 'name'],
+        column: props.column,
+        entityDefine: entityDefine,
       },
-    },
-  )
+      {
+        title: getLangText(entityDefine.name, locale),
+        width: '60%',
+        dialogModel: true,
+        onClose: (data) => {
+          if (data) {
+            selectedObject.value = data
+            emit('update:modelValue', data[props.column.externalClassPrimaryField])
+            emit('change', data[props.column.externalClassPrimaryField])
+          }
+        },
+      },
+    )
+  })
 }
 
-const setCurrentLangValue = (value) => {
-  handleDirectInput(value)
-}
-
-const setLanguageValue = (lang, value) => {
-  // 解析原字符串 -> 修改 -> 重新转成字符串
-  const jsonObj = safeParseJson(props.modelValue)
-  jsonObj[lang] = value
-  // 🔥  emit 出去的是 string 类型
-  emit('update:modelValue', JSON.stringify(jsonObj))
-}
-
-defineExpose({
-  setCurrentLangValue,
-  setLanguageValue
-})
+defineExpose({})
 </script>
