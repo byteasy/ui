@@ -1,7 +1,10 @@
 <template>
   <tuna-container>
     <template v-slot:topBar>
-      <tuna-query-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0" :fields="tableColumns" class="w-full" :query-param="queryParam" :context="props.context" @refresh="refresh()" @add="onAdd">
+      <tuna-query-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0"
+                      :fields="tableColumns" class="w-full" :query-param="queryParam"
+                      :context="props.context" @refresh="refresh()" @add="onAdd"
+                      :query-mode="props.queryMode">
         <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
           <slot :name="name" v-bind="slotProps"></slot>
         </template>
@@ -37,6 +40,7 @@
             @header-dragend="onHeaderDrag"
             @switch-view="switchViewModel"
             :query-param="queryParam"
+            :query-mode="props.queryMode"
           >
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
@@ -92,7 +96,15 @@
 </template>
 
 <script lang="ts" setup>
-import {type Component, defineEmits, defineExpose, onBeforeMount, onMounted, ref,} from 'vue'
+import {
+  type Component,
+  defineEmits,
+  defineExpose,
+  nextTick,
+  onBeforeMount,
+  onMounted,
+  ref,
+} from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
 import {doHttpGet, getEntitySchema} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
@@ -122,6 +134,9 @@ const props = defineProps<{
   defaultExpandAll?: boolean
   treeProps?: object
   showLang?: string
+  queryMode?: boolean
+  multiple?: 'YES' | 'NO'
+  dataRenderFinish?: (tableData) => void
 }>()
 
 const emit = defineEmits(['rowClick'])
@@ -134,7 +149,7 @@ const queryParam = ref({current: 1, size: 20, descColumns: []})
 const refTunaTableView = ref(null)
 
 function switchViewModel() {
-  if(viewModel.value === 'table') {
+  if (viewModel.value === 'table') {
     viewModel.value = 'cardList'
   } else {
     viewModel.value = 'table'
@@ -210,10 +225,12 @@ function refresh() {
     .then((rsp) => {
       tableData.value = rsp.data
       loading.value = false
-    })
-    .catch((error) => {
-      console.log(error)
-      ElMessage.error(t('table.loadingTableDataError'))
+
+      nextTick(() => {
+        if (props.dataRenderFinish) {
+          props.dataRenderFinish(tableData.value)
+        }
+      })
     })
 }
 
@@ -254,8 +271,15 @@ function onHeaderDrag(newWidth: number, oldWidth: number, column: TableColumnCtx
     fieldsDefine[column.property] = {}
   }
   fieldsDefine[column.property].width = newWidth
-  console.log(column, column.property, 'newWidth', newWidth)
   appSettingsStore.putStorageObject(props.className + '.fields', fieldsDefine)
+}
+
+function getSelectionRows() {
+  return refTunaTableView.value.getSelectionRows()
+}
+
+function toggleRowSelection(row, sel) {
+  refTunaTableView.value?.toggleRowSelection(row, sel)
 }
 
 defineExpose({
@@ -267,6 +291,8 @@ defineExpose({
   onView,
   onEdit,
   onAdd,
-  onDelete
+  onDelete,
+  getSelectionRows,
+  toggleRowSelection
 })
 </script>

@@ -91,8 +91,12 @@ const onAppendIconClick = () => {
               emit('update:modelValue', data[props.column.externalClassPrimaryField])
               emit('change', data[props.column.externalClassPrimaryField])
             } else {
-              emit('update:modelValue', data.map(s => s[props.column.externalClassPrimaryField]))
-              emit('change', data.map(s => s[props.column.externalClassPrimaryField]))
+              if (data.length < 1) {
+                onClearClick()
+              } else {
+                emit('update:modelValue', data.map(s => s[props.column.externalClassPrimaryField]))
+                emit('change', data.map(s => s[props.column.externalClassPrimaryField]))
+              }
             }
           }
         },

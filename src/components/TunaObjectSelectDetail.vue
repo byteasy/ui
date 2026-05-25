@@ -2,20 +2,35 @@
   <div class="form-container"
        :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }"
        style="container-type: inline-size;">
-      <el-select v-model="selectedKey" v-bind="$attrs" class="w-full"
-                 v-if="props.column.uiComponent === 'SELECT'" :multiple="props.column.multiple === 'YES'">
-        <el-option v-for="obj in tableData.records"
-                   :key="obj[props.column.externalClassPrimaryField]"
-                   :value="obj[props.column.externalClassPrimaryField]"
-                   :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
-      </el-select>
-      <el-radio-group v-model="selectedKey" v-bind="$attrs" class="w-full"
-                      v-if="props.column.uiComponent === 'RADIO' && props.column.multiple === 'NO'">
-        <el-radio v-for="obj in tableData.records"
-                  :key="obj[props.column.externalClassPrimaryField]"
-                  :value="obj[props.column.externalClassPrimaryField]"
-                  :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
-      </el-radio-group>
+    <el-select v-model="selectedKey" v-bind="$attrs" class="w-full"
+               v-if="props.column.uiComponent === 'SELECT'"
+               :multiple="props.column.multiple === 'YES'">
+      <el-option v-for="obj in tableData.records"
+                 :key="obj[props.column.externalClassPrimaryField]"
+                 :value="obj[props.column.externalClassPrimaryField]"
+                 :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
+    </el-select>
+    <el-radio-group v-model="selectedKey" v-bind="$attrs" class="w-full"
+                    v-if="props.column.uiComponent === 'RADIO' && props.column.multiple === 'NO'">
+      <el-radio v-for="obj in tableData.records"
+                :key="obj[props.column.externalClassPrimaryField]"
+                :value="obj[props.column.externalClassPrimaryField]"
+                :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
+    </el-radio-group>
+    <div v-if="props.column.uiComponent === 'TABLE'" style="height: 400px" class="w-full">
+      <tuna-table-v2
+        ref="refTable"
+        class="w-full h-full"
+        :base-url="'/' + props.entityDefine.serviceInstance.contextPath.substring(1) + props.entityDefine.url"
+        :context="props.entityDefine.serviceInstance.contextPath.substring(1)"
+        :class-name="props.entityDefine.code"
+        :query-params="props.queryParams"
+        :query-mode="true"
+        :data-render-finish="onTableDataRenderFinish"
+        :row-db-click="onTableRowDoubleClick"
+        :operation-column-width="0">
+      </tuna-table-v2>
+    </div>
     <!-- 底部按钮固定 -->
     <el-affix position="bottom" :offset="12" class="w-full">
       <div class="form-footer">
@@ -33,7 +48,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {defineEmits, onMounted, ref} from "vue";
+import {defineEmits, nextTick, onMounted, ref} from "vue";
 import {doHttpGet, getEntitySchema} from "@/api/common/platform";
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
@@ -73,6 +88,7 @@ const props = defineProps<{
   fullscreen?: boolean
   isDrawer?: boolean
 }>()
+const refTable = ref(null)
 const emit = defineEmits(['close'])
 const queryParams = ref({current: 1, size: 5000, ...props.queryParams})
 const columns = ref([])
@@ -82,10 +98,10 @@ const selectedKey = ref(props.modelValue)
 const {t, locale} = useI18n()
 
 onMounted(() => {
-  console.log('selectedKey', selectedKey.value)
   if (props.column.uiComponent === 'TABLE') {
     getEntitySchema(props.entityDefine.serviceInstance.contextPath.substring(1), props.entityDefine.code).then(response => {
       columns.value = response.data
+      loading.value = false
     })
   } else { // RADIO OR SELECT
     refresh()
@@ -99,12 +115,26 @@ function refresh() {
     loading.value = false
   })
 }
+
 function onSaveClick() {
-  // 单选模式
-  if(props.column.multiple === 'NO') {
+  // 表格选择模式
+  if (props.column.uiComponent === 'TABLE') {
+    selectedKey.value = refTable.value?.getSelectionRows().map(e => e[props.column.externalClassPrimaryField])
+    if (props.column.multiple === 'NO') {
+      const selObj = refTable.value?.getSelectionRows().map(e => e[props.column.externalClassPrimaryField])[0]
+      emit('close', selObj)
+    } else {
+      const selObj = refTable.value?.getSelectionRows()
+      emit('close', selObj)
+    }
+    return
+  }
+
+  // SELECT/RADIO选择模式
+  if (props.column.multiple === 'NO') {
     let selObj = {}
     for (let i = 0; i < tableData.value.records.length; i++) {
-      if(tableData.value.records[i][props.column.externalClassPrimaryField] === selectedKey.value) {
+      if (tableData.value.records[i][props.column.externalClassPrimaryField] === selectedKey.value) {
         selObj = tableData.value.records[i]
       }
     }
@@ -113,7 +143,7 @@ function onSaveClick() {
     // 多选模式
     const selObj = []
     for (let i = 0; i < tableData.value.records.length; i++) {
-      if(selectedKey.value.includes(tableData.value.records[i][props.column.externalClassPrimaryField])) {
+      if (selectedKey.value.includes(tableData.value.records[i][props.column.externalClassPrimaryField])) {
         selObj.push(tableData.value.records[i])
       }
     }
@@ -121,8 +151,36 @@ function onSaveClick() {
   }
 }
 
+function onTableRowDoubleClick(row) {
+  if (props.column.multiple === 'NO') {
+    selectedKey.value = row[props.column.externalClassPrimaryField]
+    emit('close', row)
+  } else {
+    selectedKey.value = [row[props.column.externalClassPrimaryField]]
+    emit('close', [row])
+  }
+}
+
 function onClearForm() {
-  emit('close', {})
+  if (props.column.multiple === 'NO') {
+    emit('close', {})
+  } else {
+    emit('close', [])
+  }
+}
+
+function onTableDataRenderFinish(tableData) {
+  for (let j = 0; j < tableData.records.length; j++) {
+    if (props.column.multiple === 'NO') {
+      if (tableData.records[j][props.column.externalClassPrimaryField] === selectedKey.value) {
+        refTable.value?.toggleRowSelection(tableData.records[j], true)
+      }
+    } else {
+      if (selectedKey.value.includes(tableData.records[j][props.column.externalClassPrimaryField])) {
+        refTable.value?.toggleRowSelection(tableData.records[j], true)
+      }
+    }
+  }
 }
 </script>
 

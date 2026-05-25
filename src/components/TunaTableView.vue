@@ -1,5 +1,6 @@
 <template>
-  <el-table fix border scrollbar-always-on stripe highlight-current-row>
+  <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable">
+    <el-table-column type="selection" width="55" v-if="props.queryMode === true && props.multiple === 'YES'" />
     <template v-for="col in tableColumns" :key="col.name">
       <slot :name="'table-column-def-' + col.name" :column="col">
         <el-table-column
@@ -159,6 +160,7 @@ import TunaExcelImport from "@/components/TunaExcelImport.vue";
 import TunaExcelExport from "@/components/TunaExcelExport.vue";
 import {useModal} from "@/components/dialog/useModal.ts";
 
+const refElTable = ref(null)
 const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
 const route = useRoute()
@@ -181,6 +183,8 @@ const props = defineProps<{
   dialogModel?: any
   operationColumnWidth?: number
   queryParam?: any
+  queryMode?: boolean
+  multiple?: 'YES' | 'NO'
 }>()
 
 const emit = defineEmits(['switchView'])
@@ -347,10 +351,20 @@ function onExcelExportClick() {
   )
 }
 
+function getSelectionRows() {
+  return refElTable.value?.getSelectionRows()
+}
+
+function toggleRowSelection(row, sel) {
+  return refElTable.value?.toggleRowSelection(row, sel)
+}
+
 defineExpose({
   onView,
   onAdd,
   onEdit,
-  onDelete
+  onDelete,
+  getSelectionRows,
+  toggleRowSelection
 })
 </script>

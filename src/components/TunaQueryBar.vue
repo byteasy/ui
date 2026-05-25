@@ -28,7 +28,7 @@
             </div>
             <slot name="form-query-buttons">
               <el-button type="primary" icon="Search" @click="handleEvent('refresh')">{{ $t('search') }}</el-button>
-              <el-button type="primary" icon="Plus" v-permission="className + '.Add'" @click="handleEvent('add')">{{ $t('add') }}</el-button>
+              <el-button type="primary" icon="Plus" v-if="props.queryMode !== true" v-permission="className + '.Add'" @click="handleEvent('add')">{{ $t('add') }}</el-button>
             </slot>
             <slot name="form-query-buttons-extra"></slot>
           </el-form-item>
@@ -51,7 +51,8 @@ const props = defineProps({
     required: true
   },
   context: String,
-  queryParam: Object
+  queryParam: Object,
+  queryMode: Boolean
 })
 
 const {t, locale} = useI18n()
