@@ -282,6 +282,10 @@ function toggleRowSelection(row, sel) {
   refTunaTableView.value?.toggleRowSelection(row, sel)
 }
 
+function setCurrentRow(row) {
+  refTunaTableView.value?.setCurrentRow(row)
+}
+
 defineExpose({
   queryParam,
   tableColumns,
@@ -293,6 +297,7 @@ defineExpose({
   onAdd,
   onDelete,
   getSelectionRows,
-  toggleRowSelection
+  toggleRowSelection,
+  setCurrentRow
 })
 </script>

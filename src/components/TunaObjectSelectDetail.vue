@@ -181,7 +181,7 @@ function onTableDataRenderFinish(tableData) {
   for (let j = 0; j < tableData.records.length; j++) {
     if (props.column.multiple === 'NO') {
       if (tableData.records[j][props.column.externalClassPrimaryField] === selectedKey.value) {
-        refTable.value?.toggleRowSelection(tableData.records[j], true)
+        refTable.value?.setCurrentRow(tableData.records[j])
       }
     } else {
       if (selectedKey.value.includes(tableData.records[j][props.column.externalClassPrimaryField])) {

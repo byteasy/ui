@@ -359,12 +359,17 @@ function toggleRowSelection(row, sel) {
   return refElTable.value?.toggleRowSelection(row, sel)
 }
 
+function setCurrentRow(row) {
+  refElTable.value?.setCurrentRow(row)
+}
+
 defineExpose({
   onView,
   onAdd,
   onEdit,
   onDelete,
   getSelectionRows,
-  toggleRowSelection
+  toggleRowSelection,
+  setCurrentRow
 })
 </script>
