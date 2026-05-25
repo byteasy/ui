@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 
-import {defineExpose, ref, useAttrs} from 'vue'
+import {defineExpose, onMounted, ref, useAttrs} from 'vue'
 import {useModal} from '@/components/dialog/useModal.ts'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
@@ -53,6 +53,7 @@ const props = defineProps<{
     externalClassDisplayField: any
     uiComponent: 'SELECT' | 'RADIO' | 'TABLE'
   }
+  queryMode?: boolean
 }>()
 
 const {open} = useModal()
@@ -65,6 +66,23 @@ const emit = defineEmits<{
 }>()
 const selectedObject = ref([])
 
+onMounted(() => {
+  console.log(props.modelValue)
+  if (props.modelValue !== undefined && props.modelValue !== '') {
+    if (!Array.isArray(props.modelValue) || props.modelValue.length === 1) {
+      doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {}).then(response => {
+        const entityDefine = response
+        const url = entityDefine.serviceInstance.contextPath + entityDefine.url
+        const queryObj = {}
+        queryObj[props.column.externalClassPrimaryField] = props.modelValue
+        doHttpGet(url, queryObj).then(objResponse => {
+          selectedObject.value = objResponse.data.records
+        })
+      })
+    }
+  }
+})
+
 const onAppendIconClick = () => {
   if (bindAttrs.disabled === true) return
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {}).then(response => {
@@ -74,6 +92,7 @@ const onAppendIconClick = () => {
       {
         modelValue: props.column.multiple === 'YES' ? selectedObject.value.map(s => s[props.column.externalClassPrimaryField]) : selectedObject.value.map(s => s[props.column.externalClassPrimaryField])[0],
         column: props.column,
+        queryMode: props.queryMode,
         entityDefine: entityDefine,
       },
       {

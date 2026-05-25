@@ -41,6 +41,7 @@
             @switch-view="switchViewModel"
             :query-param="queryParam"
             :query-mode="props.queryMode"
+            :multiple="props.multiple"
           >
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>

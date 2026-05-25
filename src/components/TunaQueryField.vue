@@ -1,5 +1,5 @@
 <template>
-  <tuna-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }" :column="props.column" />
+  <tuna-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }" :column="props.column" :query-mode="true"/>
   <el-input
     v-else-if="props.column.type === 'STRING'"
     type="text"
