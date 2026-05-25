@@ -1,7 +1,9 @@
 <template>
   <el-input ref="refInput"
-            :model-value="getLangText(selectedObject[props.column.externalClassDisplayField || 'name'], locale)"
-            readonly v-bind="bindAttrs">
+            :model-value="getDisplayName()"
+            clearable
+            @clear="onClearClick"
+            v-bind="bindAttrs">
     <template #append>
       <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !bindAttrs.disabled }"
                @click="onAppendIconClick">
@@ -61,7 +63,7 @@ const emit = defineEmits<{
   'update:modelValue': [val: string]
   'change': [val: string]
 }>()
-const selectedObject = ref({})
+const selectedObject = ref([])
 
 const onAppendIconClick = () => {
   if (bindAttrs.disabled === true) return
@@ -70,7 +72,7 @@ const onAppendIconClick = () => {
     open(
       TunaObjectSelectDetail,
       {
-        modelValue: selectedObject.value[props.column.externalClassPrimaryField || 'name'],
+        modelValue: props.column.multiple === 'YES' ? selectedObject.value.map(s => s[props.column.externalClassPrimaryField]) : selectedObject.value.map(s => s[props.column.externalClassPrimaryField])[0],
         column: props.column,
         entityDefine: entityDefine,
       },
@@ -80,14 +82,34 @@ const onAppendIconClick = () => {
         dialogModel: true,
         onClose: (data) => {
           if (data) {
-            selectedObject.value = data
-            emit('update:modelValue', data[props.column.externalClassPrimaryField])
-            emit('change', data[props.column.externalClassPrimaryField])
+            if (Array.isArray(data)) {
+              selectedObject.value = data
+            } else {
+              selectedObject.value = [data]
+            }
+            if (props.column.multiple === 'NO') {
+              emit('update:modelValue', data[props.column.externalClassPrimaryField])
+              emit('change', data[props.column.externalClassPrimaryField])
+            } else {
+              emit('update:modelValue', data.map(s => s[props.column.externalClassPrimaryField]))
+              emit('change', data.map(s => s[props.column.externalClassPrimaryField]))
+            }
           }
         },
       },
     )
   })
+}
+
+const onClearClick = () => {
+  selectedObject.value = []
+  emit('update:modelValue', '')
+  emit('change', '')
+}
+
+function getDisplayName() {
+  const names = selectedObject.value.map(s => getLangText(s[props.column.externalClassDisplayField || 'name'], locale.value))
+  return names.join(', ')
 }
 
 defineExpose({})

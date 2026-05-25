@@ -3,14 +3,14 @@
        :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }"
        style="container-type: inline-size;">
       <el-select v-model="selectedKey" v-bind="$attrs" class="w-full"
-                 v-if="props.column.uiComponent === 'SELECT'">
+                 v-if="props.column.uiComponent === 'SELECT'" :multiple="props.column.multiple === 'YES'">
         <el-option v-for="obj in tableData.records"
                    :key="obj[props.column.externalClassPrimaryField]"
                    :value="obj[props.column.externalClassPrimaryField]"
                    :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
       </el-select>
       <el-radio-group v-model="selectedKey" v-bind="$attrs" class="w-full"
-                      v-if="props.column.uiComponent === 'RADIO'">
+                      v-if="props.column.uiComponent === 'RADIO' && props.column.multiple === 'NO'">
         <el-radio v-for="obj in tableData.records"
                   :key="obj[props.column.externalClassPrimaryField]"
                   :value="obj[props.column.externalClassPrimaryField]"
@@ -23,9 +23,9 @@
         <div class="footer-buttons">
           <slot name="footerButton" :props="props">
             <el-button type="primary" @click="onSaveClick" icon="Check">
-              {{ t('save') }}
+              {{ t('ok') }}
             </el-button>
-            <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
+            <el-button @click="onClearForm" icon="Close">{{ t('cancel') }}</el-button>
           </slot>
         </div>
       </div>
@@ -100,13 +100,25 @@ function refresh() {
   })
 }
 function onSaveClick() {
-  let selObj = {}
-  for (let i = 0; i < tableData.value.records.length; i++) {
-    if(tableData.value.records[i][props.column.externalClassPrimaryField] === selectedKey.value) {
-      selObj = tableData.value.records[i]
+  // 单选模式
+  if(props.column.multiple === 'NO') {
+    let selObj = {}
+    for (let i = 0; i < tableData.value.records.length; i++) {
+      if(tableData.value.records[i][props.column.externalClassPrimaryField] === selectedKey.value) {
+        selObj = tableData.value.records[i]
+      }
     }
+    emit('close', selObj)
+  } else {
+    // 多选模式
+    const selObj = []
+    for (let i = 0; i < tableData.value.records.length; i++) {
+      if(selectedKey.value.includes(tableData.value.records[i][props.column.externalClassPrimaryField])) {
+        selObj.push(tableData.value.records[i])
+      }
+    }
+    emit('close', selObj)
   }
-  emit('close', selObj)
 }
 
 function onClearForm() {
