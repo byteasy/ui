@@ -40,6 +40,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: Record<string, any>): void
+  (e: 'change', value: Record<string, any>): void
 }>()
 
 const loading = ref(false)
@@ -101,6 +102,7 @@ function syncToParent() {
     }
   })
   emit('update:modelValue', obj)
+  emit('change', obj)
 }
 </script>
 

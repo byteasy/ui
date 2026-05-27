@@ -16,6 +16,7 @@
           <tuna-table-view
             ref="refTunaTableView"
             v-if="viewModel === 'table'"
+            :show-summary="props.showSummary === true"
             :show-lang="props.showLang"
             :context="props.context"
             :form-component="props.formComponent"
@@ -136,7 +137,8 @@ const props = defineProps<{
   treeProps?: object
   showLang?: string
   queryMode?: boolean
-  multiple?: 'YES' | 'NO'
+  multiple?: boolean
+  showSummary?: boolean
   dataRenderFinish?: (tableData) => void
 }>()
 

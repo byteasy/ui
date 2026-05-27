@@ -1,6 +1,6 @@
 <template>
   <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable">
-    <el-table-column type="selection" width="55" v-if="props.queryMode === true && props.multiple === 'YES'" />
+    <el-table-column type="selection" width="55" v-if="props.queryMode === true && props.multiple === true" />
     <template v-for="col in tableColumns" :key="col.name">
       <slot :name="'table-column-def-' + col.name" :column="col">
         <el-table-column
@@ -53,7 +53,7 @@
     <el-table-column
       fixed="right"
       :label="$t('table.operation')"
-      v-if="props.operationColumnWidth !== 0"
+      v-if="props.operationColumnWidth !== 0 && props.queryMode !== true"
       align="center"
       :min-width="props.operationColumnWidth ? props.operationColumnWidth : 160"
     >
@@ -184,7 +184,7 @@ const props = defineProps<{
   operationColumnWidth?: number
   queryParam?: any
   queryMode?: boolean
-  multiple?: 'YES' | 'NO'
+  multiple?: boolean
 }>()
 
 const emit = defineEmits(['switchView'])

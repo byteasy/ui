@@ -26,7 +26,7 @@
         :class-name="props.entityDefine.code"
         :query-params="props.queryParams"
         :query-mode="true"
-        :multiple="props.queryMode === true && props.column.multiple === 'YES' ? 'YES' : 'NO'"
+        :multiple="props.queryMode === true && props.column.multiple === 'YES' ? true : false"
         :data-render-finish="onTableDataRenderFinish"
         :row-db-click="onTableRowDoubleClick"
         :operation-column-width="0">
