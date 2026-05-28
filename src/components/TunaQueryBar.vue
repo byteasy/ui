@@ -30,7 +30,7 @@
               <el-button type="primary" icon="Search" @click="handleEvent('refresh')">{{ $t('search') }}</el-button>
               <el-button type="primary" icon="Plus" v-if="props.queryMode !== true" v-permission="className + '.Add'" @click="handleEvent('add')">{{ $t('add') }}</el-button>
             </slot>
-            <slot name="form-query-buttons-extra"></slot>
+            <slot name="form-query-buttons-extra" :queryParam="props.queryParam" :queryMode="props.queryMode"></slot>
           </el-form-item>
         </slot>
       </el-form>

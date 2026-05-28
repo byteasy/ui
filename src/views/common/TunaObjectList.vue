@@ -25,6 +25,12 @@
     <template v-for="col in fieldComponents" :key="col.name" v-slot:[`form-query-field-${col.name}`]="scope">
       <component :is="getComponent('..' + col.fieldComponent)" v-model="scope.queryParam[col.name]" :style="{ width: (col.width === 0 ? 160 : col.width) + 'px !important' }" :key="col.className + col.name" clearable @change="refTable.refresh()"></component>
     </template>
+    <template v-slot:form-query-buttons-extra="scope">
+      <component v-for="btn in formQueryButtonsExtra" :key="btn" :is="getComponent('..' + btn)" :queryParam="scope.queryParam" :queryMode="scope.queryMode"></component>
+    </template>
+    <template v-slot:table-operation-extra="scope">
+      <component v-for="btn in operationButtons" :key="btn" :is="getComponent('..' + btn)" :row="scope.row"></component>
+    </template>
   </tuna-table-v2>
   <el-skeleton :rows="5" animated v-else/>
 </template>
@@ -44,6 +50,8 @@ const loading = ref(true)
 const route = useRoute()
 const {modules } = getRouteComponents()
 const fieldComponents = ref([])
+const formQueryButtonsExtra = ref([])
+const operationButtons = ref([])
 
 function getComponent(path) {
   return modules[path]
@@ -79,6 +87,12 @@ onMounted(() => {
     metaData.multiple = entityDefine.multiple === 'YES'
     metaData.showLang = entityDefine.showLang
     metaData.showSummary = entityDefine.showSummary === 'YES'
+    if(entityDefine.queryBarButtons) {
+      formQueryButtonsExtra.value = entityDefine.queryBarButtons.split(',')
+    }
+    if(entityDefine.operationButtons) {
+      operationButtons.value = entityDefine.operationButtons.split(',')
+    }
 
     // 传递过来的queryParam拥有最高优先级
     if (params.titleColumnName !== undefined) metaData.titleColumnName = params.titleColumnName
@@ -106,6 +120,7 @@ onMounted(() => {
         console.log(err)
       }
     }
+
     console.log('模型元数据', metaData)
     getEntitySchema(metaData.context, metaData.className)
       .then((response) => {
