@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {doHttpGet, getEntitySchema} from '@/api/common/platform'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
@@ -61,6 +61,13 @@ const columns = ref([])
 onMounted(() => {
   showValue.value = props.modelValue
 })
+
+watch(
+  () => props.modelValue,
+  () => {
+    showValue.value = props.modelValue
+  },
+)
 
 function init() {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {})

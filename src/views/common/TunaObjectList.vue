@@ -10,6 +10,7 @@
     :operation-column-width="metaData.operationColumnWidth"
     :dialog-model="metaData.dialogModel"
     :form-width="metaData.formWidth"
+    :form-component="metaData.formComponent"
     :pagination-visible="metaData.paginationVisible"
     :query-form-visible="metaData.queryFormVisible"
     :row-key="metaData.rowKey"
@@ -34,66 +35,72 @@ import {getRouteComponents} from "@/util/autoImportComponent.ts";
 
 const {t, locale} = useI18n()
 const refTable = ref(null)
-const metaData = ref({})
+const metaData = {}
 const loading = ref(true)
 const route = useRoute()
 const {modules } = getRouteComponents()
 
+function getComponent(path) {
+  return modules['../views/microapp' + path]
+}
+
 onMounted(() => {
   const params = route.query
-  metaData.value.className = params.className
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + metaData.value.className, {}).then(entityDefine => {
-    metaData.value.context = entityDefine.serviceInstance.contextPath.substring(1)
-    metaData.value.baseUrl = entityDefine.serviceInstance.contextPath + entityDefine.url
+  metaData.className = params.className
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + metaData.className, {}).then(entityDefine => {
+    metaData.context = entityDefine.serviceInstance.contextPath.substring(1)
+    metaData.baseUrl = entityDefine.serviceInstance.contextPath + entityDefine.url
     try {
-      metaData.value.queryParams = JSON.parse(decodeURIComponent(entityDefine.queryParams || "{}"))
+      metaData.queryParams = JSON.parse(decodeURIComponent(entityDefine.queryParams || "{}"))
     } catch (err) {
       console.log(err)
     }
-    metaData.value.titleColumnName = entityDefine.titleColumnName
-    metaData.value.operationColumnWidth = entityDefine.operationColumnWidth
-    metaData.value.formComponent = entityDefine.formComponent
-    metaData.value.formWidth = entityDefine.formWidth
-    metaData.value.dialogModel = entityDefine.dialogModel === 'YES'
-    metaData.value.paginationVisible = entityDefine.paginationVisible === 'YES' ? 1 : 0
-    metaData.value.excelEnable = entityDefine.excelEnable === 'YES'
-    metaData.value.queryFormVisible = entityDefine.queryFormVisible === 'YES' ? 1 : 0
-    metaData.value.excelImportComponent = entityDefine.excelImportComponent
-    metaData.value.rowKey = entityDefine.rowKey
-    metaData.value.defaultExpandAll = entityDefine.defaultExpandAll === 'YES'
-    metaData.value.treeProps = entityDefine.treeProps
-    metaData.value.queryMode = entityDefine.queryMode === 'YES'
-    metaData.value.multiple = entityDefine.multiple === 'YES'
-    metaData.value.showLang = entityDefine.showLang
-    metaData.value.showSummary = entityDefine.showSummary === 'YES'
+    metaData.titleColumnName = entityDefine.titleColumnName
+    metaData.operationColumnWidth = entityDefine.operationColumnWidth
+    if(entityDefine.formComponent !== undefined) {
+      metaData.formComponent = getComponent(entityDefine.formComponent)
+    }
+    metaData.formWidth = entityDefine.formWidth
+    metaData.dialogModel = entityDefine.dialogModel === 'YES'
+    metaData.paginationVisible = entityDefine.paginationVisible === 'YES' ? 1 : 0
+    metaData.excelEnable = entityDefine.excelEnable === 'YES'
+    metaData.queryFormVisible = entityDefine.queryFormVisible === 'YES' ? 1 : 0
+    metaData.excelImportComponent = entityDefine.excelImportComponent
+    metaData.rowKey = entityDefine.rowKey
+    metaData.defaultExpandAll = entityDefine.defaultExpandAll === 'YES'
+    metaData.treeProps = entityDefine.treeProps
+    metaData.queryMode = entityDefine.queryMode === 'YES'
+    metaData.multiple = entityDefine.multiple === 'YES'
+    metaData.showLang = entityDefine.showLang
+    metaData.showSummary = entityDefine.showSummary === 'YES'
 
     // 传递过来的queryParam拥有最高优先级
-    if (params.titleColumnName !== undefined) metaData.value.titleColumnName = params.titleColumnName
-    if (params.operationColumnWidth !== undefined) metaData.value.operationColumnWidth = params.operationColumnWidth
-    if (params.formComponent !== undefined) metaData.value.formComponent = params.formComponent
-    if (params.formWidth !== undefined) metaData.value.formWidth = params.formWidth
-    if (params.dialogModel !== undefined) metaData.value.dialogModel = params.dialogModel === 'YES'
-    if (params.paginationVisible !== undefined) metaData.value.paginationVisible = params.paginationVisible === 'YES' ? 1 : 0
-    if (params.excelEnable !== undefined) metaData.value.excelEnable = params.excelEnable === 'YES'
-    if (params.queryFormVisible !== undefined) metaData.value.queryFormVisible = params.queryFormVisible === 'YES'
-    if (params.excelImportComponent !== undefined) metaData.value.excelImportComponent = params.excelImportComponent
-    if (params.rowKey !== undefined) metaData.value.rowKey = params.rowKey
-    if (params.defaultExpandAll !== undefined) metaData.value.defaultExpandAll = params.defaultExpandAll === 'YES'
-    if (params.treeProps !== undefined) metaData.value.treeProps = params.treeProps
-    if (params.queryMode !== undefined) metaData.value.queryMode = params.queryMode === 'YES'
-    if (params.multiple !== undefined) metaData.value.multiple = params.multiple === 'YES'
-    if (params.showLang !== undefined) metaData.value.showLang = params.showLang
-    if (params.showSummary !== undefined) metaData.value.showSummary = params.showSummary === 'YES'
+    if (params.titleColumnName !== undefined) metaData.titleColumnName = params.titleColumnName
+    if (params.operationColumnWidth !== undefined) metaData.operationColumnWidth = params.operationColumnWidth
+    if (params.formComponent !== undefined) metaData.formComponent = params.formComponent
+    if (params.formWidth !== undefined) metaData.formWidth = params.formWidth
+    if (params.dialogModel !== undefined) metaData.dialogModel = params.dialogModel === 'YES'
+    if (params.paginationVisible !== undefined) metaData.paginationVisible = params.paginationVisible === 'YES' ? 1 : 0
+    if (params.excelEnable !== undefined) metaData.excelEnable = params.excelEnable === 'YES'
+    if (params.queryFormVisible !== undefined) metaData.queryFormVisible = params.queryFormVisible === 'YES'
+    if (params.excelImportComponent !== undefined) metaData.excelImportComponent = params.excelImportComponent
+    if (params.rowKey !== undefined) metaData.rowKey = params.rowKey
+    if (params.defaultExpandAll !== undefined) metaData.defaultExpandAll = params.defaultExpandAll === 'YES'
+    if (params.treeProps !== undefined) metaData.treeProps = params.treeProps
+    if (params.queryMode !== undefined) metaData.queryMode = params.queryMode === 'YES'
+    if (params.multiple !== undefined) metaData.multiple = params.multiple === 'YES'
+    if (params.showLang !== undefined) metaData.showLang = params.showLang
+    if (params.showSummary !== undefined) metaData.showSummary = params.showSummary === 'YES'
 
     // queryParams 特殊处理
     if (params.queryParams !== undefined) {
       try {
-        metaData.value.queryParams = JSON.parse(decodeURIComponent(params.queryParams || ""))
+        metaData.queryParams = JSON.parse(decodeURIComponent(params.queryParams || ""))
       } catch (err) {
         console.log(err)
       }
     }
-    console.log('模型元数据', metaData.value)
+    console.log('模型元数据', metaData)
     loading.value = false
   })
 })
