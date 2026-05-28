@@ -32,6 +32,7 @@ import {useI18n} from 'vue-i18n'
 import {useRoute} from "vue-router";
 import {doHttpGet} from "@/api/common/platform";
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
+import TunaDefaultObjectForm from "@/views/common/TunaDefaultObjectForm.vue";
 
 const {t, locale} = useI18n()
 const refTable = ref(null)
@@ -41,12 +42,13 @@ const route = useRoute()
 const {modules } = getRouteComponents()
 
 function getComponent(path) {
-  return modules['../views/microapp' + path]
+  return modules[path]
 }
 
 onMounted(() => {
   const params = route.query
   metaData.className = params.className
+  metaData.formComponent = TunaDefaultObjectForm
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + metaData.className, {}).then(entityDefine => {
     metaData.context = entityDefine.serviceInstance.contextPath.substring(1)
     metaData.baseUrl = entityDefine.serviceInstance.contextPath + entityDefine.url
@@ -57,8 +59,8 @@ onMounted(() => {
     }
     metaData.titleColumnName = entityDefine.titleColumnName
     metaData.operationColumnWidth = entityDefine.operationColumnWidth
-    if(entityDefine.formComponent !== undefined) {
-      metaData.formComponent = getComponent(entityDefine.formComponent)
+    if(entityDefine.formComponent) {
+      metaData.formComponent = getComponent('../views/microapp' + entityDefine.formComponent)
     }
     metaData.formWidth = entityDefine.formWidth
     metaData.dialogModel = entityDefine.dialogModel === 'YES'
@@ -77,7 +79,7 @@ onMounted(() => {
     // 传递过来的queryParam拥有最高优先级
     if (params.titleColumnName !== undefined) metaData.titleColumnName = params.titleColumnName
     if (params.operationColumnWidth !== undefined) metaData.operationColumnWidth = params.operationColumnWidth
-    if (params.formComponent !== undefined) metaData.formComponent = params.formComponent
+    if (params.formComponent) metaData.formComponent = getComponent('../views/microapp' + params.formComponent)
     if (params.formWidth !== undefined) metaData.formWidth = params.formWidth
     if (params.dialogModel !== undefined) metaData.dialogModel = params.dialogModel === 'YES'
     if (params.paginationVisible !== undefined) metaData.paginationVisible = params.paginationVisible === 'YES' ? 1 : 0

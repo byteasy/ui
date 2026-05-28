@@ -112,7 +112,7 @@ onMounted(() => {
 
 const tableHeight = computed({
   get() {
-    return props.fullscreen === true ? '90vh' : '50vh'
+    return props.fullscreen === true ? 'calc(100vh - 200px)' : 'calc(55vh - 100px)'
   },
   set() {
   }
