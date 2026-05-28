@@ -130,7 +130,7 @@ function onSaveClick() {
     doHttpPost(props.url, queryParam.value, formValue.value)
       .then(() => {
         ElMessage.success(t('operationSuccess'))
-        emit('close')
+        emit('close', 'ok')
       })
   })
 }
@@ -143,7 +143,7 @@ const validate = () => {
 
 function onClearForm() {
   refForm.value?.resetFields()
-  emit('close')
+  emit('close', 'cancel')
 }
 
 defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})

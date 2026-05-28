@@ -228,7 +228,9 @@ function onAdd(row) {
       width: getFormWidth(),
       dialogModel: props.dialogModel,
       onClose: (data) => {
-        props.refresh()
+        if (data === 'ok') {
+          props.refresh()
+        }
       },
     },
   )
@@ -249,7 +251,9 @@ function onEdit(row) {
       width: getFormWidth(),
       dialogModel: props.dialogModel,
       onClose: (data) => {
-        props.refresh()
+        if (data === 'ok') {
+          props.refresh()
+        }
       },
     },
   )
