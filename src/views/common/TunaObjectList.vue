@@ -22,6 +22,9 @@
     :show-summary="metaData.showSummary"
     v-if="loading === false"
   >
+    <template v-for="col in fieldComponents" :key="col.name" v-slot:[`form-query-field-${col.name}`]="scope">
+      <component :is="getComponent('..' + col.fieldComponent)" v-model="scope.queryParam[col.name]" :style="{ width: (col.width === 0 ? 160 : col.width) + 'px !important' }" :key="col.className + col.name" clearable @change="refTable.refresh()"></component>
+    </template>
   </tuna-table-v2>
   <el-skeleton :rows="5" animated v-else/>
 </template>
@@ -30,7 +33,7 @@
 import {onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useRoute} from "vue-router";
-import {doHttpGet} from "@/api/common/platform";
+import {doHttpGet, getEntitySchema} from "@/api/common/platform";
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import TunaDefaultObjectForm from "@/views/common/TunaDefaultObjectForm.vue";
 
@@ -40,6 +43,7 @@ const metaData = {}
 const loading = ref(true)
 const route = useRoute()
 const {modules } = getRouteComponents()
+const fieldComponents = ref([])
 
 function getComponent(path) {
   return modules[path]
@@ -103,7 +107,11 @@ onMounted(() => {
       }
     }
     console.log('模型元数据', metaData)
-    loading.value = false
+    getEntitySchema(metaData.context, metaData.className)
+      .then((response) => {
+        fieldComponents.value = response.data.filter(s => s.fieldComponent)
+        loading.value = false
+      })
   })
 })
 </script>
