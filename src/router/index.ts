@@ -3,6 +3,7 @@ import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { doHttpGet } from '@/api/common/platform'
 import AsideMain from '@/views/layout/AsideMain.vue'
 import XEUtils from 'xe-utils'
+import {getRouteComponents} from "@/util/autoImportComponent.ts";
 
 const router = createRouter({
   history: createWebHashHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/' : '/'),
@@ -14,12 +15,8 @@ const router = createRouter({
  * 基座只有静态路由，并动态加载微应用的路由入口
  */
 let isMicroAppRouterLoad = false
-const modulesTwo = import.meta.glob('../views/*/*.vue', { eager: true, import: 'default' })
-const modulesThree = import.meta.glob('../views/*/*/*.vue', { eager: true, import: 'default' })
-const modulesFour = import.meta.glob('../views/*/*/*/*.vue', { eager: true, import: 'default' })
-console.log('router component level2', modulesTwo)
-console.log('router component level3', modulesThree)
-console.log('router component level4', modulesFour)
+const { modules } = getRouteComponents()
+console.log('all ui component', modules)
 
 router.beforeEach(async (to, from, next) => {
   if (!isMicroAppRouterLoad) {
@@ -143,17 +140,10 @@ function hasChildrenMenu(menu) {
 }
 
 function getModule(name) {
-  if (modulesThree['..' + name] !== undefined) {
-    return modulesThree['..' + name]
+  if (modules['..' + name] !== undefined) {
+    return modules['..' + name]
   }
-  if (modulesTwo['..' + name] !== undefined) {
-    return modulesTwo['..' + name]
-  }
-  if (modulesFour['..' + name] !== undefined) {
-    return modulesFour['..' + name]
-  }
-  console.log(name, 'component load error')
-  return modulesTwo['./ErrorLoadComponent.vue']
+  return modules['../views/common/Error404.vue']
 }
 
 export default router

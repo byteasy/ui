@@ -22,7 +22,7 @@
     v-if="loading === false"
   >
   </tuna-table-v2>
-  <el-skeleton :rows="5" animated v-else />
+  <el-skeleton :rows="5" animated v-else/>
 </template>
 
 <script lang="ts" setup>
@@ -30,12 +30,14 @@ import {onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useRoute} from "vue-router";
 import {doHttpGet} from "@/api/common/platform";
+import {getRouteComponents} from "@/util/autoImportComponent.ts";
 
 const {t, locale} = useI18n()
 const refTable = ref(null)
 const metaData = ref({})
 const loading = ref(true)
 const route = useRoute()
+const {modules } = getRouteComponents()
 
 onMounted(() => {
   const params = route.query
@@ -44,7 +46,7 @@ onMounted(() => {
     metaData.value.context = entityDefine.serviceInstance.contextPath.substring(1)
     metaData.value.baseUrl = entityDefine.serviceInstance.contextPath + entityDefine.url
     try {
-      metaData.value.queryParams = JSON.parse(decodeURIComponent(entityDefine.queryParams || ""))
+      metaData.value.queryParams = JSON.parse(decodeURIComponent(entityDefine.queryParams || "{}"))
     } catch (err) {
       console.log(err)
     }

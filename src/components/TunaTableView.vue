@@ -116,9 +116,11 @@
       <template #default="scope">
         <el-space direction="horizontal" :size="4">
           <slot name="table-operation" :row="scope.row">
-            <el-link underline="never" @click="onView(scope.row)" type="primary">
-              {{ t('table.view') }}
-            </el-link>
+            <tuna-popup-object-view :model-value="scope.row" :column="{ externalClass: props.className }" :lang="props.showLang">
+              <template v-slot:reference>
+                {{ t('table.view') }}
+              </template>
+            </tuna-popup-object-view>
             <el-link underline="never" @click="onEdit(scope.row)" type="primary" v-permission="props.className + '.Edit'">
               {{ t('table.edit') }}
             </el-link>
