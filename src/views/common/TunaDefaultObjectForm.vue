@@ -33,8 +33,9 @@ function getComponent(path) {
 const fieldComponents = ref(props.columns.filter(s => s.fieldComponent))
 
 onMounted(() => {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
-    loading.value = false
-  })
+  // doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+  //   loading.value = false
+  // })
+  loading.value = false
 })
 </script>

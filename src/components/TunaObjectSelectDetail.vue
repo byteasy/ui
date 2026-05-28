@@ -17,7 +17,7 @@
                 :value="obj[props.column.externalClassPrimaryField]"
                 :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
     </el-radio-group>
-    <div v-if="props.column.uiComponent === 'TABLE'" :style="{ 'height': tableHeight }" class="w-full">
+    <div v-if="props.column.uiComponent === 'TABLE' || props.column.uiComponent === undefined" :style="{ 'height': tableHeight }" class="w-full">
       <tuna-table-v2
         ref="refTable"
         class="w-full h-full"
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {computed, defineEmits, nextTick, onMounted, ref} from "vue";
+import {computed, defineEmits, onMounted, ref} from "vue";
 import {doHttpGet, getEntitySchema} from "@/api/common/platform";
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
