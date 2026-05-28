@@ -17,7 +17,7 @@
                                   v-if="col.isShow === 'YES'">
               <slot :name="'view_' + col.name" :value="showValue[col.name]" style="width: 30vw">
                 <enum-viewer
-                  v-if="col.type === 'ENUM'"
+                  v-if="col.type === 'ENUM' && showValue[col.name]"
                   :prop="showValue[col.name]"
                   :context="svrContext"
                   :code="col.typeClassName"
@@ -25,7 +25,8 @@
                 <tuna-popup-object-view :model-value="showValue[getClassFieldName(col.externalClass)]"
                                         :column="col" :lang="props.lang"
                                         v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
-                <el-text style="max-width: 15vw;" truncated v-else>{{ getLangText(showValue[col.name], props.lang) }}</el-text>
+                <el-text style="max-width: 15vw;" truncated v-else-if="col.type ==='STRING'">{{ getLangText(showValue[col.name], props.lang) }}</el-text>
+                <span v-else> {{ showValue[col.name] }}</span>
               </slot>
             </el-descriptions-item>
           </template>
@@ -49,7 +50,7 @@ const {t, locale} = useI18n() // 表单引用
 const props = defineProps<{
   modelValue: any
   column: any
-  lang?: string | undefined
+  lang?: string | undefined | null
   cols?: number
 }>()
 
