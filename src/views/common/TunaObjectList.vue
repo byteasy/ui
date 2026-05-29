@@ -22,14 +22,19 @@
     :show-summary="metaData.showSummary"
     v-if="loading === false"
   >
-    <template v-for="col in fieldComponents" :key="col.name" v-slot:[`form-query-field-${col.name}`]="scope">
-      <component :is="getComponent('..' + col.fieldComponent)" v-model="scope.queryParam[col.name]" :style="{ width: (col.width === 0 ? 160 : col.width) + 'px !important' }" :key="col.className + col.name" clearable @change="refTable.refresh()"></component>
+    <template v-for="col in fieldComponents" :key="col.name"
+              v-slot:[`form-query-field-${col.name}`]="scope">
+      <component :is="getComponent('..' + col.fieldComponent)" v-model="scope.queryParam[col.name]"
+                 :style="{ width: (col.width === 0 ? 160 : col.width) + 'px !important' }"
+                 :key="col.className + col.name" clearable @change="refTable.refresh()"></component>
     </template>
     <template v-slot:form-query-buttons-extra="scope">
-      <component v-for="btn in formQueryButtonsExtra" :key="btn" :is="getComponent('..' + btn)" :queryParam="scope.queryParam" :queryMode="scope.queryMode"></component>
+      <component v-for="btn in formQueryButtonsExtra" :key="btn" :is="getComponent('..' + btn)"
+                 :queryParam="scope.queryParam" :queryMode="scope.queryMode"></component>
     </template>
     <template v-slot:table-operation-extra="scope">
-      <component v-for="btn in operationButtons" :key="btn" :is="getComponent('..' + btn)" :row="scope.row"></component>
+      <component v-for="btn in operationButtons" :key="btn" :is="getComponent('..' + btn)"
+                 :row="scope.row"></component>
     </template>
   </tuna-table-v2>
   <el-skeleton :rows="5" animated v-else/>
@@ -42,13 +47,14 @@ import {useRoute} from "vue-router";
 import {doHttpGet, getEntitySchema} from "@/api/common/platform";
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import TunaDefaultObjectForm from "@/views/common/TunaDefaultObjectForm.vue";
+import {queryStringToJson} from "@/util/common.ts";
 
 const {t, locale} = useI18n()
 const refTable = ref(null)
 const metaData = {}
 const loading = ref(true)
 const route = useRoute()
-const {modules } = getRouteComponents()
+const {modules} = getRouteComponents()
 const fieldComponents = ref([])
 const formQueryButtonsExtra = ref([])
 const operationButtons = ref([])
@@ -64,14 +70,10 @@ onMounted(() => {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + metaData.className, {}).then(entityDefine => {
     metaData.context = entityDefine.serviceInstance.contextPath.substring(1)
     metaData.baseUrl = entityDefine.serviceInstance.contextPath + entityDefine.url
-    try {
-      metaData.queryParams = JSON.parse(decodeURIComponent(entityDefine.queryParams || "{}"))
-    } catch (err) {
-      console.log(err)
-    }
+    metaData.queryParams = queryStringToJson(entityDefine.queryParams)
     metaData.titleColumnName = entityDefine.titleColumnName
     metaData.operationColumnWidth = entityDefine.operationColumnWidth
-    if(entityDefine.formComponent) {
+    if (entityDefine.formComponent) {
       metaData.formComponent = getComponent('../views/microapp' + entityDefine.formComponent)
     }
     metaData.formWidth = entityDefine.formWidth
@@ -87,10 +89,10 @@ onMounted(() => {
     metaData.multiple = entityDefine.multiple === 'YES'
     metaData.showLang = entityDefine.showLang
     metaData.showSummary = entityDefine.showSummary === 'YES'
-    if(entityDefine.queryBarButtons) {
+    if (entityDefine.queryBarButtons) {
       formQueryButtonsExtra.value = entityDefine.queryBarButtons.split(',')
     }
-    if(entityDefine.operationButtons) {
+    if (entityDefine.operationButtons) {
       operationButtons.value = entityDefine.operationButtons.split(',')
     }
 
@@ -114,11 +116,7 @@ onMounted(() => {
 
     // queryParams 特殊处理
     if (params.queryParams !== undefined) {
-      try {
-        metaData.queryParams = JSON.parse(decodeURIComponent(params.queryParams || ""))
-      } catch (err) {
-        console.log(err)
-      }
+      metaData.queryParams = queryStringToJson(params.queryParams)
     }
 
     console.log('模型元数据', metaData)

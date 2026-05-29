@@ -42,6 +42,15 @@ export const jsonToQueryString = (obj) => {
   return params.toString();
 }
 
+export const queryStringToJson = (queryString: string) => {
+  try {
+    return JSON.parse(decodeURIComponent(queryString || "{}"))
+  } catch (err) {
+    console.log(err)
+    return undefined
+  }
+}
+
 export const getClassFieldName = (className: string) => {
   if (!className) return '';
   const arrs = className.split('.')
