@@ -49,6 +49,10 @@ import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import TunaDefaultObjectForm from "@/views/common/TunaDefaultObjectForm.vue";
 import {queryStringToJson} from "@/util/common.ts";
 
+const props = defineProps<{
+  metaData?: object | null | undefined
+}>()
+
 const {t, locale} = useI18n()
 const refTable = ref(null)
 const metaData = {}
@@ -64,7 +68,11 @@ function getComponent(path) {
 }
 
 onMounted(() => {
-  const params = route.query
+  const params = { ...route.query } // 浅拷贝，避免直接修改路由对象
+  if (props.metaData && typeof props.metaData === 'object' && !Array.isArray(props.metaData)) {
+    Object.assign(params, props.metaData)
+  }
+  console.log('params', params)
   metaData.className = params.className
   metaData.formComponent = TunaDefaultObjectForm
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + metaData.className, {}).then(entityDefine => {
