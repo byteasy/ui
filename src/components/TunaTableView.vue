@@ -1,6 +1,7 @@
 <template>
   <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable">
-    <el-table-column type="selection" width="55" v-if="props.queryMode === true && props.multiple === true" />
+    <el-table-column type="selection" width="55"
+                     v-if="props.queryMode === true && props.multiple === true"/>
     <template v-for="col in tableColumns" :key="col.name">
       <slot :name="'table-column-def-' + col.name" :column="col">
         <el-table-column
@@ -18,9 +19,13 @@
         >
           <template #default="scope">
             <slot :name="'table-cell-' + col.name" :row="scope.row">
-              <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'"><tuna-i18n-value  :model-value="scope.row[col.name]"
-                                                          :lang="props.showLang"/></el-link>
-              <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]" :column="col" :lang="props.showLang" v-else-if="col.relationType === 'EXTERNAL_KEY'" />
+              <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'">
+                <tuna-i18n-value :model-value="scope.row[col.name]"
+                                 :lang="props.showLang" @click="onOpenTableDetail(col, scope.row)"/>
+              </el-link>
+              <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]"
+                                      :column="col" :lang="props.showLang"
+                                      v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
               <tuna-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
                                :lang="props.showLang"/>
               <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
@@ -80,12 +85,12 @@
                     </el-icon>
                     {{ $t('table.customColumn') }}
                   </el-dropdown-item>
-<!--                  <el-dropdown-item>-->
-<!--                    <el-icon>-->
-<!--                      <DCaret/>-->
-<!--                    </el-icon>-->
-<!--                    {{ $t('table.customSort') }}-->
-<!--                  </el-dropdown-item>-->
+                  <!--                  <el-dropdown-item>-->
+                  <!--                    <el-icon>-->
+                  <!--                      <DCaret/>-->
+                  <!--                    </el-icon>-->
+                  <!--                    {{ $t('table.customSort') }}-->
+                  <!--                  </el-dropdown-item>-->
                   <el-dropdown-item divided @click="downLoadExcelTemplate"
                                     v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
                     <el-icon>
@@ -101,7 +106,7 @@
                     {{ $t('table.importByExcel') }}
                   </el-dropdown-item>
                   <el-dropdown-item @click="onExcelExportClick"
-                    v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')">
+                                    v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')">
                     <el-icon>
                       <IconLocalExcelExport/>
                     </el-icon>
@@ -116,12 +121,15 @@
       <template #default="scope">
         <el-space direction="horizontal" :size="4">
           <slot name="table-operation" :row="scope.row">
-            <tuna-popup-object-view :model-value="scope.row" :column="{ externalClass: props.className }" :lang="props.showLang">
+            <tuna-popup-object-view :model-value="scope.row"
+                                    :column="{ externalClass: props.className }"
+                                    :lang="props.showLang">
               <template v-slot:reference>
                 {{ t('table.view') }}
               </template>
             </tuna-popup-object-view>
-            <el-link underline="never" @click="onEdit(scope.row)" type="primary" v-permission="props.className + '.Edit'">
+            <el-link underline="never" @click="onEdit(scope.row)" type="primary"
+                     v-permission="props.className + '.Edit'">
               {{ t('table.edit') }}
             </el-link>
             <slot name="table-operation-extra" :row="scope.row"></slot>
@@ -133,7 +141,8 @@
               @confirm="onDelete(scope.row)"
             >
               <template #reference>
-                <el-link underline="never" type="danger" v-permission="props.className + '.Delete'">{{
+                <el-link underline="never" type="danger" v-permission="props.className + '.Delete'">
+                  {{
                     t('table.delete')
                   }}
                 </el-link>
@@ -150,16 +159,17 @@
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {useAppSettingsStore} from "@/stores/appSettings.ts";
-import {doHttpDelete} from "@/api/common/platform";
+import {doHttpDelete, doHttpGet} from "@/api/common/platform";
 import {ElMessage} from "element-plus";
 import TunaTableForm from "@/components/TunaTableForm.vue";
 import {type Component, defineEmits, defineExpose, ref} from "vue";
 import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
-import {getClassFieldName, putValueIfValid} from "@/util/common.ts";
+import {getClassFieldName, jsonToQueryString, putValueIfValid} from "@/util/common.ts";
 import {useRoute} from "vue-router";
 import {useSessionStore} from "@/stores/session.ts";
 import TunaExcelImport from "@/components/TunaExcelImport.vue";
 import TunaExcelExport from "@/components/TunaExcelExport.vue";
+import TunaTableContainer from "@/components/TunaTableContainer.vue";
 import {useModal} from "@/components/dialog/useModal.ts";
 
 const refElTable = ref(null)
@@ -196,67 +206,93 @@ function downLoadExcelTemplate() {
 }
 
 function onView(row) {
-  const [lastRoute] = route.matched.slice(-1)
-  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
-  open(
-    getFormComponent(), // 要显示的组件
-    {
-      columns: props.tableColumns,
-      row: row,
-      url: props.baseUrl,
-      readonly: true,
-      context: props.context,
-    }, // 传给组件的 props
-    {
-      title: t('table.view') + title,
-      width: getFormWidth(),
-      dialogModel: props.dialogModel,
-      onClose: (data) => {
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      getFormComponent(), // 要显示的组件
+      {
+        columns: props.tableColumns,
+        row: row,
+        url: props.baseUrl,
+        readonly: true,
+        context: props.context,
+      }, // 传给组件的 props
+      {
+        title: t('table.view') + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+        onClose: (data) => {
+        },
       },
-    },
-  )
+    )
+  })
+}
+
+function onOpenTableDetail(column, row) {
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + column.externalClass, {}).then(entityDefine => {
+    const params = {}
+    params.descColumns = ['updatedTime', 'createdTime']
+    params[column.externalClassPrimaryField + 'QueryType'] = 'eq'
+    params[column.externalClassPrimaryField] = row[column.innerPrimaryField]
+    const query = {}
+    query.queryParams = JSON.stringify(params)
+    query.className = column.externalClass
+    open(
+      TunaTableContainer,
+      {
+        metaData: query,
+        dialogModel: props.dialogModel,
+      },
+      {
+        title: getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+      },
+    )
+  })
 }
 
 
 function onAdd(row) {
-  const [lastRoute] = route.matched.slice(-1)
-  open(
-    getFormComponent(), // 要显示的组件
-    {columns: props.tableColumns, url: props.baseUrl, context: props.context, row: row}, // 传给组件的 props
-    {
-      title: t('add') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
-      width: getFormWidth(),
-      dialogModel: props.dialogModel,
-      onClose: (data) => {
-        if (data === 'ok') {
-          props.refresh()
-        }
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      getFormComponent(), // 要显示的组件
+      {columns: props.tableColumns, url: props.baseUrl, context: props.context, row: row}, // 传给组件的 props
+      {
+        title: t('add') + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+        onClose: (data) => {
+          if (data === 'ok') {
+            props.refresh()
+          }
+        },
       },
-    },
-  )
+    )
+  })
 }
 
 function onEdit(row) {
-  const [lastRoute] = route.matched.slice(-1)
-  open(
-    getFormComponent(), // 要显示的组件
-    {
-      columns: props.tableColumns,
-      row: row,
-      url: props.baseUrl,
-      context: props.context,
-    }, // 传给组件的 props
-    {
-      title: t('table.edit') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
-      width: getFormWidth(),
-      dialogModel: props.dialogModel,
-      onClose: (data) => {
-        if (data === 'ok') {
-          props.refresh()
-        }
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      getFormComponent(), // 要显示的组件
+      {
+        columns: props.tableColumns,
+        row: row,
+        url: props.baseUrl,
+        context: props.context,
+      }, // 传给组件的 props
+      {
+        title: t('table.edit') + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+        onClose: (data) => {
+          if (data === 'ok') {
+            props.refresh()
+          }
+        },
       },
-    },
-  )
+    )
+  })
 }
 
 function onDelete(row) {
@@ -318,43 +354,43 @@ function mergeLocalStorage(data: Array<never>) {
 }
 
 function onExcelImportClick() {
-  const [lastRoute] = route.matched.slice(-1)
-  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
-  open(
-    props.excelImportComponent || TunaExcelImport,
-    {
-      columns: props.tableColumns,
-      url: props.baseUrl,
-      context: props.context
-    }, // 传给组件的 props
-    {
-      title: t('table.importByExcel') + '>' + title,
-      width: getFormWidth(),
-      onClose: (data) => {
-        props.refresh()
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      props.excelImportComponent || TunaExcelImport,
+      {
+        columns: props.tableColumns,
+        url: props.baseUrl,
+        context: props.context
+      }, // 传给组件的 props
+      {
+        title: t('table.importByExcel') + '>' + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        onClose: (data) => {
+          props.refresh()
+        }
       }
-    }
-  )
+    )
+  })
 }
 
 function onExcelExportClick() {
-  const [lastRoute] = route.matched.slice(-1)
-  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
-  open(
-    props.excelExportComponent || TunaExcelExport,
-    {
-      columns: props.tableColumns,
-      url: props.baseUrl,
-      queryParam: props.queryParam,
-    }, // 传给组件的 props
-    {
-      title: t('table.exportToExcel') + '>' + title,
-      width: getFormWidth(),
-      onClose: (data) => {
-        props.refresh()
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      props.excelExportComponent || TunaExcelExport,
+      {
+        columns: props.tableColumns,
+        url: props.baseUrl,
+        queryParam: props.queryParam,
+      }, // 传给组件的 props
+      {
+        title: t('table.exportToExcel') + '>' + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        onClose: (data) => {
+          props.refresh()
+        }
       }
-    }
-  )
+    )
+  })
 }
 
 function getSelectionRows() {
