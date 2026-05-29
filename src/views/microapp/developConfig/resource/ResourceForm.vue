@@ -87,7 +87,7 @@
           :disabled="scope.props.readonly || scope.row.type === 'BUTTON'"
         />
         <el-form-item :label="$t('platform.resource.queryParams')" >
-          <tuna-object-input v-model="queryParams" @change="onQueryParamsChange" v-if="scope.row.type === 'MENU'"/>
+          <tuna-object-input v-model="tableMetaData" @change="onTableMetaDataChange" v-if="scope.row.type === 'MENU'"/>
         </el-form-item>
       </div>
     </template>
@@ -123,7 +123,7 @@ const {t, locale} = useI18n()
 
 const refParentTree = ref(null)
 const refForm = ref(null)
-const queryParams = ref({})
+const tableMetaData = ref({})
 
 onMounted(() => {
   loadParentTree()
@@ -133,17 +133,17 @@ onMounted(() => {
       const queryString = routerUrl.split('?')[1]
       const params = new URLSearchParams(queryString)
       for (const [key, value] of params) {
-        queryParams.value[key] = value;
+        tableMetaData.value[key] = value;
       }
     }
   }
 })
 
 function initStandComponent() {
-  queryParams.value.className = ''
-  queryParams.value.titleColumnName = ''
-  queryParams.value.excelEnable = 'YES'
-  queryParams.value.queryParams = "{\"descColumns\":[\"updatedTime\", \"createdTime\"]}"
+  tableMetaData.value.className = ''
+  tableMetaData.value.titleColumnName = ''
+  tableMetaData.value.excelEnable = 'YES'
+  tableMetaData.value.queryParams = "{\"descColumns\":[\"updatedTime\", \"createdTime\"]}"
   refForm.value.formValue.component = '/views/common/TunaObjectList.vue'
 }
 
@@ -152,10 +152,10 @@ function loadParentTree() {
   refParentTree.value.refresh()
 }
 
-function onQueryParamsChange() {
+function onTableMetaDataChange() {
   const obj = {}
-  for (const key in queryParams.value) {
-    const value = queryParams.value[key]
+  for (const key in tableMetaData.value) {
+    const value = tableMetaData.value[key]
     if (value !== '' && value.length > 0) {
       obj[key] = value
     }
