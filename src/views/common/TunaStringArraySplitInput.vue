@@ -16,7 +16,7 @@
       <el-button
         type="danger"
         icon="Delete"
-        :disabled="loading"
+        :disabled="loading || $attrs.disabled === true"
         @click="handleDelete(index)"
         circle
         size="small"
@@ -28,7 +28,7 @@
         icon="Plus"
         size="small"
         circle
-        :disabled="loading"
+        :disabled="loading || $attrs.disabled === true"
         @click="handleAdd"
         class="flex-none ml-1"
       />
