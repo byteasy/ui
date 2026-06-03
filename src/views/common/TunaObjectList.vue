@@ -6,6 +6,7 @@
     :class-name="metaData.className"
     :query-params="metaData.queryParams"
     :excel-import-enable="metaData.excelEnable"
+    :excel-import-component="metaData.excelImportComponent"
     :title-column-name="metaData.titleColumnName || 'name'"
     :operation-column-width="metaData.operationColumnWidth"
     :dialog-model="metaData.dialogModel"
@@ -82,14 +83,16 @@ onMounted(() => {
     metaData.titleColumnName = entityDefine.titleColumnName
     metaData.operationColumnWidth = entityDefine.operationColumnWidth
     if (entityDefine.formComponent) {
-      metaData.formComponent = getComponent('../views/microapp' + entityDefine.formComponent)
+      metaData.formComponent = getComponent('..' + entityDefine.formComponent)
     }
     metaData.formWidth = entityDefine.formWidth
     metaData.dialogModel = entityDefine.dialogModel === 'YES'
     metaData.paginationVisible = entityDefine.paginationVisible === 'YES' ? 1 : 0
     metaData.excelEnable = entityDefine.excelEnable === 'YES'
     metaData.queryFormVisible = entityDefine.queryFormVisible === 'YES' ? 1 : 0
-    metaData.excelImportComponent = entityDefine.excelImportComponent
+    if (entityDefine.excelImportComponent) {
+      metaData.excelImportComponent = getComponent('..' + entityDefine.excelImportComponent)
+    }
     metaData.rowKey = entityDefine.rowKey
     metaData.defaultExpandAll = entityDefine.defaultExpandAll === 'YES'
     metaData.treeProps = entityDefine.treeProps
@@ -107,13 +110,13 @@ onMounted(() => {
     // 传递过来的queryParam拥有最高优先级
     if (params.titleColumnName !== undefined) metaData.titleColumnName = params.titleColumnName
     if (params.operationColumnWidth !== undefined) metaData.operationColumnWidth = params.operationColumnWidth
-    if (params.formComponent) metaData.formComponent = getComponent('../views/microapp' + params.formComponent)
+    if (params.formComponent) metaData.formComponent = getComponent('..' + params.formComponent)
     if (params.formWidth !== undefined) metaData.formWidth = params.formWidth
     if (params.dialogModel !== undefined) metaData.dialogModel = params.dialogModel === 'YES'
     if (params.paginationVisible !== undefined) metaData.paginationVisible = params.paginationVisible === 'YES' ? 1 : 0
     if (params.excelEnable !== undefined) metaData.excelEnable = params.excelEnable === 'YES'
     if (params.queryFormVisible !== undefined) metaData.queryFormVisible = params.queryFormVisible === 'YES'
-    if (params.excelImportComponent !== undefined) metaData.excelImportComponent = params.excelImportComponent
+    if (params.excelImportComponent) metaData.excelImportComponent = getComponent('..' + params.excelImportComponent)
     if (params.rowKey !== undefined) metaData.rowKey = params.rowKey
     if (params.defaultExpandAll !== undefined) metaData.defaultExpandAll = params.defaultExpandAll === 'YES'
     if (params.treeProps !== undefined) metaData.treeProps = params.treeProps

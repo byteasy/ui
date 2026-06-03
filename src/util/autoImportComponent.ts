@@ -1,4 +1,4 @@
 export function getRouteComponents() {
-  const modules = import.meta.glob('../views/**/*.vue', { eager: true, import: 'default' })
+  const modules = import.meta.glob('../**/*.vue', { eager: true, import: 'default' })
   return { modules }
 }
