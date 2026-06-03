@@ -144,7 +144,7 @@ function initStandComponent() {
   tableMetaData.value.titleColumnName = ''
   tableMetaData.value.excelEnable = 'YES'
   tableMetaData.value.queryParams = "{\"descColumns\":[\"updatedTime\", \"createdTime\"]}"
-  refForm.value.formValue.component = '/views/common/TunaObjectList.vue'
+  refForm.value.formValue.component = '/views/template/TunaObjectList.vue'
 }
 
 function loadParentTree() {
