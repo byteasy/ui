@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import TunaObjectList from "@/views/common/TunaObjectList.vue";
+import TunaObjectList from "@/views/template/TunaObjectList.vue";
 import {computed} from "vue";
 
 const props = defineProps<{

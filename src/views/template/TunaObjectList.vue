@@ -47,7 +47,7 @@ import {useI18n} from 'vue-i18n'
 import {useRoute} from "vue-router";
 import {doHttpGet, getEntitySchema} from "@/api/common/platform";
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
-import TunaDefaultObjectForm from "@/views/common/TunaDefaultObjectForm.vue";
+import TunaDefaultObjectForm from "@/views/template/TunaDefaultObjectForm.vue";
 import {queryStringToJson} from "@/util/common.ts";
 
 const props = defineProps<{
