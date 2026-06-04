@@ -16,34 +16,19 @@
           <tuna-table-view
             ref="refTunaTableView"
             v-if="viewModel === 'table'"
+            :table-props="props"
+            :fields="tableColumns"
             :show-summary="props.showSummary === true"
-            :show-lang="props.showLang"
-            :context="props.context"
-            :form-component="props.formComponent"
-            :dialog-model="props.dialogModel"
-            :class-name="props.className"
-            :form-width="props.formWidth"
-            :excel-import-enable="props.excelImportEnable"
-            :operation-column-width="props.operationColumnWidth"
-            :excel-import-component="props.excelImportComponent"
-            :base-url="props.baseUrl"
-            :table-columns="tableColumns"
-            :loadTableColumns="loadTableColumns"
             :height="height"
-            :refresh="refresh"
             :data="tableData.records"
             @row-dblclick="onTableRowDoubleClick"
             @row-click="onTableRowClick"
+            @header-dragend="onHeaderDrag"
+            @row-action="onRowActionHandle"
             v-loading="loading"
             :row-key="props.rowKey"
             :tree-props="props.treeProps"
-            :default-expand-all="props.defaultExpandAll"
-            @header-dragend="onHeaderDrag"
-            @switch-view="switchViewModel"
-            :query-param="queryParam"
-            :query-mode="props.queryMode"
-            :multiple="props.multiple"
-          >
+            :default-expand-all="props.defaultExpandAll">
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
@@ -108,7 +93,7 @@ import {
   ref,
 } from 'vue'
 import TunaContainer from '@/components/TunaContainer.vue'
-import {doHttpGet, getEntitySchema} from '@/api/common/platform'
+import {doHttpDelete, doHttpGet, getEntitySchema} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
@@ -118,6 +103,8 @@ import {getLangText} from "@/locales/common.ts";
 import TunaExcelImport from "@/components/TunaExcelImport.vue";
 import TunaExcelExport from "@/components/TunaExcelExport.vue";
 import {useModal} from "@/components/dialog/useModal.ts";
+import TunaTableContainer from "@/components/TunaTableContainer.vue";
+import TunaTableForm from "@/components/TunaTableForm.vue";
 
 const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
@@ -235,22 +222,6 @@ function refresh() {
     })
 }
 
-function onView(row) {
-  refTunaTableView.value?.onView(row)
-}
-
-function onAdd(row) {
-  refTunaTableView.value?.onAdd(row)
-}
-
-function onEdit(row) {
-  refTunaTableView.value?.onEdit(row)
-}
-
-function onDelete(row) {
-  refTunaTableView.value?.onDelete(row)
-}
-
 function onTableRowClick(row) {
   emit('rowClick', row)
 }
@@ -276,7 +247,7 @@ function onHeaderDrag(newWidth: number, oldWidth: number, column: TableColumnCtx
 }
 
 function getSelectionRows() {
-  return refTunaTableView.value.getSelectionRows()
+  return refTunaTableView.value?.getSelectionRows()
 }
 
 function toggleRowSelection(row, sel) {
@@ -287,6 +258,13 @@ function setCurrentRow(row) {
   refTunaTableView.value?.setCurrentRow(row)
 }
 
+function getFormComponent() {
+  if (props.formComponent) {
+    return props.formComponent
+  } else {
+    return TunaTableForm
+  }
+}
 
 function getFormWidth() {
   return props.formWidth !== undefined ? props.formWidth : undefined
@@ -303,6 +281,16 @@ function onMoreActionClick(action) {
     onExcelImportClick()
   } else if (action === 'excelExport') {
     onExcelExportClick()
+  }
+}
+
+function onRowActionHandle(action, args) {
+  if (action === 'edit') {
+    onEdit(args)
+  } else if (action === 'delete') {
+    onDelete(args)
+  } else if (action === 'detailTable') {
+    onOpenTableDetail(args.column, args.row)
   }
 }
 
@@ -375,6 +363,104 @@ function onExcelExportClick() {
       }
     )
   })
+}
+
+function onView(row) {
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      getFormComponent(), // 要显示的组件
+      {
+        columns: tableColumns.value,
+        row: row,
+        url: props.baseUrl,
+        readonly: true,
+        context: props.context,
+      }, // 传给组件的 props
+      {
+        title: t('table.view') + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+        onClose: (data) => {
+        },
+      },
+    )
+  })
+}
+
+function onOpenTableDetail(column, row) {
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + column.externalClass, {}).then(entityDefine => {
+    const params = {}
+    params.descColumns = ['updatedTime', 'createdTime']
+    params[column.externalClassPrimaryField + 'QueryType'] = 'eq'
+    params[column.externalClassPrimaryField] = row[column.innerPrimaryField]
+    const query = {}
+    query.queryParams = JSON.stringify(params)
+    query.className = column.externalClass
+    open(
+      TunaTableContainer,
+      {
+        metaData: query,
+        dialogModel: props.dialogModel,
+      },
+      {
+        title: getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+      },
+    )
+  })
+}
+
+
+function onAdd(row) {
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      getFormComponent(), // 要显示的组件
+      {columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row}, // 传给组件的 props
+      {
+        title: t('add') + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+        onClose: (data) => {
+          if (data === 'ok') {
+            refresh()
+          }
+        },
+      },
+    )
+  })
+}
+
+function onEdit(row) {
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      getFormComponent(), // 要显示的组件
+      {
+        columns: tableColumns.value,
+        row: row,
+        url: props.baseUrl,
+        context: props.context,
+      }, // 传给组件的 props
+      {
+        title: t('table.edit') + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+        onClose: (data) => {
+          if (data === 'ok') {
+            refresh()
+          }
+        },
+      },
+    )
+  })
+}
+
+function onDelete(row) {
+  doHttpDelete(props.baseUrl + '/' + row.id)
+    .then(() => {
+      ElMessage.success(t('operationSuccess'))
+      refresh()
+    })
 }
 
 defineExpose({
