@@ -1,19 +1,18 @@
 <template>
   <!-- 外层容器：相对定位，用于右上角定位 -->
-  <div class="card-grid-wrapper p-2 pt-3 relative">
+  <div class="card-grid-wrapper pl-2 pr-2 relative" :style="{ height: props.height + 'px', width: props.width + 'px' }">
     <!-- 卡片网格 -->
     <div class="card-grid" v-if="props.data?.length && props.data.length > 0">
-      <div class="card-item" v-for="entity in props.data" :key="entity.id">
+      <div class="card-item" v-for="entity in props.data" :key="entity.id || entity.code || entity.name">
         <el-descriptions border :column="2" class="el-card w-full h-full">
           <template #extra>
             <div class="mt-3">
               <el-space direction="horizontal" :size="4" class="mt-1 mr-2">
                 <slot name="table-operation" :row="entity">
-                  <el-link underline="never" @click="onView(entity)" type="primary">
+                  <el-link underline="never" @click="handleRowAction('view', entity)" type="primary">
                     {{ t('table.view') }}
                   </el-link>
-                  <el-link underline="never" @click="onEdit(entity)" type="primary"
-                           v-permission="props.className + '.Edit'">
+                  <el-link underline="never" @click="handleRowAction('edit', entity)" type="primary" v-permission="props.tableProps.className + '.Edit'">
                     {{ t('table.edit') }}
                   </el-link>
                   <slot name="table-operation-extra" :row="entity"></slot>
@@ -22,11 +21,10 @@
                     :cancel-button-text="$t('cancel')"
                     :title="$t('deleteWarn')"
                     :hide-after="10"
-                    @confirm="onDelete(entity)"
+                    @confirm="handleRowAction('delete', entity)"
                   >
                     <template #reference>
-                      <el-link underline="never" type="danger"
-                               v-permission="props.className + '.Delete'">{{
+                      <el-link underline="never" type="danger" v-permission="props.tableProps.className + '.Delete'">{{
                           t('table.delete')
                         }}
                       </el-link>
@@ -40,23 +38,21 @@
           <template #title>
             <div class="mt-3">
               <slot name="table-column-title" :row="entity">
-                <el-link type="primary" @click="onView(entity)" class="ml-3">
+                <el-link type="primary" @click="handleRowAction('view', entity)" class="ml-3">
                   <el-text size="large" class="my-font-bold">
-                    <tuna-i18n-value
-                      :model-value="entity[props.titleColumnName || 'name' ]"></tuna-i18n-value>
+                    <tuna-i18n-value :model-value="entity[props.tableProps.titleColumnName || 'name' ]" class="text-truncate-36"></tuna-i18n-value>
                   </el-text>
                 </el-link>
               </slot>
             </div>
           </template>
-          <template v-for="col in props.tableColumns" :key="col.name">
-            <el-descriptions-item
-              :label="getLangText(col.displayName, locale)"
-              v-if="col.isShow === 'YES' && col.name !== props.titleColumnName"
-            >
+          <template v-for="col in props.fields" :key="col.name">
+            <el-descriptions-item v-if="col.isShow === 'YES' && col.name !== props.tableProps.titleColumnName">
+              <template #label>
+                <span class="text-truncate-15" :title="getLangText(col.displayName, locale)">{{ getLangText(col.displayName, locale) }}</span>
+              </template>
               <slot :name="'table-cell-' + col.name" :row="entity">
-                <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="entity[col.name]"
-                                 :lang="props.showLang"/>
+                <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="entity[col.name]" :lang="props.tableProps.showLang" class="text-truncate-22" />
                 <el-switch v-model="entity[col.name]" v-else-if="col.type === 'BOOL'" disabled>
                   <template #active-action>
                     <span>T</span>
@@ -67,11 +63,11 @@
                 </el-switch>
                 <enum-viewer
                   v-else-if="col.type === 'ENUM'"
-                  :prop="entity[col.name]"
-                  :context="props.context"
+                  :prop="entity[col.name] || ''"
+                  :context="props.tableProps.context"
                   :code="col.typeClassName"
                 />
-                <span v-else>{{ entity[col.name] }}</span>
+                <span class="text-truncate-22" v-else :title="getLangText(entity[col.name], locale)">{{ getLangText(entity[col.name], locale) }}</span>
               </slot>
             </el-descriptions-item>
           </template>
@@ -87,123 +83,61 @@
 <script setup lang="ts">
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
-import {doHttpDelete} from "@/api/common/platform";
-import {ElMessage} from "element-plus";
-import TunaTableForm from "@/components/TunaTableForm.vue";
 import {type Component, defineExpose} from "vue";
-import {useRoute} from "vue-router";
-import {useModal} from "@/components/dialog/useModal.ts";
 
 const {t, locale} = useI18n()
-const route = useRoute()
-const {open} = useModal()
 
 const props = defineProps<{
+  tableProps: {
+    baseUrl: string
+    context: string
+    className: string
+    titleColumnName?: string
+    queryParams?: any
+    formWidth?: string | number
+    operationColumnWidth?: number
+    paginationVisible?: number
+    queryFormVisible?: number
+    rowDbClick?: (row: any) => void
+    excelImportEnable?: boolean
+    formComponent?: Component
+    excelImportComponent?: Component
+    excelExportComponent?: Component
+    dialogModel?: any
+    rowKey?: string
+    defaultExpandAll?: boolean
+    treeProps?: object
+    showLang?: string
+    queryMode?: boolean
+    multiple?: boolean
+    showSummary?: boolean
+    dataRenderFinish?: (tableData) => void
+  },
+  fields: Array<object>
+  data: Array<object> | undefined
+  height: number
   width: number
-  baseUrl: string,
-  tableColumns: Array<any>
-  className: string
-  excelImportEnable: boolean
-  context: string
-  refresh: () => void
-  loadTableColumns: () => void
-  data: Array<any> | undefined
-  showLang?: string
-  formComponent?: Component
-  excelImportComponent?: Component
-  excelExportComponent?: Component
-  formWidth?: string | number
-  dialogModel?: any
-  operationColumnWidth?: number
-  titleColumnName?: string
-  queryParam?: any
 }>()
 
-function onView(row) {
-  const [lastRoute] = route.matched.slice(-1)
-  const title = getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value)
-  open(
-    getFormComponent(), // 要显示的组件
-    {
-      columns: props.tableColumns,
-      row: row,
-      url: props.baseUrl,
-      readonly: true,
-      context: props.context,
-    }, // 传给组件的 props
-    {
-      title: t('table.view') + title,
-      width: getFormWidth(),
-      dialogModel: props.dialogModel,
-      onClose: (data) => {
-      },
-    },
-  )
+const emit = defineEmits(['rowAction'])
+
+function handleRowAction(action, args) {
+  emit('rowAction', action, args)
 }
 
-
-function onAdd(row) {
-  const [lastRoute] = route.matched.slice(-1)
-  open(
-    getFormComponent(), // 要显示的组件
-    {columns: props.tableColumns, url: props.baseUrl, context: props.context, row: row}, // 传给组件的 props
-    {
-      title: t('add') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
-      width: getFormWidth(),
-      dialogModel: props.dialogModel,
-      onClose: (data) => {
-        props.refresh()
-      },
-    },
-  )
+function getSelectionRows() {
 }
 
-function onEdit(row) {
-  const [lastRoute] = route.matched.slice(-1)
-  open(
-    getFormComponent(), // 要显示的组件
-    {
-      columns: props.tableColumns,
-      row: row,
-      url: props.baseUrl,
-      context: props.context,
-    }, // 传给组件的 props
-    {
-      title: t('table.edit') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
-      width: getFormWidth(),
-      dialogModel: props.dialogModel,
-      onClose: (data) => {
-        props.refresh()
-      },
-    },
-  )
+function toggleRowSelection(row, sel) {
 }
 
-function onDelete(row) {
-  doHttpDelete(props.baseUrl + '/' + row.id)
-    .then((rsp) => {
-      ElMessage.success(t('operationSuccess'))
-      props.refresh()
-    })
-}
-
-function getFormComponent() {
-  if (props.formComponent) {
-    return props.formComponent
-  } else {
-    return TunaTableForm
-  }
-}
-
-function getFormWidth() {
-  return props.formWidth !== undefined ? props.formWidth : undefined
+function setCurrentRow(row) {
 }
 
 defineExpose({
-  onView,
-  onAdd,
-  onEdit,
-  onDelete
+  getSelectionRows,
+  toggleRowSelection,
+  setCurrentRow
 })
 </script>
 
@@ -211,18 +145,6 @@ defineExpose({
 /* 外层容器：用于定位右上角 */
 .card-grid-wrapper {
   position: relative;
-}
-
-/* 右上角更多文字：不明显、低调、可点击 */
-.card-grid-more {
-  position: absolute;
-  top: 1px;
-  right: 7px;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
-  transition: all 0.2s;
 }
 
 /* 卡片网格布局 */
@@ -234,25 +156,35 @@ defineExpose({
 }
 
 /* 响应式 */
-@media (max-width: 2600px) {
+/** 600 * 5 + 380 */
+@media (max-width: 4600px) {
+  .card-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/** 600 * 5 + 380 */
+@media (max-width: 3800px) {
+  .card-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/** 600 * 4 + 380 */
+@media (max-width: 3100px) {
   .card-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-
-@media (max-width: 2000px) {
-  .card-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 1500px) {
+/** 600 * 3 + 380 */
+@media (max-width: 2400px) {
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 900px) {
+/** 600 * 2 + 380 */
+@media (max-width: 1600px) {
   .card-grid {
     grid-template-columns: repeat(1, 1fr);
   }

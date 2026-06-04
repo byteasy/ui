@@ -35,39 +35,18 @@
           </tuna-table-view>
           <tuna-card-list-view v-else
                                ref="refTunaTableView"
+                               :table-props="props"
+                               :fields="tableColumns"
                                :width="width"
-                               :title-column-name="props.titleColumnName"
-                               :show-lang="props.showLang"
-                               :context="props.context"
-                               :form-component="props.formComponent"
-                               :dialog-model="props.dialogModel"
-                               :class-name="props.className"
-                               :form-width="props.formWidth"
-                               :excel-import-enable="props.excelImportEnable"
-                               :operation-column-width="props.operationColumnWidth"
-                               :excel-import-component="props.excelImportComponent"
-                               :base-url="props.baseUrl"
-                               :table-columns="tableColumns"
-                               :loadTableColumns="loadTableColumns"
                                :height="height"
-                               :refresh="refresh"
                                :data="tableData.records"
-                               @row-dblclick="onTableRowDoubleClick"
-                               @row-click="onTableRowClick"
-                               v-loading="loading"
-                               :row-key="props.rowKey"
-                               :tree-props="props.treeProps"
-                               :default-expand-all="props.defaultExpandAll"
-                               @header-dragend="onHeaderDrag"
-                               @switch-view="switchViewModel"
-                               :query-param="queryParam"
-          >
+                               @row-action="onRowActionHandle"
+                               v-loading="loading">
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
           </tuna-card-list-view>
-        </template
-        >
+        </template>
       </el-auto-resizer>
     </template>
     <template v-slot:bottomBar v-if="props.paginationVisible !== 0">
@@ -287,6 +266,8 @@ function onMoreActionClick(action) {
 function onRowActionHandle(action, args) {
   if (action === 'edit') {
     onEdit(args)
+  } else if (action === 'view') {
+    onView(args)
   } else if (action === 'delete') {
     onDelete(args)
   } else if (action === 'detailTable') {

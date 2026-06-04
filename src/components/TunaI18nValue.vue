@@ -1,6 +1,6 @@
 <template>
   <el-text v-if="props.truncated" truncated> {{ currentLangValue }}</el-text>
-  <span v-else>{{ currentLangValue }}</span>
+  <span v-else :title="currentLangValue">{{ currentLangValue }}</span>
 </template>
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'

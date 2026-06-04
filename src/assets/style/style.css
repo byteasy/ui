@@ -272,3 +272,30 @@ div.el-scrollbar__bar.is-horizontal {
 div.el-scrollbar__bar.is-vertical {
   width: 10px;
 }
+
+/** 最多显示15个文字 */
+.text-truncate-15 {
+  display: inline-block;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/** 最多显示22个文字 */
+.text-truncate-22 {
+  display: inline-block;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/** 最多显示36个文字 */
+.text-truncate-36 {
+  display: inline-block;
+  max-width: 290px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
