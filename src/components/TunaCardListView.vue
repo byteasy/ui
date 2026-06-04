@@ -52,7 +52,13 @@
                 <span class="text-truncate-15" :title="getLangText(col.displayName, locale)">{{ getLangText(col.displayName, locale) }}</span>
               </template>
               <slot :name="'table-cell-' + col.name" :row="entity">
-                <tuna-i18n-value v-if="col.isI18n === 'YES'" :model-value="entity[col.name]" :lang="props.tableProps.showLang" class="text-truncate-22" />
+                <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'">
+                  <tuna-i18n-value :model-value="entity[col.name]" :lang="props.tableProps.showLang" @click="handleRowAction('detailTable', { column: col, row: entity})"/>
+                </el-link>
+                <tuna-popup-object-view :model-value="entity[getClassFieldName(col.externalClass)]"
+                                        :column="col" :lang="props.tableProps.showLang"
+                                        v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
+                <tuna-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="entity[col.name]" :lang="props.tableProps.showLang" class="text-truncate-22" />
                 <el-switch v-model="entity[col.name]" v-else-if="col.type === 'BOOL'" disabled>
                   <template #active-action>
                     <span>T</span>
@@ -84,6 +90,7 @@
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {type Component, defineExpose} from "vue";
+import {getClassFieldName} from "@/util/common.ts";
 
 const {t, locale} = useI18n()
 
