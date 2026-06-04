@@ -41,6 +41,7 @@
                                :height="height"
                                :data="tableData.records"
                                @row-action="onRowActionHandle"
+                               @row-dblclick="onTableRowDoubleClick"
                                v-loading="loading">
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>

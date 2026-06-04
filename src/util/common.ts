@@ -57,3 +57,26 @@ export const getClassFieldName = (className: string) => {
   const simpleName = arrs[arrs.length - 1]
   return simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1)
 }
+
+export const isObjectEqual = (obj1, obj2) => {
+  // 先判断是不是对象
+  if (typeof obj1 !== 'object' || obj1 === null || typeof obj2 !== 'object' || obj2 === null) {
+    return false
+  }
+
+  // 拿到所有 key
+  const keys1 = Object.keys(obj1)
+  const keys2 = Object.keys(obj2)
+
+  // key 数量不一样 → 直接不相等
+  if (keys1.length !== keys2.length) return false
+
+  // 逐个对比属性值
+  for (const key of keys1) {
+    if (obj1[key] !== obj2[key]) {
+      return false
+    }
+  }
+
+  return true
+}

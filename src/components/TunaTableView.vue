@@ -1,6 +1,8 @@
 <template>
-  <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable">
-    <el-table-column type="selection" width="55" v-if="props.tableProps.queryMode === true && props.tableProps.multiple === true"/>
+  <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable"
+            @current-change="(row) => currentRow = row">
+    <el-table-column type="selection" width="55"
+                     v-if="props.tableProps.queryMode === true && props.tableProps.multiple === true"/>
     <template v-for="col in fields" :key="col.name">
       <slot :name="'table-column-def-' + col.name" :column="col">
         <el-table-column
@@ -19,7 +21,9 @@
           <template #default="scope">
             <slot :name="'table-cell-' + col.name" :row="scope.row">
               <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'">
-                <tuna-i18n-value :model-value="scope.row[col.name]" :lang="props.tableProps.showLang" @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
+                <tuna-i18n-value :model-value="scope.row[col.name]"
+                                 :lang="props.tableProps.showLang"
+                                 @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
               </el-link>
               <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]"
                                       :column="col" :lang="props.tableProps.showLang"
@@ -38,7 +42,8 @@
             </slot>
           </template>
         </el-table-column>
-        <enum-column :align=" col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
+        <enum-column
+          :align=" col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
           :code="col.typeClassName"
           :context="props.tableProps.context"
           :fixed="col.isFixed === 'YES'"
@@ -60,12 +65,15 @@
       <template #default="scope">
         <el-space direction="horizontal" :size="4">
           <slot name="table-operation" :row="scope.row">
-            <tuna-popup-object-view :model-value="scope.row" :column="{ externalClass: props.tableProps.className }" :lang="props.tableProps.showLang">
+            <tuna-popup-object-view :model-value="scope.row"
+                                    :column="{ externalClass: props.tableProps.className }"
+                                    :lang="props.tableProps.showLang">
               <template v-slot:reference>
                 {{ t('table.view') }}
               </template>
             </tuna-popup-object-view>
-            <el-link underline="never" @click="handleRowAction('edit', scope.row)" type="primary" v-permission="props.tableProps.className + '.Edit'">
+            <el-link underline="never" @click="handleRowAction('edit', scope.row)" type="primary"
+                     v-permission="props.tableProps.className + '.Edit'">
               {{ t('table.edit') }}
             </el-link>
             <slot name="table-operation-extra" :row="scope.row"></slot>
@@ -77,7 +85,8 @@
               @confirm="handleRowAction('delete', scope.row)"
             >
               <template #reference>
-                <el-link underline="never" type="danger" v-permission="props.tableProps.className + '.Delete'">
+                <el-link underline="never" type="danger"
+                         v-permission="props.tableProps.className + '.Delete'">
                   {{
                     t('table.delete')
                   }}
@@ -99,6 +108,7 @@ import {getClassFieldName} from "@/util/common.ts";
 
 const refElTable = ref(null)
 const {t, locale} = useI18n()
+const currentRow = ref(undefined)
 
 const props = defineProps<{
   tableProps: {
@@ -136,7 +146,15 @@ function handleRowAction(action, args) {
 }
 
 function getSelectionRows() {
-  return refElTable.value?.getSelectionRows()
+  if (props.tableProps.multiple === true) {
+    return refElTable.value?.getSelectionRows()
+  } else {
+    if (currentRow.value !== undefined) {
+      return [currentRow.value]
+    } else {
+      return []
+    }
+  }
 }
 
 function toggleRowSelection(row, sel) {

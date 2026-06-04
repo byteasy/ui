@@ -131,7 +131,7 @@ function onSaveClick() {
   if (props.column.uiComponent === 'TABLE') {
     selectedKey.value = refTable.value?.getSelectionRows().map(e => e[props.column.externalClassPrimaryField])
     if (props.column.multiple === 'NO') {
-      const selObj = refTable.value?.getSelectionRows().map(e => e[props.column.externalClassPrimaryField])[0]
+      const selObj = refTable.value?.getSelectionRows()[0]
       emit('close', selObj)
     } else {
       const selObj = refTable.value?.getSelectionRows()
