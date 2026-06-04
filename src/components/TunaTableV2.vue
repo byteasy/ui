@@ -2,9 +2,9 @@
   <tuna-container>
     <template v-slot:topBar>
       <tuna-query-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0"
-                      :fields="tableColumns" class="w-full" :query-param="queryParam"
-                      :context="props.context" @refresh="refresh()" @add="onAdd"
-                      :query-mode="props.queryMode">
+                      :query-params="queryParam" :table-props="props" :fields="tableColumns"
+                      class="w-full" @refresh="refresh()" @add="onAdd"
+                      @moreAction="onMoreActionClick">
         <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
           <slot :name="name" v-bind="slotProps"></slot>
         </template>
@@ -113,6 +113,11 @@ import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {putValueIfValid} from "@/util/common.ts";
+import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
+import {getLangText} from "@/locales/common.ts";
+import TunaExcelImport from "@/components/TunaExcelImport.vue";
+import TunaExcelExport from "@/components/TunaExcelExport.vue";
+import {useModal} from "@/components/dialog/useModal.ts";
 
 const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
@@ -123,14 +128,15 @@ const props = defineProps<{
   className: string
   titleColumnName?: string
   queryParams?: any
-  formComponent?: Component
   formWidth?: string | number
   operationColumnWidth?: number
   paginationVisible?: number
   queryFormVisible?: number
   rowDbClick?: (row: any) => void
   excelImportEnable?: boolean
+  formComponent?: Component
   excelImportComponent?: Component
+  excelExportComponent?: Component
   dialogModel?: any
   rowKey?: string
   defaultExpandAll?: boolean
@@ -150,15 +156,7 @@ const loading = ref(false)
 const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
 const queryParam = ref({current: 1, size: 20, descColumns: []})
 const refTunaTableView = ref(null)
-
-function switchViewModel() {
-  if (viewModel.value === 'table') {
-    viewModel.value = 'cardList'
-  } else {
-    viewModel.value = 'table'
-  }
-  appSettingsStore.putValue(props.className + '.viewModel', viewModel.value)
-}
+const {open} = useModal()
 
 const mergeQueryParams = () => {
   if (props.queryParams && typeof props.queryParams === 'object') {
@@ -287,6 +285,96 @@ function toggleRowSelection(row, sel) {
 
 function setCurrentRow(row) {
   refTunaTableView.value?.setCurrentRow(row)
+}
+
+
+function getFormWidth() {
+  return props.formWidth !== undefined ? props.formWidth : undefined
+}
+
+function onMoreActionClick(action) {
+  if (action === 'switchView') {
+    switchViewModel()
+  } else if (action === 'columnDefine') {
+    onColumnDefineClick()
+  } else if (action === 'downLoadExcelTemplate') {
+    downLoadExcelTemplate()
+  } else if (action === 'excelImport') {
+    onExcelImportClick()
+  } else if (action === 'excelExport') {
+    onExcelExportClick()
+  }
+}
+
+function switchViewModel() {
+  if (viewModel.value === 'table') {
+    viewModel.value = 'cardList'
+  } else {
+    viewModel.value = 'table'
+  }
+  appSettingsStore.putValue(props.className + '.viewModel', viewModel.value)
+}
+
+function onColumnDefineClick() {
+  open(
+    TunaColumnDefine,
+    {
+      columns: mergeLocalStorage(tableColumns.value),
+      className: props.className,
+    }, // 传给组件的 props
+    {
+      title: t('table.customColumn'),
+      width: getFormWidth(),
+      onClose: (data) => {
+        // TODO
+        // loadTableColumns()
+      },
+    },
+  )
+}
+
+function downLoadExcelTemplate() {
+  window.open(props.baseUrl + '/excel/template?lang=' + appSettingsStore.lang, '_blank')
+}
+
+function onExcelImportClick() {
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      props.excelImportComponent || TunaExcelImport,
+      {
+        columns: tableColumns.value,
+        url: props.baseUrl,
+        context: props.context
+      }, // 传给组件的 props
+      {
+        title: t('table.importByExcel') + '>' + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        onClose: (data) => {
+          refresh()
+        }
+      }
+    )
+  })
+}
+
+function onExcelExportClick() {
+  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+    open(
+      props.excelExportComponent || TunaExcelExport,
+      {
+        columns: tableColumns.value,
+        url: props.baseUrl,
+        queryParam: queryParam.value,
+      },
+      {
+        title: t('table.exportToExcel') + '>' + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        onClose: (data) => {
+          refresh()
+        }
+      }
+    )
+  })
 }
 
 defineExpose({

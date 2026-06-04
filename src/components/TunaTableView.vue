@@ -62,62 +62,6 @@
       align="center"
       :min-width="props.operationColumnWidth ? props.operationColumnWidth : 160"
     >
-      <template #header>
-        <div class="flex-row align-items-center w-full">
-          <div class="flex-grow"></div>
-          <div class="flex-none">
-            {{ $t('table.operation') }}
-          </div>
-          <div class="flex-grow flex-row justify-content-end">
-            <el-dropdown placement="bottom-start">
-              <el-button icon="More" circle text/>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item @click="emit('switchView')">
-                    <el-icon>
-                      <List/>
-                    </el-icon>
-                    {{ $t('table.viewModel') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="onColumnDefineClick">
-                    <el-icon>
-                      <SetUp/>
-                    </el-icon>
-                    {{ $t('table.customColumn') }}
-                  </el-dropdown-item>
-                  <!--                  <el-dropdown-item>-->
-                  <!--                    <el-icon>-->
-                  <!--                      <DCaret/>-->
-                  <!--                    </el-icon>-->
-                  <!--                    {{ $t('table.customSort') }}-->
-                  <!--                  </el-dropdown-item>-->
-                  <el-dropdown-item divided @click="downLoadExcelTemplate"
-                                    v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
-                    <el-icon>
-                      <Download/>
-                    </el-icon>
-                    {{ $t('table.downLoadExcelTemplate') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="onExcelImportClick"
-                                    v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Import')">
-                    <el-icon>
-                      <IconLocalExcel/>
-                    </el-icon>
-                    {{ $t('table.importByExcel') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="onExcelExportClick"
-                                    v-if="props.excelImportEnable === true && sessionStore.authorize(props.className + '.Export')">
-                    <el-icon>
-                      <IconLocalExcelExport/>
-                    </el-icon>
-                    {{ $t('table.exportToExcel') }}
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </div>
-        </div>
-      </template>
       <template #default="scope">
         <el-space direction="horizontal" :size="4">
           <slot name="table-operation" :row="scope.row">
@@ -158,25 +102,16 @@
 <script setup lang="ts">
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
-import {useAppSettingsStore} from "@/stores/appSettings.ts";
 import {doHttpDelete, doHttpGet} from "@/api/common/platform";
 import {ElMessage} from "element-plus";
 import TunaTableForm from "@/components/TunaTableForm.vue";
-import {type Component, defineEmits, defineExpose, ref} from "vue";
-import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
-import {getClassFieldName, jsonToQueryString, putValueIfValid} from "@/util/common.ts";
-import {useRoute} from "vue-router";
-import {useSessionStore} from "@/stores/session.ts";
-import TunaExcelImport from "@/components/TunaExcelImport.vue";
-import TunaExcelExport from "@/components/TunaExcelExport.vue";
+import {type Component, defineExpose, ref} from "vue";
+import {getClassFieldName} from "@/util/common.ts";
 import TunaTableContainer from "@/components/TunaTableContainer.vue";
 import {useModal} from "@/components/dialog/useModal.ts";
 
 const refElTable = ref(null)
-const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
-const route = useRoute()
-const sessionStore = useSessionStore()
 const {open} = useModal()
 
 const props = defineProps<{
@@ -198,12 +133,6 @@ const props = defineProps<{
   queryMode?: boolean
   multiple?: boolean
 }>()
-
-const emit = defineEmits(['switchView'])
-
-function downLoadExcelTemplate() {
-  window.open(props.baseUrl + '/excel/template?lang=' + appSettingsStore.lang, '_blank')
-}
 
 function onView(row) {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
@@ -313,84 +242,6 @@ function getFormComponent() {
 
 function getFormWidth() {
   return props.formWidth !== undefined ? props.formWidth : undefined
-}
-
-function onColumnDefineClick() {
-  open(
-    TunaColumnDefine,
-    {
-      columns: mergeLocalStorage(props.tableColumns),
-      className: props.className,
-    }, // 传给组件的 props
-    {
-      title: t('table.customColumn'),
-      width: getFormWidth() || "50%",
-      onClose: (data) => {
-        // TODO
-        // loadTableColumns()
-      },
-    },
-  )
-}
-
-
-function mergeLocalStorage(data: Array<never>) {
-  const fieldsDefine = appSettingsStore.getStorageObject(props.className + '.fields')
-  if (fieldsDefine !== undefined) {
-    data.forEach((column) => {
-      if (fieldsDefine[column.name] !== undefined) {
-        const fieldCustomDefine = fieldsDefine[column.name]
-        putValueIfValid(column, 'width', fieldCustomDefine.width)
-        putValueIfValid(column, 'showOrder', fieldCustomDefine.showOrder)
-        putValueIfValid(column, 'isShow', fieldCustomDefine.isShow)
-        putValueIfValid(column, 'isSort', fieldCustomDefine.isSort)
-        putValueIfValid(column, 'isOverflow', fieldCustomDefine.isOverflow)
-        putValueIfValid(column, 'isSearch', fieldCustomDefine.isSearch)
-        putValueIfValid(column, 'align', fieldCustomDefine.align)
-      }
-    })
-  }
-  return data
-}
-
-function onExcelImportClick() {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
-    open(
-      props.excelImportComponent || TunaExcelImport,
-      {
-        columns: props.tableColumns,
-        url: props.baseUrl,
-        context: props.context
-      }, // 传给组件的 props
-      {
-        title: t('table.importByExcel') + '>' + getLangText(entityDefine.name, locale.value),
-        width: getFormWidth(),
-        onClose: (data) => {
-          props.refresh()
-        }
-      }
-    )
-  })
-}
-
-function onExcelExportClick() {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
-    open(
-      props.excelExportComponent || TunaExcelExport,
-      {
-        columns: props.tableColumns,
-        url: props.baseUrl,
-        queryParam: props.queryParam,
-      }, // 传给组件的 props
-      {
-        title: t('table.exportToExcel') + '>' + getLangText(entityDefine.name, locale.value),
-        width: getFormWidth(),
-        onClose: (data) => {
-          props.refresh()
-        }
-      }
-    )
-  })
 }
 
 function getSelectionRows() {

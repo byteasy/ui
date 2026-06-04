@@ -1,69 +1,149 @@
 <template>
   <div class="w-full flex-column justify-content-start p-1" ref="queryBarRef">
-    <div class="w-full flex-row justify-content-start">
-      <el-form :inline="true" class="w-full">
-        <slot name="from-query" :fields="props.fields" :queryParam="props.queryParam">
-          <template v-for="col in visibleFields" :key="col.name">
-            <el-form-item :label="getLangText(col.displayName, locale)" v-if="col.isSearch === 'YES'">
-              <slot :name="'form-query-field-' + col.name" :column="col" :queryParam="props.queryParam">
-                <tuna-query-field
-                  :column="col"
-                  :context="props.context"
-                  :placeholder="getLangText(col.displayName, locale)"
-                  v-model="props.queryParam[col.name]"
-                  clearable
-                  @change="handleEvent('refresh')"
-                  :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'" />
+    <div class="w-full flex-row">
+      <div class="flex-grow flex-row justify-content-start">
+        <el-form :inline="true" class="w-full">
+          <slot name="from-query" :fields="props.fields" :queryParam="props.queryParams">
+            <template v-for="col in visibleFields" :key="col.name">
+              <el-form-item :label="getLangText(col.displayName, locale)"
+                            v-if="col.isSearch === 'YES'">
+                <slot :name="'form-query-field-' + col.name" :column="col"
+                      :queryParam="props.queryParams">
+                  <tuna-query-field
+                    :column="col"
+                    :context="props.tableProps.context"
+                    :placeholder="getLangText(col.displayName, locale)"
+                    v-model="props.queryParams[col.name]"
+                    clearable
+                    @change="handleEvent('refresh')"
+                    :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"/>
+                </slot>
+              </el-form-item>
+            </template>
+            <slot name="form-query-extra" :queryParam="props.queryParams"/>
+            <el-form-item>
+              <div v-if="showCollapseBtn === true"
+                   @click="isCollapsed = !isCollapsed, updateVisibleFields()"
+                   class="mr-2">
+                <el-icon :class="{ rotate: !isCollapsed }">
+                  <ArrowDown v-if="isCollapsed"/>
+                  <ArrowUp v-else/>
+                </el-icon>
+              </div>
+              <slot name="form-query-buttons">
+                <el-button type="primary" icon="Search" @click="handleEvent('refresh')">
+                  {{ $t('search') }}
+                </el-button>
+                <el-button type="primary" icon="Plus" v-if="props.tableProps.queryMode !== true" v-permission="props.tableProps.className + '.Add'" @click="handleEvent('add')">
+                  {{ $t('add') }}
+                </el-button>
               </slot>
+              <slot name="form-query-buttons-extra" :queryParam="props.queryParams" :queryMode="props.tableProps.queryMode"></slot>
             </el-form-item>
+          </slot>
+        </el-form>
+      </div>
+      <div class="flex-none">
+        <el-dropdown placement="bottom-start">
+          <el-button icon="More" circle text/>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="onMoreActionClick('switchView')">
+                <el-icon>
+                  <List/>
+                </el-icon>
+                {{ $t('table.viewModel') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click="onMoreActionClick('columnDefine')">
+                <el-icon>
+                  <SetUp/>
+                </el-icon>
+                {{ $t('table.customColumn') }}
+              </el-dropdown-item>
+              <el-dropdown-item divided @click="onMoreActionClick('downLoadExcelTemplate')"
+                                v-if="props.tableProps.excelImportEnable === true && sessionStore.authorize(props.tableProps.className + '.Import')">
+                <el-icon>
+                  <Download/>
+                </el-icon>
+                {{ $t('table.downLoadExcelTemplate') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click="onMoreActionClick('excelImport')"
+                                v-if="props.tableProps.excelImportEnable === true && sessionStore.authorize(props.tableProps.className + '.Import')">
+                <el-icon>
+                  <IconLocalExcel/>
+                </el-icon>
+                {{ $t('table.importByExcel') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click="onMoreActionClick('excelExport')"
+                                v-if="props.tableProps.excelImportEnable === true && sessionStore.authorize(props.tableProps.className + '.Export')">
+                <el-icon>
+                  <IconLocalExcelExport/>
+                </el-icon>
+                {{ $t('table.exportToExcel') }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
           </template>
-          <slot name="form-query-extra" :queryParam="props.queryParam"/>
-          <el-form-item>
-            <div v-if="showCollapseBtn === true" @click="isCollapsed = !isCollapsed, updateVisibleFields()"
-                 class="mr-2">
-              <el-icon :class="{ rotate: !isCollapsed }">
-                <ArrowDown v-if="isCollapsed"/>
-                <ArrowUp v-else/>
-              </el-icon>
-            </div>
-            <slot name="form-query-buttons">
-              <el-button type="primary" icon="Search" @click="handleEvent('refresh')">{{ $t('search') }}</el-button>
-              <el-button type="primary" icon="Plus" v-if="props.queryMode !== true" v-permission="className + '.Add'" @click="handleEvent('add')">{{ $t('add') }}</el-button>
-            </slot>
-            <slot name="form-query-buttons-extra" :queryParam="props.queryParam" :queryMode="props.queryMode"></slot>
-          </el-form-item>
-        </slot>
-      </el-form>
+        </el-dropdown>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {nextTick, onActivated, onDeactivated, onMounted, onUnmounted, ref} from 'vue'
+import {
+  type Component,
+  nextTick,
+  onActivated,
+  onDeactivated,
+  onMounted,
+  onUnmounted,
+  ref
+} from 'vue'
 import {ElIcon} from 'element-plus'
 import {ArrowDown} from '@element-plus/icons-vue'
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
+import {useSessionStore} from "@/stores/session.ts";
 
-const props = defineProps({
-  fields: {
-    type: Array,
-    required: true
+const props = defineProps<{
+  tableProps: {
+    baseUrl: string
+    context: string
+    className: string
+    titleColumnName?: string
+    queryParams?: any
+    formWidth?: string | number
+    operationColumnWidth?: number
+    paginationVisible?: number
+    queryFormVisible?: number
+    rowDbClick?: (row: any) => void
+    excelImportEnable?: boolean
+    formComponent?: Component
+    excelImportComponent?: Component
+    excelExportComponent?: Component
+    dialogModel?: any
+    rowKey?: string
+    defaultExpandAll?: boolean
+    treeProps?: object
+    showLang?: string
+    queryMode?: boolean
+    multiple?: boolean
+    showSummary?: boolean
+    dataRenderFinish?: (tableData) => void
   },
-  context: String,
-  queryParam: Object,
-  queryMode: Boolean
-})
+  fields: Array<object>
+  queryParams?: object
+}>()
 
 const {t, locale} = useI18n()
-const emit = defineEmits(['refresh', 'add'])
+const emit = defineEmits(['refresh', 'add', 'moreAction'])
 
 const queryBarRef = ref(null)
 const isCollapsed = ref(true)
 const showCollapseBtn = ref(true)
 const containerWidth = ref(600)
 const visibleFields = ref([])
-const className = props.fields[0]?.className
+const sessionStore = useSessionStore()
 
 onMounted(() => {
   containerWidth.value = queryBarRef.value?.offsetWidth
@@ -113,7 +193,7 @@ const updateVisibleFields = () => {
   }
 }
 
-const handleEvent = (event) => emit(event, {...props.queryParam})
+const handleEvent = (event) => emit(event, { ...props.queryParams })
 
 // 监听 resize 自动刷新（防抖）
 let resizeTimer = null
@@ -146,5 +226,9 @@ onActivated(() => {
 onDeactivated(() => {
   window.removeEventListener('resize', onResize)
 })
+
+const onMoreActionClick = (action) => {
+  emit('moreAction', action)
+}
 
 </script>
