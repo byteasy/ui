@@ -134,8 +134,8 @@ function onSaveClick() {
       const selObj = refTable.value?.getSelectionRows()[0]
       emit('close', selObj)
     } else {
-      const selObj = refTable.value?.getSelectionRows()
-      emit('close', selObj)
+      const selObjs = refTable.value?.getSelectionRows()
+      emit('close', selObjs)
     }
     return
   }
