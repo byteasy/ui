@@ -28,6 +28,7 @@
               <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]"
                                       :column="col" :lang="props.tableProps.showLang"
                                       v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
+              <component v-else-if="col.columnComponent" :is="getComponent('..' + col.columnComponent)" :model-value="scope.row[col.name]" :row="scope.row" :column="col"></component>
               <tuna-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
                                :lang="props.tableProps.showLang"/>
               <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
@@ -105,10 +106,12 @@ import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {type Component, defineExpose, ref} from "vue";
 import {getClassFieldName} from "@/util/common.ts";
+import {getRouteComponents} from "@/util/autoImportComponent.ts";
 
 const refElTable = ref(null)
 const {t, locale} = useI18n()
 const currentRow = ref(undefined)
+const {modules} = getRouteComponents()
 
 const props = defineProps<{
   tableProps: {
@@ -140,6 +143,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['rowAction'])
+
+function getComponent(path) {
+  return modules[path]
+}
 
 function handleRowAction(action, args) {
   emit('rowAction', action, args)
