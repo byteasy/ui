@@ -46,9 +46,9 @@
           </el-scrollbar>
           <template #footer>
             <div class="dialog-footer">
-              <el-button @click="onButtonClick('cancel')"><tuna-svg-icon svg="Close" class-name="mr-1"/>{{ t(item.btnCancelTitle || 'cancel') }}</el-button>
-              <el-button @click="onButtonClick(btn.key)" :type="btn.type" v-for="btn in item.btnExtras" :key="btn.key"><tuna-svg-icon :svg="btn.icon" class-name="mr-1"/>{{ btn.name }}</el-button>
-              <el-button @click="onButtonClick('ok')" type="primary" ><tuna-svg-icon svg="Check" class-name="mr-1"/>{{ t(item.btnOkTitle || 'ok') }}</el-button>
+              <el-button @click="onButtonClick('cancel')"><tuna-svg-icon svg="Close" class="mr-1"/>{{ t(item.btnCancelTitle || 'cancel') }}</el-button>
+              <el-button @click="onButtonClick(btn.key)" :type="btn.type" v-for="btn in item.btnExtras" :key="btn.key"><tuna-svg-icon :svg="btn.icon" class="mr-1"/>{{ btn.name }}</el-button>
+              <el-button @click="onButtonClick('ok')" type="primary" ><tuna-svg-icon svg="Check" class="mr-1"/>{{ t(item.btnOkTitle || 'ok') }}</el-button>
             </div>
           </template>
         </el-dialog>

@@ -9,16 +9,14 @@
     >
       <el-sub-menu :index="getUrl(root.routerUrl)" v-for="root in menuTree" :key="root.code">
         <template #title>
-          <tuna-svg-icon :svg="root.icon"/>
+          <tuna-svg-icon :svg="root.icon" :style-var="'var(--my-menu-icon-color)'"/>
           <tuna-i18n-value :model-value="root.name" class="my-font-size-md"/>
         </template>
         <el-menu-item :index="getUrl(root.routerUrl)"
                       v-if="root.type === 'MENU' && root.visible === 'YES'"
                       @click="openResource(root.routerUrl, root)">
-          <el-icon style="color: var(--my-menu-icon-color)"
-          >
-            <component :is="'IconLocalHome'"
-            />
+          <el-icon style="color: var(--my-menu-icon-color)">
+            <component :is="'IconLocalHome'" />
           </el-icon>
           <tuna-i18n-value :model-value="root.name" class="pl-3"/>
         </el-menu-item>
