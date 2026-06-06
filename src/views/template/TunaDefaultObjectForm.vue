@@ -6,8 +6,7 @@
   </tuna-table-form>
 </template>
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
-import {doHttpGet} from "@/api/common/platform";
+import {defineExpose, onMounted, ref} from "vue";
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 
 const props = defineProps<{
@@ -30,6 +29,10 @@ function getComponent(path) {
   return modules['..' + path]
 }
 
+function onButtonClick(btnName) {
+  refForm.value.onButtonClick(btnName)
+}
+
 const fieldComponents = ref(props.columns.filter(s => s.fieldComponent))
 
 onMounted(() => {
@@ -37,5 +40,9 @@ onMounted(() => {
   //   loading.value = false
   // })
   loading.value = false
+})
+
+defineExpose({
+  onButtonClick
 })
 </script>

@@ -32,24 +32,10 @@
         :operation-column-width="0">
       </tuna-table-v2>
     </div>
-    <!-- 底部按钮固定 -->
-    <el-affix position="bottom" :offset="12" class="w-full">
-      <div class="form-footer">
-        <el-divider class="m-0"/>
-        <div class="footer-buttons">
-          <slot name="footerButton" :props="props">
-            <el-button type="primary" @click="onSaveClick" icon="Check">
-              {{ t('ok') }}
-            </el-button>
-            <el-button @click="onClearForm" icon="Close">{{ t('cancel') }}</el-button>
-          </slot>
-        </div>
-      </div>
-    </el-affix>
   </div>
 </template>
 <script setup lang="ts">
-import {computed, defineEmits, onMounted, ref} from "vue";
+import {computed, defineEmits, defineExpose, onMounted, ref} from "vue";
 import {doHttpGet, getEntitySchema} from "@/api/common/platform";
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
@@ -192,6 +178,19 @@ function onTableDataRenderFinish(tableData) {
     }
   }
 }
+
+function onButtonClick(btnName) {
+  if(btnName === 'ok') {
+    onSaveClick()
+  } else if (btnName === 'cancel') {
+    onClearForm()
+  }
+}
+
+defineExpose({
+  props,
+  onButtonClick
+})
 </script>
 
 

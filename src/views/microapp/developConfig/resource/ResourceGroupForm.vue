@@ -1,5 +1,5 @@
 <template>
-  <tuna-table-form>
+  <tuna-table-form ref="refForm">
     <template v-slot:formItemField_categoryId="scope">
       <resource-category-tree-select v-model="scope.row.categoryId" clearable filterable :placeholder="getLangText(scope.column.displayName, locale)"
                                      :disabled="scope.props.readonly"/>
@@ -7,7 +7,7 @@
   </tuna-table-form>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import {defineExpose, onMounted, ref} from 'vue'
 import { doHttpGet } from '@/api/common/platform'
 import ResourceCategoryTreeSelect
   from "@/views/microapp/developConfig/resource/ResourceCategoryTreeSelect.vue";
@@ -16,6 +16,7 @@ import {getLangText} from "@/locales/common.ts";
 const {t, locale} = useI18n()
 
 const resourceCategorys = ref([])
+const refForm = ref<HTMLFormElement>()
 
 onMounted(() => {
   doHttpGet('/platformSvr/sapi/resourceCategorys', {
@@ -25,5 +26,13 @@ onMounted(() => {
   }).then((res) => {
     resourceCategorys.value = res.data.records
   })
+})
+
+function onButtonClick(btnName) {
+  refForm.value.onButtonClick(btnName)
+}
+
+defineExpose({
+  onButtonClick
 })
 </script>

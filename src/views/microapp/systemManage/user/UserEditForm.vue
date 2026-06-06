@@ -7,7 +7,7 @@
   </tuna-table-form>
 </template>
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {defineExpose, onMounted, ref} from "vue";
 
 const refForm = ref(null)
 
@@ -16,5 +16,14 @@ onMounted(() => {
     refForm.value.formValue.status = 'NORMAL'
     refForm.value.formValue.userType = 'NORMAL'
   }
+})
+
+
+function onButtonClick(btnName) {
+  refForm.value.onButtonClick(btnName)
+}
+
+defineExpose({
+  onButtonClick
 })
 </script>

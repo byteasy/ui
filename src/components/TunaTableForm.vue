@@ -39,21 +39,6 @@
         </div>
       </el-form>
     </div>
-
-    <!-- 底部按钮固定 -->
-    <el-affix position="bottom" :offset="12" class="w-full">
-    <div class="form-footer">
-      <el-divider class="m-0"/>
-      <div class="footer-buttons">
-        <slot name="footerButton" :props="props">
-          <el-button type="primary" @click="onSaveClick" icon="Check" v-if="!props.readonly">
-            {{ t('save') }}
-          </el-button>
-          <el-button @click="onClearForm" icon="Close">{{ t('close') }}</el-button>
-        </slot>
-      </div>
-    </div>
-    </el-affix>
   </div>
 </template>
 
@@ -147,7 +132,15 @@ function onClearForm() {
   emit('close', 'cancel')
 }
 
-defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm})
+function onButtonClick(btnName) {
+  if(btnName === 'ok') {
+    onSaveClick()
+  } else if (btnName === 'cancel') {
+    onClearForm()
+  }
+}
+
+defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm, onButtonClick})
 </script>
 
 <style scoped>

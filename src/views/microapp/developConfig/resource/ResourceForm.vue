@@ -110,7 +110,7 @@
   </tuna-table-form>
 </template>
 <script setup lang="ts">
-import {onMounted, ref} from 'vue'
+import {defineExpose, onMounted, ref} from 'vue'
 import ResourceCategoryGroupTreeSelect
   from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTreeSelect.vue";
 import ResourceTreeSelect from "@/views/microapp/developConfig/resource/ResourceTreeSelect.vue";
@@ -172,4 +172,12 @@ function onTableMetaDataChange() {
     refForm.value.formValue.routerUrl = '?' + param
   }
 }
+
+function onButtonClick(btnName) {
+  refForm.value.onButtonClick(btnName)
+}
+
+defineExpose({
+  onButtonClick
+})
 </script>

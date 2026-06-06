@@ -9,24 +9,11 @@
       </el-form>
     </el-scrollbar>
     <el-divider/>
-    <div class="w-full">
-      <el-affix position="bottom" class="w-full">
-        <div class="flex-row w-full justify-content-center pb-2">
-          <slot name="footerButton" :props="props">
-            <el-button type="primary" icon="Check" @click="onSaveClick">{{
-                $t('save')
-              }}
-            </el-button>
-            <el-button icon="Close" @click="onCancelClick">{{ $t('close') }}</el-button>
-          </slot>
-        </div>
-      </el-affix>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, getCurrentInstance, onUnmounted, defineEmits} from 'vue'
+import {ref, onMounted, getCurrentInstance, onUnmounted, defineEmits, defineExpose} from 'vue'
 import { langList as langDefileList } from "@/locales/common.ts"
 
 // 接收父组件传入的参数（JSON 格式多语言）
@@ -70,8 +57,17 @@ function onSaveClick() {
   emit('close', getFormData())
 }
 
-function onCancelClick() {
-  emit('close')
+function onButtonClick(btnName) {
+  if(btnName === 'ok') {
+    onSaveClick()
+  } else if (btnName === 'cancel') {
+    emit('close', {})
+  }
 }
+
+defineExpose({
+  props,
+  onButtonClick
+})
 </script>
 

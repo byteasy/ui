@@ -56,7 +56,7 @@
   </tuna-table-form>
 </template>
 <script setup lang="ts">
-import {onMounted, ref} from 'vue'
+import {defineExpose, onMounted, ref} from 'vue'
 import {useI18n} from "vue-i18n";
 import {getLangText} from "@/locales/common.ts";
 
@@ -64,6 +64,11 @@ const {t, locale} = useI18n()
 
 const refForm = ref(null)
 
-onMounted(() => {
+function onButtonClick(btnName) {
+  refForm.value.onButtonClick(btnName)
+}
+
+defineExpose({
+  onButtonClick
 })
 </script>
