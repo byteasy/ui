@@ -22,7 +22,8 @@
     :show-summary="metaData.showSummary"
     v-if="loading === false"
   >
-    <template v-for="col in fieldComponents" :key="col.name" v-slot:[`form-query-field-${col.name}`]="scope">
+    <template v-for="col in fieldComponents" :key="col.name"
+              v-slot:[`form-query-field-${col.name}`]="scope">
       <component :is="getComponent('..' + col.fieldComponent)" v-model="scope.queryParam[col.name]"
                  :style="{ width: (col.width === 0 ? 160 : col.width) + 'px !important' }"
                  :key="col.className + col.name" clearable @change="refTable.refresh()"></component>
@@ -32,7 +33,8 @@
                  :queryParam="scope.queryParam" :queryMode="scope.queryMode"></component>
     </template>
     <template v-slot:table-operation-extra="scope">
-      <component v-for="btn in operationButtons" :key="btn" :is="getComponent('..' + btn)" :row="scope.row"></component>
+      <component v-for="btn in operationButtons" :key="btn" :is="getComponent('..' + btn)"
+                 :row="scope.row"></component>
     </template>
   </tuna-table-v2>
   <el-skeleton :rows="5" animated v-else/>
@@ -66,7 +68,7 @@ function getComponent(path) {
 }
 
 onMounted(() => {
-  const params = { ...route.query } // 浅拷贝，避免直接修改路由对象
+  const params = {...route.query} // 浅拷贝，避免直接修改路由对象
   if (props.metaData && typeof props.metaData === 'object' && !Array.isArray(props.metaData)) {
     Object.assign(params, props.metaData)
   }
@@ -84,9 +86,9 @@ onMounted(() => {
     }
     metaData.formWidth = entityDefine.formWidth
     metaData.dialogModel = parseYesNoToBoolean(entityDefine.dialogModel)
-    metaData.paginationVisible = entityDefine.paginationVisible === 'YES' ? 1 : 0
+    metaData.paginationVisible = entityDefine.paginationVisible !== undefined ? (entityDefine.paginationVisible === 'YES' ? 1 : 0) : undefined
     metaData.excelEnable = parseYesNoToBoolean(entityDefine.excelEnable)
-    metaData.queryFormVisible = entityDefine.queryFormVisible === 'YES' ? 1 : 0
+    metaData.queryFormVisible = entityDefine.queryFormVisible !== undefined ? (entityDefine.queryFormVisible === 'YES' ? 1 : 0) : undefined
     if (entityDefine.excelImportComponent) {
       metaData.excelImportComponent = getComponent('..' + entityDefine.excelImportComponent)
     }
