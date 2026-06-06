@@ -24,6 +24,7 @@
                     clearable
                     :disabled="props.readonly"
                     v-model="formValue[col.name]"
+                    @clear="formValue[col.name] = null"
                   >
                     <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
                       <slot :name="name" v-bind="slotProps"></slot>

@@ -18,7 +18,6 @@
     :default-expand-all="metaData.defaultExpandAll"
     :tree-props="metaData.treeProps"
     :query-mode="metaData.queryMode"
-    :multiple="metaData.multiple"
     :show-lang="metaData.showLang"
     :show-summary="metaData.showSummary"
     v-if="loading === false"
@@ -95,7 +94,6 @@ onMounted(() => {
     metaData.defaultExpandAll = parseYesNoToBoolean(entityDefine.defaultExpandAll)
     metaData.treeProps = entityDefine.treeProps
     metaData.queryMode = parseYesNoToBoolean(entityDefine.queryMode)
-    metaData.multiple = parseYesNoToBoolean(entityDefine.multiple)
     metaData.showLang = entityDefine.showLang
     metaData.showSummary = parseYesNoToBoolean(entityDefine.showSummary)
     if (entityDefine.queryBarButtons) {
@@ -119,7 +117,6 @@ onMounted(() => {
     if (params.defaultExpandAll !== undefined) metaData.defaultExpandAll = params.defaultExpandAll === 'YES'
     if (params.treeProps !== undefined) metaData.treeProps = params.treeProps
     if (params.queryMode !== undefined) metaData.queryMode = params.queryMode === 'YES'
-    if (params.multiple !== undefined) metaData.multiple = params.multiple === 'YES'
     if (params.showLang !== undefined) metaData.showLang = params.showLang
     if (params.showSummary !== undefined) metaData.showSummary = params.showSummary === 'YES'
 
