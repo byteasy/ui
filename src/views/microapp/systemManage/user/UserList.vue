@@ -62,6 +62,10 @@ function onPermissionEdit(row) {
     {
       title: t('user.roleAllocate'),
       width: '60%',
+      btnExtras: [
+        { name: t('platform.selectAll'), key: 'selectAll' , icon: 'Select', type: 'primary' },
+        { name: t('platform.clearAll'), key: 'clearAll' , icon: 'Failed', type: 'warning' }
+      ],
       onClose: (data) => {
       },
     },

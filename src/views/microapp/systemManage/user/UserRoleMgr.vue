@@ -25,22 +25,11 @@
         </el-tree>
       </el-form-item>
     </el-form>
-    <el-affix position="bottom" class="w-full">
-      <div class="flex-row w-full justify-content-center pb-2">
-        <el-button @click="setCheckedKeys" icon="Select">{{ t('platform.selectAll') }}</el-button>
-        <el-button @click="resetChecked" icon="Failed">{{ t('platform.clearAll') }}</el-button>
-        <el-button v-debounce="doSubmit" type="primary" icon="Check">{{
-            t('save')
-          }}
-        </el-button>
-        <el-button @click="emit('close')" icon="Close">{{ t('close') }}</el-button>
-      </div>
-    </el-affix>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {defineEmits, onMounted, ref, watch} from 'vue'
+import {defineEmits, defineExpose, onMounted, ref, watch} from 'vue'
 import {useI18n} from "vue-i18n";
 import {ElMessage, type FilterNodeMethodFunction, type TreeInstance} from 'element-plus'
 import {doHttpGet, doHttpPost} from "@/api/common/platform";
@@ -102,4 +91,20 @@ const doSubmit = () => {
     emit('close')
   })
 }
+
+function onButtonClick(btnName) {
+  if(btnName === 'selectAll') {
+    setCheckedKeys()
+  } else if (btnName === 'clearAll') {
+    resetChecked()
+  } else if (btnName === 'ok') {
+    doSubmit()
+  } else if (btnName === 'cancel') {
+    emit('close')
+  }
+}
+
+defineExpose({
+  onButtonClick
+})
 </script>
