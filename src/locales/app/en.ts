@@ -11,6 +11,7 @@ export default {
       permissionAllocate: 'Permission Allocation'
     },
     more: 'More',
+    selectComponent: 'Component Select',
     schemaDefine: {
       syncSchema: 'Sync from Code'
     },

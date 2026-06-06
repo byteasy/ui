@@ -84,20 +84,20 @@ onMounted(() => {
       metaData.formComponent = getComponent('..' + entityDefine.formComponent)
     }
     metaData.formWidth = entityDefine.formWidth
-    metaData.dialogModel = entityDefine.dialogModel === 'YES'
+    metaData.dialogModel = parseYesNoToBoolean(entityDefine.dialogModel)
     metaData.paginationVisible = entityDefine.paginationVisible === 'YES' ? 1 : 0
-    metaData.excelEnable = entityDefine.excelEnable === 'YES'
+    metaData.excelEnable = parseYesNoToBoolean(entityDefine.excelEnable)
     metaData.queryFormVisible = entityDefine.queryFormVisible === 'YES' ? 1 : 0
     if (entityDefine.excelImportComponent) {
       metaData.excelImportComponent = getComponent('..' + entityDefine.excelImportComponent)
     }
     metaData.rowKey = entityDefine.rowKey
-    metaData.defaultExpandAll = entityDefine.defaultExpandAll === 'YES'
+    metaData.defaultExpandAll = parseYesNoToBoolean(entityDefine.defaultExpandAll)
     metaData.treeProps = entityDefine.treeProps
-    metaData.queryMode = entityDefine.queryMode === 'YES'
-    metaData.multiple = entityDefine.multiple === 'YES'
+    metaData.queryMode = parseYesNoToBoolean(entityDefine.queryMode)
+    metaData.multiple = parseYesNoToBoolean(entityDefine.multiple)
     metaData.showLang = entityDefine.showLang
-    metaData.showSummary = entityDefine.showSummary === 'YES'
+    metaData.showSummary = parseYesNoToBoolean(entityDefine.showSummary)
     if (entityDefine.queryBarButtons) {
       formQueryButtonsExtra.value = entityDefine.queryBarButtons.split(',')
     }
@@ -136,4 +136,11 @@ onMounted(() => {
       })
   })
 })
+
+function parseYesNoToBoolean(value) {
+  if (value === undefined) {
+    return undefined
+  }
+  return value === 'YES'
+}
 </script>

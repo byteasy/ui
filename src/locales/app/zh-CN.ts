@@ -11,6 +11,7 @@ export default {
       permissionAllocate: '权限分配'
     },
     more: '更多',
+    selectComponent: '组件选择',
     schemaDefine: {
       syncSchema: '从代码同步'
     },
