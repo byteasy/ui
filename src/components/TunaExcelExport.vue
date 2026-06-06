@@ -5,23 +5,11 @@
         <el-transfer v-model="selectedFieldNames" :data="data" :titles="[t('table.exportTotalFields'), t('table.exportExcelFields')]" filterable />
       </div>
     </div>
-    <div class="w-full flex-column">
-      <el-affix position="bottom" class="w-full">
-        <div class="flex-row w-full justify-content-center pb-2 pt-1">
-          <slot name="footerButton" :props="props">
-            <el-button type="primary" icon="Check" @click="doSubmit"
-            >{{ $t('table.exportByExcelSubmitButton') }}
-            </el-button>
-            <el-button @click="closeForm" icon="Close">{{ $t('close') }}</el-button>
-          </slot>
-        </div>
-      </el-affix>
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {defineEmits, onMounted, ref} from 'vue'
+import {defineEmits, defineExpose, onMounted, ref} from 'vue'
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {doHttpPost} from "@/api/common/platform";
@@ -90,4 +78,16 @@ function doSubmit() {
     window.URL.revokeObjectURL(url)
   })
 }
+
+function onButtonClick(btnName) {
+  if(btnName === 'ok') {
+    doSubmit()
+  } else if (btnName === 'cancel') {
+    emit('close', {})
+  }
+}
+
+defineExpose({
+  onButtonClick
+})
 </script>

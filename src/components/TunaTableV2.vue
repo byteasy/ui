@@ -319,6 +319,7 @@ function onExcelImportClick() {
       {
         title: t('table.importByExcel') + '>' + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
+        btnOkTitle: 'table.importByExcelSubmitButton',
         onClose: (data) => {
           refresh()
         }
@@ -339,6 +340,7 @@ function onExcelExportClick() {
       {
         title: t('table.exportToExcel') + '>' + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
+        btnOkTitle: 'table.exportByExcelSubmitButton',
         onClose: (data) => {
           refresh()
         }
