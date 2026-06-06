@@ -25,10 +25,8 @@
                                  :lang="props.tableProps.showLang"
                                  @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
               </el-link>
-              <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]"
-                                      :column="col" :lang="props.tableProps.showLang"
-                                      v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
-              <component v-else-if="col.columnComponent" :is="getComponent('..' + col.columnComponent)" :model-value="scope.row[col.name]" :row="scope.row" :column="col"></component>
+              <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]" :column="col" :lang="props.tableProps.showLang" v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
+              <component v-else-if="col.columnComponent" :is="getComponent('..' + col.columnComponent)" :model-value="scope.row[col.name]" :row="scope.row" :column="col" :lang="props.tableProps.showLang"></component>
               <tuna-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
                                :lang="props.tableProps.showLang"/>
               <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
@@ -86,11 +84,8 @@
               @confirm="handleRowAction('delete', scope.row)"
             >
               <template #reference>
-                <el-link underline="never" type="danger"
-                         v-permission="props.tableProps.className + '.Delete'">
-                  {{
-                    t('table.delete')
-                  }}
+                <el-link underline="never" type="danger" v-permission="props.tableProps.className + '.Delete'">
+                  {{ t('table.delete') }}
                 </el-link>
               </template>
             </el-popconfirm>
