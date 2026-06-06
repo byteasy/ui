@@ -1,9 +1,16 @@
 <template>
-  <div class="flex-column w-full" :style="{ height: props.fullscreen === true ? 'calc(100vh - 200px)' : 'calc(55vh - 100px)'}">
+  <div class="flex-column w-full"
+       :style="{ height: props.fullscreen === true ? 'calc(100vh - 200px)' : 'calc(55vh - 100px)'}">
     <el-collapse accordion class="w-full h-full" expand-icon-position="left">
-      <el-collapse-item :title="getLangText(group.name, locale)" :name="group.name" v-for="group in props.componentGroups" :key="group.name">
-        <div class="flex-row flex-wrap">
-          <span v-for="item in 2000" :key="item">tt{{item}}</span>
+      <el-collapse-item :title="getLangText(group.name, locale)" :name="group.name"
+                        v-for="group in props.componentGroups" :key="group.name">
+        <div class="flex-row flex-wrap p-2">
+          <div class="component-item flex-column justify-content-center align-items-center" v-for="com in group.components" :key="com.path">
+            <div class="el-card">
+              <tuna-svg-icon :svg="com.icon" size="64"/>
+            </div>
+            <tuna-i18n-value :model-value="com.name"/>
+          </div>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -42,7 +49,7 @@ function onOkClick() {
 }
 
 function onButtonClick(btnName) {
-  if(btnName === 'ok') {
+  if (btnName === 'ok') {
     onOkClick()
   } else if (btnName === 'cancel') {
     emit('close', {})
@@ -55,18 +62,15 @@ defineExpose({
 </script>
 
 <style scoped>
-.form-container {
-  width: 100% !important;
+.component-item {
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
 }
 
-.form-footer {
-  flex-shrink: 0;
-}
-
-.footer-buttons {
-  padding-bottom: 12px;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+.component-item:hover {
+  border-color: var(--el-color-primary);
+  cursor: pointer;
 }
 </style>

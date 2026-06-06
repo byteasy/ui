@@ -72,7 +72,6 @@ const onAppendIconClick = () => {
       title: t('platform.selectComponent'),
       width: '60%',
       dialogModel: true,
-      btnExtras: [{ name: t('ok'), key: 'ok' , icon: 'Check', type: 'danger' }],
       onClose: (data) => {
         if (data) {
           if (Array.isArray(data)) {

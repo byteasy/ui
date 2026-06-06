@@ -209,29 +209,4 @@ defineExpose({
 .form-container.fullscreen {
   padding: 12px;
 }
-
-/* 滚动区域：自动填充高度 */
-.form-scroll-wrap {
-  flex: 1;
-  width: 100%;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* 表单根容器 */
-.form-root {
-  width: 100%;
-  padding: 16px;
-}
-
-.form-footer {
-  flex-shrink: 0;
-}
-
-.footer-buttons {
-  padding-bottom: 12px;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
 </style>

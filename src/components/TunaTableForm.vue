@@ -254,15 +254,4 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm, 
   width: 100% !important;
   margin: 0 !important;
 }
-
-.form-footer {
-  flex-shrink: 0;
-}
-
-.footer-buttons {
-  padding-bottom: 12px;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
 </style>
