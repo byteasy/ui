@@ -33,17 +33,24 @@
                   <FullScreen v-if="item.fullscreen === false"/>
                   <IconLocalExitFullscreen v-else/>
                 </el-icon>
-                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
-                         style="">
+                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()">
                   <Close/>
                 </el-icon>
               </div>
             </div>
           </template>
           <el-scrollbar always class="w-full" max-height="95vh">
-            <component :is="item.component" v-bind="item.props"
-                       @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank" :height="calcDialogHeight(item)"/>
+            <component ref="componentRef" :is="item.component" v-bind="item.props"
+                       @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank"
+                       :height="calcDialogHeight(item)"/>
           </el-scrollbar>
+          <template #footer>
+            <div class="dialog-footer">
+              <el-button @click="onButtonClick('cancel')"><tuna-svg-icon svg="Close" class-name="mr-1"/>{{ t(item.btnCancelTitle || 'cancel') }}</el-button>
+              <el-button @click="onButtonClick(btn.key)" :type="btn.type" v-for="btn in item.btnExtras" :key="btn.key"><tuna-svg-icon :svg="btn.icon" class-name="mr-1"/>{{ btn.name }}</el-button>
+              <el-button @click="onButtonClick('ok')" type="primary" ><tuna-svg-icon svg="Check" class-name="mr-1"/>{{ t(item.btnOkTitle || 'ok') }}</el-button>
+            </div>
+          </template>
         </el-dialog>
         <el-drawer
           v-else
@@ -81,9 +88,16 @@
             </div>
           </template>
           <el-scrollbar always class="w-full" :style="{ maxHeight: 'calc(100vh - 130px)' }">
-            <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true" :height="calcDrawlerHeight()"
+            <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true"
+                       :height="calcDrawlerHeight()"
                        @close="(data) => handleClose(item.id, data)"/>
           </el-scrollbar>
+          <template #footer>
+            <div style="flex: auto">
+              <el-button icon="Close" @click="onButtonClick('cancel')">{{ t(item.btnCancelTitle || 'cancel') }}</el-button>
+              <el-button type="primary" icon="Check" @click="onButtonClick('ok')">{{ t(item.btnOkTitle || 'ok') }}</el-button>
+            </div>
+          </template>
         </el-drawer>
       </div>
     </el-config-provider>
@@ -96,6 +110,9 @@ import {computed, ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {elementLocales} from '@/locales/common.ts'
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const appSettingsStore = useAppSettingsStore()
 const componentRef = ref(null)
@@ -136,5 +153,10 @@ const calcDialogHeight = (item: any) => {
     const vh100 = Math.round(window.innerHeight / 3 * 2)
     return vh100 - 80
   }
+}
+
+const onButtonClick = (btn) => {
+  const len = componentRef.value.length
+  componentRef.value[len - 1]?.onButtonClick(btn)
 }
 </script>

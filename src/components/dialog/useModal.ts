@@ -1,4 +1,3 @@
-// composables/useModal.ts
 import type { Component } from 'vue'
 import { markRaw, reactive } from 'vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
@@ -19,6 +18,9 @@ interface ModalState {
     fullscreen: boolean // 仅对dialog有效
     direction?: DrawerDirection // 仅对抽屉有效
     onClose?: (data?: unknown) => void
+    btnOkTitle?: string
+    btnCancelTitle?: string
+    btnExtras?: Array<Record<string, string>>
   }>
 }
 
