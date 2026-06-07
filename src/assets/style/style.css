@@ -299,3 +299,18 @@ div.el-scrollbar__bar.is-vertical {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.selectable-item {
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.selectable-item-active {
+  border-color: var(--el-color-success);
+}
+
+.selectable-item:hover {
+  border-color: var(--el-color-primary);
+  cursor: pointer;
+}

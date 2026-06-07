@@ -13,6 +13,8 @@ export default {
     more: '更多',
     selectComponent: '组件选择',
     componentParamEnable: '开启传参',
+    componentParamsTitle: '组件参数',
+    componentNoParams: '组件无参数',
     schemaDefine: {
       syncSchema: '从代码同步'
     },

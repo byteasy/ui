@@ -87,7 +87,7 @@
           :disabled="scope.props.readonly || scope.row.type === 'BUTTON'"
         />
         <el-form-item :label="$t('platform.resource.queryParams')" >
-          <tuna-object-input v-model="tableMetaData" @change="onTableMetaDataChange" v-if="scope.row.type === 'MENU'"/>
+          <tuna-key-value-input v-model="tableMetaData" @change="onTableMetaDataChange" v-if="scope.row.type === 'MENU'"/>
         </el-form-item>
       </div>
     </template>
