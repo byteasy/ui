@@ -12,6 +12,7 @@ export default {
     },
     more: '更多',
     selectComponent: '组件选择',
+    componentParamEnable: '开启传参',
     schemaDefine: {
       syncSchema: '从代码同步'
     },
