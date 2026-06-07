@@ -5,7 +5,5 @@
 
 const props = defineProps<{
   modelValue: string | undefined
-  row: object
-  column: object
 }>()
 </script>
