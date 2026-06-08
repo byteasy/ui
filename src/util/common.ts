@@ -80,3 +80,15 @@ export const isObjectEqual = (obj1, obj2) => {
 
   return true
 }
+
+export const parseComponent = (queryString: string) => {
+  return queryString.split('?')[0]
+}
+
+export const parseComponentParam = (queryString: string) => {
+  const arrs = queryString.split('?')
+  if (arrs.length === 2) {
+    return arrs[1]
+  }
+  return undefined
+}

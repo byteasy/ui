@@ -1,19 +1,33 @@
 <template>
-  <el-descriptions border :column="props.columns || 1" direction="vertical" class="fix-descriptions">
+  <el-descriptions border :column="props.columns || 1" direction="vertical"
+                   class="fix-descriptions">
     <template v-for="col in tableColumns" :key="col.name">
-      <el-descriptions-item v-if="col.isForm === 'YES'"
-                            :label="getLangText(col.displayName || col.name, locale)" :label-width="90" :label-style="{ width: '90px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }">
+      <el-descriptions-item v-if="col.isForm === 'YES'" :label-width="90"
+                            :label-style="{ width: '90px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }">
+        <template v-slot:label>
+          <el-text type="danger" v-if="col.isRequire === 'YES'">*</el-text>
+          <span>{{ getLangText(col.displayName || col.name, locale) }}</span>
+        </template>
         <template v-slot:default>
           <slot :name="'form-json-' + col.name" :props="props" :row="formValue" :column="col">
-            <tuna-form-field
-              :column="col"
-              :context="props.context"
-              :placeholder="getLangText(col.displayName || col.name, locale)"
-              clearable
-              :disabled="props.disabled"
-              v-model="formValue[col.name]"
-              @change="onUpdateModelValueClick"
-            />
+            <el-form :model="formValue" :ref="(el) => (refBeanFields[col.name] = el)">
+              <el-form-item
+                v-if="col.isForm === 'YES'"
+                :prop="col.name"
+                :rules="[
+                    { required: col.isRequire === 'YES', message: getLangText(col.displayName, locale) + ' ' + t('validate.required') },
+                    { validator: (rule, value, callback) => validateColumnRule(col, rule, value, locale, callback), trigger: 'blur' }
+                  ]">
+                <tuna-form-field
+                  :column="col"
+                  :context="props.context ? props.context : 'platformSvr'"
+                  :placeholder="getLangText(col.displayName || col.name, locale)"
+                  clearable
+                  :disabled="props.disabled"
+                  v-model="formValue[col.name]"
+                  @change="onUpdateModelValueClick"/>
+              </el-form-item>
+            </el-form>
           </slot>
         </template>
       </el-descriptions-item>
@@ -23,31 +37,35 @@
 
 <script setup lang="ts">
 
-import {defineEmits, ref, watch} from 'vue'
+import {defineEmits, defineExpose, ref, watch} from 'vue'
 import {getEntitySchema} from '@/api/common/platform'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
 import TunaFormField from "@/components/TunaFormField.vue";
+import {validateColumnRule} from '@/util/validateUtils.ts'
 
 const {t, locale} = useI18n() // 表单引用
 
 const props = defineProps<{
-  disabled?: boolean
   className: string
-  context: string
+  context?: string
+  disabled?: boolean
   modelValue?: Record<string, any> | null
-  onEditClick?: (data?: unknown) => void
-  columns?: number
+  columns?: number // 每行显示的列数
 }>()
 
 const emit = defineEmits(['update:modelValue'])
 
 const tableColumns = ref([])
 const formValue = ref({...props.modelValue})
+const refBeanFields = ref({})
 
-getEntitySchema(props.context, props.className)
+getEntitySchema(props.context ? props.context : 'platformSvr', props.className)
   .then((response) => {
     tableColumns.value = response.data
+    for (const col in tableColumns.value) {
+      refBeanFields.value[col.name] = null
+    }
   })
 
 function onUpdateModelValueClick() {
@@ -59,6 +77,25 @@ watch(() => formValue, () => {
   },
   {deep: true}
 )
+
+async function validateForm() {
+  const fieldRefs = Object.values(refBeanFields.value)
+  const validatableRefs = fieldRefs.filter(Boolean)
+  try {
+    await Promise.all(
+      validatableRefs.map(item => item.validate()) // 每个都执行校验
+    )
+    console.log('全部校验成功')
+    return true
+  } catch (error) {
+    console.log('校验失败', error)
+    return false
+  }
+}
+
+defineExpose({
+  validateForm
+})
 </script>
 
 <style scoped>

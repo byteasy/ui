@@ -24,16 +24,21 @@
   >
     <template v-for="col in fieldComponents" :key="col.name"
               v-slot:[`form-query-field-${col.name}`]="scope">
-      <component :is="getComponent('..' + col.fieldComponent)" v-model="scope.queryParam[col.name]"
+      <component :is="getComponent('..' + parseComponent(col.fieldComponent))" v-model="scope.queryParam[col.name]"
+                 :param="parseComponentParam(col.fieldComponent)"
                  :style="{ width: (col.width === 0 ? 160 : col.width) + 'px !important' }"
                  :key="col.className + col.name" clearable @change="refTable.refresh()"></component>
     </template>
     <template v-slot:form-query-buttons-extra="scope">
-      <component v-for="btn in formQueryButtonsExtra" :key="btn" :is="getComponent('..' + btn)"
+      <component v-for="btn in formQueryButtonsExtra" :key="btn"
+                 :is="getComponent('..' + parseComponent(btn))"
+                 :param="parseComponentParam(btn)"
                  :queryParam="scope.queryParam" :queryMode="scope.queryMode"></component>
     </template>
     <template v-slot:table-operation-extra="scope">
-      <component v-for="btn in operationButtons" :key="btn" :is="getComponent('..' + btn)"
+      <component v-for="btn in operationButtons" :key="btn"
+                 :is="getComponent('..' + parseComponent(btn))"
+                 :param="parseComponentParam(btn)"
                  :row="scope.row"></component>
     </template>
   </tuna-table-v2>
@@ -47,7 +52,7 @@ import {useRoute} from "vue-router";
 import {doHttpGet, getEntitySchema} from "@/api/common/platform";
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import TunaDefaultObjectForm from "@/views/template/TunaDefaultObjectForm.vue";
-import {queryStringToJson} from "@/util/common.ts";
+import {parseComponent, parseComponentParam, queryStringToJson} from "@/util/common.ts";
 
 const props = defineProps<{
   metaData?: object | null | undefined
