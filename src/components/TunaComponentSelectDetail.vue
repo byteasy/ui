@@ -3,7 +3,8 @@
     <el-splitter-panel>
       <div class="flex-column w-full"
            :style="{ height: props.fullscreen === true ? 'calc(100vh - 200px)' : 'calc(55vh - 100px)'}">
-        <el-collapse accordion class="w-full h-full" expand-icon-position="left" :model-value="selectedGroup">
+        <el-collapse accordion class="w-full h-full" expand-icon-position="left"
+                     :model-value="selectedGroup">
           <el-collapse-item :title="getLangText(group.name, locale)" :name="group.name"
                             v-for="group in props.componentGroups" :key="group.name">
             <div class="flex-row flex-wrap p-2">
@@ -28,7 +29,8 @@
         <span>{{ getLangText(selectedCom.name, locale) + $t('platform.componentNoParams') }}</span>
       </div>
       <div class="pl-2 pr-2" v-else>
-        <tuna-bean-input ref="refBeanInput" :class-name="selectedCom.paramForm" v-model="componentParam"/>
+        <tuna-bean-input ref="refBeanInput" :class-name="selectedCom.paramForm"
+                         v-model="componentParam"/>
       </div>
     </el-splitter-panel>
   </el-splitter>
@@ -53,7 +55,7 @@ const emit = defineEmits(['close'])
 const selectedGroup = ref(undefined)
 const selectedKey = ref(props.componentPath)
 const selectedCom = ref({})
-const componentParam = ref({ ...props.componentParam })
+const componentParam = ref({...props.componentParam})
 const refBeanInput = ref(null)
 
 onMounted(() => {
@@ -76,7 +78,7 @@ function onOkClick() {
     for (let j = 0; j < group.components.length; j++) {
       const com = group.components[j]
       if (com.path === selectedKey.value) {
-        emit('close', { component: com, param: componentParam.value })
+        emit('close', {component: com, param: componentParam.value})
         return
       }
     }
@@ -89,10 +91,12 @@ function isInSelectedRows(obj) {
 }
 
 function onComponentClick(com) {
+  if (refBeanInput.value) {
+    refBeanInput.value.resetFields()
+  }
   selectedKey.value = com.path
   selectedCom.value = com
   componentParam.value = {}
-  refBeanInput.value.resetFields()
 }
 
 function onButtonClick(btnName) {
