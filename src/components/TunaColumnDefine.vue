@@ -58,7 +58,7 @@
 </template>
 <script lang="ts" setup>
 
-import {onMounted, ref} from "vue";
+import {defineEmits, defineExpose, onMounted, ref} from "vue";
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 
 const props = defineProps<{
@@ -66,6 +66,7 @@ const props = defineProps<{
   columns: Array<never>,
 }>()
 const appSettingsStore = useAppSettingsStore()
+const emit = defineEmits(['close'])
 
 const tableData = ref([])
 
@@ -86,4 +87,14 @@ function onFieldSetClick(row) {
 function sortColumnsByShowOrder() {
   return props.columns.sort((a, b) => a.showOrder - b.showOrder)
 }
+
+function onButtonClick(btnName) {
+  if(btnName === 'ok') {
+    emit('close')
+  } else if (btnName === 'cancel') {
+    emit('close')
+  }
+}
+
+defineExpose({onButtonClick})
 </script>

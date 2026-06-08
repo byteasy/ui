@@ -294,7 +294,7 @@ function onColumnDefineClick() {
     }, // 传给组件的 props
     {
       title: t('table.customColumn'),
-      width: getFormWidth(),
+      width: '90%',
       onClose: (data) => {
         // TODO
         // loadTableColumns()

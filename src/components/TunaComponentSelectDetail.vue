@@ -1,6 +1,6 @@
 <template>
   <el-splitter>
-    <el-splitter-panel>
+    <el-splitter-panel class="p-2">
       <div class="flex-column w-full"
            :style="{ height: props.fullscreen === true ? 'calc(100vh - 200px)' : 'calc(55vh - 100px)'}">
         <el-collapse accordion class="w-full h-full" expand-icon-position="left"
@@ -21,7 +21,7 @@
         </el-collapse>
       </div>
     </el-splitter-panel>
-    <el-splitter-panel size="350" collapsible :max="600">
+    <el-splitter-panel size="350" collapsible :max="600" class="p-2">
       <el-divider border-style="dotted">
         <el-text size="large">{{ $t('platform.componentParamsTitle') }}</el-text>
       </el-divider>
