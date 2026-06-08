@@ -3,6 +3,7 @@
     <template v-for="col in fieldComponents" :key="col.name" v-slot:[`formItemField_${col.name}`]="scope">
       <component :is="getComponent(parseComponent(col.fieldComponent))"
                  :param="parseComponentParam(col.fieldComponent)"
+                 :placeholder="getLangText(col.displayName, locale)"
                  v-model="scope.row[col.name]" :disabled="props.readonly" clearable></component>
     </template>
   </tuna-table-form>
@@ -11,6 +12,8 @@
 import {defineExpose, onMounted, ref} from "vue";
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
+import {getLangText} from "@/locales/common.ts";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps<{
   url: string
@@ -27,6 +30,7 @@ const props = defineProps<{
 const refForm = ref(null)
 const loading = ref(true)
 const {modules } = getRouteComponents()
+const {t, locale} = useI18n()
 
 function getComponent(path) {
   return modules['..' + path]

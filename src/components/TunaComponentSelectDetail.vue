@@ -20,7 +20,7 @@
         </el-collapse>
       </div>
     </el-splitter-panel>
-    <el-splitter-panel size="250" collapsible :max="600">
+    <el-splitter-panel size="350" collapsible :max="600">
       <el-divider border-style="dotted">
         <el-text size="large">{{ $t('platform.componentParamsTitle') }}</el-text>
       </el-divider>
@@ -63,6 +63,7 @@ onMounted(() => {
       const com = group.components[j]
       if (com.path === selectedKey.value) {
         selectedGroup.value = group.name
+        selectedCom.value = com
         return
       }
     }
@@ -90,6 +91,7 @@ function isInSelectedRows(obj) {
 function onComponentClick(com) {
   selectedKey.value = com.path
   selectedCom.value = com
+  componentParam.value = {}
 }
 
 function onButtonClick(btnName) {
