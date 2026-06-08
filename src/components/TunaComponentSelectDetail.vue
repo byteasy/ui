@@ -8,7 +8,7 @@
                             v-for="group in props.componentGroups" :key="group.name">
             <div class="flex-row flex-wrap p-2">
               <div
-                :class="{ 'selectable-item flex-column justify-content-center align-items-center' : true, 'selectable-item-active': isInSelectedRows(com.path) }"
+                :class="{ 'selectable-item flex-column ml-1 justify-content-center align-items-center' : true, 'selectable-item-active': isInSelectedRows(com.path) }"
                 v-for="com in group.components" :key="com.path" @click="onComponentClick(com)">
                 <div class="el-card">
                   <tuna-svg-icon :svg="com.icon" size="64"/>
@@ -92,6 +92,7 @@ function onComponentClick(com) {
   selectedKey.value = com.path
   selectedCom.value = com
   componentParam.value = {}
+  refBeanInput.value.resetFields()
 }
 
 function onButtonClick(btnName) {

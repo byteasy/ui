@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 
-import {defineEmits, defineExpose, ref, watch} from 'vue'
+import {defineEmits, defineExpose, onMounted, ref, watch} from 'vue'
 import {getEntitySchema} from '@/api/common/platform'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
@@ -60,13 +60,19 @@ const tableColumns = ref([])
 const formValue = ref({...props.modelValue})
 const refBeanFields = ref({})
 
-getEntitySchema(props.context ? props.context : 'platformSvr', props.className)
-  .then((response) => {
-    tableColumns.value = response.data
-    for (const col in tableColumns.value) {
-      refBeanFields.value[col.name] = null
-    }
-  })
+onMounted(() => {
+  loadDynamicFields()
+})
+
+function loadDynamicFields() {
+  getEntitySchema(props.context ? props.context : 'platformSvr', props.className)
+    .then((response) => {
+      tableColumns.value = response.data
+      for (const col in tableColumns.value) {
+        refBeanFields.value[col.name] = null
+      }
+    })
+}
 
 function onUpdateModelValueClick() {
   emit('update:modelValue', formValue.value)
@@ -77,6 +83,10 @@ watch(() => formValue, () => {
   },
   {deep: true}
 )
+
+watch(() => props.className, () => {
+  loadDynamicFields()
+})
 
 async function validateForm() {
   const fieldRefs = Object.values(refBeanFields.value)
@@ -93,8 +103,21 @@ async function validateForm() {
   }
 }
 
+async function resetFields() {
+  const fieldRefs = Object.values(refBeanFields.value)
+  const validatableRefs = fieldRefs.filter(Boolean)
+  try {
+    await Promise.all(
+      validatableRefs.map(item => item.resetFields()) // 每个都执行校验
+    )
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
 defineExpose({
-  validateForm
+  validateForm, resetFields
 })
 </script>
 

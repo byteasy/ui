@@ -13,13 +13,13 @@ const { t, locale } = useI18n()
 
 const props = defineProps<{
   code: string
-  context: string
+  context?: string
 }>()
 const enumValues = ref([])
 const loading = ref(false)
 
 onMounted(() => {
-  getEnumValues(props.context, props.code).then(rsp => {
+  getEnumValues(props.context ? props.context : 'platformSvr', props.code).then(rsp => {
     enumValues.value = rsp.data
   })
 })
