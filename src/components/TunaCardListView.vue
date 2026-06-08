@@ -4,7 +4,7 @@
        :style="{ height: props.height + 'px', width: props.width + 'px' }">
     <!-- 卡片网格 -->
     <div class="card-grid" v-if="props.data?.length && props.data.length > 0">
-      <div :class="{'card-item' : true, 'card-item-active': isInSelectedRows(entity) }"
+      <div :class="{'selectable-item' : true, 'selectable-item-active': isInSelectedRows(entity) }"
            v-for="entity in props.data" :key="entity.id || entity.code || entity.name">
         <el-descriptions border :column="2" class="el-card w-full h-full"
                          @dblclick="handleDbRowClick( entity)" @click="setCurrentRow(entity)">
@@ -255,24 +255,6 @@ defineExpose({
   .card-grid {
     grid-template-columns: repeat(1, 1fr);
   }
-}
-
-.card-item {
-  width: 100%;
-  /* 下面是新增的基础样式 */
-  cursor: pointer; /* 鼠标变成小手（可点击指示） */
-  border: 1px solid transparent; /* 预先占边框位置，避免跳动 */
-  transition: border-color 0.2s ease; /* 边框过渡更顺滑 */
-}
-
-/* 鼠标悬浮上去的效果 */
-.card-item:hover {
-  border-color: var(--el-color-primary); /* 系统主色（蓝色） */
-  cursor: pointer;
-}
-
-.card-item-active {
-  border-color: var(--el-color-success); /* 系统主色（蓝色） */
 }
 
 :deep(.el-descriptions) {
