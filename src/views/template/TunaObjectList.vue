@@ -129,7 +129,7 @@ onMounted(() => {
 
     // queryParams 特殊处理
     if (params.queryParams !== undefined) {
-      metaData.queryParams = queryStringToJson(params.queryParams)
+      metaData.queryParams = JSON.parse(params.queryParams)
     }
 
     console.log('模型元数据', metaData)

@@ -3,6 +3,8 @@
     <template v-for="col in fieldComponents" :key="col.name" v-slot:[`formItemField_${col.name}`]="scope">
       <component :is="getComponent(parseComponent(col.fieldComponent))"
                  :param="parseComponentParam(col.fieldComponent)"
+                 :row="scope.row"
+                 :column="col"
                  :placeholder="getLangText(col.displayName, locale)"
                  v-model="scope.row[col.name]" :disabled="props.readonly" clearable></component>
     </template>

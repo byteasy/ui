@@ -43,11 +43,24 @@ export const jsonToQueryString = (obj) => {
 }
 
 export const queryStringToJson = (queryString: string) => {
+  if (!queryString) return {};
   try {
-    return JSON.parse(decodeURIComponent(queryString || "{}"))
+    const params = new URLSearchParams(queryString);
+    const json = {};
+
+    for (const [key, value] of params.entries()) {
+      try {
+        // 尝试把被 stringify 过的对象还原
+        json[key] = JSON.parse(value);
+      } catch {
+        // 解析失败就直接用原始字符串
+        json[key] = value;
+      }
+    }
+    return json;
   } catch (err) {
-    console.log(err)
-    return undefined
+    console.error('解析查询字符串失败', err);
+    return {};
   }
 }
 
@@ -82,13 +95,15 @@ export const isObjectEqual = (obj1, obj2) => {
 }
 
 export const parseComponent = (queryString: string) => {
+  if(!queryString) return undefined
   return queryString.split('?')[0]
 }
 
 export const parseComponentParam = (queryString: string) => {
+  if(!queryString) return undefined
   const arrs = queryString.split('?')
-  if (arrs.length === 2) {
-    return arrs[1]
+  if (arrs.length === 2 && arrs[1]) {
+    return queryStringToJson(arrs[1])
   }
   return undefined
 }

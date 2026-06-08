@@ -10,6 +10,7 @@
         context="platformSvr"
         class-name="com.tuna.platform.entity.SchemaDefine"
         :query-params="{ ascColumns: ['className', 'showOrder'] }"
+        :form-component="TunaDefaultObjectForm"
         class="pl-2"
       >
         <template v-slot:form-query-field-serviceName="serviceNameScope">
@@ -46,6 +47,7 @@ import {doHttpGet, doHttpPost, doHttpPut } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import ServiceClassTree from "@/views/microapp/developConfig/schemaDefine/ServiceClassTree.vue";
+import TunaDefaultObjectForm from "@/views/template/TunaDefaultObjectForm.vue";
 const { t } = useI18n() // 表单引用
 
 const refTable = ref(null)

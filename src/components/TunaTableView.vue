@@ -13,7 +13,7 @@
           :label="getLangText(col.displayName, locale)"
           :prop="col.name"
           resizable
-          v-if="col.isShow === 'YES' && col.type !== 'ENUM'"
+          v-if="col.isShow === 'YES' && (col.type !== 'ENUM' || col.columnComponent)"
           :min-width="col.width === 0 ? undefined : col.width"
           :show-overflow-tooltip="col.isOverflow === 'YES'"
           :sortable="col.isSort === 'YES'"
