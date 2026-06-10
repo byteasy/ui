@@ -13,6 +13,17 @@ console.log('sub-app-container onMounted')
 const win = window as Window & { qiankunStarted?: boolean }
 let hashChangeHandler: () => void
 
+function replaceHostVar(entry: string): string {
+  // 如果不包含 {host}，直接返回原字符串
+  if (!entry.includes('{host}')) {
+    return entry;
+  }
+  // 获取当前 origin（如 http://localhost:3000）
+  const baseUrl = window.location.host;
+  // 替换所有 {host} 并返回
+  return entry.replace(/{host}/g, baseUrl);
+}
+
 onMounted(() => {
   doHttpGet('/platformSvr/sapi/resourceCategorys/topMenu').then((res) => {
     const microApps = []
@@ -30,7 +41,7 @@ onMounted(() => {
             // 构建微应用的配置信息
             const microAppConfig = {
               name: group.code,
-              entry: group.entry,
+              entry: replaceHostVar(group.entry),
               container: '#sub-app-container', // 挂载子应用的dom
               activeRule: '/' + pathArrs[1] + '/' + pathArrs[2], // 路由匹配规则
               props: group.props ? JSON.parse(group.props) : {},
@@ -51,7 +62,7 @@ onMounted(() => {
         const subApp = subApps[i]
         const cfg = {
           name: subApp.name,
-          entry: subApp.entry,
+          entry: replaceHostVar(subApp.entry),
           container: '#sub-app-container', // 挂载子应用的dom
           activeRule: (location) => {
             return (
