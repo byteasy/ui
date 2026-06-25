@@ -4,7 +4,7 @@
     base-url="/platformSvr/sapi/loginLogs"
     context="platformSvr"
     title-column-name="username"
-    class-name="com.tuna.platform.entity.LoginLog"
+    class-name="com.byteasy.platform.entity.LoginLog"
     :query-params="{ descColumns: ['createdTime'] }"
   >
   </tuna-table-v2>

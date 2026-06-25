@@ -8,7 +8,7 @@
         ref="refTable"
         base-url="/platformSvr/sapi/resources"
         context="platformSvr"
-        class-name="com.tuna.platform.entity.Resource"
+        class-name="com.byteasy.platform.entity.Resource"
         :form-component="ResourceForm"
         :row-key="'id'"
         :tree-props="{ children: 'childrenList' }"

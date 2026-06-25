@@ -8,7 +8,7 @@
         ref="refTable"
         base-url="/platformSvr/sapi/dictionarys"
         context="platformSvr"
-        class-name="com.tuna.platform.entity.Dictionary"
+        class-name="com.byteasy.platform.entity.Dictionary"
         class="pl-1"
         :form-component="DictionaryForm"
       >

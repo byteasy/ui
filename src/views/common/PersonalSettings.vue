@@ -1,7 +1,7 @@
 <template>
   <tuna-viewer
     context="platformSvr"
-    class-name="com.tuna.platform.vo.PersonalSettingsVO"
+    class-name="com.byteasy.platform.vo.PersonalSettingsVO"
     :entity="user"
     :title="$t('user.basic')"
   >
@@ -41,7 +41,7 @@
       />
     </template>
     <template v-slot:view_gender="scope">
-      <enum-select v-if="editEnable" code="com.tuna.enums.Gender" context="platformSvr" v-model="user.gender" clearable/>
+      <enum-select v-if="editEnable" code="com.byteasy.enums.Gender" context="platformSvr" v-model="user.gender" clearable/>
     </template>
     <template v-slot:extra>
       <el-button type="primary" @click="editEnable = !editEnable" v-if="!editEnable">{{

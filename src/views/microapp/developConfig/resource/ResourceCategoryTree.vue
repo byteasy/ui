@@ -151,7 +151,7 @@ function onTreeNodeAddClick(action) {
     {
       url: '/platformSvr/sapi/resourceCategorys',
       context: 'platformSvr',
-      className: 'com.tuna.platform.entity.ResourceCategory',
+      className: 'com.byteasy.platform.entity.ResourceCategory',
       row: obj
     },
     {
@@ -171,7 +171,7 @@ function onTreeNodeEditClick() {
     {
       url: '/platformSvr/sapi/resourceCategorys',
       context: 'platformSvr',
-      className: 'com.tuna.platform.entity.ResourceCategory',
+      className: 'com.byteasy.platform.entity.ResourceCategory',
       row: activeContextMenuNode.value
     }, // 传给组件的 props
     {

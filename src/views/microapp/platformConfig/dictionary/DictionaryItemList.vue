@@ -5,7 +5,7 @@
       ref="refTable"
       base-url="/platformSvr/sapi/dictionaryItems"
       context="platformSvr"
-      class-name="com.tuna.platform.entity.DictionaryItem"
+      class-name="com.byteasy.platform.entity.DictionaryItem"
       class="pl-1 w-full h-full"
       :query-params="{ dictionaryId: props.parent.id, ascColumns: ['showOrder'] }"
       :form-component="DictionaryItemForm"
@@ -16,7 +16,7 @@
           }}
         </el-button>
         <el-button type="primary" @click="onAdd" icon="Plus"
-                   v-permission="'com.tuna.platform.entity.DictionaryItem.Add'">{{ $t('add') }}
+                   v-permission="'com.byteasy.platform.entity.DictionaryItem.Add'">{{ $t('add') }}
         </el-button>
       </template>
     </tuna-table-v2>

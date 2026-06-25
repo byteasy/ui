@@ -3,7 +3,7 @@
     ref="refTable"
     base-url="/platformSvr/sapi/users"
     context="platformSvr"
-    class-name="com.tuna.platform.vo.PersonalSettingsVO"
+    class-name="com.byteasy.platform.vo.PersonalSettingsVO"
     :form-component="UserEditForm"
     :excel-import-enable="true"
     :title-column-name="'realName'"
@@ -14,20 +14,20 @@
                 :zoom-rate="1.0"/>
     </template>
     <template v-slot:table-operation-extra="powerScope">
-      <el-link underline="never" type="primary" v-permission="'com.tuna.platform.vo.PersonalSettingsVO.RoleAssign'"
+      <el-link underline="never" type="primary" v-permission="'com.byteasy.platform.vo.PersonalSettingsVO.RoleAssign'"
                @click="onPermissionEdit(powerScope.row)">{{ t('platform.role.name') }}
       </el-link>
     </template>
     <template v-slot:table-operation-end-extra="scope">
       <el-dropdown placement="bottom-start">
-        <el-link type="primary" underline="never" v-permission="'com.tuna.platform.vo.PersonalSettingsVO.Enable'">{{ $t('platform.more') }}</el-link>
+        <el-link type="primary" underline="never" v-permission="'com.byteasy.platform.vo.PersonalSettingsVO.Enable'">{{ $t('platform.more') }}</el-link>
         <template #dropdown>
           <el-dropdown-menu>
-              <el-dropdown-item v-if="scope.row.status === 'DISABLE' && sessionStore.authorize('com.tuna.platform.vo.PersonalSettingsVO.Enable')"
+              <el-dropdown-item v-if="scope.row.status === 'DISABLE' && sessionStore.authorize('com.byteasy.platform.vo.PersonalSettingsVO.Enable')"
                                 @click="onEditUserStatusClick(scope.row, 'NORMAL')" >
                 {{ $t('user.enable') }}
               </el-dropdown-item>
-              <el-dropdown-item v-if="scope.row.status === 'NORMAL' && sessionStore.authorize('com.tuna.platform.vo.PersonalSettingsVO.Enable')"
+              <el-dropdown-item v-if="scope.row.status === 'NORMAL' && sessionStore.authorize('com.byteasy.platform.vo.PersonalSettingsVO.Enable')"
                                 @click="onEditUserStatusClick(scope.row, 'DISABLE')" >
                 {{ $t('user.disable') }}
               </el-dropdown-item>

@@ -3,7 +3,7 @@
     ref="refTable"
     base-url="/platformSvr/sapi/oauth2RegisteredClients"
     context="platformSvr"
-    class-name="com.tuna.platform.oauth2.entity.Oauth2RegisteredClient"
+    class-name="com.byteasy.platform.oauth2.entity.Oauth2RegisteredClient"
     :query-params="{ descColumns: ['updatedTime', 'createdTime'] }"
     :form-component="Oauth2ClientForm"
     title-column-name="clientName"

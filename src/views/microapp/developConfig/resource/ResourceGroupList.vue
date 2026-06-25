@@ -8,7 +8,7 @@
         ref="refTable"
         base-url="/platformSvr/sapi/resourceGroups"
         context="platformSvr"
-        class-name="com.tuna.platform.entity.ResourceGroup"
+        class-name="com.byteasy.platform.entity.ResourceGroup"
         :query-params="{ ascColumns: ['showOrder'] }"
         class="pl-2"
         :form-component="ResourceGroupForm"

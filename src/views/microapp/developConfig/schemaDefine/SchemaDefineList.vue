@@ -8,7 +8,7 @@
         ref="refTable"
         base-url="/platformSvr/sapi/schemaDefines"
         context="platformSvr"
-        class-name="com.tuna.platform.entity.SchemaDefine"
+        class-name="com.byteasy.platform.entity.SchemaDefine"
         :query-params="{ ascColumns: ['className', 'showOrder'] }"
         :form-component="TunaDefaultObjectForm"
         class="pl-2"

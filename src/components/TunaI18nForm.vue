@@ -87,7 +87,7 @@ const props = defineProps<{
 const emit = defineEmits(['close'])
 
 onMounted(() => {
-  doHttpGet('/platformSvr/sapi/schemas/com.tuna.platform.entity.I18n', {}).then((rsp) => {
+  doHttpGet('/platformSvr/sapi/schemas/com.byteasy.platform.entity.I18n', {}).then((rsp) => {
     tableColumns.value = rsp.data
   })
 
