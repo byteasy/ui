@@ -17,7 +17,7 @@
     </div>
     <div class="flex-grow flex-row w-full h-full justify-content-center align-items-center ">
       <div :class="{ 'w-full h-full flex-row w-full h-full justify-content-center align-items-center': !isMobile, 'mobile-container': isMobile }">
-        <VueDraggable :class="{'w-full h-full p-2': !isMobile, 'be-material-target sense-rect-border': true, 'mobile-root-rect': isMobile }" v-model="rootComponents"
+        <VueDraggable :class="{'w-full h-full p-2': !isMobile, 'be-material-target sense-rect-border flex-column': true, 'mobile-root-rect': isMobile }" v-model="rootComponents"
                       v-bind="$attrs" :animation="150" group="material"
                       ghostClass="ghost">
           <div v-for="com in rootComponents" :key="com.id"> {{ com.name }}</div>
