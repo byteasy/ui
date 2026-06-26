@@ -46,9 +46,19 @@
           </el-scrollbar>
           <template #footer>
             <div class="dialog-footer">
-              <el-button @click="onButtonClick('cancel')"><tuna-svg-icon svg="Close" class="mr-1"/>{{ t(item.btnCancelTitle || 'cancel') }}</el-button>
-              <el-button @click="onButtonClick(btn.key)" :type="btn.type" v-for="btn in item.btnExtras" :key="btn.key"><tuna-svg-icon :svg="btn.icon" class="mr-1"/>{{ btn.name }}</el-button>
-              <el-button v-debounce="() => onButtonClick('ok')" type="primary" ><tuna-svg-icon svg="Check" class="mr-1"/>{{ t(item.btnOkTitle || 'ok') }}</el-button>
+              <el-button @click="onButtonClick('cancel', item)">
+                <tuna-svg-icon svg="Close" class="mr-1"/>
+                {{ t(item.btnCancelTitle || 'cancel') }}
+              </el-button>
+              <el-button @click="onButtonClick(btn.key, item)" :type="btn.type"
+                         v-for="btn in item.btnExtras" :key="btn.key">
+                <tuna-svg-icon :svg="btn.icon" class="mr-1"/>
+                {{ btn.name }}
+              </el-button>
+              <el-button v-debounce="() => onButtonClick('ok', item)" type="primary">
+                <tuna-svg-icon svg="Check" class="mr-1"/>
+                {{ t(item.btnOkTitle || 'ok') }}
+              </el-button>
             </div>
           </template>
         </el-dialog>
@@ -94,9 +104,19 @@
           </el-scrollbar>
           <template #footer>
             <div style="flex: auto">
-              <el-button @click="onButtonClick('cancel')"><tuna-svg-icon svg="Close" class="mr-1"/>{{ t(item.btnCancelTitle || 'cancel') }}</el-button>
-              <el-button @click="onButtonClick(btn.key)" :type="btn.type" v-for="btn in item.btnExtras" :key="btn.key"><tuna-svg-icon :svg="btn.icon" class="mr-1"/>{{ btn.name }}</el-button>
-              <el-button v-debounce="() => onButtonClick('ok')" type="primary" ><tuna-svg-icon svg="Check" class="mr-1"/>{{ t(item.btnOkTitle || 'ok') }}</el-button>
+              <el-button @click="onButtonClick('cancel', item)">
+                <tuna-svg-icon svg="Close" class="mr-1"/>
+                {{ t(item.btnCancelTitle || 'cancel') }}
+              </el-button>
+              <el-button @click="onButtonClick(btn.key, item)" :type="btn.type"
+                         v-for="btn in item.btnExtras" :key="btn.key">
+                <tuna-svg-icon :svg="btn.icon" class="mr-1"/>
+                {{ btn.name }}
+              </el-button>
+              <el-button v-debounce="() => onButtonClick('ok', item)" type="primary">
+                <tuna-svg-icon svg="Check" class="mr-1"/>
+                {{ t(item.btnOkTitle || 'ok') }}
+              </el-button>
             </div>
           </template>
         </el-drawer>
@@ -156,8 +176,19 @@ const calcDialogHeight = (item: any) => {
   }
 }
 
-const onButtonClick = (btn) => {
+const onButtonClick = (btn, item) => {
   const len = componentRef.value.length
-  componentRef.value[len - 1]?.onButtonClick(btn)
+  if (componentRef.value[len - 1]?.onButtonClick !== undefined) {
+    componentRef.value[len - 1]?.onButtonClick(btn)
+  } else {
+    defaultButtonClickHandle(btn, item)
+  }
+}
+
+function defaultButtonClickHandle(btnName, item) {
+  if (btnName === 'ok') {
+  } else if (btnName === 'cancel') {
+    handleClose(item.id)
+  }
 }
 </script>
