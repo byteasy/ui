@@ -15,13 +15,20 @@
         </el-button>
       </el-button-group>
     </div>
-    <div class="flex-grow flex-row w-full h-full justify-content-center align-items-center ">
-      <div :class="{ 'w-full h-full flex-row w-full h-full justify-content-center align-items-center': !isMobile, 'mobile-container': isMobile }">
-        <VueDraggable :class="{'w-full h-full p-2': !isMobile, 'be-material-target sense-rect-border flex-column': true, 'mobile-root-rect': isMobile }" v-model="rootComponents"
-                      v-bind="$attrs" :animation="150" group="material"
-                      ghostClass="ghost">
-          <div v-for="com in rootComponents" :key="com.id"> {{ com.name }}</div>
-        </VueDraggable>
+    <div class="flex-grow flex-row w-full h-full justify-content-center align-items-center">
+      <div :class="{ 'w-full h-full': !isMobile, 'mobile-container': isMobile }">
+        <div :class="{ 'desktop-root-rect w-full' : !isMobile, 'sense-rect-border flex-column': true, 'mobile-root-rect': isMobile}" :style="{ height: `${props.height - 126}px` }">
+          <VueDraggable
+            class="w-full be-material-target"
+            style="min-height: 400px;width: 100% !important;"
+            v-model="rootComponents"
+            v-bind="$attrs" :animation="150" group="material"
+            ghostClass="drag-ghost" chosenClass="drag-chosen">
+            <template v-for="root in rootComponents" :key="root.uuid">
+              <be-form-component :meta="root" v-model="root.childrenList" :props-value="root.propsValue"/>
+            </template>
+          </VueDraggable>
+        </div>
       </div>
     </div>
   </div>
@@ -29,6 +36,11 @@
 <script setup lang="ts">
 import {VueDraggable} from "vue-draggable-plus";
 import {ref} from "vue";
+import BeFormComponent from "@/components/form/BeFormComponent.vue";
+
+const props = defineProps<{
+  height: number
+}>()
 
 defineEmits(['update', 'add', 'remove'])
 
@@ -36,21 +48,31 @@ const isMobile = ref(false);
 const rootComponents = ref([])
 
 function handleDragStart(m) {
-  // rootComponents.value.push(m)
+  m.uuid = m.id + '-' + new Date().getTime();
 }
 
 function handleDragEnd(m) {
-  // rootComponents.value.push(m)
+}
+
+function onDragMoveHandle(event, originalEvent) {
+  console.log(event)
+  if (event.from.classList.contains('be-material-source') && event.to.classList.contains('be-material-target')) {
+    return true;
+  }
+  if (event.from.classList.contains('be-material-source') && event.to.classList.contains('be-material-source')) {
+    return false
+  }
+  return true
 }
 
 defineExpose({
-  handleDragStart, handleDragEnd
+  handleDragStart, handleDragEnd, onDragMoveHandle
 })
 </script>
 <style scoped>
 
 .mobile-container {
-  width:  459px !important;
+  width: 459px !important;
   height: 945px !important;
   background-image: url('@/assets/img/bgIphone.svg');;
 }
@@ -60,11 +82,18 @@ defineExpose({
   margin-top: 100px;
   width: 414px !important;
   height: 736px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sense-rect-border {
   border: 1px solid;
-  border-color: var(--el-color-primary);
+  border-color: var(--el-color-success);
 }
 
+.desktop-root-rect {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 </style>
