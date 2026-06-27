@@ -55,14 +55,14 @@ function handleDragEnd(m) {
 }
 
 function onDragMoveHandle(event, originalEvent) {
-  console.log(event)
   if (event.from.classList.contains('be-material-source') && event.to.classList.contains('be-material-target')) {
+    console.log(event)
     return true;
   }
   if (event.from.classList.contains('be-material-source') && event.to.classList.contains('be-material-source')) {
     return false
   }
-  return true
+  return false
 }
 
 defineExpose({

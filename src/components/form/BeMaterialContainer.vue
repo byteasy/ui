@@ -40,7 +40,7 @@ const props = defineProps<{
 const {t, locale} = useI18n()
 const emit = defineEmits(['dragStart', 'dragEnd'])
 
-const componentGroups = ref([
+const componentGroups = [
   {
     id: "Layout",
     name: "{\"zh_CN\":\"布局组件\",\"en\":\"Layout Component\"}",
@@ -146,7 +146,7 @@ const componentGroups = ref([
       },
     ]
   },
-])
+]
 
 function onDragStart(event) {
   emit('dragStart', event)
