@@ -1,14 +1,13 @@
 <template>
   <div class="flex-column w-full el-card">
     <el-text tag="b" size="large" class="p-2">属性</el-text>
-    {{ activeComponent }}
+    <el-button @click="activeComponent.properties = { test: true}">Test</el-button>
   </div>
 </template>
 <script lang="ts" setup>
-import {getLangText} from "@/locales/common.ts";
-import {VueDraggable} from "vue-draggable-plus";
+import {useFormEngine} from '@/stores/formEngine.ts'
+import {storeToRefs} from "pinia";
 
-const props = defineProps<{
-  activeComponent?: object
-}>()
+const formEngine = useFormEngine()
+const { activeComponent } = storeToRefs(formEngine)
 </script>

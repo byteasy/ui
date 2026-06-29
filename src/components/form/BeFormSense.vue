@@ -25,10 +25,10 @@
               v-bind="$attrs" :animation="150" group="material"
               :on-add="onAdded"
               ghostClass="drag-ghost" chosenClass="drag-chosen">
-              <template v-for="root in rootComponents" :key="root.uuid">
-                <be-form-component :model-value="root" @click="onComponentClick(root)" :selected="root.id === selectedComponent?.id" @copy="onComponentCopy" @delete="onComponentDelete"
-                                   @update:modelValue="doUpdateModelValue" @selected="value => emit('selected', value)"
-                />
+              <template v-for="root in rootComponents" :key="root.id">
+                <be-form-component :model-value="root" @click="onComponentClick(root)"
+                                   :active="root.id === activeComponent?.id"
+                                   @copy="onComponentCopy" @delete="onComponentDelete" @update:modelValue="doUpdateModelValue" />
               </template>
             </VueDraggable>
           </div>
@@ -38,8 +38,10 @@
 </template>
 <script setup lang="ts">
 import {VueDraggable} from "vue-draggable-plus";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import BeFormComponent from "@/components/form/BeFormComponent.vue";
+import {useFormEngine} from "@/stores/formEngine.ts";
+import {storeToRefs} from "pinia";
 
 const props = defineProps<{
   height: number | undefined
@@ -47,10 +49,17 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['update', 'add', 'remove', 'selected', 'update:modelValue'])
-
+const formEngine = useFormEngine()
 const isMobile = ref(false);
 const rootComponents = ref([...(props.modelValue || [])])
-const selectedComponent = ref(undefined)
+const { activeComponent } = storeToRefs(formEngine)
+
+watch(() => rootComponents.value, (newVal, oldVal) => {
+  const newValue = JSON.parse(JSON.stringify(newVal))
+  emit('update:modelValue', newValue)
+}, {
+  deep: true
+})
 
 function handleDragStart(m) {
 }
@@ -59,9 +68,6 @@ function handleDragEnd(m) {
 }
 
 function onAdded(event) {
-  emit('selected', event.clonedData)
-  selectedComponent.value = event.clonedData
-  console.log(rootComponents.value)
 }
 
 function onComponentCopy(root) {
@@ -71,20 +77,11 @@ function onComponentCopy(root) {
 }
 
 function onComponentDelete(root) {
-  const index = rootComponents.value.findIndex(item => item.id === root.id)
-  if (index > -1) {
-    // 删除数组对应项
-    rootComponents.value.splice(index, 1)
-    // 如果当前选中的就是被删除的组件，清空选中状态
-    if (selectedComponent.value?.id === root.id) {
-      selectedComponent.value = undefined
-    }
-  }
+  rootComponents.value = rootComponents.value.filter(item => item.id !== root.id)
 }
 
 function onComponentClick(ponent) {
-  emit('selected', ponent)
-  selectedComponent.value = ponent
+  formEngine.setActiveComponent(ponent)
 }
 
 function onDragMoveHandle(event, originalEvent) {
@@ -104,8 +101,6 @@ function doUpdateModelValue(root) {
   const index = rootComponents.value.findIndex(item => item.id === root.id)
   if (index > -1) {
     rootComponents.value[index] = root
-    const newValue = JSON.parse(JSON.stringify(rootComponents.value))
-    emit('update:modelValue', newValue)
   }
 }
 

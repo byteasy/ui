@@ -7,12 +7,12 @@
                              @drag-end="onMaterialDrapEnd" :on-move-handle="onDragMoveHandle"/>
       </el-splitter-panel>
       <el-splitter-panel class="p-1">
-        <BeFormSense ref="refFormSense" :height="props.height"
-                     @selected="(ponent) => activeComponent = ponent" :model-value="formDefine"
+        <BeFormSense ref="refFormSense" :height="props.height" v-model="formDefine"
                      @update:modelValue="doUpdateModelValue"/>
       </el-splitter-panel>
       <el-splitter-panel class="p-1" size="300" collapsible>
-        <be-form-component-prop-editor :active-component="activeComponent"/>
+        {{ formDefine }}
+        <be-form-component-prop-editor />
       </el-splitter-panel>
     </el-splitter>
   </div>
@@ -31,7 +31,6 @@ const refMaterialContainer = ref(null);
 const refFormSense = ref(null);
 
 const formDefine = ref([])
-const activeComponent = ref(undefined)
 
 function onMaterialDrapStart(event) {
   refFormSense.value.handleDragStart(event.data)
@@ -47,28 +46,6 @@ function onDragMoveHandle(event, originalEvent) {
 
 function doUpdateModelValue(value) {
   formDefine.value = value
-  if (activeComponent.value !== undefined) {
-    // 更新属性视图的数据
-    const result = findById(activeComponent.value.id, formDefine.value)
-    if (result !== undefined) {
-      activeComponent.value = result
-    }
-  }
 }
 
-function findById(id, arrs) {
-  console.log('findById', id, arrs)
-  for (const com in arrs) {
-    if (com.id === id) {
-      return com
-    }
-    if (com.children !== undefined && com.children.length > 0) {
-      const result = findById(id, com.children)
-      if (result !== undefined) {
-        return result
-      }
-    }
-  }
-  return undefined
-}
 </script>

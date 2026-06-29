@@ -1,10 +1,10 @@
 <template>
-  <div class="flex-column">
-    <div v-if="props.selected" class="w-full flex-row justify-content-end">
+  <div class="flex-column" @click.stop="$emit('click', modelValue)">
+    <div v-if="props.active" class="w-full flex-row justify-content-end">
       <el-button type="primary" icon="CopyDocument" circle size="small" @click="emit('copy', props.modelValue)"/>
       <el-button type="danger" icon="Delete" circle size="small" @click="emit('delete', props.modelValue)"/>
     </div>
-    <component :is="getComponent(props.modelValue.path)" :model-value="props.modelValue" :class="{ 'be-component-selected': props.selected}" @update:modelValue="value => emit('update:modelValue', value)" @selected="(value) => emit('selected', value)">
+    <component :is="getComponent(props.modelValue.path)" :model-value="props.modelValue" :class="{ 'be-component-selected': props.active}" @update:modelValue="value => emit('update:modelValue', value)">
     </component>
   </div>
 </template>
@@ -22,9 +22,9 @@ const props = defineProps<{
     properties: object
     children: any[]
   },
-  selected?: boolean
+  active?: boolean
 }>()
-const emit = defineEmits(['copy', 'delete', 'selected', 'update:modelValue'])
+const emit = defineEmits(['click', 'copy', 'delete', 'selected', 'update:modelValue'])
 
 const {modules} = getRouteComponents()
 const {t, locale} = useI18n()
