@@ -8,6 +8,7 @@
           class="flex-row flex-wrap p-2 overflow-auto be-material-source"
           v-model="group.components"
           v-bind="$attrs"
+          :clone="clone"
           :on-start="onDragStart"
           :on-end="onDragEnd"
           :on-move="onDragMove"
@@ -154,6 +155,14 @@ function onDragStart(event) {
 
 function onDragEnd(event) {
   emit('dragEnd', event)
+}
+
+function clone(element: Record<any>) {
+  const obj = JSON.parse(JSON.stringify(element))
+  obj.id = obj.id + '-' + new Date().getTime();
+  obj.children = []
+  obj.properties = {}
+  return obj
 }
 
 function onDragMove(event, originalEvent) {

@@ -316,11 +316,11 @@ div.el-scrollbar__bar.is-vertical {
 }
 
 .drag-ghost {
-  background: var(--el-color-success-dark-2) !important;
   border: 2px dashed var(--el-text-color-secondary) !important;
   border-radius: 4px;
 }
 
 .drag-chosen {
-  background: var(--el-color-success) !important;
+  border: 2px dashed var(--el-color-primary-light-7) !important;
+  border-radius: 4px;
 }
