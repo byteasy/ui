@@ -78,6 +78,9 @@ function onComponentCopy(root) {
 
 function onComponentDelete(root) {
   rootComponents.value = rootComponents.value.filter(item => item.id !== root.id)
+  if(root.id === activeComponent?.value.id) {
+    formEngine.resetActiveComponent()
+  }
 }
 
 function onComponentClick(ponent) {
@@ -104,8 +107,12 @@ function doUpdateModelValue(root) {
   }
 }
 
+function updateComponentProperties() {
+  rootComponents.value = [...(props.modelValue || [])]
+}
+
 defineExpose({
-  handleDragStart, handleDragEnd, onDragMoveHandle
+  handleDragStart, handleDragEnd, onDragMoveHandle, updateComponentProperties
 })
 </script>
 <style scoped>

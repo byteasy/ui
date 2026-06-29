@@ -84,6 +84,10 @@ watch(() => formValue, () => {
   {deep: true}
 )
 
+watch(() => props.modelValue, () => {
+  formValue.value = props.modelValue
+})
+
 watch(() => props.className, () => {
   loadDynamicFields()
 })

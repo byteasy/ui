@@ -50,11 +50,11 @@
                v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
                :multiple="props.column.multiple === 'YES'"
   />
-  <tuna-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" :context="props.context" v-bind="$attrs">
+  <be-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" :context="props.context" v-bind="$attrs">
     <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
       <slot :name="name" v-bind="slotProps"></slot>
     </template>
-  </tuna-bean-input>
+  </be-bean-input>
 </template>
 
 <script lang="ts" setup>

@@ -2,7 +2,7 @@
   <el-card class="w-full be-card-min-height">
     <template #header>
       <div class="card-header">
-        <span>Card name</span>
+        <span>{{ getLangText(props.modelValue.properties.title || "{\"zh_CN\":\"标题\",\"en\":\"title\"}", locale)}}</span>
       </div>
     </template>
     <VueDraggable class="w-full h-full p-2 be-material-target sense-rect-border flex-column"
@@ -24,6 +24,8 @@ import {VueDraggable} from "vue-draggable-plus";
 import BeFormComponent from "@/components/form/BeFormComponent.vue";
 import {useFormEngine} from "@/stores/formEngine.ts";
 import {storeToRefs} from "pinia";
+import {getLangText} from "@/locales/common.ts";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps<{
   modelValue: {
@@ -41,6 +43,7 @@ const formEngine = useFormEngine()
 const children = ref([...(props.modelValue.children || [])])
 const emit = defineEmits(['selected', 'update:modelValue'])
 const {activeComponent} = storeToRefs(formEngine)
+const { t, locale } = useI18n()
 
 function onComponentClick(ponent) {
   formEngine.setActiveComponent(ponent)
@@ -54,12 +57,39 @@ function onComponentCopy(root) {
 
 function onComponentDelete(root) {
   children.value = children.value.filter(item => item.id !== root.id)
+  if(root.id === activeComponent.value?.id) {
+    formEngine.setActiveComponent(null)
+  }
 }
 
 watch(() => children.value, (newVal, oldVal) => {
   doUpdateModelValue()
   },
   {deep: true})
+
+watch(
+  () => {
+    return JSON.stringify(collectAllPropsNodes(props.modelValue.children)
+    )
+  },
+  () => {
+    children.value = props.modelValue.children
+  }
+)
+
+function collectAllPropsNodes(list: any[]): Array<{ id: string; properties: any }> {
+  const result: Array<{ id: string; properties: any }> = []
+  if (!Array.isArray(list)) return result
+
+  for (const node of list) {
+    result.push({
+      id: node.id,
+      properties: node.properties
+    })
+    result.push(...collectAllPropsNodes(node.children))
+  }
+  return result
+}
 
 function doUpdateModelValue() {
   const newValue = JSON.parse(JSON.stringify(props.modelValue))

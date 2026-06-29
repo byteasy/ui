@@ -11,16 +11,11 @@ export const useFormEngine = defineStore('formEngine', () => {
       activeComponent.value = null
       return
     }
-    activeComponent.value = component
-  }
-
-  function resetActiveComponent() {
-    activeComponent.value = null
+    activeComponent.value = JSON.parse(JSON.stringify(component))
   }
 
   return {
     activeComponent,
     setActiveComponent,
-    resetActiveComponent
   }
 })

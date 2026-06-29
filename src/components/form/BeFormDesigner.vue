@@ -11,8 +11,7 @@
                      @update:modelValue="doUpdateModelValue"/>
       </el-splitter-panel>
       <el-splitter-panel class="p-1" size="300" collapsible>
-        {{ formDefine }}
-        <be-form-component-prop-editor />
+        <be-form-component-prop-editor @updateProps="doUpdateComponentProps"/>
       </el-splitter-panel>
     </el-splitter>
   </div>
@@ -48,4 +47,29 @@ function doUpdateModelValue(value) {
   formDefine.value = value
 }
 
+function doUpdateComponentProps(compoent) {
+  if(compoent == null) {
+    return
+  }
+  const target = findComponentById(compoent.id, formDefine.value)
+  if (target) {
+    target.properties = compoent.properties
+  }
+  refFormSense.value?.updateComponentProperties()
+}
+
+function findComponentById(id: string, list: any[]): any | undefined {
+  if (!Array.isArray(list)) return undefined
+
+  for (const ele of list) {
+    if (ele.id === id) {
+      return ele
+    }
+    if (Array.isArray(ele.children)) {
+      const result = findComponentById(id, ele.children)
+      if (result) return result
+    }
+  }
+  return undefined
+}
 </script>

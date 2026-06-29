@@ -29,7 +29,7 @@
         <span>{{ getLangText(selectedCom.name, locale) + $t('platform.componentNoParams') }}</span>
       </div>
       <div class="pl-2 pr-2" v-else>
-        <tuna-bean-input ref="refBeanInput" :class-name="selectedCom.paramForm"
+        <be-bean-input ref="refBeanInput" :class-name="selectedCom.paramForm"
                          v-model="componentParam"/>
       </div>
     </el-splitter-panel>
