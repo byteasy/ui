@@ -15,7 +15,7 @@
                            :active="root.id === activeComponent?.id" class="w-full" @update:modelValue="value => updateChildrenValue(value)"/>
       </template>
     </VueDraggable>
-    <template #footer></template>
+    <template #footer>{{ props.modelValue.properties }}</template>
   </el-card>
 </template>
 <script lang="ts" setup>

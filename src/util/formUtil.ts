@@ -13,5 +13,11 @@ export const renderCss = (properties) => {
   if(properties.display) {
     Object.assign(cssObject, JSON.parse(properties.display))
   }
+  if(properties.backgroundColor) {
+    cssObject.backgroundColor = properties.backgroundColor
+  }
+  if(properties.boxShadow) {
+    cssObject.boxShadow = properties.boxShadow
+  }
   return cssObject
 }
