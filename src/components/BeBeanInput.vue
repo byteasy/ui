@@ -18,10 +18,21 @@
                     { required: col.isRequire === 'YES', message: getLangText(col.displayName, locale) + ' ' + t('validate.required') },
                     { validator: (rule, value, callback) => validateColumnRule(col, rule, value, locale, callback), trigger: 'blur' }
                   ]">
+                <component :is="getComponent(parseComponent(col.fieldComponent))"
+                           :param="parseComponentParam(col.fieldComponent)"
+                           v-if="col.fieldComponent"
+                           :context="props.context ? props.context : 'platformSvr'"
+                           :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
+                           :column="col"
+                           clearable
+                           :disabled="props.disabled"
+                           v-model="formValue[col.name]"
+                           @change="onUpdateModelValueClick"></component>
                 <tuna-form-field
                   :column="col"
+                  v-else
                   :context="props.context ? props.context : 'platformSvr'"
-                  :placeholder="getLangText(col.displayName || col.name, locale)"
+                  :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                   clearable
                   :disabled="props.disabled"
                   v-model="formValue[col.name]"
@@ -43,6 +54,9 @@ import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
 import TunaFormField from "@/components/TunaFormField.vue";
 import {validateColumnRule} from '@/util/validateUtils.ts'
+import {getRouteComponents} from "@/util/autoImportComponent.ts";
+import {parseComponent, parseComponentParam} from "@/util/common.ts";
+const {modules } = getRouteComponents()
 
 const {t, locale} = useI18n() // 表单引用
 
@@ -59,6 +73,10 @@ const emit = defineEmits(['update:modelValue'])
 const tableColumns = ref([])
 const formValue = ref({...props.modelValue})
 const refBeanFields = ref({})
+
+function getComponent(path) {
+  return modules['..' + path]
+}
 
 onMounted(() => {
   loadDynamicFields()

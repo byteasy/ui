@@ -79,7 +79,7 @@ function onComponentCopy(root) {
 function onComponentDelete(root) {
   rootComponents.value = rootComponents.value.filter(item => item.id !== root.id)
   if(root.id === activeComponent?.value.id) {
-    formEngine.resetActiveComponent()
+    formEngine.setActiveComponent(null)
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <el-card class="w-full be-card-min-height">
+  <el-card :style="renderCss(props.modelValue.properties)">
     <template #header>
       <div class="card-header">
         <span>{{ getLangText(props.modelValue.properties.title || "{\"zh_CN\":\"标题\",\"en\":\"title\"}", locale)}}</span>
@@ -15,7 +15,7 @@
                            :active="root.id === activeComponent?.id" class="w-full" @update:modelValue="value => updateChildrenValue(value)"/>
       </template>
     </VueDraggable>
-    <template #footer>Footer content</template>
+    <template #footer></template>
   </el-card>
 </template>
 <script lang="ts" setup>
@@ -26,6 +26,7 @@ import {useFormEngine} from "@/stores/formEngine.ts";
 import {storeToRefs} from "pinia";
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
+import {renderCss} from "@/util/formUtil.ts";
 
 const props = defineProps<{
   modelValue: {
@@ -33,7 +34,7 @@ const props = defineProps<{
     name: string
     path: string
     icon: string
-    paramForm: string
+    propsForm: Array<object>
     properties: object
     children: any[]
   }

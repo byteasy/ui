@@ -51,7 +51,11 @@ const componentGroups = [
         name: "{\"zh_CN\":\"卡片\",\"en\":\"Card Layout\"}",
         path: '/components/form/BeLayoutCard.vue',
         icon: '<svg t="1782464134753" class="icon" viewBox="0 0 1063 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8916" width="200" height="200"><path d="M100.439634 0q-24.888889 0-42.666666 17.777778T39.99519 60.444444v789.333334q0 24.888889 17.777778 42.666666t42.666666 17.777778h789.333334q24.888889 0 42.666666-17.777778t17.777778-42.666666V60.444444q0-24.888889-17.777778-42.666666t-42.666666-17.777778H100.439634z m792.888889 853.333333H96.884079V376.888889h796.444444v476.444444z m0-533.333333H96.884079V56.888889h796.444444v263.111111zM175.106301 151.111111q-12.444444 0-20.444444 8.444445T146.661857 179.555556q0 11.555556 8 20t20.444444 8.444444h325.333333q12.444444 0 20.444445-8.444444t8-20q0-11.555556-8-20T500.439634 151.111111H175.106301z m488.888889 0q-12.444444 0-20.444444 8.444445T635.550746 179.555556q0 11.555556 8 20t20.444444 8.444444h151.111111q12.444444 0 20.444445-8.444444t8-20q0-11.555556-8-20T815.106301 151.111111H663.99519z" p-id="8917"></path></svg>',
-        paramForm: 'components.form.BeLayoutCard.vue'
+        propsForm: [
+          { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.BeLayoutCard.vue.Field'},
+          { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutCard.vue'},
+          { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.base.style'},
+        ]
       },
       {
         id: "LayoutGrid",

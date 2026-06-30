@@ -69,7 +69,7 @@ export function getLangText(text: any, currentLocale: string): string {
 
   try {
     const obj = JSON.parse(text)
-    return obj[lang] || obj['zh_CN'] || obj['en'] || text
+    return obj[lang] || obj['zh_CN'] || obj['en']
   } catch {
     return text
   }

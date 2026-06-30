@@ -18,7 +18,7 @@ const props = defineProps<{
     name: string
     path: string
     icon: string
-    paramForm: string
+    propsForm: Array<object>
     properties: object
     children: any[]
   },
