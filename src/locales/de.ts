@@ -2,7 +2,7 @@ import parent from './parent/de.ts'
 import app from './app/de.ts'
 
 export default {
-  title: 'LGAG',
+  title: 'Byteasy',
   ...parent,
   ...app
 
