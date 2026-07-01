@@ -4,5 +4,5 @@ echo UI name: $APP_NAME-$VERSION
 pnpm install
 pnpm run build-only
 jar cvf $APP_NAME-$VERSION.jar -C dist .
-mvn install:install-file -DgroupId=com.tuna -DartifactId=$APP_NAME -Dversion=$VERSION -Dpackaging=jar -Dfile=$APP_NAME-$VERSION.jar
+mvn install:install-file -DgroupId=com.byteasy -DartifactId=$APP_NAME -Dversion=$VERSION -Dpackaging=jar -Dfile=$APP_NAME-$VERSION.jar
 rm -f $APP_NAME-$VERSION.jar
