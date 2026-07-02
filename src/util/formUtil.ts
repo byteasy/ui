@@ -14,7 +14,7 @@ export const renderCss = (properties) => {
     Object.assign(cssObject, JSON.parse(properties.display))
   }
   if(properties.fontStyle) {
-    Object.assign(cssObject, JSON.parse(properties.fontStyle))
+    Object.assign(cssObject, properties.fontStyle)
   }
   if(properties.backgroundColor) {
     cssObject.backgroundColor = properties.backgroundColor

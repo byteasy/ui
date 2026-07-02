@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   allowNegative: false,
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "change"]);
 
 // 当前数值
 const unitValue = ref<number>(0);
@@ -85,6 +85,7 @@ const syncModel = () => {
   const currentUnit = props.units[activeUnit.value];
   const val = `${unitValue.value}${currentUnit}`;
   emit("update:modelValue", val);
+  emit("change", val);
 };
 
 // 数值改变同步

@@ -1,72 +1,84 @@
 <template>
-  <div class="flex flex-column gap-3">
-    <span>Display: {{ blockModel }}</span>
-    <el-radio-group v-model="blockModel" size="small">
-      <el-radio-button value="block" label="block" />
-      <el-radio-button value="inline-block" label="inline-block" />
-      <el-radio-button value="inline" label="inline" />
-      <el-radio-button value="flex" label="flex" />
-    </el-radio-group>
-
-    <div v-if="blockModel === 'flex'" class="flex flex-column gap-2 w-full">
-      <span>Flex Direction: {{ flexDirection }}</span>
-      <el-radio-group v-model="flexDirection" size="small">
-        <el-radio-button value="row" label="row" />
-        <el-radio-button value="column" label="column" />
-        <el-radio-button value="row-reverse" label="row-reverse" />
-        <el-radio-button value="column-reverse" label="column-reverse" />
+  <div class="flex flex-column gap-1-2 w-full">
+    <div class="flex flex-row align-items-center">
+      <el-text class="flex-none label-width" :size="props.size">Display:</el-text>
+      <el-radio-group v-model="blockModel" :size="props.size" class="flex-grow">
+        <el-radio-button value="block" label="block"/>
+        <el-radio-button value="inline-block" label="inline-block"/>
+        <el-radio-button value="inline" label="inline"/>
+        <el-radio-button value="flex" label="flex"/>
       </el-radio-group>
+    </div>
 
-      <span>Flex Wrap: {{ flexWrap }}</span>
-      <el-radio-group v-model="flexWrap" size="small">
-        <el-radio-button value="wrap" label="wrap" />
-        <el-radio-button value="nowrap" label="nowrap" />
-        <el-radio-button value="wrap-reverse" label="wrap-reverse" />
-      </el-radio-group>
+    <div v-if="blockModel === 'flex'" class="flex flex-column gap-1-2 w-full">
+      <div class="flex flex-row align-items-center">
+        <el-text class="flex-none label-width" :size="props.size">Flex Direction:</el-text>
+        <el-radio-group v-model="flexDirection" :size="props.size">
+          <el-radio-button value="row" label="row"/>
+          <el-radio-button value="column" label="column"/>
+          <el-radio-button value="row-reverse" label="row-reverse"/>
+          <el-radio-button value="column-reverse" label="column-reverse"/>
+        </el-radio-group>
+      </div>
 
-      <span>Align Items: {{ alignItem }}</span>
-      <el-radio-group v-model="alignItem" size="small">
-        <el-radio-button value="stretch" label="stretch" />
-        <el-radio-button value="center" label="center" />
-        <el-radio-button value="baseline" label="baseline" />
-        <el-radio-button value="flex-start" label="flex-start" />
-        <el-radio-button value="flex-end" label="flex-end" />
+      <div class="flex flex-row align-items-center">
+      <el-text class="flex-none label-width" :size="props.size">Flex Wrap:</el-text>
+      <el-radio-group v-model="flexWrap" :size="props.size">
+        <el-radio-button value="wrap" label="wrap"/>
+        <el-radio-button value="nowrap" label="nowrap"/>
+        <el-radio-button value="wrap-reverse" label="wrap-reverse"/>
       </el-radio-group>
+      </div>
 
-      <span>Justify Content: {{ justifyContent }}</span>
-      <el-radio-group v-model="justifyContent" size="small">
-        <el-radio-button value="flex-start" label="flex-start" />
-        <el-radio-button value="flex-end" label="flex-end" />
-        <el-radio-button value="center" label="center" />
-        <el-radio-button value="space-between" label="space-between" />
-        <el-radio-button value="space-around" label="space-around" />
-        <el-radio-button value="space-evenly" label="space-evenly" />
+      <div class="flex flex-row align-items-center">
+      <el-text class="flex-none label-width" :size="props.size">Align Items:</el-text>
+      <el-radio-group v-model="alignItem" :size="props.size">
+        <el-radio-button value="stretch" label="stretch"/>
+        <el-radio-button value="center" label="center"/>
+        <el-radio-button value="baseline" label="baseline"/>
+        <el-radio-button value="flex-start" label="flex-start"/>
+        <el-radio-button value="flex-end" label="flex-end"/>
       </el-radio-group>
+      </div>
+      <div class="flex flex-row align-items-center">
+      <el-text class="flex-none label-width" :size="props.size">Justify Content: </el-text>
+      <el-radio-group v-model="justifyContent" :size="props.size">
+        <el-radio-button value="flex-start" label="flex-start"/>
+        <el-radio-button value="flex-end" label="flex-end"/>
+        <el-radio-button value="center" label="center"/>
+        <el-radio-button value="space-between" label="space-between"/>
+        <el-radio-button value="space-around" label="space-around"/>
+        <el-radio-button value="space-evenly" label="space-evenly"/>
+      </el-radio-group>
+      </div>
 
-      <span>Align Content: {{ alignContent }}</span>
-      <el-radio-group v-model="alignContent" size="small">
-        <el-radio-button value="flex-start" label="flex-start" />
-        <el-radio-button value="flex-end" label="flex-end" />
-        <el-radio-button value="center" label="center" />
-        <el-radio-button value="stretch" label="stretch" />
-        <el-radio-button value="space-between" label="space-between" />
-        <el-radio-button value="space-around" label="space-around" />
-        <el-radio-button value="space-evenly" label="space-evenly" />
+      <div class="flex flex-row align-items-center">
+      <el-text class="flex-none label-width" :size="props.size">Align Content:</el-text>
+      <el-radio-group v-model="alignContent" :size="props.size">
+        <el-radio-button value="flex-start" label="flex-start"/>
+        <el-radio-button value="flex-end" label="flex-end"/>
+        <el-radio-button value="center" label="center"/>
+        <el-radio-button value="stretch" label="stretch"/>
+        <el-radio-button value="space-between" label="space-between"/>
+        <el-radio-button value="space-around" label="space-around"/>
+        <el-radio-button value="space-evenly" label="space-evenly"/>
       </el-radio-group>
+    </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { watch, ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { getLangText } from "@/locales/common.ts";
+import {watch, ref} from "vue";
+import {useI18n} from "vue-i18n";
+import {getLangText} from "@/locales/common.ts";
 
-const { t, locale } = useI18n();
+const {t, locale} = useI18n();
 
 // 定义v-model
 const props = defineProps<{
   modelValue: string | undefined
+  size?: string
 }>();
 const emit = defineEmits(["update:modelValue"]);
 
@@ -139,6 +151,12 @@ watch(
       console.warn("布局样式JSON解析失败", err);
     }
   },
-  { immediate: true }
+  {immediate: true}
 );
 </script>
+<style scoped>
+
+.label-width {
+  min-width: 80px;
+}
+</style>

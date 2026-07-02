@@ -2,27 +2,62 @@
 <template>
   <div class="w-full flex flex-column gap-1-2">
     <div class="flex-row w-full align-items-center gap-1-2">
-      <el-text class="flex-none label-width" size="small">字体:</el-text>
-      <el-select v-model="fontFamily" placeholder="请选择字体" size="small" @change="handleChange">
+      <el-text class="flex-none label-width" :size="props.size">字体:</el-text>
+      <el-select v-model="fontFamily" placeholder="请选择字体" :size="props.size" @change="handleChange">
+        <!-- 中文字体 - Windows 常用 -->
         <el-option label="微软雅黑" value="Microsoft YaHei" />
         <el-option label="宋体" value="SimSun" />
+        <el-option label="新宋体" value="NSimSun" />
         <el-option label="黑体" value="SimHei" />
+        <el-option label="微软雅黑粗体" value="Microsoft YaHei Bold" />
+        <el-option label="楷体" value="KaiTi" />
+        <el-option label="仿宋" value="FangSong" />
+        <el-option label="方正姚体" value="FZYaoti" />
+        <el-option label="方正舒体" value="FZShuTi" />
+
+        <!-- Mac 常用中文字体 -->
+        <el-option label="苹方" value="PingFang SC" />
+        <el-option label="华文宋体" value="STSong" />
+        <el-option label="华文黑体" value="STHeiti" />
+        <el-option label="华文楷体" value="STKaiti" />
+        <el-option label="华文仿宋" value="STFangsong" />
+        <el-option label="华文细黑" value="STXihei" />
+
+        <!-- 无衬线英文字体（网页最常用） -->
         <el-option label="Arial" value="Arial" />
+        <el-option label="Helvetica" value="Helvetica" />
+        <el-option label="Helvetica Neue" value="Helvetica Neue" />
+        <el-option label="Segoe UI" value="Segoe UI" />
+        <el-option label="Roboto" value="Roboto" />
+        <el-option label="Open Sans" value="Open Sans" />
+
+        <!-- 衬线英文印刷字体 -->
         <el-option label="Times New Roman" value="Times New Roman" />
+        <el-option label="Georgia" value="Georgia" />
+        <el-option label="Garamond" value="Garamond" />
+
+        <!-- 等宽代码类字体 -->
         <el-option label="Consolas" value="Consolas" />
+        <el-option label="Courier New" value="Courier New" />
+        <el-option label="Monaco" value="Monaco" />
+
+        <!-- 通用网页安全字体兜底 -->
+        <el-option label="系统默认无衬线" value="sans-serif" />
+        <el-option label="系统默认衬线" value="serif" />
+        <el-option label="系统等宽字体" value="monospace" />
       </el-select>
     </div>
 
     <!-- 字体大小 -->
     <div class="flex-row w-full align-items-center gap-1-2">
-      <el-text class="flex-none label-width" size="small">字号:</el-text>
-      <be-unit-input v-model="fontSize" :units="['px', 'vw', 'rem', '%']" size="small"/>
+      <el-text class="flex-none label-width" :size="props.size">字号:</el-text>
+      <be-unit-input v-model="fontSize" :units="['px', 'vw', 'rem', '%']" :size="props.size" @change="handleChange"/>
     </div>
 
     <!-- 字重 -->
     <div class="flex-row w-full align-items-center gap-1-2">
-      <el-text class="flex-none label-width" size="small">字重:</el-text>
-      <el-select v-model="fontWeight" size="small" class="flex-grow" @change="handleChange">
+      <el-text class="flex-none label-width" :size="props.size">字重:</el-text>
+      <el-select v-model="fontWeight" :size="props.size" class="flex-grow" @change="handleChange">
         <el-option label="常规(400)" value="400" />
         <el-option label="中等(500)" value="500" />
         <el-option label="粗体(600)" value="600" />
@@ -33,8 +68,8 @@
 
     <!-- 文字倾斜 -->
     <div class="flex-row w-full align-items-center gap-1-2">
-      <el-text class="flex-none label-width" size="small">样式:</el-text>
-      <el-radio-group v-model="fontStyle" size="small" @change="handleChange">
+      <el-text class="flex-none label-width" :size="props.size">样式:</el-text>
+      <el-radio-group v-model="fontStyle" :size="props.size" @change="handleChange">
         <el-radio-button label="normal">正常</el-radio-button>
         <el-radio-button label="italic">倾斜</el-radio-button>
       </el-radio-group>
@@ -42,14 +77,14 @@
 
     <!-- 字体颜色 -->
     <div class="flex-row w-full align-items-center gap-1-2">
-      <el-text class="flex-none label-width" size="small">颜色:</el-text>
-      <el-color-picker v-model="fontColor" show-alpha size="small" @change="handleChange" />
+      <el-text class="flex-none label-width" :size="props.size">颜色:</el-text>
+      <el-color-picker v-model="color" color-format="hex6" show-alpha :size="props.size" @change="handleChange" />
     </div>
 
     <!-- 对齐方式 -->
     <div class="flex-row w-full align-items-center gap-1-2">
-      <el-text class="flex-none label-width" size="small">对齐:</el-text>
-      <el-radio-group v-model="textAlign" size="small" @change="handleChange">
+      <el-text class="flex-none label-width" :size="props.size">对齐:</el-text>
+      <el-radio-group v-model="textAlign" :size="props.size" @change="handleChange">
         <el-radio-button label="left">左对齐</el-radio-button>
         <el-radio-button label="center">居中</el-radio-button>
         <el-radio-button label="right">右对齐</el-radio-button>
@@ -59,8 +94,8 @@
 
     <!-- 文字装饰 -->
     <div class="flex-row w-full align-items-center gap-1-2">
-      <el-text class="flex-none label-width" size="small">装饰:</el-text>
-      <el-radio-group v-model="textDecoration" size="small" @change="handleChange">
+      <el-text class="flex-none label-width" :size="props.size">装饰:</el-text>
+      <el-radio-group v-model="textDecoration" :size="props.size" @change="handleChange">
         <el-radio-button label="none">无</el-radio-button>
         <el-radio-button label="underline">下划线</el-radio-button>
         <el-radio-button label="line-through">删除线</el-radio-button>
@@ -77,13 +112,14 @@ export interface FontStyle {
   fontSize: string
   fontWeight: string
   fontStyle: 'normal' | 'italic'
-  fontColor: string
+  color: string
   textAlign: 'left' | 'center' | 'right' | 'justify'
   textDecoration: 'none' | 'underline' | 'line-through'
 }
 
 interface Props {
   modelValue?: FontStyle
+  size?: string
 }
 
 const props = defineProps<Props>()
@@ -95,7 +131,7 @@ const defaultFont: FontStyle = {
   fontSize: '14px',
   fontWeight: '400',
   fontStyle: 'normal',
-  fontColor: '#000000',
+  color: '#000000',
   textAlign: 'left',
   textDecoration: 'none'
 }
@@ -105,7 +141,7 @@ const fontFamily = ref(defaultFont.fontFamily)
 const fontSize = ref(defaultFont.fontSize)
 const fontWeight = ref(defaultFont.fontWeight)
 const fontStyle = ref<'normal' | 'italic'>(defaultFont.fontStyle)
-const fontColor = ref(defaultFont.fontColor)
+const color = ref(defaultFont.color)
 const textAlign = ref<'left' | 'center' | 'right' | 'justify'>(defaultFont.textAlign)
 const textDecoration = ref<'none' | 'underline' | 'line-through'>(defaultFont.textDecoration)
 
@@ -116,7 +152,7 @@ const initValue = (val?: FontStyle) => {
   fontSize.value = val.fontSize
   fontWeight.value = val.fontWeight
   fontStyle.value = val.fontStyle
-  fontColor.value = val.fontColor
+  color.value = val.color
   textAlign.value = val.textAlign
   textDecoration.value = val.textDecoration
 }
@@ -130,7 +166,7 @@ const handleChange = () => {
     fontSize: fontSize.value,
     fontWeight: fontWeight.value,
     fontStyle: fontStyle.value,
-    fontColor: fontColor.value,
+    color: color.value,
     textAlign: textAlign.value,
     textDecoration: textDecoration.value
   }
