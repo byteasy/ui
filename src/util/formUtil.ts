@@ -22,5 +22,8 @@ export const renderCss = (properties) => {
   if(properties.boxShadow) {
     cssObject.boxShadow = properties.boxShadow
   }
+  if(properties.paddingStyle) {
+    Object.assign(cssObject, properties.paddingStyle)
+  }
   return cssObject
 }
