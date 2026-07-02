@@ -80,11 +80,19 @@ const marginLeft = ref(defaultMargin.marginLeft)
 
 // 初始化赋值
 const initValue = (val?: MarginStyle) => {
-  if (!val) return
-  marginTop.value = val.marginTop
-  marginRight.value = val.marginRight
-  marginBottom.value = val.marginBottom
-  marginLeft.value = val.marginLeft
+  if (!val) {
+    // 传入 null / undefined，全部重置为默认边距
+    marginTop.value = defaultMargin.marginTop
+    marginRight.value = defaultMargin.marginRight
+    marginBottom.value = defaultMargin.marginBottom
+    marginLeft.value = defaultMargin.marginLeft
+    return
+  }
+  // 单个字段缺失时使用默认值兜底
+  marginTop.value = val.marginTop ?? defaultMargin.marginTop
+  marginRight.value = val.marginRight ?? defaultMargin.marginRight
+  marginBottom.value = val.marginBottom ?? defaultMargin.marginBottom
+  marginLeft.value = val.marginLeft ?? defaultMargin.marginLeft
 }
 
 initValue(props.modelValue)

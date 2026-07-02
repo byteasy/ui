@@ -147,14 +147,25 @@ const textDecoration = ref<'none' | 'underline' | 'line-through'>(defaultFont.te
 
 // 初始化赋值
 const initValue = (val?: FontStyle) => {
-  if (!val) return
-  fontFamily.value = val.fontFamily
-  fontSize.value = val.fontSize
-  fontWeight.value = val.fontWeight
-  fontStyle.value = val.fontStyle
-  color.value = val.color
-  textAlign.value = val.textAlign
-  textDecoration.value = val.textDecoration
+  if (!val) {
+    // 外部传入空值，全部重置为默认配置
+    fontFamily.value = defaultFont.fontFamily
+    fontSize.value = defaultFont.fontSize
+    fontWeight.value = defaultFont.fontWeight
+    fontStyle.value = defaultFont.fontStyle
+    color.value = defaultFont.color
+    textAlign.value = defaultFont.textAlign
+    textDecoration.value = defaultFont.textDecoration
+    return
+  }
+  // 有值时逐个赋值，同时兜底防止单个字段缺失
+  fontFamily.value = val.fontFamily ?? defaultFont.fontFamily
+  fontSize.value = val.fontSize ?? defaultFont.fontSize
+  fontWeight.value = val.fontWeight ?? defaultFont.fontWeight
+  fontStyle.value = val.fontStyle ?? defaultFont.fontStyle
+  color.value = val.color ?? defaultFont.color
+  textAlign.value = val.textAlign ?? defaultFont.textAlign
+  textDecoration.value = val.textDecoration ?? defaultFont.textDecoration
 }
 
 initValue(props.modelValue)
