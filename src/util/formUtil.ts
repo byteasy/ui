@@ -25,5 +25,11 @@ export const renderCss = (properties) => {
   if(properties.paddingStyle) {
     Object.assign(cssObject, properties.paddingStyle)
   }
+  if(properties.radiusStyle) {
+    Object.assign(cssObject, properties.radiusStyle)
+  }
+  if(properties.borderStyle) {
+    Object.assign(cssObject, properties.borderStyle)
+  }
   return cssObject
 }
