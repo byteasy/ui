@@ -16,7 +16,7 @@
             <el-descriptions-item :label="getLangText(col.displayName, locale)"
                                   v-if="col.isShow === 'YES'">
               <slot :name="'view_' + col.name" :value="showValue[col.name]" style="width: 30vw">
-                <enum-viewer
+                <be-enum-viewer
                   v-if="col.type === 'ENUM' && showValue[col.name]"
                   :prop="showValue[col.name]"
                   :context="svrContext"

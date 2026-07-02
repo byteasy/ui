@@ -8,7 +8,7 @@
     <template v-for="col in columns" :key="col.name">
       <el-descriptions-item :label="getLangText(col.displayName, locale)" v-if="col.isShow === 'YES'">
         <slot :name="'view_' + col.name" :value="props.entity[col.name]">
-          <enum-viewer
+          <be-enum-viewer
             v-if="col.type === 'ENUM'"
             :prop="props.entity[col.name]"
             :context="props.context"

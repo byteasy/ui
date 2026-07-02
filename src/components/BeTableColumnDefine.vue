@@ -1,5 +1,5 @@
 <template>
-    <el-table height="100%" :data="tableData" scrollbar-always-on highlight-current-row border fit
+    <el-table height="95%" :data="tableData" scrollbar-always-on highlight-current-row border fit
               table-layout="auto">
       <el-table-column :label="$t('table.columnNo')" type="index" width="60"/>
       <el-table-column :label="$t('table.columnLabel')" prop="displayName" resizable>
@@ -64,6 +64,7 @@ import {useAppSettingsStore} from '@/stores/appSettings.ts'
 const props = defineProps<{
   className: string,
   columns: Array<never>,
+  height?: number,
 }>()
 const appSettingsStore = useAppSettingsStore()
 const emit = defineEmits(['close'])

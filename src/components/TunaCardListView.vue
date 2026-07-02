@@ -83,7 +83,7 @@
                     <span>F</span>
                   </template>
                 </el-switch>
-                <enum-viewer
+                <be-enum-viewer
                   v-else-if="col.type === 'ENUM'"
                   :prop="entity[col.name] || ''"
                   :context="props.tableProps.context"

@@ -78,7 +78,7 @@ import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {putValueIfValid} from "@/util/common.ts";
-import TunaColumnDefine from "@/components/TunaColumnDefine.vue";
+import BeTableColumnDefine from "@/components/BeTableColumnDefine.vue";
 import {getLangText} from "@/locales/common.ts";
 import TunaExcelImport from "@/components/TunaExcelImport.vue";
 import TunaExcelExport from "@/components/TunaExcelExport.vue";
@@ -287,7 +287,7 @@ function switchViewModel() {
 
 function onColumnDefineClick() {
   open(
-    TunaColumnDefine,
+    BeTableColumnDefine,
     {
       columns: mergeLocalStorage(tableColumns.value),
       className: props.className,
