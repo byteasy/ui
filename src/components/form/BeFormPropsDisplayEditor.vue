@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-column gap-1-2 w-full">
     <div class="flex flex-row align-items-center">
-      <el-text class="flex-none label-width" :size="props.size">Display:</el-text>
       <el-radio-group v-model="blockModel" :size="props.size" class="flex-grow">
         <el-radio-button value="block" label="block"/>
         <el-radio-button value="inline-block" label="inline-block"/>

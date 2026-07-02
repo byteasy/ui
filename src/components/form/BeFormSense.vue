@@ -15,23 +15,27 @@
         </el-button>
       </el-button-group>
     </div>
-    <div class="flex-grow flex-row w-full h-full justify-content-center align-items-center designer-container">
-        <div :class="{ 'w-full h-full': !isMobile, 'mobile-container': isMobile }">
-          <div :class="{ 'desktop-root-rect w-full' : !isMobile, 'sense-rect-border flex-column': true, 'mobile-root-rect': isMobile}" :style="{ height: `${props.height - 126}px` }">
-            <VueDraggable
-              class="w-full be-material-target"
-              :style="{ 'min-height': isMobile ? '730px' : (props.height ? `${props.height - 136}px` : '100vh') }"
-              v-model="rootComponents"
-              v-bind="$attrs" :animation="150" group="material"
-              :on-add="onAdded"
-              ghostClass="drag-ghost" chosenClass="drag-chosen">
-              <template v-for="root in rootComponents" :key="root.id">
-                <be-form-component :model-value="root" @click="onComponentClick(root)"
-                                   :active="root.id === activeComponent?.id"
-                                   @copy="onComponentCopy" @delete="onComponentDelete" @update:modelValue="doUpdateModelValue" />
-              </template>
-            </VueDraggable>
-          </div>
+    <div
+      class="flex-grow flex-row w-full h-full justify-content-center align-items-center designer-container">
+      <div :class="{ 'w-full h-full': !isMobile, 'mobile-container': isMobile }">
+        <div
+          :class="{ 'desktop-root-rect w-full' : !isMobile, 'sense-rect-border flex-column': true, 'mobile-root-rect': isMobile}"
+          :style="{ height: `${props.height - 126}px` }">
+          <VueDraggable
+            class="w-full be-material-target"
+            :style="{ 'min-height': isMobile ? '730px' : (props.height ? `${props.height - 136}px` : '100vh') }"
+            v-model="rootComponents"
+            v-bind="$attrs" :animation="150" group="material"
+            :on-add="onAdded"
+            ghostClass="drag-ghost" chosenClass="drag-chosen">
+            <template v-for="root in rootComponents" :key="root.id">
+              <be-form-component :model-value="root" @click="onComponentClick(root)"
+                                 :active="root.id === activeComponent?.id"
+                                 @copy="onComponentCopy" @delete="onComponentDelete"
+                                 @update:modelValue="doUpdateModelValue"/>
+            </template>
+          </VueDraggable>
+        </div>
       </div>
     </div>
   </div>
@@ -52,7 +56,7 @@ const emit = defineEmits(['update', 'add', 'remove', 'selected', 'update:modelVa
 const formEngine = useFormEngine()
 const isMobile = ref(false);
 const rootComponents = ref([...(props.modelValue || [])])
-const { activeComponent } = storeToRefs(formEngine)
+const {activeComponent} = storeToRefs(formEngine)
 
 watch(() => rootComponents.value, (newVal, oldVal) => {
   const newValue = JSON.parse(JSON.stringify(newVal))
@@ -78,7 +82,7 @@ function onComponentCopy(root) {
 
 function onComponentDelete(root) {
   rootComponents.value = rootComponents.value.filter(item => item.id !== root.id)
-  if(root.id === activeComponent?.value.id) {
+  if (root.id === activeComponent?.value.id) {
     formEngine.setActiveComponent(null)
   }
 }
@@ -134,9 +138,6 @@ defineExpose({
   height: 736px !important;
   overflow-y: auto;
   overflow-x: hidden;
-}
-
-.sense-rect-border {
 }
 
 .desktop-root-rect {

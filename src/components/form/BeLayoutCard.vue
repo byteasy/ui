@@ -1,22 +1,27 @@
 <template>
-  <el-card :style="renderCss(props.modelValue.properties)">
-    <template #header>
-      <div class="card-header">
-        <span>{{ getLangText(props.modelValue.properties.title || "{\"zh_CN\":\"标题\",\"en\":\"title\"}", locale)}}</span>
-      </div>
-    </template>
-    <VueDraggable class="w-full h-full p-2 be-material-target sense-rect-border flex-column"
-                  v-model="children"
-                  v-bind="$attrs" :animation="150" group="material"
-                  ghostClass="drag-ghost" chosenClass="drag-chosen">
-      <template v-for="root in children" :key="root.id">
-        <be-form-component :model-value="root" @click="onComponentClick(root)"
-                           @copy="onComponentCopy(root)" @delete="onComponentDelete(root)"
-                           :active="root.id === activeComponent?.id" class="w-full" @update:modelValue="value => updateChildrenValue(value)"/>
-      </template>
-    </VueDraggable>
-    <template #footer>{{ props.modelValue.properties }}</template>
-  </el-card>
+  <div class="w-full">
+    <div :style="props.modelValue.properties.marginStyle">
+      <el-card :style="renderCss(props.modelValue.properties)">
+        <template #header>
+          <div class="card-header">
+            <span>{{ getLangText(props.modelValue.properties.title || "{\"zh_CN\":\"标题\",\"en\":\"title\"}", locale) }}</span>
+          </div>
+        </template>
+        <VueDraggable class="w-full h-full p-2 be-material-target sense-rect-border flex-column"
+                      v-model="children"
+                      v-bind="$attrs" :animation="150" group="material"
+                      ghostClass="drag-ghost" chosenClass="drag-chosen">
+          <template v-for="root in children" :key="root.id">
+            <be-form-component :model-value="root" @click="onComponentClick(root)"
+                               @copy="onComponentCopy(root)" @delete="onComponentDelete(root)"
+                               :active="root.id === activeComponent?.id" class="w-full"
+                               @update:modelValue="value => updateChildrenValue(value)"/>
+          </template>
+        </VueDraggable>
+        <template #footer>{{ props.modelValue.properties }}</template>
+      </el-card>
+    </div>
+  </div>
 </template>
 <script lang="ts" setup>
 import {ref, watch} from 'vue'
@@ -44,7 +49,7 @@ const formEngine = useFormEngine()
 const children = ref([...(props.modelValue.children || [])])
 const emit = defineEmits(['selected', 'update:modelValue'])
 const {activeComponent} = storeToRefs(formEngine)
-const { t, locale } = useI18n()
+const {t, locale} = useI18n()
 
 function onComponentClick(ponent) {
   formEngine.setActiveComponent(ponent)
@@ -58,13 +63,13 @@ function onComponentCopy(root) {
 
 function onComponentDelete(root) {
   children.value = children.value.filter(item => item.id !== root.id)
-  if(root.id === activeComponent.value?.id) {
+  if (root.id === activeComponent.value?.id) {
     formEngine.setActiveComponent(null)
   }
 }
 
 watch(() => children.value, (newVal, oldVal) => {
-  doUpdateModelValue()
+    doUpdateModelValue()
   },
   {deep: true})
 
