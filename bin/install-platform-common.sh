@@ -1,3 +1,4 @@
+. /etc/profile
 VERSION=1.0.0
 APP_NAME=cloud-platform-common-ui
 echo UI name: $APP_NAME-$VERSION
