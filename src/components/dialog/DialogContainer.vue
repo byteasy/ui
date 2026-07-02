@@ -163,7 +163,7 @@ const getDrawlerWidth = (item: any) => {
 
 const calcDrawlerHeight = () => {
   const vh100 = window.innerHeight
-  return vh100 - 190
+  return vh100 - 130
 }
 
 const calcDialogHeight = (item: any) => {

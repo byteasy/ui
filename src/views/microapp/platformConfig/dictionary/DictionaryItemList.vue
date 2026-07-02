@@ -1,6 +1,6 @@
 
 <template>
-  <div :style="{ width: '100%', height: props.height + 'px'}">
+  <div :style="{ width: '100%', height: (props.height - 60) + 'px'}">
     <tuna-table-v2
       ref="refTable"
       base-url="/platformSvr/sapi/dictionaryItems"
