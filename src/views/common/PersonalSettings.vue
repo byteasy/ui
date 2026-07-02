@@ -41,7 +41,7 @@
       />
     </template>
     <template v-slot:view_gender="scope">
-      <enum-select v-if="editEnable" code="com.byteasy.enums.Gender" context="platformSvr" v-model="user.gender" clearable/>
+      <be-enum-select v-if="editEnable" code="com.byteasy.enums.Gender" context="platformSvr" v-model="user.gender" clearable/>
     </template>
     <template v-slot:extra>
       <el-button type="primary" @click="editEnable = !editEnable" v-if="!editEnable">{{

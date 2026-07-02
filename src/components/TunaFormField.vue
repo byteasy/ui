@@ -46,7 +46,7 @@
     value-format="YYYY-MM-DD HH:mm:ss"
     class="w-full"
   />
-  <enum-select :code="props.column.typeClassName" :context="props.context"
+  <be-enum-select :code="props.column.typeClassName" :context="props.context"
                v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
                :multiple="props.column.multiple === 'YES'"
   />

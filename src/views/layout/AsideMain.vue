@@ -17,7 +17,7 @@
         <div class="pl-1 pt-1 pr-1 w-full h-full my-bg-color-blank">
           <div class="flex-column h-full w-full">
             <div class="el-card is-always-shadow p-1" style="height: 2.4rem; width: 100%">
-              <bread-crumb v-if="tagView === '0'" />
+              <be-bread-crumb v-if="tagView === '0'" />
               <tuna-tag-view v-else />
             </div>
             <div class="el-card is-always-shadow p-2 mt-1 flex-grow" style="width: 100%">
@@ -46,7 +46,7 @@
 
 <script lang="ts" setup>
 import LeftMenu from '@/views/layout/LeftMenu.vue'
-import BreadCrumb from '@/components/BreadCrumb.vue'
+import BeBreadCrumb from '@/components/BeBreadCrumb.vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
 import {computed, onBeforeMount, ref} from 'vue'

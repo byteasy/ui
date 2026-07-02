@@ -51,7 +51,7 @@
                     </slot>
                   </template>
                 </el-table-column>
-                <enum-column
+                <be-enum-column
                   :align="
                     col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
                   "

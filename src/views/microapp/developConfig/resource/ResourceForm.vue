@@ -102,7 +102,7 @@
     <template v-slot:formExtra="scope">
       <el-form-item :label="$t('platform.resource.standardPermission')"
                     v-if="scope.row.type === 'BUTTON'">
-        <enum-select code="com.byteasy.enums.YesNo" context="platformSvr"
+        <be-enum-select code="com.byteasy.enums.YesNo" context="platformSvr"
                      v-model="scope.row.standButton"
                      @change="(va) => refForm.queryParam.standButton = va"/>
       </el-form-item>
