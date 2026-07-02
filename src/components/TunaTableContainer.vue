@@ -15,7 +15,7 @@ const props = defineProps<{
 
 const tableHeightCss = computed({
   get() {
-    return props.dialogModel === true ? (props.fullscreen === true ? 'calc(100vh - 100px)' : 'calc(60vh - 100px)') : 'calc(100vh - 150px)'
+    return props.dialogModel === true ? (props.fullscreen === true ? 'calc(100vh - 100px)' : 'calc(60vh - 100px)') : 'calc(100vh - 185px)'
   },
   set() {
   }
