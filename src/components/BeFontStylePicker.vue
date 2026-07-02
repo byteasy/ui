@@ -70,8 +70,8 @@
     <div class="flex-row w-full align-items-center gap-1-2">
       <el-text class="flex-none label-width" :size="props.size">样式:</el-text>
       <el-radio-group v-model="fontStyle" :size="props.size" @change="handleChange">
-        <el-radio-button label="normal">正常</el-radio-button>
-        <el-radio-button label="italic">倾斜</el-radio-button>
+        <el-radio-button value="normal">正常</el-radio-button>
+        <el-radio-button value="italic">倾斜</el-radio-button>
       </el-radio-group>
     </div>
 
@@ -85,10 +85,10 @@
     <div class="flex-row w-full align-items-center gap-1-2">
       <el-text class="flex-none label-width" :size="props.size">对齐:</el-text>
       <el-radio-group v-model="textAlign" :size="props.size" @change="handleChange">
-        <el-radio-button label="left">左对齐</el-radio-button>
-        <el-radio-button label="center">居中</el-radio-button>
-        <el-radio-button label="right">右对齐</el-radio-button>
-        <el-radio-button label="justify">两端对齐</el-radio-button>
+        <el-radio-button value="left">左对齐</el-radio-button>
+        <el-radio-button value="center">居中</el-radio-button>
+        <el-radio-button value="right">右对齐</el-radio-button>
+        <el-radio-button value="justify">两端对齐</el-radio-button>
       </el-radio-group>
     </div>
 
@@ -96,9 +96,9 @@
     <div class="flex-row w-full align-items-center gap-1-2">
       <el-text class="flex-none label-width" :size="props.size">装饰:</el-text>
       <el-radio-group v-model="textDecoration" :size="props.size" @change="handleChange">
-        <el-radio-button label="none">无</el-radio-button>
-        <el-radio-button label="underline">下划线</el-radio-button>
-        <el-radio-button label="line-through">删除线</el-radio-button>
+        <el-radio-button value="none">无</el-radio-button>
+        <el-radio-button value="underline">下划线</el-radio-button>
+        <el-radio-button value="line-through">删除线</el-radio-button>
       </el-radio-group>
     </div>
   </div>

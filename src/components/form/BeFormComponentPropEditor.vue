@@ -25,7 +25,6 @@ const { t, locale } = useI18n()
 
 onMounted(() => {
   watch(() => activeComponent.value, (newValue, oldValue) => {
-    console.log('activeComponent change', activeComponent.value)
     emit('updateProps', oldValue)
   }, {deep: false})
 })

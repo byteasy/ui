@@ -10,6 +10,9 @@ export const renderCss = (properties) => {
   } else {
     cssObject.minHeight = '200px'
   }
+  if(properties.opacityStyle) {
+    cssObject.opacity = properties.opacityStyle / 100
+  }
   if(properties.display) {
     Object.assign(cssObject, JSON.parse(properties.display))
   }
