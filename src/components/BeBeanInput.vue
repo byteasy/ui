@@ -1,16 +1,16 @@
 <template>
   <el-descriptions border :column="props.columns || 1" direction="vertical"
-                   class="fix-descriptions">
+                   class="fix-descriptions" :size="props.size">
     <template v-for="col in tableColumns" :key="col.name">
       <el-descriptions-item v-if="col.isForm === 'YES'" :label-width="90"
                             :label-style="{ width: '90px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }">
         <template v-slot:label>
-          <el-text type="danger" v-if="col.isRequire === 'YES'">*</el-text>
+          <el-text type="danger" v-if="col.isRequire === 'YES'" :size="props.size">*</el-text>
           <span>{{ getLangText(col.displayName || col.name, locale) }}</span>
         </template>
         <template v-slot:default>
           <slot :name="'form-json-' + col.name" :props="props" :row="formValue" :column="col">
-            <el-form :model="formValue" :ref="(el) => (refBeanFields[col.name] = el)">
+            <el-form :model="formValue" :ref="(el) => (refBeanFields[col.name] = el)" :size="props.size">
               <el-form-item
                 v-if="col.isForm === 'YES'"
                 :prop="col.name"
@@ -65,7 +65,8 @@ const props = defineProps<{
   context?: string
   disabled?: boolean
   modelValue?: Record<string, any> | null
-  columns?: number // 每行显示的列数
+  columns?: number
+  size?: string
 }>()
 
 const emit = defineEmits(['update:modelValue'])

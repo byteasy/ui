@@ -4,7 +4,7 @@
     <el-collapse expand-icon-position="left" class="pl-2 pr-2 w-full" :accordion="false" v-if="activeComponent">
       <el-collapse-item :title="getLangText(group.title, locale)" :name="group.title"
                         v-for="group in activeComponent.propsForm" :key="group.form">
-        <be-bean-input ref="refBeanInput" v-model="activeComponent.properties"
+        <be-bean-input ref="refBeanInput" v-model="activeComponent.properties" size="small"
                        :class-name="group.form" :columns="1"  @update:modelValue="doUpdateComponentProps"/>
       </el-collapse-item>
     </el-collapse>

@@ -66,7 +66,7 @@ const { t, locale } = useI18n();
 
 // 定义v-model
 const props = defineProps<{
-  modelValue: string | undefined;
+  modelValue: string | undefined
 }>();
 const emit = defineEmits(["update:modelValue"]);
 

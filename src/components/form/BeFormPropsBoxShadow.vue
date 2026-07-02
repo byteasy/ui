@@ -1,27 +1,28 @@
 <template>
-  <div class="flex flex-column gap-1-2">
+  <div class="flex flex-column gap-1-2 w-full">
     <div class="flex flex-row items-center ">
-      <span>阴影颜色：</span>
-      <el-color-picker v-model="color" show-alpha />
+      <el-text class="flex-none label-width" :size="props.size">颜色:</el-text>
+      <el-color-picker v-model="color" show-alpha :size="props.size" />
     </div>
-    <div class="flex flex-row items-center ">
-      <span style="width: 40px;">X:</span>
-      <be-unit-input v-model="x" />
+    <div class="flex flex-row items-center w-full">
+      <el-text class="flex-none label-width" :size="props.size">X:</el-text>
+      <be-unit-input v-model="x" :size="props.size"/>
     </div>
-    <div class="flex flex-row items-center ">
-      <span style="width: 40px;">Y:</span>
-      <be-unit-input v-model="y" />
+    <div class="flex flex-row items-center w-full">
+      <el-text class="flex-none label-width" :size="props.size">Y:</el-text>
+      <be-unit-input v-model="y" :size="props.size"/>
     </div>
-    <div class="flex flex-row items-center ">
-      <span style="width: 40px;">模糊:</span>
-      <be-unit-input v-model="like" />
+    <div class="flex flex-row items-center w-full">
+      <el-text class="flex-none label-width" :size="props.size">模糊:</el-text>
+      <be-unit-input v-model="like" :size="props.size"/>
     </div>
-    <div class="flex flex-row items-center ">
-      <span style="width: 40px;">拓展:</span>
-      <be-unit-input v-model="extras" />
+    <div class="flex flex-row items-center w-full">
+      <el-text class="flex-none label-width" :size="props.size">拓展:</el-text>
+      <be-unit-input v-model="extras" :size="props.size"/>
     </div>
-    <div class="flex flex-row items-center ">
-      <el-checkbox v-model="isInset">内阴影(inset)</el-checkbox>
+    <div class="flex flex-row items-center w-full">
+      <el-text class="flex-none label-width" :size="props.size">内阴影:</el-text>
+      <el-checkbox v-model="isInset" :size="props.size"></el-checkbox>
     </div>
   </div>
 </template>
@@ -31,7 +32,8 @@ import { ref, watch } from "vue";
 
 // v-model 双向绑定：接收 box-shadow 完整字符串
 const props = defineProps<{
-  modelValue: string | undefined;
+  modelValue: string | undefined
+  size?: string
 }>();
 const emit = defineEmits(["update:modelValue"]);
 
@@ -112,3 +114,9 @@ watch(
   { immediate: true }
 );
 </script>
+<style scoped>
+
+.label-width {
+  min-width: 40px;
+}
+</style>

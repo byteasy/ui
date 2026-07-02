@@ -1,9 +1,11 @@
 <!-- UnitInput.vue -->
 <template>
-  <div class="flex-row w-full">
+  <div class="flex flex-row align-items-center w-full">
     <el-input-number
       v-model="unitValue"
       controls-position="right"
+      v-bind="$attrs"
+      class="flex-grow"
       :min="props.allowNegative ? -Infinity : 0"
     >
       <template #decrease-icon>
@@ -17,7 +19,7 @@
         </el-icon>
       </template>
     </el-input-number>
-    <el-button @click="changeUnit">
+    <el-button @click="changeUnit" v-bind="$attrs" class="flex-none">
       {{ props.units[activeUnit] }}
     </el-button>
   </div>
