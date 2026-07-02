@@ -1,26 +1,26 @@
 <template>
-  <div class="flex flex-column gap-3">
-    <div class="flex flex-row items-center gap-2">
+  <div class="flex flex-column gap-1-2">
+    <div class="flex flex-row items-center ">
       <span>阴影颜色：</span>
       <el-color-picker v-model="color" show-alpha />
     </div>
-    <div class="flex flex-row items-center gap-2">
+    <div class="flex flex-row items-center ">
       <span style="width: 40px;">X:</span>
-      <el-input v-model="x" placeholder="px vh rem..." size="small" />
+      <be-unit-input v-model="x" />
     </div>
-    <div class="flex flex-row items-center gap-2">
+    <div class="flex flex-row items-center ">
       <span style="width: 40px;">Y:</span>
-      <el-input v-model="y" placeholder="px vh rem..." size="small" />
+      <be-unit-input v-model="y" />
     </div>
-    <div class="flex flex-row items-center gap-2">
+    <div class="flex flex-row items-center ">
       <span style="width: 40px;">模糊:</span>
-      <el-input v-model="like" placeholder="px vh rem..." size="small" />
+      <be-unit-input v-model="like" />
     </div>
-    <div class="flex flex-row items-center gap-2">
+    <div class="flex flex-row items-center ">
       <span style="width: 40px;">拓展:</span>
-      <el-input v-model="extras" placeholder="px vh rem..." size="small" />
+      <be-unit-input v-model="extras" />
     </div>
-    <div class="flex flex-row items-center gap-2">
+    <div class="flex flex-row items-center ">
       <el-checkbox v-model="isInset">内阴影(inset)</el-checkbox>
     </div>
   </div>
