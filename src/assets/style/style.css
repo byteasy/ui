@@ -1,0 +1,274 @@
+.mr-1 { margin-right: 0.25rem !important; }
+.mr-2 { margin-right: 0.5rem !important; }
+.mr-3 { margin-right: 0.75rem !important; }
+.mr-4 { margin-right: 1rem !important; }
+.mr-5 { margin-right: 1.5rem !important; }
+.ml-1 { margin-left: 0.25rem !important; }
+.ml-2 { margin-left: 0.5rem !important; }
+.ml-3 { margin-left: 0.75rem !important; }
+.ml-4 { margin-left: 1rem !important; }
+.ml-5 { margin-left: 1.5rem !important; }
+.mt-1 { margin-top: 0.25rem !important; }
+.mt-2 { margin-top: 0.5rem !important; }
+.mt-3 { margin-top: 0.75rem !important; }
+.mt-4 { margin-top: 1rem !important; }
+.mt-5 { margin-top: 1.5rem !important; }
+.m-1 { margin: 0.25rem !important; }
+.m-2 { margin: 0.5rem !important; }
+.mb-2 { margin-bottom: 0.5rem !important; }
+.m-3 { margin: 0.75rem !important; }
+.m-4 { margin: 1rem !important; }
+.m-5 { margin: 1.5rem !important; }
+.p-0 { padding: 0 !important; }
+.p-1 { padding: 0.25rem !important; }
+.pt-1 { padding-top: 0.25rem !important; }
+.pl-1 { padding-left: 0.25rem !important; }
+.pr-1 { padding-right: 0.25rem !important; }
+.pb-1 { padding-bottom: 0.25rem !important; }
+.p-2 { padding: 0.5rem !important; }
+.pt-2 { padding-top: 0.5rem !important; }
+.pl-2 { padding-left: 0.5rem !important; }
+.pr-2 { padding-right: 0.5rem !important; }
+.pb-2 { padding-bottom: 0.5rem !important; }
+.p-3 { padding: 0.75rem !important; }
+.p-4 { padding: 1rem !important; }
+.p-5 { padding: 1.5rem !important; }
+.pt-3 { padding-top: 0.75rem !important; }
+.pl-3 { padding-left: 0.75rem !important; }
+.pr-3 { padding-right: 0.75rem !important; }
+.pb-3 { padding-bottom: 0.75rem !important; }
+.pt-4 { padding-top: 1rem !important; }
+.pl-4 { padding-left: 1rem !important; }
+.pr-4 { padding-right: 1rem !important; }
+.pb-4 { padding-bottom: 1rem !important; }
+.pt-5 { padding-top: 1.5rem !important; }
+.pl-5 { padding-left: 1.5rem !important; }
+.pr-5 { padding-right: 1.5rem !important; }
+.pb-5 { padding-bottom: 1.5rem !important; }
+
+.height-1 { height: 1rem !important; }
+.height-1-2 { height: 1.5rem !important; }
+.height-2 { height: 2rem !important; }
+
+.font-bold-100 { font-weight: 100; } /* Thin */
+.font-bold-200 { font-weight: 200; } /* Extra Light */
+.font-bold-300 { font-weight: 300; } /* Light */
+.font-bold-400 { font-weight: 400; } /* Normal / Regular (默认) */
+.font-bold-500 { font-weight: 500; } /* Medium */
+.font-bold-600 { font-weight: 600; } /* Semi Bold */
+.font-bold-700 { font-weight: 700; } /* Bold (常用) */
+.font-bold-800 { font-weight: 800; } /* Extra Bold */
+.font-bold-900 { font-weight: 900; } /* Black / Ultra Bold */
+.font-normal { font-weight: normal; }   /* 相当于 400 */
+.font-bold   { font-weight: bold; }     /* 相当于 700 */
+.font-bolder { font-weight: bolder; }   /* 相对于父元素更粗 */
+.font-lighter { font-weight: lighter; } /* 相对于父元素更细 */
+
+.flex-row {
+  display: inline-flex; /* 改为 inline-flex */
+  flex-direction: row;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.flex-none {
+  flex: none;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.flex-grow-2 {
+  flex-grow: 2;
+}
+
+.gap-1-2 {
+  gap: 0.5rem;
+}
+
+.gap-1 {
+  gap: 1rem;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.align-items-start {
+  align-items: flex-start !important;
+}
+
+.align-items-end {
+  align-items: flex-end !important;
+}
+
+.justify-content-start {
+  justify-content: start !important; /* 水平方向居左（新增核心属性） */
+}
+
+.justify-content-center {
+  justify-content: center !important; /* 水平方向居中（新增核心属性） */
+}
+
+.justify-content-right{
+  justify-content: right !important;/* 水平方向居左（新增核心属性） */
+}
+
+.justify-content-end {
+  justify-content: end;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
+}
+
+.h-full {
+  height: 100% !important;
+}
+
+.w-full {
+  width: 100% !important;
+}
+
+:root {
+  --my-bg-color: #ffffff !important;
+  --my-bg-menu-item-active-color: #efefef !important;
+  --my-text-color: black !important;
+  --my-menu-icon-color: black !important;
+  --my-text-gray: #909399 !important;
+  /* 基础字体大小（默认中等） */
+  --font-size-base: 14px;
+  /* 扩展字体大小变量 */
+  --my-font-size-xs: calc(var(--font-size-base) * 0.714);  /* 10px */
+  --my-font-size-sm: calc(var(--font-size-base) * 0.857);  /* 12px */
+  --my-font-size: var(--font-size-base);                   /* 14px */
+  --my-font-size-md: calc(var(--font-size-base) * 1.143);  /* 16px */
+  --my-font-size-lg: calc(var(--font-size-base) * 1.286);  /* 18px */
+  --my-font-size-xl: calc(var(--font-size-base) * 1.429);  /* 20px */
+  --my-font-size-2xl: calc(var(--font-size-base) * 1.571); /* 22px */
+  --my-font-color-primay: var(--el-color-primary) !important;
+}
+
+/* 小号字体主题 */
+html.font-small {
+  --font-size-base: 12px;
+}
+
+/* 默认/中等字体主题 */
+html.font-default {
+  --font-size-base: 14px;
+}
+
+/* 大号字体主题 */
+html.font-large {
+  --font-size-base: 16px;
+}
+
+html.dark {
+  --my-bg-color: #000000 !important;
+  --my-text-color: white !important;
+  --my-text-gray: #A3A3A3 !important;
+  --my-bg-menu-item-active-color: #000000 !important;
+  --my-menu-icon-color: white !important;
+}
+
+html.light {
+  --my-bg-color: #ffffff !important;
+  --my-text-color: black !important;
+  --my-text-gray: #939393 !important;
+  --my-bg-menu-item-active-color: #c5c6c8 !important;
+  --my-menu-icon-color: black !important;
+}
+
+html.green {
+  --my-bg-color: #008351 !important;
+  --my-text-color: white !important;
+  --my-text-gray: #D3D3D3 !important;
+  --my-bg-menu-item-active-color: #008351 !important;
+  --my-menu-icon-color: black !important;
+  --el-menu-active-color: #FFFFFF !important;
+  --el-color-primary: #008351 !important;
+  --el-color-primary-light-3: #3db386 !important;
+  --el-color-primary-light-5: #4dc698 !important;
+  --el-color-primary-light-7: #61cca3 !important;
+  --el-color-primary-light-8: #84dcbb !important;
+  --el-color-primary-light-9: #b6ecd8 !important;
+  --el-color-primary-dark-2: #0d4c35 !important;
+  --el-fill-color-light: #edf6f3 !important;
+  --my-font-color-primay: var(--el-color-primary) !important;
+}
+
+html.blue {
+  --my-bg-color: #014ba9 !important;
+  --my-text-color: white !important;
+  --my-text-gray: #D3D3D3 !important;
+  --my-bg-menu-item-active-color: #014ba9 !important;
+  --my-menu-icon-color: black !important;
+  --el-menu-active-color: #FFFFFF !important;
+  --el-color-primary: #014ba9 !important;
+}
+
+.my-bg-color-page {
+  background-color: var(--my-bg-color);
+}
+
+.my-bg-color-blank {
+  background-color: var(--el-bg-color-page);
+}
+
+.my-dialog-bg-color {
+  background-color: var(--el-bg-color);
+}
+
+.my-font-size {
+  font-size: var(--my-font-size);
+}
+
+.my-font-size-xs {
+  font-size: var(--my-font-size-xs);
+}
+
+.my-font-size-sm {
+  font-size: var(--my-font-size-sm);
+}
+.my-font-size-md {
+  font-size: var(--my-font-size-md);
+}
+.my-font-size-lg {
+  font-size: var(--my-font-size-lg);
+}
+.my-font-size-xl {
+  font-size: var(--my-font-size-xl);
+}
+.my-font-size-2xl {
+  font-size: var(--my-font-size-2xl);
+}
+.my-font-bold {font-weight: bold;}
+.my-icon-color-primary {
+  color: var(--my-font-color-primay);
+  font-size: 1rem;
+}
+.text-gray {
+  color: var(--el-text-color-placeholder);
+}
+.my-icon-color-primary:hover {
+  background-color: color-mix(in srgb, var(--el-color-primary-light-5) 90%, var(--my-text-color));
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+div.el-scrollbar__bar.is-horizontal {
+  height: 10px;
+}
+div.el-scrollbar__bar.is-vertical {
+  width: 10px;
+}
