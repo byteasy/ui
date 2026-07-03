@@ -15,7 +15,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref, watch} from 'vue'
+import {ref, watch} from 'vue'
 import BeFormComponent from "@/components/form/BeFormComponent.vue";
 import {useFormEngine} from "@/stores/formEngine.ts";
 import {storeToRefs} from "pinia";
@@ -39,14 +39,6 @@ const children = ref([...(props.modelValue.children || [])])
 const emit = defineEmits(['selected', 'update:modelValue'])
 const {activeComponent} = storeToRefs(formEngine)
 const {t, locale} = useI18n()
-
-onMounted(() => {
-  if (children.value.length < 1) {
-    children.value = [{
-      id: 1
-    }]
-  }
-})
 
 function onComponentClick(ponent) {
   formEngine.setActiveComponent(ponent)

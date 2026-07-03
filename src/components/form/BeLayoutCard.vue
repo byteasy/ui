@@ -7,7 +7,7 @@
             <span>{{ getLangText(props.modelValue.properties.title || "{\"zh_CN\":\"标题\",\"en\":\"title\"}", locale) }}</span>
           </div>
         </template>
-        <VueDraggable class="w-full h-full p-2 be-material-target sense-rect-border flex-column drag-rect-border"
+        <VueDraggable class="w-full h-full be-material-target sense-rect-border flex-column drag-rect-border"
                       v-model="children"
                       v-bind="$attrs" :animation="150" group="material"
                       ghostClass="drag-ghost" chosenClass="drag-chosen">

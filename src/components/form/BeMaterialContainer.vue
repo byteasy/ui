@@ -127,8 +127,17 @@ const componentGroups = [
       {
         id: "LayoutTab",
         name: "{\"zh_CN\":\"选项卡\",\"en\":\"Tab Layout\"}",
-        path: '/components/TunaObjectSelect.vue',
+        path: '/components/form/BeLayoutTab.vue',
         icon: '<svg t="1782465904723" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11172" width="200" height="200"><path d="M853.333333 170.666667H170.666667a85.333333 85.333333 0 0 0-85.333334 85.333333v512a85.333333 85.333333 0 0 0 85.333334 85.333333h682.666666a85.333333 85.333333 0 0 0 85.333334-85.333333V256a85.333333 85.333333 0 0 0-85.333334-85.333333z m0 597.333333H170.666667V298.666667a42.666667 42.666667 0 0 1 42.666666-42.666667h213.333334a42.666667 42.666667 0 0 1 42.666666 42.666667v85.333333a42.666667 42.666667 0 0 0 42.666667 42.666667h341.333333z m0-426.666667h-298.666666V298.666667a42.666667 42.666667 0 0 1 42.666666-42.666667h213.333334a42.666667 42.666667 0 0 1 42.666666 42.666667z" p-id="11173"></path></svg>',
+        propsForm: [
+          { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutTab.vue'},
+          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
+          { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
+        ],
+        properties: {
+          width: '100%',
+          height: '100%',
+        },
       },
       {
         id: "LayoutForm",
