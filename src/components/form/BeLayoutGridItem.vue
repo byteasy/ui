@@ -1,18 +1,20 @@
 <template>
   <div class="w-full">
     <div :style="props.modelValue.properties.marginStyle">
-      <VueDraggable
-        class="w-full p-2 be-material-target sense-rect-border flex-column drag-rect-border"
-        v-model="children"
-        v-bind="$attrs" :animation="150" group="material"
-        ghostClass="drag-ghost" chosenClass="drag-chosen">
-        <template v-for="root in children" :key="root.id">
-          <be-form-component :model-value="root" @click="onComponentClick(root)"
-                             @copy="onComponentCopy(root)" @delete="onComponentDelete(root)"
-                             :active="root.id === activeComponent?.id" class="w-full h-full"
-                             @update:modelValue="value => updateChildrenValue(value)"/>
-        </template>
-      </VueDraggable>
+      <div :style="renderCss(props.modelValue.properties)">
+        <VueDraggable
+          class="w-full p-2 be-material-target sense-rect-border flex-column drag-rect-border"
+          v-model="children"
+          v-bind="$attrs" :animation="150" group="material"
+          ghostClass="drag-ghost" chosenClass="drag-chosen">
+          <template v-for="root in children" :key="root.id">
+            <be-form-component :model-value="root" @click="onComponentClick(root)"
+                               @copy="onComponentCopy(root)" @delete="onComponentDelete(root)"
+                               :active="root.id === activeComponent?.id"
+                               @update:modelValue="value => updateChildrenValue(value)"/>
+          </template>
+        </VueDraggable>
+      </div>
     </div>
   </div>
 </template>

@@ -44,7 +44,7 @@ function getComponent(path) {
 <style scoped>
 
 .be-component-selected {
-  border: 1px solid !important;
+  border: 2px solid !important;
   border-color: var(--el-color-success) !important;
 }
 </style>

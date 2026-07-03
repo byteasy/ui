@@ -82,6 +82,8 @@ const componentGroups = [
             ],
             properties: {
               colSpan: 8,
+              width: '100%',
+              height: '100%',
             }
           },
           {
@@ -95,6 +97,8 @@ const componentGroups = [
             ],
             properties: {
               colSpan: 8,
+              width: '100%',
+              height: '100%',
             }
           },
           {
@@ -108,6 +112,8 @@ const componentGroups = [
             ],
             properties: {
               colSpan: 8,
+              width: '100%',
+              height: '100%',
             }
           },
         ],
