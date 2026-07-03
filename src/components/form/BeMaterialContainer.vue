@@ -55,7 +55,11 @@ const componentGroups = [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutCard.vue'},
           { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
-        ]
+        ],
+        properties: {
+          width: '100%',
+          height: '100%',
+        },
       },
       {
         id: "LayoutGrid",
@@ -69,6 +73,8 @@ const componentGroups = [
         ],
         properties: {
           gutter: 10,
+          width: '100%',
+          height: '100%',
         },
         children: [
           {

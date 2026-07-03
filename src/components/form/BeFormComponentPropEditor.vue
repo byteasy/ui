@@ -1,6 +1,7 @@
 <template>
   <div class="flex-column w-full el-card">
-    <el-text tag="b" size="large" class="p-2">属性{{activeComponent?.id }}</el-text>
+    <el-text tag="b" size="large" class="p-2">属性</el-text>
+    <el-text tag="b" size="small">ID:{{activeComponent?.id }}</el-text>
     <el-collapse expand-icon-position="left" class="pl-2 pr-2 w-full" :accordion="false" v-if="activeComponent">
       <el-collapse-item :title="getLangText(group.title, locale)" :name="group.title"
                         v-for="group in activeComponent.propsForm" :key="group.form">
