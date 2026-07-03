@@ -18,7 +18,6 @@
                                @update:modelValue="value => updateChildrenValue(value)"/>
           </template>
         </VueDraggable>
-        <template #footer>{{ props.modelValue.properties }}</template>
       </el-card>
     </div>
   </div>
