@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="w-full drag-container-border">
     <div :style="props.modelValue.properties.marginStyle">
       <el-card :style="renderCss(props.modelValue.properties)">
         <template #header>
@@ -7,7 +7,7 @@
             <span>{{ getLangText(props.modelValue.properties.title || "{\"zh_CN\":\"标题\",\"en\":\"title\"}", locale) }}</span>
           </div>
         </template>
-        <VueDraggable class="w-full h-full p-2 be-material-target sense-rect-border flex-column"
+        <VueDraggable class="w-full h-full p-2 be-material-target sense-rect-border flex-column drag-rect-border"
                       v-model="children"
                       v-bind="$attrs" :animation="150" group="material"
                       ghostClass="drag-ghost" chosenClass="drag-chosen">
@@ -111,7 +111,11 @@ function updateChildrenValue(child) {
 }
 </script>
 <style scoped>
-.be-card-min-height {
+.drag-rect-border {
   min-height: 100px;
+  border: 1px dashed var(--el-color-info);
+}
+.drag-container-border {
+  border: 1px dashed var(--el-color-primary);
 }
 </style>

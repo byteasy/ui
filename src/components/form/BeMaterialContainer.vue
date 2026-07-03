@@ -60,10 +60,57 @@ const componentGroups = [
       {
         id: "LayoutGrid",
         name: "{\"zh_CN\":\"网格\",\"en\":\"Grid Layout\"}",
-        path: '/components/BeEnumSelect.vue',
+        path: '/components/form/BeLayoutGrid.vue',
         icon: '<svg t="1782464167848" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9920" width="200" height="200"><path d="M180.0704 185.4464h183.2448v183.2448H180.0704zM420.4032 185.4464h183.2448v183.2448H420.4032zM660.736 185.4464h183.2448v183.2448h-183.2448zM180.0704 411.8528h183.2448v183.2448H180.0704zM420.4032 411.8528h183.2448v183.2448H420.4032zM660.736 411.8528h183.2448v183.2448h-183.2448zM180.0704 638.2592h183.2448v183.2448H180.0704zM420.4032 638.2592h183.2448v183.2448H420.4032zM660.736 638.2592h183.2448v183.2448h-183.2448z" p-id="9921"></path></svg>',
-        hasParam: true,
-        paramForm: 'components.BeEnumSelect.vue'
+        propsForm: [
+          { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGrid.vue'},
+          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
+          { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
+        ],
+        properties: {
+          gutter: 10,
+        },
+        children: [
+          {
+            id: "LayoutGridItem",
+            name: "{\"zh_CN\":\"网格元素\",\"en\":\"Grid Layout Item\"}",
+            path: '/components/form/BeLayoutGridItem.vue',
+            propsForm: [
+              { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
+              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
+              { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+            ],
+            properties: {
+              colSpan: 8,
+            }
+          },
+          {
+            id: "LayoutGridItem",
+            name: "{\"zh_CN\":\"网格元素\",\"en\":\"Grid Layout Item\"}",
+            path: '/components/form/BeLayoutGridItem.vue',
+            propsForm: [
+              { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
+              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
+              { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+            ],
+            properties: {
+              colSpan: 8,
+            }
+          },
+          {
+            id: "LayoutGridItem",
+            name: "{\"zh_CN\":\"网格元素\",\"en\":\"Grid Layout Item\"}",
+            path: '/components/form/BeLayoutGridItem.vue',
+            propsForm: [
+              { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
+              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
+              { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+            ],
+            properties: {
+              colSpan: 8,
+            }
+          },
+        ],
       },
       {
         id: "LayoutTab",
@@ -89,6 +136,20 @@ const componentGroups = [
     id: "Input",
     name: "{\"zh_CN\":\"输入组件\",\"en\":\"Form Field Component\"}",
     components: [
+      {
+        id: "InputSlider",
+        name: "{\"zh_CN\":\"滑块\",\"en\":\"Slider\"}",
+        path: '/components/BeSlider.vue',
+        icon: '<svg t="1782982464933" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13712" width="200" height="200"><path d="M228.704 212.096v66.688H112V212.096h116.704z m333.184 266.592v66.688H112v-66.688h449.888z m-266.496 266.72v66.592H112v-66.688l183.392 0.096z m116.608-600c8.992 0 16.8 3.296 23.488 9.888 6.496 6.496 9.888 14.496 9.888 23.488v133.312c0 8.992-3.296 16.8-9.888 23.488a32.416 32.416 0 0 1-23.488 9.888H278.816c-8.992 0-16.8-3.296-23.488-9.888a32.128 32.128 0 0 1-9.888-23.488V178.912c0-8.992 3.296-16.8 9.888-23.488 6.496-6.496 14.304-9.888 23.488-9.888l133.184-0.096z m66.688 533.28c8.992 0 16.8 3.296 23.488 9.888 6.496 6.496 9.888 14.496 9.888 23.488v133.312c0 8.992-3.296 16.8-9.888 23.488a32.416 32.416 0 0 1-23.488 9.888H345.28c-8.992 0-16.8-3.296-23.488-9.888a32.416 32.416 0 0 1-9.888-23.488v-133.312c0-8.992 3.296-16.8 9.888-23.488 6.496-6.496 14.304-9.888 23.488-9.888l133.408-0.096zM912 212.096v66.688H462.112V212.096H912z m0 533.312v66.592H528.608v-66.688l383.392 0.096z m-166.784-333.312c8.992 0 16.8 3.296 23.488 9.888 6.496 6.496 9.888 14.496 9.888 23.488v133.312c0 8.992-3.296 16.8-9.888 23.488a32.416 32.416 0 0 1-23.488 9.888h-133.216c-8.992 0-16.8-3.296-23.488-9.888a32.128 32.128 0 0 1-9.888-23.488v-133.408c0-8.992 3.296-16.8 9.888-23.488 6.496-6.496 14.496-9.888 23.488-9.888l133.216 0.096z m166.784 66.592v66.688h-116.704v-66.688H912z" p-id="13713"></path></svg>',
+        propsForm: [{ title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' }],
+      },
+      {
+        id: "InputNumber",
+        name: "{\"zh_CN\":\"数字\",\"en\":\"Number\"}",
+        path: '/components/BeNumberInput.vue',
+        icon: '<svg t="1783063371922" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9214" width="200" height="200"><path d="M960 1024H64a64 64 0 0 1-64-64V64a64 64 0 0 1 64-64h896a64 64 0 0 1 64 64v896a64 64 0 0 1-64 64z m0-896a64 64 0 0 0-64-64H128a64 64 0 0 0-64 64v768a64 64 0 0 0 64 64h768a64 64 0 0 0 64-64V128z m-128 640h-128a64 64 0 0 1 0-128h64V576h-64a64 64 0 0 1 0-128h64V384h-64a64 64 0 0 1 0-128h128a64 64 0 0 1 64 64v384a64 64 0 0 1-64 64z m-320-128a64 64 0 0 1 0 128H384a64 64 0 0 1-64-64V512a64 64 0 0 1 64-64h64V384H384a64 64 0 0 1 0-128h128a64 64 0 0 1 64 64v192a64 64 0 0 1-64 64H448v64h64z m-320 128a64 64 0 0 1-64-64V320a64 64 0 0 1 128 0v384a64 64 0 0 1-64 64z" p-id="9215"></path></svg>',
+        propsForm: [{ title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' }],
+      },
       {
         id: "InputDictionary",
         name: "{\"zh_CN\":\"数据字典\",\"en\":\"Dictionary\"}",
@@ -164,8 +225,18 @@ function onDragEnd(event) {
 function clone(element: Record<any>) {
   const obj = JSON.parse(JSON.stringify(element))
   obj.id = obj.id + '-' + new Date().getTime();
-  obj.children = []
-  obj.properties = {}
+  if(obj.children === undefined) {
+    obj.children = []
+  } else {
+    let ts = new Date().getTime()
+    obj.children.forEach(child => {
+      ts = ts + 1
+      child.id = child.id + '-' + ts
+    })
+  }
+  if(obj.properties === undefined) {
+    obj.properties = {}
+  }
   return obj
 }
 

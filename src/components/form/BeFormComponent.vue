@@ -1,11 +1,18 @@
 <template>
   <div class="flex-column" @click.stop="$emit('click', modelValue)">
-    <div v-if="props.active" class="w-full flex-row justify-content-end">
-      <el-button type="primary" icon="CopyDocument" circle size="small" @click="emit('copy', props.modelValue)"/>
-      <el-button type="danger" icon="Delete" circle size="small" @click="emit('delete', props.modelValue)"/>
+    <div style="position: relative;" class="w-full h-full">
+      <div v-if="props.active" class="w-full flex-row justify-content-end"
+           style="position: absolute; top: 4px; right: 4px; z-index: 10;">
+        <el-button type="primary" icon="CopyDocument" circle size="small"
+                   @click="emit('copy', props.modelValue)"/>
+        <el-button type="danger" icon="Delete" circle size="small"
+                   @click="emit('delete', props.modelValue)"/>
+      </div>
+      <component :is="getComponent(props.modelValue.path)" :model-value="props.modelValue"
+                 :class="{ 'be-component-selected': props.active}"
+                 @update:modelValue="value => emit('update:modelValue', value)">
+      </component>
     </div>
-    <component :is="getComponent(props.modelValue.path)" :model-value="props.modelValue" :class="{ 'be-component-selected': props.active}" @update:modelValue="value => emit('update:modelValue', value)">
-    </component>
   </div>
 </template>
 <script lang="ts" setup>
@@ -37,7 +44,7 @@ function getComponent(path) {
 <style scoped>
 
 .be-component-selected {
-  border: 1px solid;
-  border-color: var(--el-color-primary-light-5);
+  border: 1px solid !important;
+  border-color: var(--el-color-success) !important;
 }
 </style>
