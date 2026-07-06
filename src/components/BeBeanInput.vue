@@ -20,6 +20,7 @@
                   ]">
                 <component :is="getComponent(parseComponent(col.fieldComponent))"
                            :param="parseComponentParam(col.fieldComponent)"
+                           :formModel="formValue"
                            v-if="col.fieldComponent"
                            :context="props.context ? props.context : 'platformSvr'"
                            :placeholder="getLangText(col.description || col.displayName || col.name, locale)"

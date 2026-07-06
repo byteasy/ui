@@ -1,7 +1,10 @@
 <template>
   <div :style="props.modelValue.properties.marginStyle" >
     <el-form-item :prop="props.modelValue.properties.fieldName" :label="getLangText(props.modelValue.properties.fieldTitle, locale)" :style="renderCss(props.modelValue.properties)">
-      <el-slider v-model="testValue"/>
+      <el-slider v-model="testValue" v-if="props.modelValue.properties.component === 'slider'"
+                 :min="props.modelValue.properties.min"
+                 :max="props.modelValue.properties.max"
+      />
     </el-form-item>
   </div>
 </template>

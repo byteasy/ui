@@ -1,5 +1,5 @@
 <template>
-  <el-input-number controls-position="right">
+  <el-input-number controls-position="right" class="w-full">
     <template #decrease-icon>
       <el-icon>
         <Minus />
