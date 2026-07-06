@@ -6,12 +6,15 @@
         <BeMaterialContainer ref="refMaterialContainer" @drag-start="onMaterialDrapStart"
                              @drag-end="onMaterialDrapEnd" :on-move-handle="onDragMoveHandle"/>
       </el-splitter-panel>
-      <el-splitter-panel class="p-1">
+      <el-splitter-panel class="p-1" v-if="isPlay === false">
         <BeFormSense ref="refFormSense" :height="props.height" v-model="formDefine"
-                     @update:modelValue="doUpdateModelValue"/>
+                     @update:modelValue="doUpdateModelValue" @play-start="isPlay = true" @play-stoped="isPlay = false"/>
       </el-splitter-panel>
-      <el-splitter-panel class="p-1" size="300" collapsible>
+      <el-splitter-panel class="p-1" size="300" collapsible v-if="isPlay === false">
         <be-form-component-prop-editor @updateProps="doUpdateComponentProps"/>
+      </el-splitter-panel>
+      <el-splitter-panel class="p-1" v-if="isPlay === true">
+        <be-form-render-container v-model="formDefine" :height="props.height" @play-start="isPlay = true" @play-stoped="isPlay = false"/>
       </el-splitter-panel>
     </el-splitter>
   </div>
@@ -21,6 +24,7 @@ import BeFormSense from "@/components/form/BeFormSense.vue";
 import BeMaterialContainer from "@/components/form/BeMaterialContainer.vue";
 import BeFormComponentPropEditor from "@/components/form/BeFormComponentPropEditor.vue";
 import {ref} from "vue";
+import BeFormRenderContainer from "@/components/form/BeFormRenderContainer.vue";
 
 const props = defineProps<{
   height?: number
@@ -30,6 +34,7 @@ const refMaterialContainer = ref(null);
 const refFormSense = ref(null);
 
 const formDefine = ref([])
+const isPlay = ref(false)
 
 function onMaterialDrapStart(event) {
   refFormSense.value.handleDragStart(event.data)
