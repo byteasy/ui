@@ -138,6 +138,23 @@ const componentGroups = [
           width: '100%',
           height: '100%',
         },
+        children: [
+          {
+            id: "LayoutTabPane",
+            name: "{\"zh_CN\":\"选项卡页\",\"en\":\"Layout Tab Pane\"}",
+            path: '/components/form/BeLayoutTabPane.vue',
+            propsForm: [
+              { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutTabPane.vue' },
+              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
+              { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+            ],
+            properties: {
+              title: "{\"zh_CN\":\"未命名\",\"en\":\"Untitled name\"}",
+              width: '100%',
+              height: '100%',
+            }
+          },
+        ]
       },
       {
         id: "LayoutForm",

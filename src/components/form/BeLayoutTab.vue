@@ -3,27 +3,21 @@
     <div :style="props.modelValue.properties.marginStyle">
       <el-tabs
         v-model="editableTabsValue"
-        type="card"
-        editable
-        class="w-full"
+        :type="props.modelValue.properties.type"
+        :tab-position="props.modelValue.properties.tabPosition"
+        :style="renderCss(props.modelValue.properties)"
       >
-        <el-tab-pane
-          v-for="root in children"
-          :key="root.name"
-          :label="root.title"
-          :name="root.name"
-        >
-          <VueDraggable
-            class="w-full be-material-target sense-rect-border flex-column drag-rect-border"
-            v-model="children"
-            v-bind="$attrs" :animation="150" group="material"
-            ghostClass="drag-ghost" chosenClass="drag-chosen">
+        <template v-for="root in children" :key="root.id">
+          <el-tab-pane
+            :label="getLangText(root.properties.title, locale)"
+            :name="root.id"
+          >
             <be-form-component :model-value="root" @click="onComponentClick(root)"
                                @copy="onComponentCopy(root)" @delete="onComponentDelete(root)"
-                               :active="root.id === activeComponent?.id"
+                               :active="root.id === activeComponent?.id" class="w-full"
                                @update:modelValue="value => updateChildrenValue(value)"/>
-          </VueDraggable>
-        </el-tab-pane>
+          </el-tab-pane>
+        </template>
       </el-tabs>
     </div>
   </div>
@@ -36,6 +30,8 @@ import {storeToRefs} from "pinia";
 import {useI18n} from "vue-i18n";
 import {renderCss} from "@/util/formUtil.ts";
 import {VueDraggable} from "vue-draggable-plus";
+import {getLangText} from "@/locales/common.ts";
+import type {TabPaneName} from "element-plus";
 
 const props = defineProps<{
   modelValue: {
@@ -54,7 +50,7 @@ const children = ref([...(props.modelValue.children || [])])
 const emit = defineEmits(['selected', 'update:modelValue'])
 const {activeComponent} = storeToRefs(formEngine)
 const {t, locale} = useI18n()
-const editableTabsValue = ref('2')
+const editableTabsValue = ref(children.value.length > 0 ? children.value[0].id : undefined)
 
 function onComponentClick(ponent) {
   formEngine.setActiveComponent(ponent)
@@ -67,10 +63,14 @@ function onComponentCopy(root) {
 }
 
 function onComponentDelete(root) {
+  if(children.value.length < 2) {
+    return
+  }
   children.value = children.value.filter(item => item.id !== root.id)
   if (root.id === activeComponent.value?.id) {
     formEngine.setActiveComponent(null)
   }
+  editableTabsValue.value = children.value.length > 0 ? children.value[0].id : undefined
 }
 
 watch(() => children.value, (newVal, oldVal) => {
@@ -115,6 +115,7 @@ function updateChildrenValue(child) {
   }
   doUpdateModelValue()
 }
+
 </script>
 <style scoped>
 .drag-rect-border {

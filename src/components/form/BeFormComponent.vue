@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-column" @click.stop="$emit('click', modelValue)">
+  <div class="flex-column w-full" @click.stop="$emit('click', modelValue)">
     <div style="position: relative;" class="w-full h-full">
       <div v-if="props.active" class="w-full flex-row justify-content-end"
            style="position: absolute; top: 4px; right: 4px; z-index: 10;">
