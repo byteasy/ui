@@ -12,14 +12,26 @@
                  :min="props.formDefine.properties.min"
                  :max="props.formDefine.properties.max"
                  :show-input="props.formDefine.properties.showInput"
-                 :step="props.formDefine.properties.step"
-      />
+                 :step="props.formDefine.properties.step"/>
       <el-input-number v-else-if="props.formDefine.properties.component === 'number'"
                        v-model="formValue[props.formDefine.properties.fieldName]"
+                       :controls="props.formDefine.properties.controls"
+                       :controls-position="props.formDefine.properties.controlsPosition === true ? 'right' : ''"
                        :min="props.formDefine.properties.min"
                        :max="props.formDefine.properties.max"
-                       :step="props.formDefine.properties.step"
-      />
+                       :step="props.formDefine.properties.step"/>
+      <el-input v-model="formValue[props.formDefine.properties.fieldName]" v-else-if="props.formDefine.properties.component === 'text'"
+                       :type="props.formDefine.properties.type"
+                       :minlength="props.formDefine.properties.minlength"
+                       :maxlength="props.formDefine.properties.maxlength"
+                       :show-word-limit="props.formDefine.properties.showWordLimit"
+                       :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+                       :clearable="props.formDefine.properties.clearable"
+                       :show-password="props.formDefine.properties.showPassword"
+                       :rows="props.formDefine.properties.rows"
+                       :autosize="props.formDefine.properties.autosize"
+                       :tabindex="props.formDefine.properties.tabindex"
+                       :word-limit-position="props.formDefine.properties.wordLimitPosition" />
     </el-form-item>
   </div>
 </template>

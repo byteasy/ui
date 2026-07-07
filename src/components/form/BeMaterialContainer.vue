@@ -204,6 +204,20 @@ const componentGroups = [
         properties: { width: '100%', height: '100%', component: 'number', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}' },
       },
       {
+        id: "FormInputText",
+        name: "{\"zh_CN\":\"输入框\",\"en\":\"Text Input\"}",
+        path: '/components/form/BeFormInput.vue',
+        icon: '<svg t="1783411305540" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2682" width="200" height="200"><path d="M118.784 727.04h778.24V296.96h-778.24v430.08zM77.824 256h860.16v512H77.824V256zM194.56 409.6v204.8c0 12.288 8.192 20.48 20.48 20.48s20.48-8.192 20.48-20.48V409.6c0-12.288-8.192-20.48-20.48-20.48s-20.48 8.192-20.48 20.48z" p-id="2683"></path></svg>',
+        render: '/components/formRender/BeFormInputRender.vue',
+        propsForm: [
+          { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputText' },
+          { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
+          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
+          { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+        ],
+        properties: { width: '100%', height: '100%', component: 'text', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'text', minlength: 0, maxlength: 60 },
+      },
+      {
         id: "InputDictionary",
         name: "{\"zh_CN\":\"数据字典\",\"en\":\"Dictionary\"}",
         path: '/components/BeDictionarySelect.vue',
