@@ -4,6 +4,8 @@
       <el-slider v-model="testValue" v-if="props.modelValue.properties.component === 'slider'"
                  :min="props.modelValue.properties.min"
                  :max="props.modelValue.properties.max"
+                 :show-input="props.modelValue.properties.showInput"
+                 :step="props.modelValue.properties.step"
       />
     </el-form-item>
   </div>

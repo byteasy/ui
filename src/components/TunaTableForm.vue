@@ -17,7 +17,18 @@
               >
                 <slot :name="'formItemField_' + col.name" :row="formValue" :column="col"
                       :props="props">
+                  <component :is="getComponent(parseComponent(col.fieldComponent))"
+                             :param="parseComponentParam(col.fieldComponent)"
+                             :formModel="formValue"
+                             v-if="col.fieldComponent"
+                             :context="props.context ? props.context : 'platformSvr'"
+                             :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
+                             :column="col"
+                             clearable
+                             :disabled="props.disabled"
+                             v-model="formValue[col.name]" />
                   <tuna-form-field
+                    v-else
                     :column="col"
                     :context="props.context"
                     :placeholder="getLangText(col.displayName, locale)"
@@ -49,14 +60,16 @@ import {useI18n} from 'vue-i18n'
 import {doHttpPost, getEntitySchema} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
 import {validateColumnRule} from '@/util/validateUtils.ts'
-import {putValueIfValid} from '@/util/common.ts'
+import {parseComponent, parseComponentParam, putValueIfValid} from '@/util/common.ts'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {getLangText} from '@/locales/common.ts'
+import {getRouteComponents} from "@/util/autoImportComponent.ts";
 
 const {t, locale} = useI18n()
 const emit = defineEmits(['close'])
 const refForm = ref(null)
 const appSettingsStore = useAppSettingsStore()
+const {modules } = getRouteComponents()
 
 const props = defineProps<{
   url: string
@@ -138,6 +151,10 @@ function onButtonClick(btnName) {
   } else if (btnName === 'cancel') {
     onClearForm()
   }
+}
+
+function getComponent(path) {
+  return modules['..' + path]
 }
 
 defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm, onButtonClick})
