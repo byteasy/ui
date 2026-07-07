@@ -10,7 +10,7 @@
           </div>
         </template>
         <template v-for="root in children" :key="root.id">
-          <be-render-component class="w-full" :form-define="root"/>
+          <be-render-component class="w-full" :form-define="root" :model-value="props.modelValue" @update:modelValue="(value) => emit('update:modelValue', value)"/>
         </template>
       </el-card>
     </div>
@@ -34,6 +34,7 @@ const props = defineProps<{
     properties: object
     children: any[]
   },
+  modelValue: Record<string, any>
 }>()
 
 const children = ref([...(props.formDefine.children || [])])

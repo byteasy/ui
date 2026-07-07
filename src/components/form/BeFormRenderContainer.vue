@@ -35,7 +35,7 @@
         <div
           :class="{ 'desktop-root-rect w-full' : !isMobile, 'sense-rect-border flex-column': true, 'mobile-root-rect': isMobile}"
           :style="{ height: `${props.height - 126}px` }">
-          <be-form-render :form-define="props.modelValue" :height="props.height" />
+          <be-form-render :form-define="props.modelValue" :height="props.height" v-model="testFormValue"/>
         </div>
       </div>
     </div>
@@ -53,6 +53,7 @@ const props = defineProps<{
 const emit = defineEmits(['playStart', 'playStoped'])
 const isMobile = ref(false);
 const isPlay = ref(true);
+const testFormValue = ref({})
 
 function doPlay() {
   isPlay.value = true

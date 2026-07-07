@@ -1,7 +1,10 @@
 <template>
   <div class="flex-column w-full" @click.stop="$emit('click', props.formDefine)">
-    <component :is="getComponent(props.formDefine.render)" :form-define="props.formDefine"
-               @update:modelValue="value => emit('update:modelValue', value)"></component>
+    <component :is="getComponent(props.formDefine.render)" :formDefine="props.formDefine"
+               class="w-full"
+               :model-value="props.modelValue"
+               @update:modelValue="(value) => emit('update:modelValue', value)"
+               ></component>
   </div>
 </template>
 <script lang="ts" setup>
@@ -19,8 +22,9 @@ const props = defineProps<{
     properties: object
     children: any[]
   },
+  modelValue: Record<string, any>
 }>()
-const emit = defineEmits(['click', 'copy', 'delete', 'selected', 'update:modelValue'])
+const emit = defineEmits(['click', 'update:modelValue'])
 
 const {modules} = getRouteComponents()
 const {t, locale} = useI18n()
