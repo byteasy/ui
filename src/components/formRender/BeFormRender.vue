@@ -1,8 +1,8 @@
 <template>
   <div class="h-full w-full flex-column">
-    <el-form v-model="formValue" class="w-full">
+    <el-form :model="formValue" class="w-full" ref="refForm">
       <template v-for="root in rootComponents" :key="root.id">
-        <be-render-component :form-define="root" :modelValue="formValue"/>
+        <be-render-component :form-define="root" :model-value="formValue" />
       </template>
     </el-form>
   </div>
@@ -16,12 +16,15 @@ const props = defineProps<{
   formDefine: Array<any>
 }>()
 
+const refForm = ref(null)
 const formValue = ref({ ...props.modelValue })
 const rootComponents = ref([...(props.formDefine || [])])
+const emit = defineEmits(['update:modelValue'])
 
 watch(formValue, (newVal, oldVal) => {
-  console.log('modelValue', newVal)
+  emit('update:modelValue', formValue.value)
 }, { deep: true })
+
 defineExpose({})
 </script>
 <style scoped>

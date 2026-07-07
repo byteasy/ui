@@ -1,11 +1,19 @@
 <template>
   <div :style="props.modelValue.properties.marginStyle" >
-    <el-form-item :prop="props.modelValue.properties.fieldName" :label="getLangText(props.modelValue.properties.fieldTitle, locale)" :style="renderCss(props.modelValue.properties)">
+    <el-form-item :prop="props.modelValue.properties.fieldName"
+                  :required="props.modelValue.properties.required"
+                  :label="getLangText(props.modelValue.properties.fieldTitle, locale)"
+                  :style="renderCss(props.modelValue.properties)">
       <el-slider v-model="testValue" v-if="props.modelValue.properties.component === 'slider'"
                  :min="props.modelValue.properties.min"
                  :max="props.modelValue.properties.max"
                  :show-input="props.modelValue.properties.showInput"
                  :step="props.modelValue.properties.step"
+      />
+      <el-input-number v-model="testValue" v-else-if="props.modelValue.properties.component === 'number'"
+                       :min="props.modelValue.properties.min"
+                       :max="props.modelValue.properties.max"
+                       :step="props.modelValue.properties.step"
       />
     </el-form-item>
   </div>
