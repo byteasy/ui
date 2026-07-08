@@ -7,7 +7,7 @@
                   ]"
                   :style="renderCss(props.formDefine.properties)">
       <template v-slot:label="scope">
-        <span :style="props.modelValue.properties.fontStyle">{{ getLangText(props.modelValue.properties.fieldTitle, locale) + scope.label }}</span>
+        <span :style="props.formDefine.properties.fontStyle">{{ getLangText(props.formDefine.properties.fieldTitle, locale) + scope.label }}</span>
       </template>
       <el-slider v-if="props.formDefine.properties.component === 'slider'"
                  v-model="formValue[props.formDefine.properties.fieldName]"
