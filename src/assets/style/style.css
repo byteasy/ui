@@ -324,3 +324,7 @@ div.el-scrollbar__bar.is-vertical {
   border: 2px dashed var(--el-color-primary-light-7) !important;
   border-radius: 4px;
 }
+
+.be-material-target {
+  padding-bottom: 15px !important;
+}

@@ -1,7 +1,14 @@
 <template>
   <div class="w-full">
     <div :style="props.formDefine.properties.marginStyle">
-      <el-form :style="renderCss(props.formDefine.properties)" :model="formValue">
+      <el-form :style="renderCss(props.formDefine.properties)" :model="formValue"
+               :label-position="props.formDefine.properties.labelPosition"
+               :label-width="props.formDefine.properties.labelWidth"
+               :label-suffix="props.formDefine.properties.labelSuffix"
+               :hide-required-asterisk="props.formDefine.properties.hideRequiredAsterisk"
+               :require-asterisk-position="props.formDefine.properties.requireAsteriskPosition"
+               :inline-message="props.formDefine.properties.inlineMessage"
+               :scroll-to-error="props.formDefine.properties.scrollToError">
         <template v-for="root in children" :key="root.id">
           <be-render-component class="w-full" :form-define="root" :model-value="props.modelValue"
                                @update:modelValue="(value) => emit('update:modelValue', value)"/>

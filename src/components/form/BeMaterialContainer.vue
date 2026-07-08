@@ -32,7 +32,6 @@
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {VueDraggable} from "vue-draggable-plus";
-import {ref} from "vue";
 
 const props = defineProps<{
   onMoveHandle: (event?: any, orginEvent: any) => void

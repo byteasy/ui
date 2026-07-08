@@ -1,7 +1,9 @@
 <template>
   <div :style="props.modelValue.properties.marginStyle">
     <el-form-item :prop="props.modelValue.properties.fieldName"
-                  :required="props.modelValue.properties.required"
+                  :rules="[
+                    { required: props.modelValue.properties.required === true, message: getLangText(props.modelValue.properties.fieldTitle, locale) + ' ' + t('validate.required') },
+                  ]"
                   :label="getLangText(props.modelValue.properties.fieldTitle, locale)"
                   :style="renderCss(props.modelValue.properties)">
       <el-slider v-model="testValue" v-if="props.modelValue.properties.component === 'slider'"

@@ -6,7 +6,14 @@
                     v-bind="$attrs" :animation="150" group="material"
                     ghostClass="drag-ghost" chosenClass="drag-chosen">
         <el-form :style="renderCss(props.modelValue.properties)" :model="testModelValue"
-                 :inline="true">
+                 :label-position="props.modelValue.properties.labelPosition"
+                 :label-width="props.modelValue.properties.labelWidth"
+                 :label-suffix="props.modelValue.properties.labelSuffix"
+                 :hide-required-asterisk="props.modelValue.properties.hideRequiredAsterisk"
+                 :require-asterisk-position="props.modelValue.properties.requireAsteriskPosition"
+                 :inline-message="props.modelValue.properties.inlineMessage"
+                 :scroll-to-error="props.modelValue.properties.scrollToError"
+        >
           <template v-for="root in children" :key="root.id">
             <be-form-component :model-value="root" @click="onComponentClick(root)"
                                @copy="onComponentCopy(root)" @delete="onComponentDelete(root)"
