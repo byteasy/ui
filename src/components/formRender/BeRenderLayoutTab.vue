@@ -24,7 +24,6 @@ import {ref} from 'vue'
 import {useI18n} from "vue-i18n";
 import {renderCss} from "@/util/formUtil.ts";
 import {getLangText} from "@/locales/common.ts";
-import BeFormComponent from "@/components/form/BeFormComponent.vue";
 
 const props = defineProps<{
   formDefine: {

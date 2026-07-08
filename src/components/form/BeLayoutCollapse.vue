@@ -3,8 +3,8 @@
     <div :style="props.modelValue.properties.marginStyle">
       <el-collapse
         v-model="editableTabsValue"
-        :type="props.modelValue.properties.type"
-        :tab-position="props.modelValue.properties.tabPosition"
+        :accordion="props.modelValue.properties.accordion"
+        :expand-icon-position="props.modelValue.properties.expandIconPosition"
         :style="renderCss(props.modelValue.properties)">
         <template v-for="root in children" :key="root.id">
           <el-collapse-item
