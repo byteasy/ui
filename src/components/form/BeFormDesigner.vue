@@ -14,7 +14,7 @@
         <be-form-component-prop-editor @updateProps="doUpdateComponentProps"/>
       </el-splitter-panel>
       <el-splitter-panel class="p-1" v-if="isPlay === true">
-        <be-form-render-container v-model="formDefine" :height="props.height" @play-start="isPlay = true" @play-stoped="isPlay = false"/>
+        <be-page-render-container v-model="formDefine" :height="props.height" @play-start="isPlay = true" @play-stoped="isPlay = false"/>
       </el-splitter-panel>
     </el-splitter>
   </div>
@@ -24,7 +24,7 @@ import BeFormSense from "@/components/form/BeFormSense.vue";
 import BeMaterialContainer from "@/components/form/BeMaterialContainer.vue";
 import BeFormComponentPropEditor from "@/components/form/BeFormComponentPropEditor.vue";
 import {ref} from "vue";
-import BeFormRenderContainer from "@/components/form/BeFormRenderContainer.vue";
+import BePageRenderContainer from "@/components/form/BePageRenderContainer.vue";
 
 const props = defineProps<{
   height?: number

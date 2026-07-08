@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full drag-container-border">
+  <div class="w-full drag-container-border" style="padding-bottom: 15px;">
     <div :style="props.modelValue.properties.marginStyle">
       <el-row :style="renderCss(props.modelValue.properties)" :gutter="props.modelValue.properties.gutter" :justify="props.modelValue.properties.justify" :align="props.modelValue.properties.align">
         <template v-for="root in children" :key="root.id">

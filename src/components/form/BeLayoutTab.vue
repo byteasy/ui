@@ -23,15 +23,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref, watch} from 'vue'
+import {ref, watch} from 'vue'
 import BeFormComponent from "@/components/form/BeFormComponent.vue";
 import {useFormEngine} from "@/stores/formEngine.ts";
 import {storeToRefs} from "pinia";
 import {useI18n} from "vue-i18n";
 import {renderCss} from "@/util/formUtil.ts";
-import {VueDraggable} from "vue-draggable-plus";
 import {getLangText} from "@/locales/common.ts";
-import type {TabPaneName} from "element-plus";
 
 const props = defineProps<{
   modelValue: {

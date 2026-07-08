@@ -35,7 +35,7 @@
         <div
           :class="{ 'desktop-root-rect w-full' : !isMobile, 'sense-rect-border flex-column': true, 'mobile-root-rect': isMobile}"
           :style="{ height: `${props.height - 126}px` }">
-          <be-form-render :form-define="props.modelValue" :height="props.height" v-model="testFormValue"/>
+          <be-page-render :form-define="props.modelValue" :height="props.height" v-model="testFormValue"/>
         </div>
       </div>
     </div>

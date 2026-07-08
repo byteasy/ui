@@ -65,6 +65,7 @@ const componentGroups = [
         id: "LayoutGrid",
         name: "{\"zh_CN\":\"网格\",\"en\":\"Grid Layout\"}",
         path: '/components/form/BeLayoutGrid.vue',
+        render: '/components/formRender/BeRenderLayoutGrid.vue',
         icon: '<svg t="1782464167848" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9920" width="200" height="200"><path d="M180.0704 185.4464h183.2448v183.2448H180.0704zM420.4032 185.4464h183.2448v183.2448H420.4032zM660.736 185.4464h183.2448v183.2448h-183.2448zM180.0704 411.8528h183.2448v183.2448H180.0704zM420.4032 411.8528h183.2448v183.2448H420.4032zM660.736 411.8528h183.2448v183.2448h-183.2448zM180.0704 638.2592h183.2448v183.2448H180.0704zM420.4032 638.2592h183.2448v183.2448H420.4032zM660.736 638.2592h183.2448v183.2448h-183.2448z" p-id="9921"></path></svg>',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGrid.vue'},
@@ -175,8 +176,34 @@ const componentGroups = [
       {
         id: "LayoutCollapse",
         name: "{\"zh_CN\":\"折叠面板\",\"en\":\"Collapse Layout\"}",
-        path: '/components/TunaStringArraySplitInput.vue',
+        path: '/components/form/BeLayoutCollapse.vue',
         icon: '<svg t="1782465967342" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13153" width="200" height="200"><path d="M585.7 661.3H211.3v-71.7h374.3v71.7zM287 291H135.7L64 362.7v525.7l71.7 71.7h525.7l71.7-71.7V737.1h151.3l75.7-75.7V139.7L884.4 64H362.7L287 139.7V291z m75.7-151.3h521.7v521.7H733.1V362.7L661.4 291H362.7V139.7z m298.6 748.6H135.7V362.7h525.7v525.7z" p-id="13154"></path></svg>',
+        propsForm: [
+          { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutCollapse.vue'},
+          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
+          { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
+        ],
+        properties: {
+          width: '100%',
+          height: '100%',
+        },
+        children: [
+          {
+            id: "LayoutCollapseItem",
+            name: "{\"zh_CN\":\"面板页\",\"en\":\"Layout Collapse Item\"}",
+            path: '/components/form/BeLayoutCollapseItem.vue',
+            propsForm: [
+              { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutCollapseItem.vue' },
+              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
+              { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+            ],
+            properties: {
+              title: "{\"zh_CN\":\"未命名\",\"en\":\"Untitled name\"}",
+              width: '100%',
+              height: '100%',
+            }
+          },
+        ]
       },
     ]
   },
@@ -188,7 +215,7 @@ const componentGroups = [
         id: "FormInputSlider",
         name: "{\"zh_CN\":\"滑块\",\"en\":\"Slider\"}",
         path: '/components/form/BeFormInput.vue',
-        render: '/components/formRender/BeFormInputRender.vue',
+        render: '/components/formRender/BeRenderFormInput.vue',
         icon: '<svg t="1782982464933" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13712" width="200" height="200"><path d="M228.704 212.096v66.688H112V212.096h116.704z m333.184 266.592v66.688H112v-66.688h449.888z m-266.496 266.72v66.592H112v-66.688l183.392 0.096z m116.608-600c8.992 0 16.8 3.296 23.488 9.888 6.496 6.496 9.888 14.496 9.888 23.488v133.312c0 8.992-3.296 16.8-9.888 23.488a32.416 32.416 0 0 1-23.488 9.888H278.816c-8.992 0-16.8-3.296-23.488-9.888a32.128 32.128 0 0 1-9.888-23.488V178.912c0-8.992 3.296-16.8 9.888-23.488 6.496-6.496 14.304-9.888 23.488-9.888l133.184-0.096z m66.688 533.28c8.992 0 16.8 3.296 23.488 9.888 6.496 6.496 9.888 14.496 9.888 23.488v133.312c0 8.992-3.296 16.8-9.888 23.488a32.416 32.416 0 0 1-23.488 9.888H345.28c-8.992 0-16.8-3.296-23.488-9.888a32.416 32.416 0 0 1-9.888-23.488v-133.312c0-8.992 3.296-16.8 9.888-23.488 6.496-6.496 14.304-9.888 23.488-9.888l133.408-0.096zM912 212.096v66.688H462.112V212.096H912z m0 533.312v66.592H528.608v-66.688l383.392 0.096z m-166.784-333.312c8.992 0 16.8 3.296 23.488 9.888 6.496 6.496 9.888 14.496 9.888 23.488v133.312c0 8.992-3.296 16.8-9.888 23.488a32.416 32.416 0 0 1-23.488 9.888h-133.216c-8.992 0-16.8-3.296-23.488-9.888a32.128 32.128 0 0 1-9.888-23.488v-133.408c0-8.992 3.296-16.8 9.888-23.488 6.496-6.496 14.496-9.888 23.488-9.888l133.216 0.096z m166.784 66.592v66.688h-116.704v-66.688H912z" p-id="13713"></path></svg>',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputSlider' },
@@ -203,7 +230,7 @@ const componentGroups = [
         name: "{\"zh_CN\":\"数字\",\"en\":\"Number\"}",
         path: '/components/form/BeFormInput.vue',
         icon: '<svg t="1783063371922" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9214" width="200" height="200"><path d="M960 1024H64a64 64 0 0 1-64-64V64a64 64 0 0 1 64-64h896a64 64 0 0 1 64 64v896a64 64 0 0 1-64 64z m0-896a64 64 0 0 0-64-64H128a64 64 0 0 0-64 64v768a64 64 0 0 0 64 64h768a64 64 0 0 0 64-64V128z m-128 640h-128a64 64 0 0 1 0-128h64V576h-64a64 64 0 0 1 0-128h64V384h-64a64 64 0 0 1 0-128h128a64 64 0 0 1 64 64v384a64 64 0 0 1-64 64z m-320-128a64 64 0 0 1 0 128H384a64 64 0 0 1-64-64V512a64 64 0 0 1 64-64h64V384H384a64 64 0 0 1 0-128h128a64 64 0 0 1 64 64v192a64 64 0 0 1-64 64H448v64h64z m-320 128a64 64 0 0 1-64-64V320a64 64 0 0 1 128 0v384a64 64 0 0 1-64 64z" p-id="9215"></path></svg>',
-        render: '/components/formRender/BeFormInputRender.vue',
+        render: '/components/formRender/BeRenderFormInput.vue',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputNumber' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
@@ -217,7 +244,7 @@ const componentGroups = [
         name: "{\"zh_CN\":\"输入框\",\"en\":\"Text Input\"}",
         path: '/components/form/BeFormInput.vue',
         icon: '<svg t="1783411305540" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2682" width="200" height="200"><path d="M118.784 727.04h778.24V296.96h-778.24v430.08zM77.824 256h860.16v512H77.824V256zM194.56 409.6v204.8c0 12.288 8.192 20.48 20.48 20.48s20.48-8.192 20.48-20.48V409.6c0-12.288-8.192-20.48-20.48-20.48s-20.48 8.192-20.48 20.48z" p-id="2683"></path></svg>',
-        render: '/components/formRender/BeFormInputRender.vue',
+        render: '/components/formRender/BeRenderFormInput.vue',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputText' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
