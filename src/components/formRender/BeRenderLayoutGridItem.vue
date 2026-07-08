@@ -1,118 +1,39 @@
 <template>
   <div class="w-full">
-    <div :style="props.modelValue.properties.marginStyle">
-      <VueDraggable
-        class="w-full p-2 be-material-target sense-rect-border drag-rect-border"
-        v-model="children"
-        v-bind="$attrs" :animation="150" group="material"
-        ghostClass="drag-ghost" chosenClass="drag-chosen">
-        <div :style="renderCss(props.modelValue.properties)">
-          <template v-for="root in children" :key="root.id">
-            <be-form-component :model-value="root" @click="onComponentClick(root)"
-                               @copy="onComponentCopy(root)" @delete="onComponentDelete(root)"
-                               :active="root.id === activeComponent?.id"
-                               @update:modelValue="value => updateChildrenValue(value)"/>
-          </template>
-        </div>
-      </VueDraggable>
+    <div :style="props.formDefine.properties.marginStyle">
+      <div :style="renderCss(props.formDefine.properties)">
+        <template v-for="root in children" :key="root.id">
+          <be-render-component class="w-full" :form-define="root" :model-value="props.modelValue"
+                               @update:modelValue="(value) => emit('update:modelValue', value)"/>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import {ref, watch} from 'vue'
-import {VueDraggable} from "vue-draggable-plus";
-import BeFormComponent from "@/components/form/BeFormComponent.vue";
-import {useFormEngine} from "@/stores/formEngine.ts";
-import {storeToRefs} from "pinia";
+import {ref} from 'vue'
 import {useI18n} from "vue-i18n";
 import {renderCss} from "@/util/formUtil.ts";
 
 const props = defineProps<{
-  modelValue: {
+  formDefine: {
     id: string
     name: string
     path: string
+    render: string
     icon: string
     propsForm: Array<object>
     properties: object
     children: any[]
-  }
+  },
+  modelValue: Record<string, any>
 }>()
 
-const formEngine = useFormEngine()
-const children = ref([...(props.modelValue.children || [])])
+const children = ref([...(props.formDefine.children || [])])
 const emit = defineEmits(['selected', 'update:modelValue'])
-const {activeComponent} = storeToRefs(formEngine)
 const {t, locale} = useI18n()
 
-function onComponentClick(ponent) {
-  formEngine.setActiveComponent(ponent)
-}
-
-function onComponentCopy(root) {
-  const newRoot = JSON.parse(JSON.stringify(root))
-  newRoot.id = newRoot.id + '-' + new Date().getTime()
-  children.value.push(newRoot)
-}
-
-function onComponentDelete(root) {
-  children.value = children.value.filter(item => item.id !== root.id)
-  if (root.id === activeComponent.value?.id) {
-    formEngine.setActiveComponent(null)
-  }
-}
-
-watch(() => children.value, (newVal, oldVal) => {
-    doUpdateModelValue()
-  },
-  {deep: true})
-
-watch(
-  () => {
-    return JSON.stringify(collectAllPropsNodes(props.modelValue.children)
-    )
-  },
-  () => {
-    children.value = props.modelValue.children
-  }
-)
-
-function collectAllPropsNodes(list: any[]): Array<{ id: string; properties: any }> {
-  const result: Array<{ id: string; properties: any }> = []
-  if (!Array.isArray(list)) return result
-
-  for (const node of list) {
-    result.push({
-      id: node.id,
-      properties: node.properties
-    })
-    result.push(...collectAllPropsNodes(node.children))
-  }
-  return result
-}
-
-function doUpdateModelValue() {
-  const newValue = JSON.parse(JSON.stringify(props.modelValue))
-  newValue.children = children.value
-  emit('update:modelValue', newValue)
-}
-
-function updateChildrenValue(child) {
-  const index = children.value.findIndex(item => item.id === child.id)
-  if (index > -1) {
-    children.value[index] = child
-  }
-  doUpdateModelValue()
-}
 </script>
 <style scoped>
-.drag-rect-border {
-  min-height: 100px;
-  border: 1px dashed var(--el-color-info);
-}
-
-.drag-container-border {
-  border: 1px dashed var(--el-color-primary);
-}
 </style>
 

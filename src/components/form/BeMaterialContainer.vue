@@ -82,6 +82,7 @@ const componentGroups = [
             id: "LayoutGridItem",
             name: "{\"zh_CN\":\"网格元素\",\"en\":\"Grid Layout Item\"}",
             path: '/components/form/BeLayoutGridItem.vue',
+            render: '/components/formRender/BeRenderLayoutGridItem.vue',
             propsForm: [
               { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
               { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
@@ -97,6 +98,7 @@ const componentGroups = [
             id: "LayoutGridItem",
             name: "{\"zh_CN\":\"网格元素\",\"en\":\"Grid Layout Item\"}",
             path: '/components/form/BeLayoutGridItem.vue',
+            render: '/components/formRender/BeRenderLayoutGridItem.vue',
             propsForm: [
               { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
               { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
@@ -112,6 +114,7 @@ const componentGroups = [
             id: "LayoutGridItem",
             name: "{\"zh_CN\":\"网格元素\",\"en\":\"Grid Layout Item\"}",
             path: '/components/form/BeLayoutGridItem.vue',
+            render: '/components/formRender/BeRenderLayoutGridItem.vue',
             propsForm: [
               { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
               { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
