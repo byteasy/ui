@@ -32,9 +32,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ref, watch} from 'vue'
-import {useFormEngine} from "@/stores/formEngine.ts";
-import {storeToRefs} from "pinia";
+import {ref} from 'vue'
 import {useI18n} from "vue-i18n";
 import {renderCss} from "@/util/formUtil.ts";
 import {getLangText} from "@/locales/common.ts";
@@ -51,15 +49,9 @@ const props = defineProps<{
   }
 }>()
 
-const formEngine = useFormEngine()
-const emit = defineEmits(['selected', 'update:modelValue'])
-const {activeComponent} = storeToRefs(formEngine)
+const emit = defineEmits(['click', 'selected', 'update:modelValue'])
 const {t, locale} = useI18n()
 const testValue = ref(undefined)
-
-function onComponentClick(ponent) {
-  formEngine.setActiveComponent(ponent)
-}
 
 </script>
 <style scoped>

@@ -160,8 +160,18 @@ const componentGroups = [
       {
         id: "LayoutForm",
         name: "{\"zh_CN\":\"表单\",\"en\":\"Form Layout\"}",
-        path: '/components/TunaStringArraySplitInput.vue',
+        path: '/components/form/BeLayoutForm.vue',
+        render: '/components/formRender/BeRenderLayoutForm.vue',
         icon: '<svg t="1782465930753" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="12181" width="200" height="200"><path d="M797.2352 137.01632h-124.06272v-16.58368a30.72 30.72 0 0 0-61.44 0v16.58368h-182.9888v-16.58368a30.72 30.72 0 0 0-61.44 0v16.58368H228.05504c-44.47744 0-80.65536 36.17792-80.65536 80.65536v624.9472c0 44.47744 36.18304 80.65536 80.65536 80.65536H797.2352c44.47744 0 80.65536-36.17792 80.65536-80.65536V217.67168c0-44.47744-36.18304-80.65536-80.65536-80.65536z m19.21536 374.43072H208.83968v-133.12h607.61088v133.12z m-607.61088 61.44h607.61088v133.12H208.83968v-133.12z m19.21536-374.43072h139.24864V215.04a30.72 30.72 0 0 0 61.44 0v-16.58368h182.98368V215.04a30.72 30.72 0 0 0 61.44 0v-16.58368h124.06272a19.24096 19.24096 0 0 1 19.21536 19.21536v99.21536H208.83968V217.67168a19.23072 19.23072 0 0 1 19.21536-19.21536zM797.2352 861.82912H228.05504a19.23584 19.23584 0 0 1-19.21536-19.21536v-75.17184h607.61088v75.17184a19.23584 19.23584 0 0 1-19.21536 19.21536z" p-id="12182"></path></svg>',
+        propsForm: [
+          { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutForm.vue'},
+          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
+          { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
+        ],
+        properties: {
+          width: '100%',
+          height: '100%',
+        },
       },
       {
         id: "LayoutCollapse",
