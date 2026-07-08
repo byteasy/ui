@@ -4,8 +4,10 @@
                   :rules="[
                     { required: props.modelValue.properties.required === true, message: getLangText(props.modelValue.properties.fieldTitle, locale) + ' ' + t('validate.required') },
                   ]"
-                  :label="getLangText(props.modelValue.properties.fieldTitle, locale)"
                   :style="renderCss(props.modelValue.properties)">
+      <template v-slot:label="scope">
+        <span :style="props.modelValue.properties.fontStyle">{{ getLangText(props.modelValue.properties.fieldTitle, locale) + scope.label }}</span>
+      </template>
       <el-slider v-model="testValue" v-if="props.modelValue.properties.component === 'slider'"
                  :min="props.modelValue.properties.min"
                  :max="props.modelValue.properties.max"

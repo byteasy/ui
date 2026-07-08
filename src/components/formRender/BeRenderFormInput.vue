@@ -5,8 +5,10 @@
                     { required: props.formDefine.properties.required === true, message: getLangText(props.formDefine.properties.fieldTitle, locale) + ' ' + t('validate.required') },
                     { validator: (rule, value, callback) => callback(), trigger: 'blur' }
                   ]"
-                  :label="getLangText(props.formDefine.properties.fieldTitle, locale)"
                   :style="renderCss(props.formDefine.properties)">
+      <template v-slot:label="scope">
+        <span :style="props.modelValue.properties.fontStyle">{{ getLangText(props.modelValue.properties.fieldTitle, locale) + scope.label }}</span>
+      </template>
       <el-slider v-if="props.formDefine.properties.component === 'slider'"
                  v-model="formValue[props.formDefine.properties.fieldName]"
                  :min="props.formDefine.properties.min"
