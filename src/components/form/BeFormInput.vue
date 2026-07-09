@@ -45,7 +45,6 @@
         :clearable="props.modelValue.properties.clearable"
         :type="props.modelValue.properties.type"
         :format="props.modelValue.properties.format"
-        :default-value="new Date(Date.now() + 7 * 24 * 3600 * 1000)"
         :value-format="props.modelValue.properties.valueFormat"
         :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
       />
