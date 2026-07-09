@@ -1,29 +1,149 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
+import { doHttpGet } from '@/api/common/platform'
+import AsideMain from '@/views/layout/AsideMain.vue'
+import XEUtils from 'xe-utils'
+import {getRouteComponents} from "@/util/autoImportComponent.ts";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/' : '/'),
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
-    },
-    {
-      // history模式需要通配所有路由，详见vue-router文档
-      path: '/app/app-vue3/:pathMatch(.*)*',
-      name: 'app-vue3',
-      component: () => import('../views/SubContainer.vue'),
-    }
   ],
 })
+
+/**
+ * 基座只有静态路由，并动态加载微应用的路由入口
+ */
+let isMicroAppRouterLoad = false
+const { modules } = getRouteComponents()
+console.log('all ui component', modules)
+
+router.beforeEach(async (to, from, next) => {
+  if (!isMicroAppRouterLoad) {
+    console.log('micro app router not init. try to init', to.fullPath)
+    await doHttpGet('/platformSvr/sapi/resources/leftMenu', { fullPath: to.fullPath }).then(
+      (response) => {
+        response.data.forEach((item) => {
+          try {
+            const dynamicRoute: RouteRecordRaw = {}
+            rebuildLeftMenus(dynamicRoute, item)
+            console.log('micro app add dynamicRoute', dynamicRoute, item)
+            router.addRoute(dynamicRoute)
+            console.log('micro app routes length:', router.getRoutes().length)
+          } catch (err) {
+            console.log('micro app add router err', err)
+          }
+        })
+      },
+    )
+    console.log('micro app router init finished', router.getRoutes().length)
+    isMicroAppRouterLoad = true
+    next({ ...to, replace: true })
+    return
+  }
+  console.log('micro app goto', to.fullPath)
+  next()
+})
+
+function rebuildLeftMenus(node, menu) {
+  console.log('menu', menu)
+  // 支持一级菜单
+  if (menu.type === 'MENU' && (menu.parentId === null || menu.parentId === undefined)) {
+    const idx = (menu.routerUrl || '').lastIndexOf('/')
+    node.path = filteredQueryParameter(menu.routerUrl.substring(0, idx))
+    node.name = menu.code + 'Parent'
+    node.component = AsideMain
+    node.children = [
+      {
+        path: filteredQueryParameter(menu.routerUrl.substring(idx)),
+        name: menu.code,
+        meta: { title: menu.title, noCache: menu.keepAlive === 'NO' },
+        component: getModule(menu.component),
+      },
+    ]
+  }
+  if (hasChildrenMenu(menu)) {
+    node.path = filteredQueryParameter(menu.routerUrl)
+    node.name = menu.code
+    node.component = AsideMain
+    node.redirect = menu.redirectUrl
+    node.children = []
+    node.meta = { title: menu.name }
+    menu.childrenList.forEach((child) => {
+      if (child.type === 'MENU' || child.type === 'DIRECTORY') {
+        if (hasChildrenMenu(child)) {
+          child.childrenList.forEach((subChild) => {
+            if (subChild.type === 'MENU') {
+              node.children.push({
+                path: filteredQueryParameter(child.routerUrl) + '/' + filteredQueryParameter(subChild.routerUrl),
+                name: subChild.code,
+                meta: {
+                  title: subChild.name,
+                  affix: subChild.affix === 'YES',
+                  noCache: subChild.keepAlive === 'NO',
+                  query: parseQueryParameter(subChild.routerUrl),
+                },
+                component: getModule(subChild.component),
+              })
+            }
+          })
+        } else {
+          node.children.push({
+            path: filteredQueryParameter(child.routerUrl),
+            name: child.code,
+            meta: {
+              title: child.name,
+              affix: child.affix === 'YES',
+              noCache: child.keepAlive === 'NO',
+              query: parseQueryParameter(child.routerUrl),
+            },
+            component: getModule(child.component),
+          })
+        }
+      }
+    })
+  }
+}
+
+function filteredQueryParameter(value) {
+  if (value.indexOf('?') >= 0) {
+    return value.split('?')[0]
+  } else {
+    return value
+  }
+}
+
+function parseQueryParameter(value) {
+  const index = value.indexOf('?')
+  if (index >= 0) {
+    return value.substring(index + 1)
+  } else {
+    return undefined
+  }
+}
+
+function hasChildrenMenu(menu) {
+  if (XEUtils.hasOwnProp(menu, 'childrenList') && menu.childrenList !== null && menu.childrenList.length > 0) {
+    const len = menu.childrenList.length
+    for (let i = 0; i < len; i++) {
+      const child = menu.childrenList[i]
+      if (child.type === 'MENU') {
+        return true
+      }
+      const childHasChildren = hasChildrenMenu(child)
+      if (childHasChildren === true) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+function getModule(name) {
+  if (modules['..' + name] !== undefined) {
+    return modules['..' + name]
+  }
+  return modules['../views/common/Error404.vue']
+}
 
 export default router
