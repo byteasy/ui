@@ -7,33 +7,50 @@
                   ]"
                   :style="renderCss(props.formDefine.properties)">
       <template v-slot:label="scope">
-        <span :style="props.formDefine.properties.fontStyle">{{ getLangText(props.formDefine.properties.fieldTitle, locale) + scope.label }}</span>
+        <span :style="props.formDefine.properties.fontStyle">{{
+            getLangText(props.formDefine.properties.fieldTitle, locale) + scope.label
+          }}</span>
       </template>
       <el-slider v-if="props.formDefine.properties.component === 'slider'"
+                 class="w-full"
                  v-model="formValue[props.formDefine.properties.fieldName]"
                  :min="props.formDefine.properties.min"
                  :max="props.formDefine.properties.max"
                  :show-input="props.formDefine.properties.showInput"
                  :step="props.formDefine.properties.step"/>
       <el-input-number v-else-if="props.formDefine.properties.component === 'number'"
+                       class="w-full"
                        v-model="formValue[props.formDefine.properties.fieldName]"
                        :controls="props.formDefine.properties.controls"
                        :controls-position="props.formDefine.properties.controlsPosition === true ? 'right' : ''"
                        :min="props.formDefine.properties.min"
                        :max="props.formDefine.properties.max"
                        :step="props.formDefine.properties.step"/>
-      <el-input v-model="formValue[props.formDefine.properties.fieldName]" v-else-if="props.formDefine.properties.component === 'text'"
-                       :type="props.formDefine.properties.type"
-                       :minlength="props.formDefine.properties.minlength"
-                       :maxlength="props.formDefine.properties.maxlength"
-                       :show-word-limit="props.formDefine.properties.showWordLimit"
-                       :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
-                       :clearable="props.formDefine.properties.clearable"
-                       :show-password="props.formDefine.properties.showPassword"
-                       :rows="props.formDefine.properties.rows"
-                       :autosize="props.formDefine.properties.autosize"
-                       :tabindex="props.formDefine.properties.tabindex"
-                       :word-limit-position="props.formDefine.properties.wordLimitPosition" />
+      <el-input v-model="formValue[props.formDefine.properties.fieldName]"
+                v-else-if="props.formDefine.properties.component === 'text'"
+                class="w-full"
+                :type="props.formDefine.properties.type"
+                :minlength="props.formDefine.properties.minlength"
+                :maxlength="props.formDefine.properties.maxlength"
+                :show-word-limit="props.formDefine.properties.showWordLimit"
+                :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+                :clearable="props.formDefine.properties.clearable"
+                :show-password="props.formDefine.properties.showPassword"
+                :rows="props.formDefine.properties.rows"
+                :autosize="props.formDefine.properties.autosize"
+                :tabindex="props.formDefine.properties.tabindex"
+                :word-limit-position="props.formDefine.properties.wordLimitPosition"/>
+      <el-date-picker
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        v-else-if="props.formDefine.properties.component === 'date'"
+        :editable="props.formDefine.properties.editable"
+        :clearable="props.formDefine.properties.clearable"
+        :type="props.formDefine.properties.type"
+        :format="props.formDefine.properties.format"
+        :value-format="props.formDefine.properties.valueFormat"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+      />
     </el-form-item>
   </div>
 </template>

@@ -107,3 +107,8 @@ export const parseComponentParam = (queryString: string) => {
   }
   return undefined
 }
+
+export const execDefaultValueScript = (scriptText, ctx) => {
+  const fn = new Function("ctx", scriptText)
+  return fn(ctx)
+}
