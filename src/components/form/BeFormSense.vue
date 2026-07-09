@@ -148,16 +148,24 @@ defineExpose({
 }
 
 .mobile-container {
-  width: 459px !important;
-  height: 945px !important;
-  background-image: url('@/assets/img/bgIphone.svg');;
+  position: relative; /* 关键 */
+  width: calc(0.5 * 60vh) !important;
+  height: 60vh !important;
+  background-image: url('@/assets/img/bgIphone.svg');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .mobile-root-rect {
-  margin-left: 24px;
-  margin-top: 100px;
-  width: 414px !important;
-  height: 736px !important;
+  position: absolute;
+  /* 百分比是相对于父容器宽高 */
+  left: 8%;    /* 距离父左侧8%宽度 */
+  top: 10%;    /* 距离父顶部16%高度 */
+  right: 8%;
+  bottom: 10%;
+  width: auto !important;
+  height: auto !important;
   overflow-y: auto;
   overflow-x: hidden;
 }

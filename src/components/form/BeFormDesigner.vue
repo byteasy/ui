@@ -2,7 +2,7 @@
   <div class="w-full"
        :style="{ height: props.height ? `${props.height - 60}px !important` : '100vh !important' }">
     <el-splitter class="flex-row w-full h-full">
-      <el-splitter-panel class="p-1" size="300" collapsible>
+      <el-splitter-panel class="p-1" size="300" collapsible v-if="isPlay === false">
         <BeMaterialContainer ref="refMaterialContainer" @drag-start="onMaterialDrapStart"
                              @drag-end="onMaterialDrapEnd" :on-move-handle="onDragMoveHandle"/>
       </el-splitter-panel>
