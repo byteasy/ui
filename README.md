@@ -94,3 +94,8 @@
 7.4 前后端打包
 - [一键打包脚本](https://github.com/byteasy/cloud-platform/blob/main/doc/sh/autoDeploy.sh) 打包步骤可参照此演示后台的自动部署脚本
 
+## 八、前端分支说明
+
+- byteasy-base/main 微前端的基座分支
+- byteasy-platform/platform 微前端应用分支：基础平台 
+
