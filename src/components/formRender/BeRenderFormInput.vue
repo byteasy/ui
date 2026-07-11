@@ -23,6 +23,7 @@
                        v-model="formValue[props.formDefine.properties.fieldName]"
                        :controls="props.formDefine.properties.controls"
                        :controls-position="props.formDefine.properties.controlsPosition === true ? 'right' : ''"
+                       :tabindex="props.formDefine.properties.tabindex"
                        :min="props.formDefine.properties.min"
                        :max="props.formDefine.properties.max"
                        :step="props.formDefine.properties.step"/>
@@ -51,7 +52,6 @@
         :value-format="props.formDefine.properties.valueFormat"
         :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
       />
-      {{props.formDefine.properties}}
     </el-form-item>
   </div>
 </template>
