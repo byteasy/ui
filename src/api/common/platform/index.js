@@ -62,3 +62,14 @@ export function getDictionaryValues(code) {
     method: 'get'
   })
 }
+
+export function runDefaultValueScript(input, script) {
+  return request({
+    url: '/platformSvr/sapi/jsExec/form/run',
+    method: 'post',
+    data: {
+      input: input,
+      script: script
+    }
+  })
+}

@@ -258,7 +258,7 @@ const componentGroups = [
           { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
-        properties: { width: '100%', height: '100%', component: 'text', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'text', minlength: 0, maxlength: 60 },
+        properties: { width: '100%', height: '100%', component: 'text', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'text', minlength: 0, maxlength: 60 , clearable: true, editable: true },
       },
       {
         id: "FormInputDate",
@@ -272,7 +272,7 @@ const componentGroups = [
           { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
-        properties: { width: '100%', height: '100%', component: 'date', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'date' },
+        properties: { width: '100%', height: '100%', component: 'date', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'date', format: 'YYYY-MM-DD', valueFormat: 'YYYY-MM-DD', clearable: true, editable: true },
       },
     ]
   },

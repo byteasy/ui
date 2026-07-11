@@ -51,6 +51,7 @@
         :value-format="props.formDefine.properties.valueFormat"
         :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
       />
+      {{props.formDefine.properties}}
     </el-form-item>
   </div>
 </template>
@@ -59,6 +60,8 @@ import {onMounted, ref} from 'vue'
 import {useI18n} from "vue-i18n";
 import {renderCss} from "@/util/formUtil.ts";
 import {getLangText} from "@/locales/common.ts";
+import dayjs from "dayjs";
+import {runDefaultValueScript} from "@/api/common/platform";
 
 const props = defineProps<{
   formDefine: {
@@ -84,10 +87,21 @@ onMounted(() => {
       if (props.formDefine.properties.component === 'slider'
         || props.formDefine.properties.component === 'number') {
         defaultValue = Number.parseInt(props.formDefine.properties.defaultValue)
+      } else if(props.formDefine.properties.component === 'date') {
+        if (props.formDefine.properties.defaultValue === 'now') {
+          defaultValue = dayjs(new Date()).format(props.formDefine.properties.valueFormat)
+        }
       } else {
         defaultValue = props.formDefine.properties.defaultValue
       }
-      formValue.value[props.formDefine.properties.fieldName] = defaultValue
+      if (props.formDefine.properties.defaultValueScript !== undefined) {
+        runDefaultValueScript(props.formDefine.properties,
+          props.formDefine.properties.defaultValueScript).then(rsp => {
+          formValue.value[props.formDefine.properties.fieldName] = dayjs(new Date(Number.parseInt(rsp.data.output))).format(props.formDefine.properties.valueFormat)
+        })
+      } else {
+        formValue.value[props.formDefine.properties.fieldName] = defaultValue;
+      }
     }
   }
 })
