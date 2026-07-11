@@ -23,6 +23,7 @@
                        :controls="props.modelValue.properties.controls"
                        :controls-position="props.modelValue.properties.controlsPosition === true ? 'right' : ''"
                        :tabindex="props.modelValue.properties.tabindex"
+                       :precision="props.modelValue.properties.precision"
                        :max="props.modelValue.properties.max"
                        :step="props.modelValue.properties.step"/>
       <el-input v-model="testValue" v-else-if="props.modelValue.properties.component === 'text'"

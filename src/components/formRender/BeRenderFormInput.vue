@@ -24,6 +24,7 @@
                        :controls="props.formDefine.properties.controls"
                        :controls-position="props.formDefine.properties.controlsPosition === true ? 'right' : ''"
                        :tabindex="props.formDefine.properties.tabindex"
+                       :precision="props.formDefine.properties.precision"
                        :min="props.formDefine.properties.min"
                        :max="props.formDefine.properties.max"
                        :step="props.formDefine.properties.step"/>
@@ -86,7 +87,7 @@ onMounted(() => {
       let defaultValue
       if (props.formDefine.properties.component === 'slider'
         || props.formDefine.properties.component === 'number') {
-        defaultValue = Number.parseInt(props.formDefine.properties.defaultValue)
+        defaultValue = props.formDefine.properties.defaultValue
       } else if(props.formDefine.properties.component === 'date') {
         if (props.formDefine.properties.defaultValue === 'now') {
           defaultValue = dayjs(new Date()).format(props.formDefine.properties.valueFormat)
