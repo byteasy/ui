@@ -314,7 +314,7 @@ const componentGroups = [
           { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
-        properties: { width: '100%', height: '100%', component: 'checkboxInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true },
+        properties: { width: '100%', height: '100%', component: 'checkboxInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true, type: 'string' },
       },
       {
         id: "FormInputSelect",

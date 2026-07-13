@@ -76,6 +76,18 @@
       >
         <el-radio v-for="op in props.modelValue.properties.options" :key="op.id" :label="getLangText(op.label, locale)" :value="op.value" />
       </el-radio-group>
+      <be-check-box-group
+        v-model="testValue"
+        class="w-full"
+        v-else-if="props.modelValue.properties.component === 'checkboxInput'"
+        :clearable="props.modelValue.properties.clearable"
+        :tabindex="props.modelValue.properties.tabindex"
+        :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
+      >
+        <template #default>
+          <el-checkbox v-for="op in props.modelValue.properties.options" :key="op.id" :label="getLangText(op.label, locale)" :value="op.value" />
+        </template>
+      </be-check-box-group>
     </el-form-item>
   </div>
 </template>
