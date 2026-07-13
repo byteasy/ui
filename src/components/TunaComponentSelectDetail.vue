@@ -12,7 +12,7 @@
                 :class="{ 'selectable-item flex-column ml-1 justify-content-center align-items-center' : true, 'selectable-item-active': isInSelectedRows(com.path) }"
                 v-for="com in group.components" :key="com.path" @click="onComponentClick(com)">
                 <div class="el-card">
-                  <tuna-svg-icon :svg="com.icon" size="64"/>
+                  <tuna-svg-icon :svg="com.icon" size="48"/>
                 </div>
                 <tuna-i18n-value :model-value="com.name"/>
               </div>
