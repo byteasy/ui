@@ -20,13 +20,13 @@ const localList = ref<string[]>([])
 watch(
   () => props.modelValue,
   (val) => {
-    const list = val ? val.split(',') : []
+    const list = val ? JSON.parse(val) : []
     localList.value = list.length ? [...list] : []
   },
   { immediate: true }
 )
 
 function syncParent() {
-  emit('update:modelValue', localList.value.join(','))
+  emit('update:modelValue', JSON.stringify(localList.value))
 }
 </script>
