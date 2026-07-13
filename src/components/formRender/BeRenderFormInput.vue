@@ -53,6 +53,23 @@
         :value-format="props.formDefine.properties.valueFormat"
         :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
       />
+      <be-tag-input
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        v-else-if="props.formDefine.properties.component === 'tagInput'"
+        :editable="props.formDefine.properties.editable"
+        :max="props.formDefine.properties.max"
+        :tag-type="props.formDefine.properties.tagType"
+        :tag-effect="props.formDefine.properties.tagEffect"
+        :effect="props.formDefine.properties.effect"
+        :trigger="props.formDefine.properties.trigger"
+        :draggable="props.formDefine.properties.draggable"
+        :delimiter ="props.formDefine.properties.delimiter"
+        :clearable="props.formDefine.properties.clearable"
+        :tabindex="props.formDefine.properties.tabindex"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+        />
+      {{ formValue[props.formDefine.properties.fieldName] }}
     </el-form-item>
   </div>
 </template>

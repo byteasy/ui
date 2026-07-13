@@ -50,6 +50,21 @@
         :value-format="props.modelValue.properties.valueFormat"
         :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
       />
+      <be-tag-input
+        v-model="testValue"
+        class="w-full"
+        v-else-if="props.modelValue.properties.component === 'tagInput'"
+        :max="props.modelValue.properties.max"
+        :tag-type="props.modelValue.properties.tagType"
+        :tag-effect="props.modelValue.properties.tagEffect"
+        :effect="props.modelValue.properties.effect"
+        :trigger="props.modelValue.properties.trigger"
+        :draggable="props.modelValue.properties.draggable"
+        :delimiter ="props.modelValue.properties.delimiter"
+        :clearable="props.modelValue.properties.clearable"
+        :tabindex="props.modelValue.properties.tabindex"
+        :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
+      />
     </el-form-item>
   </div>
 </template>
