@@ -65,6 +65,17 @@
         :tabindex="props.modelValue.properties.tabindex"
         :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
       />
+
+      <el-radio-group
+        v-model="testValue"
+        class="w-full"
+        v-else-if="props.modelValue.properties.component === 'radioInput'"
+        :clearable="props.modelValue.properties.clearable"
+        :tabindex="props.modelValue.properties.tabindex"
+        :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
+      >
+        <el-radio v-for="op in props.modelValue.properties.options" :key="op.id" :label="getLangText(op.label, locale)" :value="op.value" />
+      </el-radio-group>
     </el-form-item>
   </div>
 </template>

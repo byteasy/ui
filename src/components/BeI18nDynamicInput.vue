@@ -1,19 +1,21 @@
 <template>
-    <el-input ref="refInput" v-model="currentLangInput" @input="handleDirectInput" v-bind="bindAttrs">
-      <template #append>
+  <el-input ref="refInput" v-model="currentLangInput" @input="handleDirectInput" v-bind="$attrs">
+    <template #append>
+      <div style="padding: 4px !important; margin: 0 !important;" class="flex-row align-items-center">
         <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }"
-                 @click="onI18nClick">
+                 :size="12" @click="onI18nClick">
           <IconLocalLanguage/>
         </el-icon>
-      </template>
-    </el-input>
+      </div>
+    </template>
+  </el-input>
 </template>
 
 <script setup lang="ts">
 
 import {computed, defineExpose, onMounted, ref, useAttrs} from 'vue'
 import {useModal} from '@/components/dialog/useModal.ts'
-import TunaI18nDynamicForm from "@/components/TunaI18nDynamicForm.vue"
+import BeI18NDynamicForm from "@/components/BeI18nDynamicForm.vue"
 import {useI18n} from 'vue-i18n'
 import {langMap} from "@/locales/common.ts"
 
@@ -84,7 +86,7 @@ const onI18nClick = () => {
   if (bindAttrs.disabled === true) return
 
   open(
-    TunaI18nDynamicForm,
+    BeI18NDynamicForm,
     {
       // 把 string 解析成对象传给弹窗
       i18nData: safeParseJson(props.modelValue) || {},
@@ -121,3 +123,8 @@ defineExpose({
   setLanguageValue
 })
 </script>
+<style scoped>
+:deep(.el-input-group__append) {
+  padding: 0 0; /* 减小内边距，根据需要调整 */
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <tuna-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :column="props.column" />
-  <tuna-i18n-dynamic-input v-else-if="props.column.isI18n === 'YES' && props.column.type === 'STRING'"
+  <be-i18n-dynamic-input v-else-if="props.column.isI18n === 'YES' && props.column.type === 'STRING'"
                            :maxlength="props.column.maxLength"
                            :minlength="props.column.minLength"/>
   <el-input

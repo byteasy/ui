@@ -69,6 +69,16 @@
         :tabindex="props.formDefine.properties.tabindex"
         :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
         />
+      <el-radio-group
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        v-else-if="props.formDefine.properties.component === 'radioInput'"
+        :clearable="props.formDefine.properties.clearable"
+        :tabindex="props.formDefine.properties.tabindex"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+      >
+        <el-radio v-for="op in props.formDefine.properties.options" :key="op.id" :label="getLangText(op.label, locale)" :value="op.value" />
+      </el-radio-group>
       {{ formValue[props.formDefine.properties.fieldName] }}
     </el-form-item>
   </div>
