@@ -1,9 +1,9 @@
 <template>
   <el-input ref="refInput" v-model="currentLangInput" @input="handleDirectInput" v-bind="$attrs">
     <template #append>
-      <div style="padding: 4px !important; margin: 0 !important;" class="flex-row align-items-center">
-        <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }"
-                 :size="12" @click="onI18nClick">
+      <div style="padding-left: 6px !important; padding-right: 6px !important; margin: 0 !important;" class="flex-row align-items-center">
+        <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }" v-bind="$attrs"
+                 @click="onI18nClick" >
           <IconLocalLanguage/>
         </el-icon>
       </div>
