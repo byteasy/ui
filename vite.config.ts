@@ -24,10 +24,10 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       vueJsx(),
-      qiankun('product-assistant', {
+      qiankun('platform-service', {
         useDevMode: true
       }),
-      vueDevTools(),
+      mode === 'dev' && process.env.NOT_QIANKUN_BUILD && vueDevTools(),
       AutoImport({
         resolvers: [ElementPlusResolver()],
       }),
