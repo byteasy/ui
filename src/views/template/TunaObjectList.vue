@@ -24,7 +24,8 @@
   >
     <template v-for="col in fieldComponents" :key="col.name"
               v-slot:[`form-query-field-${col.name}`]="scope">
-      <component :is="getComponent('..' + parseComponent(col.fieldComponent))" v-model="scope.queryParam[col.name]"
+      <component :is="getComponent('..' + parseComponent(col.fieldComponent))"
+                 v-model="scope.queryParam[col.name]"
                  :param="parseComponentParam(col.fieldComponent)"
                  :style="{ width: (col.width === 0 ? 160 : col.width) + 'px !important' }"
                  :key="col.className + col.name" clearable @change="refTable.refresh()"></component>
@@ -78,7 +79,9 @@ onMounted(() => {
     Object.assign(params, props.metaData)
   }
   console.log('params', params)
-  metaData.className = params.className
+  if (params.className) {
+    metaData.className = params.className
+  }
   metaData.formComponent = TunaDefaultObjectForm
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + metaData.className, {}).then(entityDefine => {
     metaData.context = entityDefine.serviceInstance.contextPath.substring(1)
