@@ -15,10 +15,19 @@ const router = createRouter({
  * 基座只有静态路由，并动态加载微应用的路由入口
  */
 let isMicroAppRouterLoad = false
+let activeMicroAppRouter = 'noActive'
 const { modules } = getRouteComponents()
 console.log('all ui component', modules)
 
 router.beforeEach(async (to, from, next) => {
+  const paths = to.fullPath.split('/')
+  const nowActiveAppRouter = '/' + paths[1] + '/' + paths[2]
+  console.log('active router', nowActiveAppRouter)
+  if(!to.fullPath.startsWith(activeMicroAppRouter)) {
+    isMicroAppRouterLoad = false
+    activeMicroAppRouter = nowActiveAppRouter
+    router.clearRoutes()
+  }
   if (!isMicroAppRouterLoad) {
     console.log('micro app router not init. try to init', to.fullPath)
     await doHttpGet('/platformSvr/sapi/resources/leftMenu', { fullPath: to.fullPath }).then(
