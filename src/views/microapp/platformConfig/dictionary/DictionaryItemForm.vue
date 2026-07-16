@@ -1,9 +1,9 @@
 <template>
-  <tuna-table-form ref="refForm">
+  <be-table-form ref="refForm">
     <template v-slot:formItemField_dictionaryId="scope">
       <dictionary-select v-model="scope.row.dictionaryId" :group-id="scope.row.groupId"/>
     </template>
-  </tuna-table-form>
+  </be-table-form>
 </template>
 <script setup lang="ts">
 import {defineExpose, ref} from 'vue'

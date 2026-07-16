@@ -1,5 +1,5 @@
 <template>
-  <tuna-table-form ref="refForm" v-if="loading === false" :url="props.url" :context="props.context" :columns="props.columns" :class-name="props.className" :row="props.row" :readonly="props.readonly" :direction="props.direction" :fullscreen="props.fullscreen" :is-drawer="props.isDrawer">
+  <be-table-form ref="refForm" v-if="loading === false" :url="props.url" :context="props.context" :columns="props.columns" :class-name="props.className" :row="props.row" :readonly="props.readonly" :direction="props.direction" :fullscreen="props.fullscreen" :is-drawer="props.isDrawer">
     <template v-for="col in fieldComponents" :key="col.name" v-slot:[`formItemField_${col.name}`]="scope">
       <component :is="getComponent(parseComponent(col.fieldComponent))"
                  :param="parseComponentParam(col.fieldComponent)"
@@ -8,7 +8,7 @@
                  :placeholder="getLangText(col.displayName, locale)"
                  v-model="scope.row[col.name]" :disabled="props.readonly" clearable></component>
     </template>
-  </tuna-table-form>
+  </be-table-form>
 </template>
 <script setup lang="ts">
 import {defineExpose, onMounted, ref} from "vue";

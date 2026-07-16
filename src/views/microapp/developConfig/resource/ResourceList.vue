@@ -4,7 +4,7 @@
       <resource-category-group-tree @tree-node-click="onGroupClick"/>
     </el-splitter-panel>
     <el-splitter-panel>
-      <tuna-table-v2
+      <BeTableV2
         ref="refTable"
         base-url="/platformSvr/sapi/resources"
         context="platformSvr"
@@ -24,10 +24,10 @@
           <el-button type="primary" @click="onAdd" icon="Plus">{{ $t('add') }}</el-button>
         </template>
         <template v-slot:table-cell-icon="iconScope">
-          <tuna-svg-icon :svg="iconScope.row.icon" v-if="iconScope.row.icon"/>
+          <be-svg-icon :svg="iconScope.row.icon" v-if="iconScope.row.icon"/>
           <span v-else>-</span>
         </template>
-      </tuna-table-v2>
+      </BeTableV2>
     </el-splitter-panel>
   </el-splitter>
 </template>

@@ -29,7 +29,7 @@
                            :disabled="props.disabled"
                            v-model="formValue[col.name]"
                            @change="onUpdateModelValueClick"></component>
-                <tuna-form-field
+                <be-form-field
                   :column="col"
                   v-else
                   :context="props.context ? props.context : 'platformSvr'"
@@ -53,7 +53,7 @@ import {defineEmits, defineExpose, onMounted, ref, watch} from 'vue'
 import {getEntitySchema} from '@/api/common/platform'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
-import TunaFormField from "@/components/TunaFormField.vue";
+import BeFormField from "@/components/BeFormField.vue";
 import {validateColumnRule} from '@/util/validateUtils.ts'
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";

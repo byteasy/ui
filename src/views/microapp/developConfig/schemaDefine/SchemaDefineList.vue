@@ -4,13 +4,13 @@
       <service-class-tree ref="refTree" @tree-node-click="onTreeNodeClick"/>
     </el-splitter-panel>
     <el-splitter-panel :min="200">
-      <tuna-table-v2
+      <BeTableV2
         ref="refTable"
         base-url="/platformSvr/sapi/schemaDefines"
         context="platformSvr"
         class-name="com.byteasy.platform.entity.SchemaDefine"
         :query-params="{ ascColumns: ['className', 'showOrder'] }"
-        :form-component="TunaDefaultObjectForm"
+        :form-component="BeDefaultObjectForm"
         class="pl-2"
       >
         <template v-slot:form-query-field-serviceName="serviceNameScope">
@@ -36,7 +36,7 @@
             @change="saveShowOrder(scope.row)"
           />
         </template>
-      </tuna-table-v2>
+      </BeTableV2>
     </el-splitter-panel>
   </el-splitter>
 </template>
@@ -47,7 +47,7 @@ import {doHttpGet, doHttpPost, doHttpPut } from '@/api/common/platform'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import ServiceClassTree from "@/views/microapp/developConfig/schemaDefine/ServiceClassTree.vue";
-import TunaDefaultObjectForm from "@/views/template/TunaDefaultObjectForm.vue";
+import BeDefaultObjectForm from "@/views/template/BeDefaultObjectForm.vue";
 const { t } = useI18n() // 表单引用
 
 const refTable = ref(null)

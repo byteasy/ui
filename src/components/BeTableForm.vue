@@ -27,7 +27,7 @@
                              clearable
                              :disabled="props.disabled"
                              v-model="formValue[col.name]" />
-                  <tuna-form-field
+                  <be-form-field
                     v-else
                     :column="col"
                     :context="props.context"
@@ -40,7 +40,7 @@
                     <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
                       <slot :name="name" v-bind="slotProps"></slot>
                     </template>
-                  </tuna-form-field>
+                  </be-form-field>
                 </slot>
               </el-form-item>
             </slot>
@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import {defineEmits, defineExpose, onMounted, ref} from 'vue'
-import TunaFormField from '@/components/TunaFormField.vue'
+import BeFormField from '@/components/BeFormField.vue'
 import {useI18n} from 'vue-i18n'
 import {doHttpPost, getEntitySchema} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'

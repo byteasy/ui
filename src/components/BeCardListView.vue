@@ -48,9 +48,9 @@
               <slot name="table-column-title" :row="entity">
                 <el-link type="primary" @click="handleRowAction('view', entity)" class="ml-3">
                   <el-text size="large" class="my-font-bold">
-                    <tuna-i18n-value
+                    <be-i18n-value
                       :model-value="entity[props.tableProps.titleColumnName || 'name' ]"
-                      class="text-truncate-36"></tuna-i18n-value>
+                      class="text-truncate-36"></be-i18n-value>
                   </el-text>
                 </el-link>
               </slot>
@@ -67,13 +67,13 @@
               <slot :name="'table-cell-' + col.name" :row="entity">
                 <el-link underline="never" type="primary"
                          v-if="col.relationType === 'DETAIL_TABLE'">
-                  <tuna-i18n-value :model-value="entity[col.name]" :lang="props.tableProps.showLang"
+                  <be-i18n-value :model-value="entity[col.name]" :lang="props.tableProps.showLang"
                                    @click="handleRowAction('detailTable', { column: col, row: entity})"/>
                 </el-link>
-                <tuna-popup-object-view :model-value="entity[getClassFieldName(col.externalClass)]"
+                <be-popup-object-view :model-value="entity[getClassFieldName(col.externalClass)]"
                                         :column="col" :lang="props.tableProps.showLang"
                                         v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
-                <tuna-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="entity[col.name]"
+                <be-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="entity[col.name]"
                                  :lang="props.tableProps.showLang" class="text-truncate-22"/>
                 <el-switch v-model="entity[col.name]" v-else-if="col.type === 'BOOL'" disabled>
                   <template #active-action>

@@ -1,5 +1,5 @@
 <template>
-  <tuna-table-form ref="refForm">
+  <be-table-form ref="refForm">
     <template v-slot:formItemField_clientAuthenticationMethods="scope">
       <el-select v-model="scope.row.clientAuthenticationMethods" multiple :disabled="scope.props.readonly">
         <el-option label="CLIENT_SECRET_BASIC" value="client_secret_basic"/>
@@ -23,13 +23,13 @@
       </el-select>
     </template>
     <template v-slot:formItemField_redirectUris="scope">
-      <tuna-string-array-input v-model="scope.row.redirectUris" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
+      <be-string-array-input v-model="scope.row.redirectUris" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
     </template>
     <template v-slot:formItemField_postLogoutRedirectUris="scope">
-      <tuna-string-array-input v-model="scope.row.postLogoutRedirectUris" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
+      <be-string-array-input v-model="scope.row.postLogoutRedirectUris" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
     </template>
     <template v-slot:formItemField_scopes="scope">
-      <tuna-string-array-input v-model="scope.row.scopes" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
+      <be-string-array-input v-model="scope.row.scopes" :disabled="scope.props.readonly" :placeholder="getLangText(scope.column.displayName, locale)"/>
     </template>
     <template v-slot:formItemField_clientSecret="scope">
       <el-input type="text" v-model="scope.row.clientSecret" :disabled="scope.props.readonly" v-if="!scope.row.id" :placeholder="getLangText(scope.column.displayName, locale)"/>
@@ -53,7 +53,7 @@
         <el-option label="PS512" value="PS512" />
       </el-select>
     </template>
-  </tuna-table-form>
+  </be-table-form>
 </template>
 <script setup lang="ts">
 import {defineExpose, onMounted, ref} from 'vue'

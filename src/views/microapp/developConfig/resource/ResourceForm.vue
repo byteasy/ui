@@ -1,7 +1,7 @@
 <template>
-  <tuna-table-form ref="refForm">
+  <be-table-form ref="refForm">
     <template v-slot:formItemField_icon="scope">
-      <tuna-form-field
+      <be-form-field
         :column="scope.column"
         :context="scope.props.context"
         :placeholder="getLangText(scope.column.displayName, locale)"
@@ -11,7 +11,7 @@
       />
     </template>
     <template v-slot:formItemField_visible="scope">
-      <tuna-form-field
+      <be-form-field
         :column="scope.column"
         :context="scope.props.context"
         :placeholder="getLangText(scope.column.displayName, locale)"
@@ -21,7 +21,7 @@
       />
     </template>
     <template v-slot:formItemField_openTab="scope">
-      <tuna-form-field
+      <be-form-field
         :column="scope.column"
         :context="scope.props.context"
         :placeholder="getLangText(scope.column.displayName, locale)"
@@ -31,7 +31,7 @@
       />
     </template>
     <template v-slot:formItemField_affix="scope">
-      <tuna-form-field
+      <be-form-field
         :column="scope.column"
         :context="scope.props.context"
         :placeholder="getLangText(scope.column.displayName, locale)"
@@ -41,7 +41,7 @@
       />
     </template>
     <template v-slot:formItemField_keepAlive="scope">
-      <tuna-form-field
+      <be-form-field
         :column="scope.column"
         :context="scope.props.context"
         :placeholder="getLangText(scope.column.displayName, locale)"
@@ -52,7 +52,7 @@
     </template>
     <template v-slot:formItemField_component="scope">
       <div class="flex-column w-full">
-        <tuna-form-field
+        <be-form-field
           :column="scope.column"
           :context="scope.props.context"
           :placeholder="getLangText(scope.column.displayName, locale)"
@@ -67,7 +67,7 @@
       </div>
     </template>
     <template v-slot:formItemField_layout="scope">
-      <tuna-form-field
+      <be-form-field
         :column="scope.column"
         :context="scope.props.context"
         :placeholder="getLangText(scope.column.displayName, locale)"
@@ -78,7 +78,7 @@
     </template>
     <template v-slot:formItemField_routerUrl="scope">
       <div class="flex-column w-full gap-1-2">
-        <tuna-form-field
+        <be-form-field
           v-model="scope.row.routerUrl"
           :column="scope.column"
           :context="scope.props.context"
@@ -87,7 +87,7 @@
           :disabled="scope.props.readonly || scope.row.type === 'BUTTON'"
         />
         <el-form-item :label="$t('platform.resource.queryParams')" >
-          <tuna-key-value-input v-model="tableMetaData" @change="onTableMetaDataChange" v-if="scope.row.type === 'MENU'"/>
+          <be-key-value-input v-model="tableMetaData" @change="onTableMetaDataChange" v-if="scope.row.type === 'MENU'"/>
         </el-form-item>
       </div>
     </template>
@@ -107,7 +107,7 @@
                      @change="(va) => refForm.queryParam.standButton = va"/>
       </el-form-item>
     </template>
-  </tuna-table-form>
+  </be-table-form>
 </template>
 <script setup lang="ts">
 import {defineExpose, onMounted, ref} from 'vue'
@@ -115,7 +115,7 @@ import ResourceCategoryGroupTreeSelect
   from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTreeSelect.vue";
 import ResourceTreeSelect from "@/views/microapp/developConfig/resource/ResourceTreeSelect.vue";
 import {getLangText} from "@/locales/common.ts";
-import TunaFormField from "@/components/TunaFormField.vue";
+import BeFormField from "@/components/BeFormField.vue";
 import {jsonToQueryString} from "@/util/common.ts";
 import {useI18n} from "vue-i18n";
 
@@ -144,7 +144,7 @@ function initStandComponent() {
   tableMetaData.value.titleColumnName = ''
   tableMetaData.value.excelEnable = 'YES'
   tableMetaData.value.queryParams = "{\"descColumns\":[\"updatedTime\", \"createdTime\"]}"
-  refForm.value.formValue.component = '/views/template/TunaObjectList.vue'
+  refForm.value.formValue.component = '/views/template/BeObjectList.vue'
 }
 
 function loadParentTree() {

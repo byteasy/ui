@@ -13,7 +13,7 @@
           @close="closeSelectedTag(tag)"
           @contextmenu.prevent="openMenu(tag, $event)"
         >
-          <tuna-i18n-value :model-value="tag.title" />
+          <be-i18n-value :model-value="tag.title" />
         </el-tag>
       </div>
     </el-scrollbar>

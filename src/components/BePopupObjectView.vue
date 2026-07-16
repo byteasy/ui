@@ -4,7 +4,7 @@
     <template #reference>
       <el-link underline="never" type="primary" >
         <slot name="reference">
-          <tuna-i18n-value :model-value="showValue[props.column.externalClassDisplayField]"
+          <be-i18n-value :model-value="showValue[props.column.externalClassDisplayField]"
                            :lang="props.lang" />
         </slot>
       </el-link>
@@ -22,7 +22,7 @@
                   :context="svrContext"
                   :code="col.typeClassName"
                 />
-                <tuna-popup-object-view :model-value="showValue[getClassFieldName(col.externalClass)]"
+                <be-popup-object-view :model-value="showValue[getClassFieldName(col.externalClass)]"
                                         :column="col" :lang="props.lang"
                                         v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
                 <el-text style="max-width: 15vw;" truncated v-else-if="col.type ==='STRING'">{{ getLangText(showValue[col.name], props.lang) }}</el-text>

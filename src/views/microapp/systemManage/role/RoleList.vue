@@ -1,5 +1,5 @@
 <template>
-  <tuna-table-v2
+  <BeTableV2
     ref="refTable"
     base-url="/platformSvr/sapi/roles"
     context="platformSvr"
@@ -10,7 +10,7 @@
     <template v-slot:table-operation-extra="powerScope">
       <el-link underline="never" type="primary" @click="onPermissionEdit(powerScope.row)" v-permission="'com.byteasy.platform.entity.Role.Permission'">{{ t('platform.role.permission') }}</el-link>
     </template>
-  </tuna-table-v2>
+  </BeTableV2>
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
 <template>
-  <tuna-table-v2
+  <BeTableV2
     ref="refTable"
     base-url="/platformSvr/sapi/users"
     context="platformSvr"
@@ -35,7 +35,7 @@
         </template>
       </el-dropdown>
     </template>
-  </tuna-table-v2>
+  </BeTableV2>
 </template>
 
 <script lang="ts" setup>

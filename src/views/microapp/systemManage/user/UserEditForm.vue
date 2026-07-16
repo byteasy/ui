@@ -1,10 +1,10 @@
 <template>
-  <tuna-table-form ref="refForm">
+  <be-table-form ref="refForm">
     <template v-slot:formItemField_username="scope">
       <el-input v-model="scope.row.username" :disabled="scope.row.id !== undefined"
                 type="text"/>
     </template>
-  </tuna-table-form>
+  </be-table-form>
 </template>
 <script setup lang="ts">
 import {defineExpose, onMounted, ref} from "vue";

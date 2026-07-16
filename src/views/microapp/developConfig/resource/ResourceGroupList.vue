@@ -4,7 +4,7 @@
       <resource-category-tree @tree-node-click="onCategoryTableRowClick"/>
     </el-splitter-panel>
     <el-splitter-panel>
-      <tuna-table-v2
+      <BeTableV2
         ref="refTable"
         base-url="/platformSvr/sapi/resourceGroups"
         context="platformSvr"
@@ -29,7 +29,7 @@
             @change="saveShowOrder(scope.row)"
           />
         </template>
-      </tuna-table-v2>
+      </BeTableV2>
     </el-splitter-panel>
   </el-splitter>
 </template>

@@ -33,7 +33,7 @@
             <el-icon size="24">
               <IconLocalFolder/>
             </el-icon>
-            <tuna-i18n-value :model-value="data.name" class="pl-1"/>
+            <be-i18n-value :model-value="data.name" class="pl-1"/>
           </div>
         </div>
       </template>

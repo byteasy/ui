@@ -1,10 +1,10 @@
 <template>
-  <tuna-table-form ref="refForm">
+  <be-table-form ref="refForm">
     <template v-slot:formItemField_categoryId="scope">
       <resource-category-tree-select v-model="scope.row.categoryId" clearable filterable :placeholder="getLangText(scope.column.displayName, locale)"
                                      :disabled="scope.props.readonly"/>
     </template>
-  </tuna-table-form>
+  </be-table-form>
 </template>
 <script setup lang="ts">
 import {defineExpose, onMounted, ref} from 'vue'

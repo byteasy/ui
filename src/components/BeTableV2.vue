@@ -1,20 +1,20 @@
 <template>
-  <tuna-container>
+  <be-container>
     <template v-slot:topBar>
-      <tuna-query-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0"
+      <be-query-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0"
                       :query-params="queryParam" :table-props="props" :fields="tableColumns"
                       class="w-full" @refresh="refresh()" @add="onAdd"
                       @moreAction="onMoreActionClick">
         <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
           <slot :name="name" v-bind="slotProps"></slot>
         </template>
-      </tuna-query-bar>
+      </be-query-bar>
     </template>
     <template v-slot:mainContent>
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <tuna-table-view
-            ref="refTunaTableView"
+          <be-table-view
+            ref="refBeTableView"
             v-if="viewModel === 'table'"
             :table-props="props"
             :fields="tableColumns"
@@ -32,9 +32,9 @@
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
-          </tuna-table-view>
-          <tuna-card-list-view v-else
-                               ref="refTunaTableView"
+          </be-table-view>
+          <be-card-list-view v-else
+                               ref="refBeTableView"
                                :table-props="props"
                                :fields="tableColumns"
                                :width="width"
@@ -46,7 +46,7 @@
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
-          </tuna-card-list-view>
+          </be-card-list-view>
         </template>
       </el-auto-resizer>
     </template>
@@ -59,7 +59,7 @@
         @change="onPageChange"
       />
     </template>
-  </tuna-container>
+  </be-container>
 </template>
 
 <script lang="ts" setup>
@@ -72,7 +72,7 @@ import {
   onMounted,
   ref,
 } from 'vue'
-import TunaContainer from '@/components/TunaContainer.vue'
+import BeContainer from '@/components/BeContainer.vue'
 import {doHttpDelete, doHttpGet, getEntitySchema} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
@@ -80,11 +80,11 @@ import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {putValueIfValid} from "@/util/common.ts";
 import BeTableColumnDefine from "@/components/BeTableColumnDefine.vue";
 import {getLangText} from "@/locales/common.ts";
-import TunaExcelImport from "@/components/TunaExcelImport.vue";
-import TunaExcelExport from "@/components/TunaExcelExport.vue";
+import BeExcelImport from "@/components/BeExcelImport.vue";
+import BeExcelExport from "@/components/BeExcelExport.vue";
 import {useModal} from "@/components/dialog/useModal.ts";
-import TunaTableContainer from "@/components/TunaTableContainer.vue";
-import TunaTableForm from "@/components/TunaTableForm.vue";
+import BeTableContainer from "@/components/BeTableContainer.vue";
+import BeTableForm from "@/components/BeTableForm.vue";
 
 const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
@@ -122,7 +122,7 @@ const tableData = ref({total: '0'})
 const loading = ref(false)
 const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
 const queryParam = ref({current: 1, size: 20, descColumns: []})
-const refTunaTableView = ref(null)
+const refBeTableView = ref(null)
 const {open} = useModal()
 
 const mergeQueryParams = () => {
@@ -227,22 +227,22 @@ function onHeaderDrag(newWidth: number, oldWidth: number, column: TableColumnCtx
 }
 
 function getSelectionRows() {
-  return refTunaTableView.value?.getSelectionRows()
+  return refBeTableView.value?.getSelectionRows()
 }
 
 function toggleRowSelection(row, sel) {
-  refTunaTableView.value?.toggleRowSelection(row, sel)
+  refBeTableView.value?.toggleRowSelection(row, sel)
 }
 
 function setCurrentRow(row) {
-  refTunaTableView.value?.setCurrentRow(row)
+  refBeTableView.value?.setCurrentRow(row)
 }
 
 function getFormComponent() {
   if (props.formComponent) {
     return props.formComponent
   } else {
-    return TunaTableForm
+    return BeTableForm
   }
 }
 
@@ -310,7 +310,7 @@ function downLoadExcelTemplate() {
 function onExcelImportClick() {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
     open(
-      props.excelImportComponent || TunaExcelImport,
+      props.excelImportComponent || BeExcelImport,
       {
         columns: tableColumns.value,
         url: props.baseUrl,
@@ -331,7 +331,7 @@ function onExcelImportClick() {
 function onExcelExportClick() {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
     open(
-      props.excelExportComponent || TunaExcelExport,
+      props.excelExportComponent || BeExcelExport,
       {
         columns: tableColumns.value,
         url: props.baseUrl,
@@ -381,7 +381,7 @@ function onOpenTableDetail(column, row) {
     query.queryParams = JSON.stringify(params)
     query.className = column.externalClass
     open(
-      TunaTableContainer,
+      BeTableContainer,
       {
         metaData: query,
         dialogModel: props.dialogModel,

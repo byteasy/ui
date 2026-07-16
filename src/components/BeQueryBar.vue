@@ -9,7 +9,7 @@
                             v-if="col.isSearch === 'YES'">
                 <slot :name="'form-query-field-' + col.name" :column="col"
                       :queryParam="props.queryParams">
-                  <tuna-query-field
+                  <be-query-field
                     :column="col"
                     :context="props.tableProps.context"
                     :placeholder="getLangText(col.displayName, locale)"

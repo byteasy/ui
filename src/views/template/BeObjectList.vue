@@ -1,5 +1,5 @@
 <template>
-  <tuna-table-v2
+  <BeTableV2
     ref="refTable"
     :base-url="metaData.baseUrl"
     :context="metaData.context"
@@ -42,7 +42,7 @@
                  :param="parseComponentParam(btn)"
                  :row="scope.row"></component>
     </template>
-  </tuna-table-v2>
+  </BeTableV2>
   <el-skeleton :rows="5" animated v-else/>
 </template>
 
@@ -52,7 +52,7 @@ import {useI18n} from 'vue-i18n'
 import {useRoute} from "vue-router";
 import {doHttpGet, getEntitySchema} from "@/api/common/platform";
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
-import TunaDefaultObjectForm from "@/views/template/TunaDefaultObjectForm.vue";
+import BeDefaultObjectForm from "@/views/template/BeDefaultObjectForm.vue";
 import {parseComponent, parseComponentParam, queryStringToJson} from "@/util/common.ts";
 
 const props = defineProps<{
@@ -82,7 +82,7 @@ onMounted(() => {
   if (params.className) {
     metaData.className = params.className
   }
-  metaData.formComponent = TunaDefaultObjectForm
+  metaData.formComponent = BeDefaultObjectForm
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + metaData.className, {}).then(entityDefine => {
     metaData.context = entityDefine.serviceInstance.contextPath.substring(1)
     metaData.baseUrl = entityDefine.serviceInstance.contextPath + entityDefine.url

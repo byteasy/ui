@@ -6,7 +6,7 @@
     <template #default="{ data: { name, icon } }">
       <div class="w-full flex flex-row items-center">
         <div class="flex flex-row items-center">
-          <tuna-svg-icon :svg="icon" v-if="icon"/>
+          <be-svg-icon :svg="icon" v-if="icon"/>
           <span class="pl-1">{{ name }}</span>
         </div>
       </div>

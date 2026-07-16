@@ -18,7 +18,7 @@
                 :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
     </el-radio-group>
     <div v-if="props.column.uiComponent === 'TABLE' || props.column.uiComponent === undefined" :style="{ 'height': tableHeight }" class="w-full">
-      <tuna-table-v2
+      <BeTableV2
         ref="refTable"
         class="w-full h-full"
         :base-url="'/' + props.entityDefine.serviceInstance.contextPath.substring(1) + props.entityDefine.url"
@@ -30,7 +30,7 @@
         :data-render-finish="onTableDataRenderFinish"
         :row-db-click="onTableRowDoubleClick"
         :operation-column-width="0">
-      </tuna-table-v2>
+      </BeTableV2>
     </div>
   </div>
 </template>

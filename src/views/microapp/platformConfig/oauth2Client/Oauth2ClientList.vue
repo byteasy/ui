@@ -1,5 +1,5 @@
 <template>
-  <tuna-table-v2
+  <BeTableV2
     ref="refTable"
     base-url="/platformSvr/sapi/oauth2RegisteredClients"
     context="platformSvr"
@@ -8,7 +8,7 @@
     :form-component="Oauth2ClientForm"
     title-column-name="clientName"
   >
-  </tuna-table-v2>
+  </BeTableV2>
 </template>
 
 <script lang="ts" setup>

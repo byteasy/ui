@@ -20,7 +20,7 @@ import {useModal} from '@/components/dialog/useModal.ts'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
 import {doHttpGet} from "@/api/common/platform";
-import TunaObjectSelectDetail from "@/components/TunaObjectSelectDetail.vue";
+import BeObjectSelectDetail from "@/components/BeObjectSelectDetail.vue";
 
 const props = defineProps<{
   modelValue?: any
@@ -88,7 +88,7 @@ const onAppendIconClick = () => {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {}).then(response => {
     const entityDefine = response
     open(
-      TunaObjectSelectDetail,
+      BeObjectSelectDetail,
       {
         modelValue: props.column.multiple === 'YES' ? selectedObject.value.map(s => s[props.column.externalClassPrimaryField]) : selectedObject.value.map(s => s[props.column.externalClassPrimaryField])[0],
         column: props.column,

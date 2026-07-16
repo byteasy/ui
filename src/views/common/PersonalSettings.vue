@@ -1,5 +1,5 @@
 <template>
-  <tuna-viewer
+  <be-viewer
     context="platformSvr"
     class-name="com.byteasy.platform.vo.PersonalSettingsVO"
     :entity="user"
@@ -49,7 +49,7 @@
       }}</el-button>
       <el-button type="primary" @click="onSaveClick" v-if="editEnable">{{ $t('save') }}</el-button>
     </template>
-  </tuna-viewer>
+  </be-viewer>
 </template>
 
 <script setup lang="ts">

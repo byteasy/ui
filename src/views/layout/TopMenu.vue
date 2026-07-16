@@ -110,7 +110,7 @@ function onGroupClick(category) {
       }"
       @click="onItemClick(item)"
     >
-      <tuna-i18n-value :model-value="item.name" />
+      <be-i18n-value :model-value="item.name" />
     </el-text
     >
     <el-popover placement="bottom-start" :width="popoverWidth" ref="refPopWindow">
@@ -137,7 +137,7 @@ function onGroupClick(category) {
               class="group-one"
               @mouseenter="onGroupClick(item)"
             >
-              <tuna-i18n-value :model-value="item.name" />
+              <be-i18n-value :model-value="item.name" />
             </div>
           </div>
         </div>
@@ -152,14 +152,14 @@ function onGroupClick(category) {
               <!--              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">供应商子项 {{n}}</div>-->
               <!--            </div>-->
               <div class="flex-column align-items-start p-3" v-for="group in groupEntries" :key="group.id">
-                <div class="my-font-size-md font-bold mb-2"><tuna-i18n-value :model-value="group.name" /></div>
+                <div class="my-font-size-md font-bold mb-2"><be-i18n-value :model-value="group.name" /></div>
                 <div
                   v-for="item in group.resourceGroups"
                   :key="item.code"
                   class="my-font-size group-tow-child"
                   @click="onItemClick(item)"
                 >
-                  <tuna-i18n-value :model-value="item.name" />
+                  <be-i18n-value :model-value="item.name" />
                 </div>
               </div>
             </el-space>

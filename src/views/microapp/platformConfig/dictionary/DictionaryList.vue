@@ -4,7 +4,7 @@
       <resource-category-group-tree @tree-node-click="onGroupClick"/>
     </el-splitter-panel>
     <el-splitter-panel>
-      <tuna-table-v2
+      <BeTableV2
         ref="refTable"
         base-url="/platformSvr/sapi/dictionarys"
         context="platformSvr"
@@ -22,7 +22,7 @@
         <template v-slot:table-cell-code="codeScope">
           <el-link type="success" @click="onItemManageClick(codeScope.row)">{{ codeScope.row.code }}</el-link>
         </template>
-      </tuna-table-v2>
+      </BeTableV2>
     </el-splitter-panel>
   </el-splitter>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <tuna-table-v2
+  <BeTableV2
     ref="refTable"
     base-url="/platformSvr/sapi/loginLogs"
     context="platformSvr"
@@ -7,7 +7,7 @@
     class-name="com.byteasy.platform.entity.LoginLog"
     :query-params="{ descColumns: ['createdTime'] }"
   >
-  </tuna-table-v2>
+  </BeTableV2>
 </template>
 
 <script lang="ts" setup>

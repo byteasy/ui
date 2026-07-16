@@ -1,10 +1,10 @@
 <template>
   <div :style="{ height: tableHeightCss }">
-    <tuna-object-list :meta-data="props.metaData" />
+    <be-object-list :meta-data="props.metaData" />
   </div>
 </template>
 <script lang="ts" setup>
-import TunaObjectList from "@/views/template/TunaObjectList.vue";
+import BeObjectList from "@/views/template/BeObjectList.vue";
 import {computed} from "vue";
 
 const props = defineProps<{

@@ -18,7 +18,7 @@
           <div class="flex-column h-full w-full">
             <div class="el-card is-always-shadow p-1" style="height: 2.4rem; width: 100%">
               <be-bread-crumb v-if="tagView === '0'" />
-              <tuna-tag-view v-else />
+              <be-tag-view v-else />
             </div>
             <div class="el-card is-always-shadow p-2 mt-1 flex-grow" style="width: 100%">
               <div class="h-full">
@@ -53,7 +53,7 @@ import {computed, onBeforeMount, ref} from 'vue'
 import { elementLocales } from '@/locales/common.ts'
 
 import CommonLeftMenu from "@/views/layout/CommonLeftMenu.vue";
-import TunaTagView from "@/components/TunaTagView.vue";
+import BeTagView from "@/components/BeTagView.vue";
 import {useRoute} from "vue-router";
 import {doHttpGet} from "@/api/common/platform";
 import {useSessionStore} from "@/stores/session.ts";

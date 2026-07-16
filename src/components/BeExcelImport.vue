@@ -47,7 +47,7 @@
                 >
                   <template #default="scope">
                     <slot :name="'table_column_' + col.name" :row="scope.row">
-                      <tuna-i18n-value :model-value="scope.row[col.name]" />
+                      <be-i18n-value :model-value="scope.row[col.name]" />
                     </slot>
                   </template>
                 </el-table-column>

@@ -21,16 +21,16 @@
           <template #default="scope">
             <slot :name="'table-cell-' + col.name" :row="scope.row">
               <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'">
-                <tuna-i18n-value :model-value="scope.row[col.name]"
+                <be-i18n-value :model-value="scope.row[col.name]"
                                  :lang="props.tableProps.showLang"
                                  @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
               </el-link>
-              <tuna-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]" :column="col" :lang="props.tableProps.showLang" v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
+              <be-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]" :column="col" :lang="props.tableProps.showLang" v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
               <component v-else-if="col.columnComponent"
                          :is="getComponent('..' + parseComponent(col.columnComponent))"
                          :param="parseComponentParam(col.columnComponent)"
                          :model-value="scope.row[col.name]" :row="scope.row" :column="col" :lang="props.tableProps.showLang"></component>
-              <tuna-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
+              <be-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
                                :lang="props.tableProps.showLang"/>
               <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
                 <template #active-action>
@@ -67,13 +67,13 @@
       <template #default="scope">
         <el-space direction="horizontal" :size="4">
           <slot name="table-operation" :row="scope.row">
-            <tuna-popup-object-view :model-value="scope.row"
+            <be-popup-object-view :model-value="scope.row"
                                     :column="{ externalClass: props.tableProps.className }"
                                     :lang="props.tableProps.showLang">
               <template v-slot:reference>
                 {{ t('table.view') }}
               </template>
-            </tuna-popup-object-view>
+            </be-popup-object-view>
             <el-link underline="never" @click="handleRowAction('edit', scope.row)" type="primary"
                      v-permission="props.tableProps.className + '.Edit'">
               {{ t('table.edit') }}

@@ -1,7 +1,7 @@
 
 <template>
   <div :style="{ width: '100%', height: (props.height - 60) + 'px'}">
-    <tuna-table-v2
+    <BeTableV2
       ref="refTable"
       base-url="/platformSvr/sapi/dictionaryItems"
       context="platformSvr"
@@ -19,7 +19,7 @@
                    v-permission="'com.byteasy.platform.entity.DictionaryItem.Add'">{{ $t('add') }}
         </el-button>
       </template>
-    </tuna-table-v2>
+    </BeTableV2>
   </div>
 </template>
 
