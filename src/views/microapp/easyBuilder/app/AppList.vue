@@ -1,6 +1,7 @@
 <template>
   <el-splitter>
     <el-splitter-panel size="300" collapsible :min="300" :max="600">
+      <service-app-tree />
     </el-splitter-panel>
     <el-splitter-panel :min="200">
       <be-object-list :meta-data="{ className: 'com.byteasy.platform.entity.EbApplication'}" />
@@ -9,4 +10,5 @@
 </template>
 <script setup lang="ts">
 import BeObjectList from "@/views/template/BeObjectList.vue";
+import ServiceAppTree from "@/views/microapp/easyBuilder/app/ServiceAppTree.vue";
 </script>
