@@ -16,7 +16,8 @@ export default {
     componentParamsTitle: '组件参数',
     componentNoParams: '组件无参数',
     schemaDefine: {
-      syncSchema: '从代码同步'
+      syncSchema: '从代码同步',
+      syncSchemaFromDatabase: '从数据库同步',
     },
     resourceGroup: {
       name: '分组'

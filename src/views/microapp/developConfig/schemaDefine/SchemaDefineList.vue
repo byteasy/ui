@@ -18,11 +18,10 @@
             <el-option v-for="item in services" :key="item" :label="item" :value="item" />
           </el-select>
         </template>
-        <template v-slot:form-query-buttons-extra
-        ><el-button type="primary" icon="Loading" @click="onSyncSchemaClick">{{
-            $t('platform.schemaDefine.syncSchema')
-          }}</el-button></template
-        >
+        <template v-slot:form-query-buttons-extra>
+          <el-button type="primary" icon="Loading" v-debounce="onSyncSchemaClick">{{ $t('platform.schemaDefine.syncSchema') }}</el-button>
+          <el-button type="primary" icon="Loading" v-debounce="onSyncSchemaFromDatabaseClick">{{ $t('platform.schemaDefine.syncSchemaFromDatabase') }}</el-button>
+        </template>
         <template v-slot:table-cell-className="scope"
         ><el-link @click="doResearch(scope.row)">{{ scope.row.className }}</el-link></template
         >
@@ -72,6 +71,35 @@ function onSyncSchemaClick() {
   doHttpGet('/platformSvr/sapi/schemaDefines/services/' + serviceName + '/context').then(res1 => {
     const ctxPath = res1.data
     doHttpGet(ctxPath + '/sapi/schemas/src/' + className).then(res2 => {
+      const columns = res2.data
+      if(columns.length > 0) {
+        doHttpPut('/platformSvr/sapi/schemaDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {
+          ElMessage.success(t('operationSuccess'))
+          refTable.value?.refresh()
+          refTree.value?.refresh()
+        })
+      } else {
+        ElMessage.warning(t('table.emptyText'))
+        return
+      }
+    })
+  })
+}
+
+function onSyncSchemaFromDatabaseClick() {
+  const serviceName = refTable.value?.queryParam.serviceName
+  const className = refTable.value?.queryParam.className
+  if(serviceName == null) {
+    ElMessage.warning(t('platform.serviceNameMissing'))
+    return
+  }
+  if(className == null) {
+    ElMessage.warning(t('platform.classNameMissing'))
+    return
+  }
+  doHttpGet('/platformSvr/sapi/schemaDefines/services/' + serviceName + '/context').then(res1 => {
+    const ctxPath = res1.data
+    doHttpGet(ctxPath + '/sapi/schemas/database/' + className).then(res2 => {
       const columns = res2.data
       if(columns.length > 0) {
         doHttpPut('/platformSvr/sapi/schemaDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {

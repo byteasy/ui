@@ -89,7 +89,7 @@ const props = withDefaults(
     addApiCode: string
     updateApiCode: string
     deleteApiCode: string
-    formComponent: string
+    formComponent?: string
     label?: string
     children?: string
     nodeKey?: string

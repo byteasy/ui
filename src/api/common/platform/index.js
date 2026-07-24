@@ -85,6 +85,15 @@ export function executeOpenApi(apiCode, params, data) {
         const openapi = response.data.records[0]
         // 脚本函数
         if (openapi.scriptId) {
+          request({
+            url: getUrl(openapi.entityDefine.serviceInstance.contextPath + '/sapi/script/api/' + apiCode, params),
+            method: 'post',
+            data: data
+          }).then(result => {
+            resolve(result)
+          }).catch(error => {
+            reject(error)
+          })
         } else {
           request({
             url: getUrl(genUri(openapi.uri, params), params),

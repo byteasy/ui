@@ -1,14 +1,13 @@
 <template>
   <el-splitter>
     <el-splitter-panel size="300" collapsible :min="300" :max="600">
-      <service-app-tree />
+      <be-tree query-api-code="getEbAppTree" update-api-code="getEbAppTree" delete-api-code="getEbAppTree" add-api-code="getEbAppTree"/>
     </el-splitter-panel>
     <el-splitter-panel :min="200">
-      <be-object-list :meta-data="{ className: 'com.byteasy.platform.entity.EbApplication'}" />
+<!--      <be-object-list :meta-data="{ className: 'com.byteasy.platform.entity.EbApplication'}" />-->
     </el-splitter-panel>
   </el-splitter>
 </template>
 <script setup lang="ts">
 import BeObjectList from "@/views/template/BeObjectList.vue";
-import ServiceAppTree from "@/views/microapp/easyBuilder/app/ServiceAppTree.vue";
 </script>
