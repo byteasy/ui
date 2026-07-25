@@ -1,7 +1,7 @@
 <template>
   <el-splitter>
     <el-splitter-panel size="300" collapsible :min="300" :max="600">
-      <be-tree query-api-code="getEbAppTree" update-api-code="getEbAppTree" delete-api-code="getEbAppTree" add-api-code="getEbAppTree"/>
+      <be-tree query-api-code="getEbAppTree" node-key="code" update-api-code="getEbAppTree" delete-api-code="getEbAppTree" add-api-code="getEbAppTree"/>
     </el-splitter-panel>
     <el-splitter-panel :min="200">
 <!--      <be-object-list :meta-data="{ className: 'com.byteasy.platform.entity.EbApplication'}" />-->

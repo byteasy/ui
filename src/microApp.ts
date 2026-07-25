@@ -9,15 +9,15 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import '@/assets/style/style.css'
+
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import i18n from './locales'
 import App from './App.vue'
-
 import { debounce } from './directive/debounce'
 import { focus } from './directive/focus'
 import { permission } from './directive/permission'
 
-let app
+let app: any
 
 const render = (container) => {
   app = createApp(App)
@@ -32,22 +32,27 @@ const render = (container) => {
   app.directive('focus', focus)
   app.directive('permission', permission)
 
+
   app.mount(container ? container.querySelector('#app') : '#app')
 }
 
 const initQianKun = () => {
-  console.log('init in qianqun')
+  console.log('[SubApp] init in qiankun')
   renderWithQiankun({
     mount(props) {
-      console.log('unmount')
+      console.log('[SubApp] mount')
       const { container } = props
       render(container)
     },
     bootstrap() {
+      console.log('[SubApp] bootstrap')
     },
     unmount() {
-      console.log('unmount')
-      app.unmount()
+      console.log('[SubApp] unmount')
+      if (app) {
+        app.unmount()
+        app = null // 关键：释放内存！
+      }
     }
   })
 }

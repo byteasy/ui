@@ -31,15 +31,16 @@
                  :key="col.className + col.name" clearable @change="refTable.refresh()"></component>
     </template>
     <template v-slot:form-query-buttons-extra="scope">
-      <component v-for="btn in formQueryButtonsExtra" :key="btn"
+      <component v-for="btn in formQueryButtonsExtra" :key="btn + '_' + (scope.row.id || scope.$index)"
                  :is="getComponent('..' + parseComponent(btn))"
                  :param="parseComponentParam(btn)"
                  :queryParam="scope.queryParam" :queryMode="scope.queryMode"></component>
     </template>
     <template v-slot:table-operation-extra="scope">
-      <component v-for="btn in operationButtons" :key="btn"
+      <component v-for="btn in operationButtons" :key="btn + '_' + (scope.row.id || scope.$index)"
                  :is="getComponent('..' + parseComponent(btn))"
                  :param="parseComponentParam(btn)"
+                 :tableRef="refTable"
                  :row="scope.row"></component>
     </template>
   </be-table-v2>

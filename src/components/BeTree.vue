@@ -116,7 +116,7 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits(['treeNodeClick'])
+const emit = defineEmits(['treeNodeClick', 'addNodeClick', 'editNodeClick'])
 
 const {open} = useModal()
 const route = useRoute()
