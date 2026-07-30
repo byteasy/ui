@@ -8,7 +8,8 @@
         :placeholder="$t('platform.searchTip')"
         suffix-icon="search"
       />
-      <el-button type="primary" icon="plus" class="ml-1" v-debounce="onAddTreeRootNodeClick">
+      <el-button type="primary" icon="plus" class="ml-1" v-debounce="onAddTreeRootNodeClick"
+                 v-if="props.permissionAddCode === undefined || session.authorize(props.permissionAddCode)">
         {{ $t('add') }}
       </el-button>
     </div>
@@ -17,6 +18,7 @@
              class="filter-tree w-full pt-1"
              :data="treeData"
              :lazy="props.lazy"
+             :load="loadChildren"
              :node-key="props.nodeKey"
              :props="{ label: props.label, children: props.children }"
              @node-click="onTreeNodeClick"
@@ -41,55 +43,62 @@
                  :virtual-ref="contextMenuTriggerRef">
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="onTreeNodeAddClick('rootAdd')">
+          <el-dropdown-item @click="onTreeNodeAddClick"
+                            v-if="props.permissionAddCode === undefined || session.authorize(props.permissionAddCode)">
             <el-icon>
               <FolderAdd/>
             </el-icon>
             {{ $t('add') }}
           </el-dropdown-item>
-          <el-dropdown-item @click="onTreeNodeEditClick">
+          <el-dropdown-item @click="onTreeNodeEditClick"
+                            v-if="props.permissionEditCode === undefined || session.authorize(props.permissionEditCode)">
             <el-icon>
               <FolderOpened/>
             </el-icon>
             {{ $t('table.edit') }}
           </el-dropdown-item>
-          <el-dropdown-item @click="onTreeNodeDeleteClick">
+          <el-dropdown-item @click="onTreeNodeDeleteClick" v-if="props.permissionDeleteCode === undefined || session.authorize(props.permissionDeleteCode)">
             <el-icon>
               <FolderDelete/>
             </el-icon>
             {{ $t('table.delete') }}
           </el-dropdown-item>
+          <template v-for="extra in props.contextExtraItems" :key="extra.name">
+            <el-dropdown-item @click="onTreeNodeExtraClick(extra.name)" v-if="extra.permission === undefined || session.authorize(extra.permission)">
+              <be-svg-icon :svg="extra.icon" v-if="extra.icon" />
+              {{ $t(extra.label )}}
+            </el-dropdown-item>
+          </template>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
   </div>
 </template>
 <script lang="ts" setup>
-import {defineExpose, onMounted, ref, watch} from 'vue'
-import {
-  ElMessage,
-  ElMessageBox,
-  type FilterNodeMethodFunction,
-  type TreeInstance
-} from 'element-plus'
-import ResourceCategoryForm from "@/views/microapp/developConfig/resource/ResourceCategoryForm.vue";
+import {defineExpose, ref, watch} from 'vue'
+import {ElMessageBox, type FilterNodeMethodFunction, type TreeInstance} from 'element-plus'
 import {executeOpenApi} from "@/api/common/platform";
 import {useI18n} from "vue-i18n"
-import {useModal} from '@/components/dialog/useModal.ts'
-import {useRoute} from "vue-router";
-import {getLangText} from "@/locales/common.ts";
+import {useSessionStore} from "@/stores/session.ts";
 
 interface Tree {
   [key: string]: any
 }
 
+interface ExtraItem {
+  label: string
+  name: string
+  icon: string
+  permission?: string
+}
+
 const props = withDefaults(
   defineProps<{
     queryApiCode: string
-    addApiCode: string
-    updateApiCode: string
-    deleteApiCode: string
-    formComponent?: string
+    permissionAddCode?: string
+    permissionEditCode?: string
+    permissionDeleteCode?: string
+    contextExtraItems?: Array<ExtraItem>
     label?: string
     children?: string
     nodeKey?: string
@@ -101,30 +110,28 @@ const props = withDefaults(
   }>(),
   {
     queryApiCode: undefined,
-    addApiCode: undefined,
-    updateApiCode: undefined,
-    deleteApiCode: undefined,
-    formComponent: '',
+    permissionAddCode: undefined,
+    permissionEditCode: undefined,
+    permissionDeleteCode: undefined,
+    contextExtraItems: undefined,
     label: 'name',
     children: 'children',
-    nodeKey: 'id',
+    nodeKey: 'code',
     lazy: false,
-    defaultExpandAll: true,
+    defaultExpandAll: false,
     highlightCurrent: true,
     checkStrictly: false,
     expandOnClickNode: false,
   }
 )
 
-const emit = defineEmits(['treeNodeClick', 'addNodeClick', 'editNodeClick'])
+const emit = defineEmits(['nodeClick', 'addNodeClick', 'editNodeClick', 'deleteNodeClick', 'extraNodeClick'])
+const session = useSessionStore()
 
-const {open} = useModal()
-const route = useRoute()
 const {t, locale} = useI18n()
 const activeContextMenuNode = ref(undefined)
 const treeData = ref([])
 const filterText = ref('')
-const queryParams = ref({})
 const treeRef = ref<TreeInstance>()
 const dropDownMenuRef = ref(null)
 const contextMenuPosition = ref({
@@ -141,13 +148,17 @@ watch(filterText, (val) => {
   treeRef.value!.filter(val)
 })
 
-onMounted(() => {
-  loadTreeData()
-})
-
 function loadTreeData() {
-  executeOpenApi(props.queryApiCode, queryParams, {}).then(res => {
+  executeOpenApi(props.queryApiCode, {}, {}).then(res => {
     treeData.value = res.data
+  })
+}
+
+function loadChildren(node, resolve, reject) {
+  executeOpenApi(props.queryApiCode, node.data, {}).then(res => {
+    resolve(res.data || [])
+  }).catch(err => {
+    reject(err)
   })
 }
 
@@ -176,51 +187,23 @@ const filterNode: FilterNodeMethodFunction = (value: string, data: Tree) => {
 }
 
 function onAddTreeRootNodeClick() {
-  console.log('onAddTreeRootNodeClick')
+  emit('addNodeClick', undefined)
+  refresh()
 }
 
-function onTreeNodeAddClick(action) {
-  const [lastRoute] = route.matched.slice(-1)
-  const obj = {}
-  if (action !== 'add') {
-    obj.parentId = activeContextMenuNode.value?.id
-  }
-  open(
-    ResourceCategoryForm,
-    {
-      url: '/platformSvr/sapi/resourceCategorys',
-      context: 'platformSvr',
-      className: 'com.byteasy.platform.entity.ResourceCategory',
-      row: obj
-    },
-    {
-      title: t('add') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
-      width: '50%',
-      onClose: (data) => {
-        refresh()
-      },
-    },
-  )
+function onTreeNodeAddClick() {
+  emit('addNodeClick', activeContextMenuNode.value)
+  refresh()
 }
 
 function onTreeNodeEditClick() {
-  const [lastRoute] = route.matched.slice(-1)
-  open(
-    ResourceCategoryForm,
-    {
-      url: '/platformSvr/sapi/resourceCategorys',
-      context: 'platformSvr',
-      className: 'com.byteasy.platform.entity.ResourceCategory',
-      row: activeContextMenuNode.value
-    }, // 传给组件的 props
-    {
-      title: t('table.edit') + getLangText(lastRoute !== undefined ? lastRoute.meta.title : '', locale.value),
-      width: '50%',
-      onClose: (data) => {
-        refresh()
-      },
-    },
-  )
+  emit('editNodeClick', activeContextMenuNode.value)
+  refresh()
+}
+
+function onTreeNodeExtraClick(name) {
+  emit('extraNodeClick', name, activeContextMenuNode.value)
+  refresh()
 }
 
 function onTreeNodeDeleteClick() {
@@ -231,15 +214,13 @@ function onTreeNodeDeleteClick() {
       type: 'warning'
     })
     .then(() => {
-      executeOpenApi(props.deleteApiCode, activeContextMenuNode.value, {}).then(() => {
-        refresh()
-        ElMessage.success(t('operationSuccess'))
-      })
+      emit('deleteNodeClick', activeContextMenuNode.value)
+      refresh()
     })
 }
 
 function onTreeNodeClick(data, props, treeNode, event) {
-  emit('treeNodeClick', data)
+  emit('nodeClick', data)
 }
 
 function refresh() {

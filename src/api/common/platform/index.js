@@ -74,44 +74,50 @@ export function runDefaultValueScript(input, script) {
   })
 }
 
-export function executeOpenApi(apiCode, params, data) {
-  return new Promise((resolve, reject) => {
-    request({
-      url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi', {code: apiCode}),
+export async function executeOpenApi(apiCode, params, data) {
+  try {
+    // 第一步：发起请求
+    const response = await request({
+      url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi', { code: apiCode }),
       method: 'get',
       data: data
-    }).then(response => {
-      if (response.success === true) {
-        const openapi = response.data.records[0]
-        // 脚本函数
-        if (openapi.scriptId) {
-          request({
-            url: getUrl(openapi.entityDefine.serviceInstance.contextPath + '/sapi/script/api/' + apiCode, params),
-            method: 'post',
-            data: data
-          }).then(result => {
-            resolve(result)
-          }).catch(error => {
-            reject(error)
-          })
-        } else {
-          request({
-            url: getUrl(genUri(openapi.uri, params), params),
-            method: openapi.httpMethod,
-            data: data
-          }).then(result => {
-            resolve(result)
-          }).catch(error => {
-            reject(error)
-          })
-        }
-      } else {
-        reject(response.error)
-      }
-    }).catch(error => {
-      reject(error)
-    })
-  })
+    });
+
+    // 第二步：校验 success
+    if (response.success !== true) {
+      throw response.error || new Error('获取 OpenAPI 配置失败');
+    }
+
+    // 第三步：提取数据
+    const openapi = response.data?.records?.[0];
+    if (!openapi) {
+      throw new Error(`未找到 apiCode: ${apiCode} 对应的配置信息`);
+    }
+
+    // 第四步：根据条件发起二次请求
+    if (openapi.scriptId) {
+      const contextPath = openapi.entityDefine?.serviceInstance?.contextPath || '';
+
+      return request({
+        url: getUrl(`${contextPath}/sapi/script/api/${apiCode}`, params),
+        method: 'post',
+        data: data
+      });
+    }
+
+    console.log(`[调试] 7. 走无 scriptId 分支，准备发起最终请求...`);
+    return request({
+      url: getUrl(genUri(openapi.uri, params), params),
+      method: openapi.httpMethod,
+      data: data
+    });
+
+  } catch (error) {
+    // 捕获这个函数内部发生的任何阻断
+    console.error(`[调试] 💥 发生异常，函数执行被提前中断！错误信息:`, error);
+    // 必须继续向上抛出，否则外层会以为执行成功了
+    throw error;
+  }
 }
 
 /**
