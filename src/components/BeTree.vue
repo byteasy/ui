@@ -57,16 +57,18 @@
             </el-icon>
             {{ $t('table.edit') }}
           </el-dropdown-item>
-          <el-dropdown-item @click="onTreeNodeDeleteClick" v-if="props.permissionDeleteCode === undefined || session.authorize(props.permissionDeleteCode)">
+          <el-dropdown-item @click="onTreeNodeDeleteClick"
+                            v-if="props.permissionDeleteCode === undefined || session.authorize(props.permissionDeleteCode)">
             <el-icon>
               <FolderDelete/>
             </el-icon>
             {{ $t('table.delete') }}
           </el-dropdown-item>
           <template v-for="extra in props.contextExtraItems" :key="extra.name">
-            <el-dropdown-item @click="onTreeNodeExtraClick(extra.name)" v-if="extra.permission === undefined || session.authorize(extra.permission)">
-              <be-svg-icon :svg="extra.icon" v-if="extra.icon" />
-              {{ $t(extra.label )}}
+            <el-dropdown-item @click="onTreeNodeExtraClick(extra.name)"
+                              v-if="extra.permission === undefined || session.authorize(extra.permission)">
+              <be-svg-icon :svg="extra.icon" v-if="extra.icon"/>
+              {{ $t(extra.label) }}
             </el-dropdown-item>
           </template>
         </el-dropdown-menu>
@@ -188,22 +190,26 @@ const filterNode: FilterNodeMethodFunction = (value: string, data: Tree) => {
 
 function onAddTreeRootNodeClick() {
   emit('addNodeClick', undefined)
+  // 修改的根部节点，直接刷新整棵树
   refresh()
 }
 
 function onTreeNodeAddClick() {
   emit('addNodeClick', activeContextMenuNode.value)
-  refresh()
+  executeOpenApi(props.queryApiCode, activeContextMenuNode.value, {}).then(res => {
+    activeContextMenuNode.value.children = res.data
+  }).catch(err => {
+  })
 }
 
 function onTreeNodeEditClick() {
   emit('editNodeClick', activeContextMenuNode.value)
-  refresh()
+  refreshCurrentNode(activeContextMenuNode.value)
 }
 
 function onTreeNodeExtraClick(name) {
   emit('extraNodeClick', name, activeContextMenuNode.value)
-  refresh()
+  refreshCurrentNode(activeContextMenuNode.value)
 }
 
 function onTreeNodeDeleteClick() {
@@ -215,8 +221,21 @@ function onTreeNodeDeleteClick() {
     })
     .then(() => {
       emit('deleteNodeClick', activeContextMenuNode.value)
-      refresh()
+      refreshCurrentNode(activeContextMenuNode.value)
     })
+}
+
+function getParentData(currentData) {
+  // 通过 treeRef 和当前数据获取内部 Node 对象
+  const currentNode = treeRef.value?.getNode(currentData)
+
+  // 获取父节点数据 (注意：根节点的 parent.data 是一个内部生成的数组，不是你业务数据的父节点)
+  // 所以需要判断 parent 的 level
+  let parentData = undefined
+  if (currentNode && currentNode.parent && currentNode.parent.level > 0) {
+    parentData = currentNode.parent.data
+  }
+  return parentData
 }
 
 function onTreeNodeClick(data, props, treeNode, event) {
@@ -225,6 +244,28 @@ function onTreeNodeClick(data, props, treeNode, event) {
 
 function refresh() {
   loadTreeData()
+}
+
+function refreshCurrentNode(nodeData) {
+  const parent = getParentData(nodeData)
+  if (parent !== undefined) {
+    executeOpenApi(props.queryApiCode, parent, {}).then(res => {
+      // 获取父节点的唯一 Key（你配置了 props.nodeKey 默认为 'code'）
+      const parentKey = parent[props.nodeKey]
+
+      // 使用 el-tree 内置 API 覆盖更新子节点
+      // 这会自动处理内部 Node 状态，销毁旧节点，渲染新节点，不会出现重复
+      treeRef.value!.updateKeyChildren(parentKey, res.data || [])
+
+      // 注意：无需再手动修改 parent.children，updateKeyChildren 会在底层帮你同步数据
+    }).catch(err => {
+      console.error(err)
+    })
+  } else {
+    // 如果 parent 是 undefined，说明编辑的是根节点
+    // 此时直接刷新整棵树即可
+    refresh()
+  }
 }
 
 defineExpose({
