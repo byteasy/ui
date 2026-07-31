@@ -49,9 +49,9 @@ export function getEnumValues(serviceContext, enumClassName) {
   })
 }
 
-export function getEntitySchema(serviceContext, enumClassName) {
+export function getEntitySchema(enumClassName) {
   return request({
-    url: '/' + serviceContext + '/sapi/schemas/' + enumClassName,
+    url: '/platformSvr/sapi/schemas/' + enumClassName,
     method: 'get',
   })
 }

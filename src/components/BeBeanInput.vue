@@ -85,7 +85,7 @@ onMounted(() => {
 })
 
 function loadDynamicFields() {
-  getEntitySchema(props.context ? props.context : 'platformSvr', props.className)
+  getEntitySchema(props.className)
     .then((response) => {
       tableColumns.value = response.data
       for (const col in tableColumns.value) {

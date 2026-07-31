@@ -87,7 +87,7 @@ const {t, locale} = useI18n()
 
 onMounted(() => {
   if (props.column.uiComponent === 'TABLE') {
-    getEntitySchema(props.entityDefine.serviceInstance.contextPath.substring(1), props.entityDefine.code).then(response => {
+    getEntitySchema(props.entityDefine.code).then(response => {
       columns.value = response.data
       loading.value = false
     })

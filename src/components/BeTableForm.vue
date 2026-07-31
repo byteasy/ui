@@ -92,7 +92,7 @@ onMounted(() => {
 })
 
 function loadTableColumns() {
-  getEntitySchema(props.context, props.className)
+  getEntitySchema(props.className)
     .then((response) => {
       const arrs = sortColumnsByShowOrder(mergeLocalStorage(response.data))
       tableColumns.value = arrs

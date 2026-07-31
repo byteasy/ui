@@ -42,7 +42,7 @@ const emit = defineEmits(['editClick'])
 
 const columns = ref([])
 
-getEntitySchema(props.context, props.className)
+getEntitySchema(props.className)
   .then((response) => {
     columns.value = response.data
   })

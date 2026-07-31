@@ -137,7 +137,7 @@ onMounted(() => {
     }
 
     console.log('模型元数据', localMetaData)
-    getEntitySchema(localMetaData.context, localMetaData.className)
+    getEntitySchema(localMetaData.className)
       .then((response) => {
         fieldComponents.value = response.data.filter(s => s.fieldComponent)
         loading.value = false

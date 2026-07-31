@@ -71,14 +71,9 @@ watch(
 )
 
 function init() {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {})
+  getEntitySchema(props.column.externalClass)
     .then((response) => {
-      const contextPath = response.serviceInstance.contextPath
-      svrContext.value = contextPath.substring(1)
-      getEntitySchema(svrContext.value, props.column.externalClass)
-        .then((response) => {
-          columns.value = response.data
-        })
+      columns.value = response.data
     })
 }
 </script>
