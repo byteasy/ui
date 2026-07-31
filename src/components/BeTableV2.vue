@@ -91,7 +91,6 @@ const {t, locale} = useI18n()
 
 const props = defineProps<{
   baseUrl: string
-  context: string
   className: string
   titleColumnName?: string
   queryParams?: any
@@ -314,7 +313,6 @@ function onExcelImportClick() {
       {
         columns: tableColumns.value,
         url: props.baseUrl,
-        context: props.context
       }, // 传给组件的 props
       {
         title: t('table.importByExcel') + '>' + getLangText(entityDefine.name, locale.value),
@@ -358,7 +356,6 @@ function onView(row) {
         row: row,
         url: props.baseUrl,
         readonly: true,
-        context: props.context,
       }, // 传给组件的 props
       {
         title: t('table.view') + getLangText(entityDefine.name, locale.value),
@@ -423,7 +420,6 @@ function onEdit(row) {
         columns: tableColumns.value,
         row: row,
         url: props.baseUrl,
-        context: props.context,
       }, // 传给组件的 props
       {
         title: t('table.edit') + getLangText(entityDefine.name, locale.value),

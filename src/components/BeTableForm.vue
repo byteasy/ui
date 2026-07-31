@@ -21,7 +21,6 @@
                              :param="parseComponentParam(col.fieldComponent)"
                              :formModel="formValue"
                              v-if="col.fieldComponent"
-                             :context="props.context ? props.context : 'platformSvr'"
                              :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                              :column="col"
                              clearable
@@ -30,7 +29,6 @@
                   <be-form-field
                     v-else
                     :column="col"
-                    :context="props.context"
                     :placeholder="getLangText(col.displayName, locale)"
                     clearable
                     :disabled="props.readonly"
@@ -73,7 +71,6 @@ const {modules } = getRouteComponents()
 
 const props = defineProps<{
   url: string
-  context: string
   columns?: Array<any>
   className?: string
   row?: any

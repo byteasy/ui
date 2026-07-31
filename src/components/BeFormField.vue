@@ -46,11 +46,11 @@
     value-format="YYYY-MM-DD HH:mm:ss"
     class="w-full"
   />
-  <be-enum-select :code="props.column.typeClassName" :context="props.context"
+  <be-enum-select :code="props.column.typeClassName"
                v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
                :multiple="props.column.multiple === 'YES'"
   />
-  <be-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" :context="props.context" v-bind="$attrs">
+  <be-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" v-bind="$attrs">
     <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
       <slot :name="name" v-bind="slotProps"></slot>
     </template>
@@ -63,7 +63,6 @@ import {useI18n} from 'vue-i18n'
 const {t} = useI18n()
 
 const props = defineProps<{
-  context: string
   column: {
     className: string
     name: string

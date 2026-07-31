@@ -22,7 +22,6 @@
                            :param="parseComponentParam(col.fieldComponent)"
                            :formModel="formValue"
                            v-if="col.fieldComponent"
-                           :context="props.context ? props.context : 'platformSvr'"
                            :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                            :column="col"
                            clearable
@@ -32,7 +31,6 @@
                 <be-form-field
                   :column="col"
                   v-else
-                  :context="props.context ? props.context : 'platformSvr'"
                   :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                   clearable
                   :disabled="props.disabled"
@@ -63,7 +61,6 @@ const {t, locale} = useI18n() // 表单引用
 
 const props = defineProps<{
   className: string
-  context?: string
   disabled?: boolean
   modelValue?: Record<string, any> | null
   columns?: number

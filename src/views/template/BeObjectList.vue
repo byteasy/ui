@@ -2,7 +2,6 @@
   <be-table-v2
     ref="refTable"
     :base-url="localMetaData.baseUrl"
-    :context="localMetaData.context"
     :class-name="localMetaData.className"
     :query-params="localMetaData.queryParams"
     :excel-import-enable="localMetaData.excelEnable"
@@ -85,7 +84,6 @@ onMounted(() => {
   }
   localMetaData.formComponent = BeDefaultObjectForm
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + localMetaData.className, {}).then(entityDefine => {
-    localMetaData.context = entityDefine.serviceInstance.contextPath.substring(1)
     localMetaData.baseUrl = entityDefine.serviceInstance.contextPath + entityDefine.url
     localMetaData.queryParams = queryStringToJson(entityDefine.queryParams)
     localMetaData.titleColumnName = entityDefine.titleColumnName

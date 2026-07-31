@@ -56,7 +56,6 @@
                     col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
                   "
                   :code="col.typeClassName"
-                  :context="props.context"
                   :fixed="col.isFixed === 'YES'"
                   :label="getLangText(col.displayName, locale)"
                   :prop="col.name"
@@ -98,7 +97,6 @@ import {getLangText} from "@/locales/common.ts";
 
 const props = defineProps<{
   url: string
-  context: string
   columns: Array<any>
 }>()
 
