@@ -75,7 +75,7 @@
               </template>
             </be-popup-object-view>
             <el-link underline="never" @click="handleRowAction('edit', scope.row)" type="primary"
-                     v-permission="props.tableProps.className + '.Edit'">
+                     >
               {{ t('table.edit') }}
             </el-link>
             <slot name="table-operation-extra" :row="scope.row"></slot>
@@ -87,7 +87,7 @@
               @confirm="handleRowAction('delete', scope.row)"
             >
               <template #reference>
-                <el-link underline="never" type="danger" v-permission="props.tableProps.className + '.Delete'">
+                <el-link underline="never" type="danger">
                   {{ t('table.delete') }}
                 </el-link>
               </template>

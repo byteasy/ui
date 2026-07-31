@@ -34,7 +34,7 @@
                 <el-button type="primary" icon="Search" @click="handleEvent('refresh')">
                   {{ $t('search') }}
                 </el-button>
-                <el-button type="primary" icon="Plus" v-if="props.tableProps.queryMode !== true" v-permission="props.tableProps.className + '.Add'" @click="handleEvent('add')">
+                <el-button type="primary" icon="Plus" v-if="props.tableProps.queryMode !== true" @click="handleEvent('add')">
                   {{ $t('add') }}
                 </el-button>
               </slot>

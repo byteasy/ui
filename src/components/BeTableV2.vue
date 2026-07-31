@@ -34,15 +34,15 @@
             </template>
           </be-table-view>
           <be-card-list-view v-else
-                               ref="refBeTableView"
-                               :table-props="props"
-                               :fields="tableColumns"
-                               :width="width"
-                               :height="height"
-                               :data="tableData.records"
-                               @row-action="onRowActionHandle"
-                               @row-dblclick="onTableRowDoubleClick"
-                               v-loading="loading">
+                             ref="refBeTableView"
+                             :table-props="props"
+                             :fields="tableColumns"
+                             :width="width"
+                             :height="height"
+                             :data="tableData.records"
+                             @row-action="onRowActionHandle"
+                             @row-dblclick="onTableRowDoubleClick"
+                             v-loading="loading">
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
