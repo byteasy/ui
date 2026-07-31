@@ -42,9 +42,9 @@ export function doHttpDelete(url, params, data) {
   })
 }
 
-export function getEnumValues(serviceContext, enumClassName) {
+export function getEnumValues(enumClassName) {
   return request({
-    url: '/' + serviceContext + '/sapi/enums/' + enumClassName,
+    url: '/platformSvr/sapi/enums/' + enumClassName,
     method: 'get',
   })
 }

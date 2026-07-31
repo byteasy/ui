@@ -22,7 +22,7 @@ const enumMap = ref({})
 
 onMounted(() => {
   const code = props.param !== undefined ? props.param.code : props.code
-  getEnumValues('platformSvr', code).then((rsp) => {
+  getEnumValues(code).then((rsp) => {
     rsp.data.forEach((item) => {
       enumMap.value[XEUtils.toString(item.value)] = item
     })

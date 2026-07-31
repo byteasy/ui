@@ -16,11 +16,10 @@ const enumMap = ref({})
 const props = defineProps<{
   code: string
   prop: string
-  context: string
 }>()
 
 onMounted(() => {
-  getEnumValues(props.context, props.code).then((rsp) => {
+  getEnumValues(props.code).then((rsp) => {
     rsp.data.forEach((item) => {
       enumMap.value[XEUtils.toString(item.value)] = item
     })
