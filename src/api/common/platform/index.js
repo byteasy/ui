@@ -96,7 +96,7 @@ export async function executeOpenApi(apiCode, params, data) {
 
     // 第四步：根据条件发起二次请求
     if (openapi.scriptId) {
-      const contextPath = openapi.entityDefine?.serviceInstance?.contextPath || '';
+      const contextPath = openapi?.serviceInstance?.contextPath || '';
 
       return request({
         url: getUrl(`${contextPath}/sapi/script/api/${apiCode}`, params),

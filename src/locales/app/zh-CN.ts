@@ -27,6 +27,13 @@ export default {
       standardPermission: '标准权限',
       queryParams: 'URL参数',
       standardTableComponent: '标准模板'
+    },
+    ebApp: {
+      model: "模型",
+      form: "表单",
+      pageTemplate: "页面模板",
+      api: "接口",
+      permission: "权限",
     }
   }
 } as const
