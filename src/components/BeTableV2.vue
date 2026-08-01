@@ -410,7 +410,7 @@ function onAdd(row) {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
     open(
       getFormComponent(), // 要显示的组件
-      {columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row, className: props.className }, // 传给组件的 props
+      {columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row, className: props.className, apiSave: props.apiSave }, // 传给组件的 props
       {
         title: t('add') + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
@@ -433,7 +433,7 @@ function onEdit(row) {
         columns: tableColumns.value,
         row: row,
         className: props.className,
-        url: props.baseUrl,
+        url: props.baseUrl, apiSave: props.apiSave
       }, // 传给组件的 props
       {
         title: t('table.edit') + getLangText(entityDefine.name, locale.value),

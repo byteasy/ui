@@ -9,12 +9,12 @@
           <slot name="formItem" :props="props" :row="formValue" :queryParam="queryParam" :className="props.className">
             <component :is="getComponent(parseComponent(defaultFormItemComponent))"
                        :param="parseComponentParam(defaultFormItemComponent)"
-                       :formModel="formValue"
                        :row="formValue"
                        :className="props.className"
                        :readonly="props.readonly"
                        :queryParam="queryParam" />
           </slot>
+          <slot name="formItemExtra" :props="props" :row="formValue" :queryParam="queryParam" :className="props.className"/>
         </div>
       </el-form>
     </div>
@@ -57,6 +57,7 @@ function onSaveClick() {
       ElMessage.success(t('operationSuccess'))
       emit('close', 'ok')
     }).catch(err => {
+      ElMessage.error(err.message)
     })
   })
 }

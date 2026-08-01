@@ -9,7 +9,7 @@
         <slot :name="'formItemField_' + col.name" :row="formValue" :column="col" :props="props">
           <component :is="getComponent(parseComponent(col.fieldComponent))"
                      :param="parseComponentParam(col.fieldComponent)"
-                     :formModel="formValue"
+                     :row="formValue"
                      v-if="col.fieldComponent"
                      :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                      :column="col"
@@ -57,7 +57,6 @@ const props = defineProps<{
   row?: any
   readonly?: boolean
   param?: object
-  formModel?: object
   queryParam?: object
 }>()
 
