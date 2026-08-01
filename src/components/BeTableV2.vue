@@ -84,7 +84,7 @@ import BeExcelImport from "@/components/BeExcelImport.vue";
 import BeExcelExport from "@/components/BeExcelExport.vue";
 import {useModal} from "@/components/dialog/useModal.ts";
 import BeTableContainer from "@/components/BeTableContainer.vue";
-import BeTableForm from "@/components/BeTableForm.vue";
+import BeForm from "@/components/BeForm.vue";
 
 const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
@@ -92,6 +92,18 @@ const {t, locale} = useI18n()
 const props = defineProps<{
   baseUrl: string
   className: string
+  apiQuery?: string
+  apiSave?: string
+  apiDelete?: string
+  apiDownloadImportTemplate?: string
+  apiImportPreview?: string
+  apiImportBatchSave?: string
+  apiExport?: string
+  permissionAddCode?: string
+  permissionEditCode?: string
+  permissionDeleteCode?: string
+  permissionImportCode?: string
+  permissionExportCode?: string
   titleColumnName?: string
   queryParams?: any
   formWidth?: string | number
@@ -241,7 +253,7 @@ function getFormComponent() {
   if (props.formComponent) {
     return props.formComponent
   } else {
-    return BeTableForm
+    return BeForm
   }
 }
 
@@ -355,6 +367,7 @@ function onView(row) {
         columns: tableColumns.value,
         row: row,
         url: props.baseUrl,
+        className: props.className,
         readonly: true,
       }, // 传给组件的 props
       {
@@ -397,7 +410,7 @@ function onAdd(row) {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
     open(
       getFormComponent(), // 要显示的组件
-      {columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row}, // 传给组件的 props
+      {columns: tableColumns.value, url: props.baseUrl, context: props.context, row: row, className: props.className }, // 传给组件的 props
       {
         title: t('add') + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
@@ -419,6 +432,7 @@ function onEdit(row) {
       {
         columns: tableColumns.value,
         row: row,
+        className: props.className,
         url: props.baseUrl,
       }, // 传给组件的 props
       {

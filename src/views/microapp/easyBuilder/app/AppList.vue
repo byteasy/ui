@@ -9,8 +9,7 @@
         <el-tab-pane :label="$t('platform.ebApp.api')" name="api" class="h-full">
           <tab-api v-if="activeName === 'api'" />
         </el-tab-pane>
-        <el-tab-pane :label="$t('platform.ebApp.form')" name="form"></el-tab-pane>
-        <el-tab-pane :label="$t('platform.ebApp.pageTemplate')" name="pageTemplate"></el-tab-pane>
+        <el-tab-pane :label="$t('platform.ebApp.pageLayout')" name="pageLayout"></el-tab-pane>
         <el-tab-pane :label="$t('platform.ebApp.permission')" name="permission"></el-tab-pane>
       </el-tabs>
     </el-splitter-panel>

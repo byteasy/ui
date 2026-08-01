@@ -64,6 +64,10 @@
                  style="font-size: var(--el-font-size-extra-small)" @click="initStandComponent">
           {{ $t('platform.resource.standardTableComponent') }}
         </el-link>
+        <el-link v-if="scope.row.type === 'MENU'" type="primary" underline="never"
+                 style="font-size: var(--el-font-size-extra-small)" @click="initStandComponentNew">
+          {{ $t('platform.resource.standardTableComponent') + 'New' }}
+        </el-link>
       </div>
     </template>
     <template v-slot:formItemField_layout="scope">
@@ -138,6 +142,11 @@ onMounted(() => {
     }
   }
 })
+
+function initStandComponentNew() {
+  tableMetaData.value.queryParams = "{\"id\":\"1\"}"
+  refForm.value.formValue.component = '/views/template/BeStandPageLayout.vue'
+}
 
 function initStandComponent() {
   tableMetaData.value.className = ''

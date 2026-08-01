@@ -44,7 +44,7 @@
     value-format="YYYY-MM-DD HH:mm:ss"
     :style="{ width: (props.column.width === 0 ? 240 : props.column.width) + 'px' }"
   />
-  <be-enum-select :code="props.column.typeClassName" :context="props.context"
+  <be-enum-select :code="props.column.typeClassName"
                v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
                :multiple="props.column.multiple === 'YES'"
                :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }"/>
@@ -53,7 +53,6 @@
 <script lang="ts" setup>
 
 const props = defineProps<{
-  context: string
   column: {
     className: string
     name: string

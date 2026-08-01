@@ -30,8 +30,7 @@ export default {
     },
     ebApp: {
       model: "模型",
-      form: "表单",
-      pageTemplate: "页面模板",
+      pageLayout: "布局",
       api: "接口",
       permission: "权限",
     }
