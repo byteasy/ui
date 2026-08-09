@@ -73,7 +73,7 @@ import {
   ref,
 } from 'vue'
 import BeContainer from '@/components/BeContainer.vue'
-import {doHttpDelete, doHttpGet, getEntitySchema} from '@/api/common/platform'
+import {doHttpDelete, doHttpGet, executeOpenApi, getEntitySchema} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
@@ -91,7 +91,7 @@ const {t, locale} = useI18n()
 
 const props = defineProps<{
   className: string
-  apiQuery?: string
+  apiQuery: string
   apiSave?: string
   apiDelete?: string
   apiDownloadImportTemplate?: string
@@ -199,8 +199,20 @@ function onPageChange(currentPage, pageSize) {
 
 function refresh() {
   loading.value = true
-  doHttpGet(props.baseUrl, queryParam.value)
-    .then((rsp) => {
+  if(props.apiQuery.startsWith('/')) {
+    doHttpGet(props.apiQuery, queryParam.value)
+      .then((rsp) => {
+        tableData.value = rsp.data
+        loading.value = false
+
+        nextTick(() => {
+          if (props.dataRenderFinish) {
+            props.dataRenderFinish(tableData.value)
+          }
+        })
+      })
+  } else {
+    executeOpenApi(props.apiCode, queryParam.value, {}).then((rsp) => {
       tableData.value = rsp.data
       loading.value = false
 
@@ -210,6 +222,7 @@ function refresh() {
         }
       })
     })
+  }
 }
 
 function onTableRowClick(row) {

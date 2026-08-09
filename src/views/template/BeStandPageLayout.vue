@@ -1,7 +1,8 @@
 <template>
-  <be-table-v2
+  <be-table
     ref="refTable"
     :class-name="localMetaData.className"
+    :api-query="localMetaData.apiQuery"
     :query-params="localMetaData.queryParams"
     :excel-import-enable="localMetaData.excelEnable"
     :excel-import-component="localMetaData.excelImportComponent"
@@ -41,7 +42,7 @@
                  :tableRef="refTable"
                  :row="scope.row"></component>
     </template>
-  </be-table-v2>
+  </be-table>
   <el-skeleton :rows="5" animated v-else/>
 </template>
 
@@ -82,6 +83,7 @@ onMounted(() => {
   }
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + localMetaData.className, {}).then(entityDefine => {
     localMetaData.queryParams = queryStringToJson(entityDefine.queryParams)
+    localMetaData.apiQuery = entityDefine.serviceInstance.contextPath + '/sapi/common/' + localMetaData.className
     localMetaData.titleColumnName = entityDefine.titleColumnName
     localMetaData.operationColumnWidth = entityDefine.operationColumnWidth
     if (entityDefine.formComponent) {
@@ -109,6 +111,7 @@ onMounted(() => {
     }
 
     // 传递过来的queryParam拥有最高优先级
+    if (params.apiQuery !== undefined) localMetaData.apiQuery = params.apiQuery
     if (params.titleColumnName !== undefined) localMetaData.titleColumnName = params.titleColumnName
     if (params.operationColumnWidth !== undefined) localMetaData.operationColumnWidth = params.operationColumnWidth
     if (params.formComponent) localMetaData.formComponent = getComponent('..' + params.formComponent)

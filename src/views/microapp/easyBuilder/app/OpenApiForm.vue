@@ -41,8 +41,7 @@ const refBeForm = ref(null)
 const {t, locale} = useI18n()
 
 onMounted(() => {
-  refBeForm.value.formValue.type = 2
-  console.log(refBeForm.value.formValue)
+  refBeForm.value.formValue.type = 1
 })
 
 function onButtonClick(btnName) {

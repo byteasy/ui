@@ -1,6 +1,6 @@
 <template>
-  <be-object-list :meta-data="{ className: 'com.byteasy.platform.entity.Openapi', formComponent: '/views/microapp/easyBuilder/app/OpenApiForm.vue' }" class="h-full" />
+  <be-stand-page-layout :meta-data="{ className: 'com.byteasy.platform.entity.Openapi', formComponent: '/views/microapp/easyBuilder/app/OpenApiForm.vue' }" class="h-full" />
 </template>
 <script lang="ts" setup>
-import BeObjectList from "@/views/template/BeObjectList.vue";
+import BeStandPageLayout from "@/views/template/BeStandPageLayout.vue";
 </script>

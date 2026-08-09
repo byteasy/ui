@@ -6,7 +6,8 @@
       <el-form ref="refForm" label-width="auto" label-position="right" class="form-root"
                :model="formValue">
         <div class="form-grid w-full">
-          <slot name="formItem" :props="props" :row="formValue" :queryParam="queryParam" :className="props.className">
+          <slot name="formItem" :props="props" :row="formValue" :queryParam="queryParam"
+                :className="props.className">
             <component :is="getComponent(parseComponent(defaultFormItemComponent))"
                        :param="parseComponentParam(defaultFormItemComponent)"
                        :row="formValue"
@@ -18,7 +19,8 @@
               </template>
             </component>
           </slot>
-          <slot name="formItemExtra" :props="props" :row="formValue" :queryParam="queryParam" :className="props.className"/>
+          <slot name="formItemExtra" :props="props" :row="formValue" :queryParam="queryParam"
+                :className="props.className"/>
         </div>
       </el-form>
     </div>
@@ -28,7 +30,7 @@
 <script setup lang="ts">
 import {defineEmits, defineExpose, defineModel, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
-import {executeOpenApi} from '@/api/common/platform'
+import {doHttpPost, executeOpenApi} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
@@ -50,19 +52,28 @@ const props = defineProps<{
   formItemComponent?: string
 }>()
 
-const formValue = defineModel<any>('row', { default: () => ({}) })
+const formValue = defineModel<any>('row', {default: () => ({})})
 const queryParam = ref({})
 const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue')
 
 function onSaveClick() {
   refForm.value?.validate(valid => {
     if (!valid) return
-    executeOpenApi(props.apiSave, queryParam.value, formValue.value).then(res => {
-      ElMessage.success(t('operationSuccess'))
-      emit('close', 'ok')
-    }).catch(err => {
-      ElMessage.error(err.message)
-    })
+    if (props.apiSave.startsWith('/')) {
+      doHttpPost(props.apiSave, queryParam.value, formValue.value).then(() => {
+        ElMessage.success(t('operationSuccess'))
+        emit('close', 'ok')
+      }).catch(err => {
+        ElMessage.error(err.message)
+      })
+    } else {
+      executeOpenApi(props.apiSave, queryParam.value, formValue.value).then(() => {
+        ElMessage.success(t('operationSuccess'))
+        emit('close', 'ok')
+      }).catch(err => {
+        ElMessage.error(err.message)
+      })
+    }
   })
 }
 
