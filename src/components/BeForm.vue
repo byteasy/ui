@@ -12,7 +12,11 @@
                        :row="formValue"
                        :className="props.className"
                        :readonly="props.readonly"
-                       :queryParam="queryParam" />
+                       :queryParam="queryParam">
+              <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
+                <slot :name="name" v-bind="slotProps"></slot>
+              </template>
+            </component>
           </slot>
           <slot name="formItemExtra" :props="props" :row="formValue" :queryParam="queryParam" :className="props.className"/>
         </div>
@@ -22,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineEmits, defineExpose, ref} from 'vue'
+import {defineEmits, defineExpose, defineModel, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {executeOpenApi} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
@@ -46,7 +50,7 @@ const props = defineProps<{
   formItemComponent?: string
 }>()
 
-const formValue = ref({...props.row})
+const formValue = defineModel<any>('row', { default: () => ({}) })
 const queryParam = ref({})
 const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue')
 

@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue'
+import {defineModel, onMounted, ref} from 'vue'
 import BeFormField from '@/components/BeFormField.vue'
 import {useI18n} from 'vue-i18n'
 import {getEntitySchema} from '@/api/common/platform'
@@ -60,7 +60,7 @@ const props = defineProps<{
   queryParam?: object
 }>()
 
-const formValue = ref({...props.row})
+const formValue = defineModel<any>('row', { default: () => ({}) })
 const tableColumns = ref(props.columns ?? [])
 
 onMounted(() => {
