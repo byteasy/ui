@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineEmits, defineExpose, defineModel, ref} from 'vue'
+import {defineEmits, defineExpose, defineModel, onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {doHttpPost, executeOpenApi} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'

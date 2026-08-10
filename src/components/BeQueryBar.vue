@@ -3,24 +3,24 @@
     <div class="w-full flex-row">
       <div class="flex-grow flex-row justify-content-start">
         <el-form :inline="true" class="w-full">
-          <slot name="from-query" :fields="props.fields" :queryParam="props.queryParams">
+          <slot name="from-query" :fields="props.fields" :queryParam="queryParam">
             <template v-for="col in visibleFields" :key="col.name">
               <el-form-item :label="getLangText(col.displayName, locale)"
                             v-if="col.isSearch === 'YES'">
                 <slot :name="'form-query-field-' + col.name" :column="col"
-                      :queryParam="props.queryParams">
+                      :queryParam="queryParam">
                   <be-query-field
                     :column="col"
                     :context="props.tableProps.context"
                     :placeholder="getLangText(col.displayName, locale)"
-                    v-model="props.queryParams[col.name]"
+                    v-model="queryParam[col.name]"
                     clearable
                     @change="handleEvent('refresh')"
                     :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"/>
                 </slot>
               </el-form-item>
             </template>
-            <slot name="form-query-extra" :queryParam="props.queryParams"/>
+            <slot name="form-query-extra" :queryParam="queryParam"/>
             <el-form-item>
               <div v-if="showCollapseBtn === true"
                    @click="isCollapsed = !isCollapsed, updateVisibleFields()"
@@ -38,7 +38,7 @@
                   {{ $t('add') }}
                 </el-button>
               </slot>
-              <slot name="form-query-buttons-extra" :queryParam="props.queryParams" :queryMode="props.tableProps.queryMode"></slot>
+              <slot name="form-query-buttons-extra" :queryParam="queryParam" :queryMode="props.tableProps.queryMode"></slot>
             </el-form-item>
           </slot>
         </el-form>
@@ -91,7 +91,7 @@
 
 <script lang="ts" setup>
 import {
-  type Component,
+  type Component, defineModel,
   nextTick,
   onActivated,
   onDeactivated,
@@ -137,6 +137,7 @@ const props = defineProps<{
 
 const {t, locale} = useI18n()
 const emit = defineEmits(['refresh', 'add', 'moreAction'])
+const queryParam = defineModel<any>('queryParams', {default: () => ({})})
 
 const queryBarRef = ref(null)
 const isCollapsed = ref(true)
@@ -193,7 +194,7 @@ const updateVisibleFields = () => {
   }
 }
 
-const handleEvent = (event) => emit(event, { ...props.queryParams })
+const handleEvent = (event) => emit(event, JSON.parse(JSON.stringify(queryParam.value)))
 
 // 监听 resize 自动刷新（防抖）
 let resizeTimer = null

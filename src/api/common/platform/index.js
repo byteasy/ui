@@ -12,14 +12,14 @@ function getUrl(url, params) {
 
 export function doHttpGet(url, params) {
   return request({
-    url: getUrl(url, params),
+    url: getUrl(genUri(url, params), params),
     method: 'get',
   })
 }
 
 export function doHttpPut(url, params, data) {
   return request({
-    url: getUrl(url, params),
+    url: getUrl(genUri(url, params), params),
     method: 'put',
     data: data,
   })
@@ -27,7 +27,7 @@ export function doHttpPut(url, params, data) {
 
 export function doHttpPost(url, params, data, config = {}) {
   return request({
-    url: getUrl(url, params),
+    url: getUrl(genUri(url, params), params),
     method: 'post',
     data: data,
     ...config,
@@ -36,7 +36,7 @@ export function doHttpPost(url, params, data, config = {}) {
 
 export function doHttpDelete(url, params, data) {
   return request({
-    url: getUrl(url, params),
+    url: getUrl(genUri(url, params), params),
     method: 'delete',
     data: data,
   })
