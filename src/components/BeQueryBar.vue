@@ -11,7 +11,6 @@
                       :queryParam="queryParam">
                   <be-query-field
                     :column="col"
-                    :context="props.tableProps.context"
                     :placeholder="getLangText(col.displayName, locale)"
                     v-model="queryParam[col.name]"
                     clearable
@@ -107,8 +106,6 @@ import {useSessionStore} from "@/stores/session.ts";
 
 const props = defineProps<{
   tableProps: {
-    baseUrl: string
-    context: string
     className: string
     titleColumnName?: string
     queryParams?: any
