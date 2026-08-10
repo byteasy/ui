@@ -3,6 +3,8 @@
     ref="refTable"
     :class-name="localMetaData.className"
     :api-query="localMetaData.apiQuery"
+    :api-save="localMetaData.apiSave"
+    :api-delete="localMetaData.apiDelete"
     :query-params="localMetaData.queryParams"
     :excel-import-enable="localMetaData.excelEnable"
     :excel-import-component="localMetaData.excelImportComponent"
@@ -82,7 +84,15 @@ onMounted(() => {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + localMetaData.value.className, {}).then(entityDefine => {
     const tmpParams = queryStringToJson(entityDefine.queryParams)
     Object.assign(localMetaData.value.queryParams, tmpParams)
-    localMetaData.value.apiQuery = entityDefine.serviceInstance.contextPath + '/sapi/common/' + localMetaData.value.className
+    if(!localMetaData.value.apiQuery) {
+      localMetaData.value.apiQuery = entityDefine.serviceInstance.contextPath + '/sapi/common/' + localMetaData.value.className
+    }
+    if(!localMetaData.value.apiSave) {
+      localMetaData.value.apiSave = entityDefine.serviceInstance.contextPath + '/sapi/common/' + localMetaData.value.className
+    }
+    if(!localMetaData.value.apiDelete) {
+      localMetaData.value.apiDelete = entityDefine.serviceInstance.contextPath + '/sapi/common/' + localMetaData.value.className
+    }
     localMetaData.value.titleColumnName = entityDefine.titleColumnName
     localMetaData.value.operationColumnWidth = entityDefine.operationColumnWidth
     if (entityDefine.formComponent) {
@@ -110,7 +120,6 @@ onMounted(() => {
     }
 
     // 传递过来的queryParam拥有最高优先级
-    if (params.apiQuery !== undefined) localMetaData.value.apiQuery = params.apiQuery
     if (params.titleColumnName !== undefined) localMetaData.value.titleColumnName = params.titleColumnName
     if (params.operationColumnWidth !== undefined) localMetaData.value.operationColumnWidth = params.operationColumnWidth
     if (params.formComponent) localMetaData.value.formComponent = params.formComponent

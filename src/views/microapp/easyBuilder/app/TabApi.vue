@@ -1,5 +1,5 @@
 <template>
-  <be-stand-page-layout :meta-data="metaData" class="h-full"/>
+  <be-stand-page-layout :meta-data="metaData" class="h-full" />
 </template>
 
 <script lang="ts" setup>
@@ -20,7 +20,7 @@ const metaData = ref({
   formComponent: '/views/microapp/easyBuilder/app/OpenApiForm.vue',
   queryParams: {
     resourceId: undefined
-  },
+  }
 })
 
 watch(

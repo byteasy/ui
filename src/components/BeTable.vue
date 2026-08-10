@@ -451,11 +451,18 @@ function onEdit(row) {
 }
 
 function onDelete(row) {
-  doHttpDelete(props.baseUrl + '/' + row.id)
-    .then(() => {
+  if(props.apiDelete.startsWith('/')) {
+    doHttpDelete(props.apiDelete, queryParam.value, row)
+      .then(() => {
+        ElMessage.success(t('operationSuccess'))
+        refresh()
+      })
+  } else {
+    executeOpenApi(props.apiDelete, queryParam.value, row).then(() => {
       ElMessage.success(t('operationSuccess'))
       refresh()
     })
+  }
 }
 
 defineExpose({
