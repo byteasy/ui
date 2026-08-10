@@ -66,11 +66,11 @@
 import {
   type Component,
   defineEmits,
-  defineExpose,
+  defineExpose, defineModel,
   nextTick,
   onBeforeMount,
   onMounted,
-  ref,
+  ref, watch,
 } from 'vue'
 import BeContainer from '@/components/BeContainer.vue'
 import {doHttpDelete, doHttpGet, executeOpenApi, getEntitySchema} from '@/api/common/platform'
@@ -131,19 +131,14 @@ const tableColumns = ref([])
 const tableData = ref({total: '0'})
 const loading = ref(false)
 const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
-const queryParam = ref({current: 1, size: 20, descColumns: []})
 const refBeTableView = ref(null)
 const {open} = useModal()
+const queryParam = defineModel<any>('queryParams', {default: () => ({current: 1, size: 20, descColumns: []})})
 
-const mergeQueryParams = () => {
-  if (props.queryParams && typeof props.queryParams === 'object') {
-    // 使用对象展开运算符合并，props.queryParams 会覆盖默认值
-    queryParam.value = {
-      ...queryParam.value,
-      ...props.queryParams,
-    }
-  }
-}
+watch(queryParam, (newVal, oldVal) => {
+  console.log('tableQueryParams', newVal)
+  refresh()
+}, { deep: true })
 
 onBeforeMount(() => {
   loadTableColumns()
@@ -154,8 +149,6 @@ function loadTableColumns() {
     .then((response) => {
       const arrs = sortColumnsByShowOrder(mergeLocalStorage(response.data))
       tableColumns.value = arrs
-
-      mergeQueryParams();
     })
     .catch((error) => {
       console.log(error)
@@ -187,14 +180,12 @@ function mergeLocalStorage(data: Array<never>) {
 }
 
 onMounted(() => {
-  mergeQueryParams()
   refresh()
 })
 
 function onPageChange(currentPage, pageSize) {
   queryParam.value.current = currentPage
   queryParam.value.size = pageSize
-  refresh()
 }
 
 function refresh() {
@@ -263,8 +254,10 @@ function setCurrentRow(row) {
 
 function getFormComponent() {
   if (props.formComponent) {
+    console.log('Load form:', props.formComponent)
     return props.formComponent
   } else {
+    console.log('Load form: BeForm')
     return BeForm
   }
 }
@@ -356,7 +349,6 @@ function onExcelExportClick() {
       props.excelExportComponent || BeExcelExport,
       {
         columns: tableColumns.value,
-        url: props.baseUrl,
         queryParam: queryParam.value,
       },
       {
