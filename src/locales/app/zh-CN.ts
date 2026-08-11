@@ -33,6 +33,7 @@ export default {
       pageLayout: "布局",
       api: "接口",
       permission: "权限",
+      scriptEditor: "脚本开发",
     }
   }
 } as const

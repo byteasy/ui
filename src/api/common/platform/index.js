@@ -91,7 +91,7 @@ export async function executeOpenApi(apiCode, params, data) {
       throw new Error(`未找到 apiCode: ${apiCode} 对应的配置信息`);
     }
 
-    if (openapi.scriptId) {
+    if (openapi.scriptId && openapi.type === 'script') {
       const contextPath = openapi?.serviceInstance?.contextPath || '';
       return request({
         url: getUrl(`${contextPath}/sapi/script/api/${apiCode}`, params),

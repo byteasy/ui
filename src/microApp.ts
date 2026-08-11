@@ -9,10 +9,11 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import '@/assets/style/style.css'
-
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import i18n from './locales'
 import App from './App.vue'
+import { loader } from '@guolao/vue-monaco-editor'
+
 import { debounce } from './directive/debounce'
 import { focus } from './directive/focus'
 import { permission } from './directive/permission'
@@ -20,6 +21,12 @@ import { permission } from './directive/permission'
 let app: any
 
 const render = (container) => {
+  loader.config({
+    paths: {
+      vs: '/platformSvr/common/lib/monaco-editor/vs'
+    }
+  })
+
   app = createApp(App)
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)

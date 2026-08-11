@@ -17,14 +17,7 @@
                     { required: scope.column.isRequire === 'YES', message: getLangText(scope.column.displayName, locale) + ' ' + t('validate.required') },
                     { validator: (rule, value, callback) => validateColumnRule(scope.column, rule, value, locale, callback), trigger: 'blur' }
                   ]">
-        <be-form-field
-          :column="scope.column"
-          :placeholder="getLangText(scope.column.displayName, locale)"
-          clearable
-          :disabled="scope.props.readonly"
-          v-model="scope.row[scope.column.name]"
-          @clear="scope.row[scope.column.name] = null"
-        />
+        <api-script-field v-model="scope.row[scope.column.name]" :name="scope.row.name" />
       </el-form-item>
       <div style="display: none;" v-else></div>
     </template>
@@ -37,6 +30,7 @@ import {getLangText} from "@/locales/common.ts";
 import BeFormField from "@/components/BeFormField.vue";
 import {doHttpGet} from "@/api/common/platform";
 import {validateColumnRule} from "@/util/validateUtils.ts";
+import ApiScriptField from "@/views/microapp/easyBuilder/app/ApiScriptField.vue";
 
 const refBeForm = ref(null)
 const {t, locale} = useI18n()
