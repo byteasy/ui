@@ -1,20 +1,20 @@
-import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, loadEnv } from 'vite' // 新增 loadEnv 导入
+import {fileURLToPath, URL} from 'node:url'
+import {defineConfig, loadEnv} from 'vite' // 新增 loadEnv 导入
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Icons from 'unplugin-icons/vite'
-import { FileSystemIconLoader } from 'unplugin-icons/loaders'
-import { resolve } from 'path'
+import {FileSystemIconLoader} from 'unplugin-icons/loaders'
+import {resolve} from 'path'
 import IconsResolver from 'unplugin-icons/resolver'
 import qiankun from 'vite-plugin-qiankun'
 
 // https://vite.dev/config/
 // 改为带环境参数的函数形式，核心改造点
-export default defineConfig(({ mode }) => {
+export default defineConfig(({mode}) => {
   // 加载对应环境的 .env 文件（.env.dev / .env.pro）
   // 第三个参数为空字符串，确保能加载所有 VITE_ 开头的环境变量
   const env = loadEnv(mode, process.cwd(), '')
@@ -70,6 +70,35 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: 'dist/static/common',
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          // 自定义拆包策略
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              // 1. 把 Monaco Editor 单独拆分 (极其庞大)
+              if (id.includes('monaco-editor') || id.includes('@guolao/vue-monaco-editor')) {
+                return 'monaco-editor'
+              }
+              // 2. 把 Element Plus 及图标库单独拆分
+              if (id.includes('element-plus') || id.includes('@element-plus')) {
+                return 'element-plus'
+              }
+              // 3. 把 Vue 全家桶 (Vue, Router, Pinia, i18n) 拆分为核心 vendor
+              if (id.includes('node_modules/vue/') || id.includes('vue-router') ||
+                id.includes('pinia') || id.includes('vue-i18n')) {
+                return 'vue-core'
+              }
+              // 4. 把 CodeMirror 拆分
+              if (id.includes('codemirror') || id.includes('@codemirror')) {
+                return 'codemirror'
+              }
+              // 5. 剩余的其他第三方库 (axios, dayjs, vueuse, md5 等) 统一打入 vendor
+              return 'vendor'
+            }
+          }
+        }
+      }
     },
     css: {
       preprocessorOptions: {
