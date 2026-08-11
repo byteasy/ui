@@ -71,10 +71,10 @@ onMounted(() => {
   if (props.modelValue !== undefined && props.modelValue !== '') {
     if (!Array.isArray(props.modelValue) || props.modelValue.length === 1) {
       doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {}).then(response => {
-        const entityDefine = response
-        const url = entityDefine.serviceInstance.contextPath + entityDefine.url
+        const url = response.serviceInstance.contextPath + '/sapi/common/' + props.column.externalClass
         const queryObj = {}
         queryObj[props.column.externalClassPrimaryField] = props.modelValue
+        queryObj[props.column.externalClassPrimaryField + 'QueryType'] = 'eq'
         doHttpGet(url, queryObj).then(objResponse => {
           selectedObject.value = objResponse.data.records
         })
