@@ -29,10 +29,13 @@
     </el-collapse>
     <el-divider content-position="left">{{ $t('platform.ebApp.scriptFunction') }}</el-divider>
     <be-tree query-api-code="queryScriptFunctionTree" node-key="code"
-             permission-add-code="noExistPermission" @nodeClick="onFunctionClick"/>
-    <el-divider content-position="left">{{ $t('platform.ebApp.scriptFunctionHelpMsg') }}</el-divider>
+             permission-add-code="noExistPermission" @nodeClick="onFunctionClick" :context-menu-enable="false" />
+    <el-divider content-position="left">{{
+        $t('platform.ebApp.scriptFunctionHelpMsg')
+      }}
+    </el-divider>
     <div class="flex-column">
-        <el-text v-for="des in descriptionList" class="w-full">{{ des }}</el-text>
+      <el-text v-for="des in descriptionList" class="w-full">{{ des }}</el-text>
     </div>
   </el-scrollbar>
 </template>
@@ -44,12 +47,12 @@ const activeFunction = ref({})
 const descriptionList = ref([])
 
 const props = defineProps<{
-  height?: number
+  height: number | undefined
 }>()
 
 function onFunctionClick(node) {
   activeFunction.value = node
-  if(activeFunction.value.description) {
+  if (activeFunction.value.description) {
     descriptionList.value = activeFunction.value.description.split('\n')
   } else {
     descriptionList.value = []

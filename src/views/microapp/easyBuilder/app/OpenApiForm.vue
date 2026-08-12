@@ -17,7 +17,7 @@
                     { required: scope.column.isRequire === 'YES', message: getLangText(scope.column.displayName, locale) + ' ' + t('validate.required') },
                     { validator: (rule, value, callback) => validateColumnRule(scope.column, rule, value, locale, callback), trigger: 'blur' }
                   ]">
-        <api-script-field v-model="scope.row[scope.column.name]" :name="scope.row.name" />
+        <api-script-field v-model="scope.row[scope.column.name]" :name="scope.row.name" :open-api="scope.row"/>
       </el-form-item>
       <div style="display: none;" v-else></div>
     </template>

@@ -28,6 +28,7 @@ const bindAttrs = useAttrs()
 // scriptId
 const modelValue = defineModel<any>('modelValue', {default: () => null})
 const apiName = defineModel<any>('name', {default: () => null})
+const openApi = defineModel<any>('openApi', {default: () => null})
 // script row
 const scriptRow = ref()
 
@@ -59,7 +60,8 @@ const openEditor = () => {
   open(
     ApiScriptEditor,
     {
-      row: JSON.parse(JSON.stringify(scriptRow.value))
+      row: JSON.parse(JSON.stringify(scriptRow.value)),
+      openApi: openApi.value
     },
     {
       title: t('platform.ebApp.scriptEditor'),

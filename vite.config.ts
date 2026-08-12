@@ -89,11 +89,7 @@ export default defineConfig(({mode}) => {
                 id.includes('pinia') || id.includes('vue-i18n')) {
                 return 'vue-core'
               }
-              // 4. 把 CodeMirror 拆分
-              if (id.includes('codemirror') || id.includes('@codemirror')) {
-                return 'codemirror'
-              }
-              // 5. 剩余的其他第三方库 (axios, dayjs, vueuse, md5 等) 统一打入 vendor
+              // 4. 剩余的其他第三方库 (axios, dayjs, vueuse, md5 等) 统一打入 vendor
               return 'vendor'
             }
           }

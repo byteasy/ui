@@ -109,6 +109,7 @@ const props = withDefaults(
     highlightCurrent?: boolean
     checkStrictly?: boolean
     expandOnClickNode?: boolean
+    contextMenuEnable?: boolean
   }>(),
   {
     queryApiCode: undefined,
@@ -124,6 +125,7 @@ const props = withDefaults(
     highlightCurrent: true,
     checkStrictly: false,
     expandOnClickNode: false,
+    contextMenuEnable: true,
   }
 )
 
@@ -179,6 +181,9 @@ const handleContextmenuOpen = (event: MouseEvent) => {
 }
 
 function onContextMenuClick(event, data, node, treeNode) {
+  if (!props.contextMenuEnable) {
+    return
+  }
   activeContextMenuNode.value = data
   handleContextmenuOpen(event)
 }
@@ -247,7 +252,7 @@ function refresh() {
 }
 
 onMounted(() => {
-  if(!props.lazy) {
+  if (!props.lazy) {
     refresh()
   }
 })

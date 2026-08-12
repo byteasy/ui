@@ -7,6 +7,7 @@
       <be-src-editor v-model="scriptRow.script" :height="props.height" />
     </el-splitter-panel>
     <el-splitter-panel class="pl-2" collapsible>
+      <api-script-debug :height="props.height" :row="scriptRow" :open-api="openApi"/>
     </el-splitter-panel>
   </el-splitter>
 </template>
@@ -15,6 +16,7 @@
 import {defineEmits, defineExpose, defineModel} from "vue";
 import {executeOpenApi} from "@/api/common/platform";
 import ApiScriptHelper from "@/views/microapp/easyBuilder/app/ApiScriptHelper.vue";
+import ApiScriptDebug from "@/views/microapp/easyBuilder/app/ApiScriptDebug.vue";
 const emit = defineEmits(['close'])
 
 const props = defineProps<{
@@ -22,6 +24,7 @@ const props = defineProps<{
 }>()
 
 const scriptRow = defineModel<any>('row', {default: () => ({})})
+const openApi = defineModel<any>('openApi', {default: () => null})
 
 function onButtonClick(btnName) {
   if (btnName === 'ok') {

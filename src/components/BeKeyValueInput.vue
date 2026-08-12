@@ -1,6 +1,7 @@
 <template>
   <div class="w-full">
-    <div v-for="(item, index) in localList" :key="index" class="flex-row w-full p-1 align-items-center">
+    <div v-for="(item, index) in localList" :key="index"
+         class="flex-row w-full p-1 align-items-center">
       <el-input v-model="item.key" @input="syncToParent" class="flex-grow"/>
       <span style="margin:0 4px">=</span>
       <el-input v-model="item.value" @input="syncToParent" v-bind="$attrs" class="flex-grow"/>
@@ -85,8 +86,13 @@ function handleAdd() {
 
 // 删除
 function handleDelete(index: number) {
-  if (localList.value.length <= 1) return
-  localList.value.splice(index, 1)
+  if (localList.value.length < 1) return
+  if (localList.value.length === 1) {
+    localList.value[0].key = ''
+    localList.value[0].value = ''
+  } else {
+    localList.value.splice(index, 1)
+  }
   syncToParent()
 }
 

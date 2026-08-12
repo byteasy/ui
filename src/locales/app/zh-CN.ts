@@ -37,6 +37,9 @@ export default {
       scriptInputParam: '脚本入参',
       scriptFunction: '脚本函数',
       scriptFunctionHelpMsg: '使用帮助',
+      scriptDebug: '脚本调试',
+      scriptDebugRequest: '发起请求',
+      scriptDebugResponse: '接口响应',
     }
   }
 } as const
