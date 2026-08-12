@@ -64,6 +64,8 @@ const onDebugClick = () => {
   response.value = ''
   doHttpPost(url, params.value, data).then((res) => {
     response.value = JSON.stringify(res, null, 2)
+  }).catch((err) => {
+    response.value = JSON.stringify(err, null, 2)
   })
 }
 </script>
