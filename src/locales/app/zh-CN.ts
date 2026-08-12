@@ -34,6 +34,9 @@ export default {
       api: "接口",
       permission: "权限",
       scriptEditor: "脚本开发",
+      scriptInputParam: '脚本入参',
+      scriptFunction: '脚本函数',
+      scriptFunctionHelpMsg: '使用帮助',
     }
   }
 } as const

@@ -77,7 +77,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {defineExpose, ref, watch} from 'vue'
+import {defineExpose, onMounted, ref, watch} from 'vue'
 import {ElMessageBox, type FilterNodeMethodFunction, type TreeInstance} from 'element-plus'
 import {executeOpenApi} from "@/api/common/platform";
 import {useI18n} from "vue-i18n"
@@ -245,6 +245,12 @@ function onTreeNodeClick(data, props, treeNode, event) {
 function refresh() {
   loadTreeData()
 }
+
+onMounted(() => {
+  if(!props.lazy) {
+    refresh()
+  }
+})
 
 function refreshCurrentNode(nodeData) {
   const parent = getParentData(nodeData)
