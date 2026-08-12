@@ -118,7 +118,7 @@ export async function executeOpenApi(apiCode, params, data) {
  * @returns 替换后的 URL，例如: /api/A01/123
  */
 export function genUri(url, params) {
-  if (!url || Object.keys(params).length === 0) return url;
+  if (!url || !params || Object.keys(params).length === 0) return url;
 
   // 匹配 {} 中的内容，例如 {code}，其中 match 是 "{code}", key 是 "code"
   return url.replace(/\{([^}]+)\}/g, (match, key) => {
