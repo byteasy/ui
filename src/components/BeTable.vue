@@ -109,12 +109,8 @@ const props = defineProps<{
   operationColumnWidth?: number
   paginationVisible?: number
   queryFormVisible?: number
-  rowDbClick?: (row: any) => void
   excelImportEnable?: boolean
-  formComponent?: Component
-  excelImportComponent?: Component
-  excelExportComponent?: Component
-  dialogModel?: any
+  dialogModel?: boolean
   rowKey?: string
   defaultExpandAll?: boolean
   treeProps?: object
@@ -122,6 +118,10 @@ const props = defineProps<{
   queryMode?: boolean
   multiple?: boolean
   showSummary?: boolean
+  formComponent?: Component
+  excelImportComponent?: Component
+  excelExportComponent?: Component
+  rowDbClick?: (row: any) => void
   dataRenderFinish?: (tableData) => void
 }>()
 

@@ -29,8 +29,4 @@ watch(
     metaData.value.queryParams.resourceId = newResource?.id
   }
 )
-
-watch(metaData, (newValue) => {
-  console.log('mm', newValue)
-})
 </script>
