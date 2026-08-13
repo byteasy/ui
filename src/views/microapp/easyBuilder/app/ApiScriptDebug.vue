@@ -51,7 +51,7 @@ const editorOptions = {
   formatOnPaste: true,       // 粘贴时自动格式化
   formatOnType: true,        // 输入时自动格式化
   tabSize: 2,                // 缩进空格数
-  minimap: { enabled: true },// 是否开启右侧代码小地图
+  minimap: { enabled: false },// 是否开启右侧代码小地图
   scrollBeyondLastLine: false,// 禁止滚动超过最后一行
   folding: true,             // 开启代码折叠（加号/减号）
   fontSize: 14,              // 字号
