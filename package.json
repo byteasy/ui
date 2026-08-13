@@ -63,5 +63,10 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-vue-devtools": "^8.0.5",
     "vue-tsc": "^3.2.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "vue-demi"
+    ]
   }
 }
