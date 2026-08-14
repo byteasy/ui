@@ -159,7 +159,7 @@ function getVisibleCount() {
     if (fieldWidth === 0) {
       w = w - 200 - 20 * lang.length
     } else {
-      w = w - fieldWidth - 20 * lang.length
+      w = w - fieldWidth - 20 * (lang?.length || 0)
     }
     if (w > 0) {
       count++

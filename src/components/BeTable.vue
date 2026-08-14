@@ -66,12 +66,14 @@
 import {
   type Component,
   defineEmits,
-  defineExpose, defineModel,
+  defineExpose,
+  defineModel,
   nextTick,
   onBeforeMount,
   onMounted,
-  ref, watch,
+  ref,
 } from 'vue'
+import {watchDebounced} from '@vueuse/core'
 import BeContainer from '@/components/BeContainer.vue'
 import {doHttpDelete, doHttpGet, executeOpenApi, getEntitySchema} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
@@ -135,10 +137,14 @@ const refBeTableView = ref(null)
 const {open} = useModal()
 const queryParam = defineModel<any>('queryParams', {default: () => ({current: 1, size: 20, descColumns: []})})
 
-watch(queryParam, (newVal, oldVal) => {
+watchDebounced(queryParam, (newVal, oldVal) => {
   console.log('tableQueryParams', newVal)
   refresh()
-}, { deep: true })
+}, {
+  deep: true,
+  debounce: 400,
+  maxWait: 1500
+})
 
 onBeforeMount(() => {
   loadTableColumns()

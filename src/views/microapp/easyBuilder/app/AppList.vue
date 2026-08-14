@@ -11,8 +11,9 @@
         <el-tab-pane :label="$t('platform.ebApp.api')" name="api" class="h-full">
           <tab-api v-if="activeName === 'api'" :resource="activeTreeNode"/>
         </el-tab-pane>
-        <el-tab-pane :label="$t('platform.ebApp.pageLayout')" name="pageLayout" class="h-full"></el-tab-pane>
-        <el-tab-pane :label="$t('platform.ebApp.permission')" name="permission" class="h-full"></el-tab-pane>
+        <el-tab-pane :label="$t('platform.ebApp.pageLayout')" name="pageLayout" class="h-full">
+          <tab-layout v-if="activeName === 'pageLayout'" :resource="activeTreeNode"/>
+        </el-tab-pane>
       </el-tabs>
     </el-splitter-panel>
   </el-splitter>
@@ -21,6 +22,7 @@
 import {ref} from "vue";
 import TabApi from "@/views/microapp/easyBuilder/app/TabApi.vue";
 import TabEntity from "@/views/microapp/easyBuilder/app/TabEntity.vue";
+import TabLayout from "@/views/microapp/easyBuilder/app/TabLayout.vue";
 
 const activeName = ref('model')
 const activeTreeNode = ref(undefined)

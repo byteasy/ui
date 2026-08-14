@@ -18,19 +18,18 @@
                 :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
     </el-radio-group>
     <div v-if="props.column.uiComponent === 'TABLE' || props.column.uiComponent === undefined" :style="{ 'height': tableHeight }" class="w-full">
-      <BeTableV2
+      <be-table
         ref="refTable"
         class="w-full h-full"
-        :base-url="'/' + props.entityDefine.serviceInstance.contextPath.substring(1) + props.entityDefine.url"
-        :context="props.entityDefine.serviceInstance.contextPath.substring(1)"
         :class-name="props.entityDefine.code"
+        :api-query="props.entityDefine.serviceInstance.contextPath + '/sapi/common/' + props.entityDefine.code"
         :query-params="props.queryParams"
         :query-mode="true"
         :multiple="props.queryMode === true && props.column.multiple === 'YES' ? true : false"
         :data-render-finish="onTableDataRenderFinish"
         :row-db-click="onTableRowDoubleClick"
         :operation-column-width="0">
-      </BeTableV2>
+      </be-table>
     </div>
   </div>
 </template>
@@ -106,7 +105,7 @@ const tableHeight = computed({
 
 function refresh() {
   loading.value = true
-  doHttpGet(props.entityDefine.serviceInstance.contextPath + props.entityDefine.url, queryParams.value).then((rsp) => {
+  doHttpGet(props.entityDefine.serviceInstance.contextPath + '/sapi/common/' + props.entityDefine.code, queryParams.value).then((rsp) => {
     tableData.value = rsp.data
     loading.value = false
   })
