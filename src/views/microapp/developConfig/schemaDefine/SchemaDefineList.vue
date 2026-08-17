@@ -6,9 +6,9 @@
     <el-splitter-panel :min="200">
       <BeTableV2
         ref="refTable"
-        base-url="/platformSvr/sapi/schemaDefines"
+        base-url="/platformSvr/sapi/fieldDefines"
         context="platformSvr"
-        class-name="com.byteasy.platform.entity.SchemaDefine"
+        class-name="com.byteasy.platform.entity.FieldDefine"
         :query-params="{ ascColumns: ['className', 'showOrder'] }"
         :form-component="BeDefaultObjectForm"
         class="pl-2"
@@ -68,12 +68,12 @@ function onSyncSchemaClick() {
     ElMessage.warning(t('platform.classNameMissing'))
     return
   }
-  doHttpGet('/platformSvr/sapi/schemaDefines/services/' + serviceName + '/context').then(res1 => {
+  doHttpGet('/platformSvr/sapi/fieldDefines/services/' + serviceName + '/context').then(res1 => {
     const ctxPath = res1.data
     doHttpGet(ctxPath + '/sapi/schemas/src/' + className).then(res2 => {
       const columns = res2.data
       if(columns.length > 0) {
-        doHttpPut('/platformSvr/sapi/schemaDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {
+        doHttpPut('/platformSvr/sapi/fieldDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {
           ElMessage.success(t('operationSuccess'))
           refTable.value?.refresh()
           refTree.value?.refresh()
@@ -97,12 +97,12 @@ function onSyncSchemaFromDatabaseClick() {
     ElMessage.warning(t('platform.classNameMissing'))
     return
   }
-  doHttpGet('/platformSvr/sapi/schemaDefines/services/' + serviceName + '/context').then(res1 => {
+  doHttpGet('/platformSvr/sapi/fieldDefines/services/' + serviceName + '/context').then(res1 => {
     const ctxPath = res1.data
     doHttpGet(ctxPath + '/sapi/schemas/database/' + className).then(res2 => {
       const columns = res2.data
       if(columns.length > 0) {
-        doHttpPut('/platformSvr/sapi/schemaDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {
+        doHttpPut('/platformSvr/sapi/fieldDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {
           ElMessage.success(t('operationSuccess'))
           refTable.value?.refresh()
           refTree.value?.refresh()
@@ -116,7 +116,7 @@ function onSyncSchemaFromDatabaseClick() {
 }
 
 function loadServices() {
-  doHttpGet('/platformSvr/sapi/schemaDefines/services', {}).then(res1 => {
+  doHttpGet('/platformSvr/sapi/fieldDefines/services', {}).then(res1 => {
     services.value = res1.data
   })
 }
@@ -139,7 +139,7 @@ function doResearch(row) {
 }
 
 function saveShowOrder(row) {
-  doHttpPost('/platformSvr/sapi/schemaDefines', {}, row)
+  doHttpPost('/platformSvr/sapi/fieldDefines', {}, row)
     .then(() => {
       ElMessage.success(t('operationSuccess'))
       refTable.value.refresh()

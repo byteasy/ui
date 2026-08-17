@@ -131,7 +131,7 @@ onMounted(() => {
 })
 
 function loadTreeData() {
-  doHttpGet('/platformSvr/sapi/schemaDefines/services/classes', {}).then(res => {
+  doHttpGet('/platformSvr/sapi/fieldDefines/services/classes', {}).then(res => {
     treeData.value = res.data
   })
 }
@@ -159,7 +159,7 @@ function onTreeNodeDeleteClick() {
         con.serviceName = activeContextMenuNode.value.name
         con.serviceNameQueryType = 'eq'
       }
-      doHttpDelete('/platformSvr/sapi/schemaDefines', con, {}).then(res => {
+      doHttpDelete('/platformSvr/sapi/fieldDefines', con, {}).then(res => {
         loadTreeData()
         ElMessage.success(t('operationSuccess'))
       })
