@@ -391,8 +391,7 @@ function onView(row) {
 
 function onOpenTableDetail(column, row) {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + column.externalClass, {}).then(entityDefine => {
-    const params = {}
-    params.descColumns = ['updatedTime', 'createdTime']
+    const params = JSON.parse(column.extrasParams || '{}')
     params[column.externalClassPrimaryField + 'QueryType'] = 'eq'
     params[column.externalClassPrimaryField] = row[column.innerPrimaryField]
     const query = {}
