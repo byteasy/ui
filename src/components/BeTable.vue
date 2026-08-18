@@ -25,6 +25,7 @@
             @row-click="onTableRowClick"
             @header-dragend="onHeaderDrag"
             @row-action="onRowActionHandle"
+            @refresh="refresh"
             v-loading="loading"
             :row-key="props.rowKey"
             :tree-props="props.treeProps"

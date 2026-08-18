@@ -51,7 +51,7 @@ export function getEnumValues(enumClassName) {
 
 export function getEntitySchema(enumClassName) {
   return request({
-    url: '/platformSvr/sapi/schemas/' + enumClassName,
+    url: '/platformSvr/sapi/fields/' + enumClassName,
     method: 'get',
   })
 }

@@ -30,7 +30,7 @@
                          :is="getComponent('..' + parseComponent(col.columnComponent))"
                          :param="parseComponentParam(col.columnComponent)"
                          :model-value="scope.row[col.name]" :row="scope.row" :column="col" :lang="props.tableProps.showLang"></component>
-              <be-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
+              <be-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]" @refresh="emit('refresh')"
                                :lang="props.tableProps.showLang"/>
               <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
                 <template #active-action>
@@ -140,7 +140,7 @@ const props = defineProps<{
   fields: Array<object>
 }>()
 
-const emit = defineEmits(['rowAction'])
+const emit = defineEmits(['rowAction', 'refresh'])
 
 function getComponent(path) {
   return modules[path]
