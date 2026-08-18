@@ -70,9 +70,8 @@ const appSettingsStore = useAppSettingsStore()
 const {modules } = getRouteComponents()
 
 const props = defineProps<{
-  url: string
-  columns?: Array<any>
-  className?: string
+  saveApi?: string
+  className: string
   row?: any
   readonly?: boolean
   direction?: string
@@ -81,11 +80,11 @@ const props = defineProps<{
 }>()
 
 const formValue = ref({...props.row})
-const tableColumns = ref(props.columns ?? [])
+const tableColumns = ref([])
 const queryParam = ref({})
 
 onMounted(() => {
-  if (!props.columns) loadTableColumns()
+  loadTableColumns()
 })
 
 function loadTableColumns() {

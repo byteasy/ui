@@ -21,9 +21,9 @@ function onLayoutParamsEdit() {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/com.byteasy.platform.entity.PlatformStdLayoutParams', {}).then(entityDefine => {
     open(
       BeTableForm, // 要显示的组件
-      {row: props.row}, // 传给组件的 props
+      { row: { id: props.row.stdLayoutParamsId }, className: 'com.byteasy.platform.entity.PlatformStdLayoutParams' }, // 传给组件的 props
       {
-        title: t('edit') + getLangText(entityDefine.name, locale.value),
+        title: t('table.edit') + getLangText(entityDefine.name, locale.value),
         width: '60%',
         onClose: (data) => {
           if (data === 'ok') {

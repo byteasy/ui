@@ -30,7 +30,7 @@ export default {
     },
     ebApp: {
       model: "模型",
-      params: '参数',
+      params: '布局参数',
       pageLayout: "布局",
       api: "接口",
       permission: "权限",
