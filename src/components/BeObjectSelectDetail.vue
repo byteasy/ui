@@ -23,7 +23,7 @@
         class="w-full h-full"
         :class-name="props.entityDefine.code"
         :api-query="props.entityDefine.serviceInstance.contextPath + '/sapi/common/' + props.entityDefine.code"
-        :query-params="props.queryParams"
+        :query-params="queryParams"
         :query-mode="true"
         :multiple="props.queryMode === true && props.column.multiple === 'YES' ? true : false"
         :data-render-finish="onTableDataRenderFinish"
@@ -77,7 +77,7 @@ const props = defineProps<{
 }>()
 const refTable = ref(null)
 const emit = defineEmits(['close'])
-const queryParams = ref({current: 1, size: 5000, ...props.queryParams})
+const queryParams = ref({current: 1, size: 20, ...props.queryParams})
 const columns = ref([])
 const tableData = ref({total: '0'})
 const loading = ref(false)

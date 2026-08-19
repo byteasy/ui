@@ -66,6 +66,9 @@ function onTypeChange(type) {
   if (type === 'query') {
     refBeForm.value.formValue.httpMethod = 'GET'
     refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className
+  } else if (type === 'getById') {
+    refBeForm.value.formValue.httpMethod = 'GET'
+    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className + '/{id}'
   } else if (type === 'saveOrUpdate') {
     refBeForm.value.formValue.httpMethod = 'POST'
     refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className

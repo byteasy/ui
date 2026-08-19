@@ -78,8 +78,7 @@ export async function executeOpenApi(apiCode, params, data) {
   try {
     const response = await request({
       url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi', { code: apiCode, codeQueryType: 'eq' }),
-      method: 'get',
-      data: data
+      method: 'get'
     });
 
     if (response.success !== true) {

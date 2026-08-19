@@ -1,5 +1,7 @@
 <template>
-  <div class="form-container" :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }" style="container-type: inline-size;">
+  <div class="form-container"
+       :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }"
+       style="container-type: inline-size;">
     <div class="form-scroll-wrap">
       <el-form ref="refForm" label-width="auto" label-position="right" class="form-root"
                :model="formValue">
@@ -25,7 +27,7 @@
                              :column="col"
                              clearable
                              :disabled="props.disabled"
-                             v-model="formValue[col.name]" />
+                             v-model="formValue[col.name]"/>
                   <be-form-field
                     v-else
                     :column="col"
@@ -55,7 +57,7 @@
 import {defineEmits, defineExpose, onMounted, ref} from 'vue'
 import BeFormField from '@/components/BeFormField.vue'
 import {useI18n} from 'vue-i18n'
-import {doHttpPost, getEntitySchema} from '@/api/common/platform'
+import {doHttpPost, executeOpenApi, getEntitySchema} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
 import {validateColumnRule} from '@/util/validateUtils.ts'
 import {parseComponent, parseComponentParam, putValueIfValid} from '@/util/common.ts'
@@ -67,9 +69,10 @@ const {t, locale} = useI18n()
 const emit = defineEmits(['close'])
 const refForm = ref(null)
 const appSettingsStore = useAppSettingsStore()
-const {modules } = getRouteComponents()
+const {modules} = getRouteComponents()
 
 const props = defineProps<{
+  url?: string
   saveApi?: string
   className: string
   row?: any
@@ -122,11 +125,18 @@ function mergeLocalStorage(data) {
 function onSaveClick() {
   refForm.value?.validate(valid => {
     if (!valid) return
-    doHttpPost(props.url, queryParam.value, formValue.value)
-      .then(() => {
+    if (props.saveApi) {
+      executeOpenApi(props.saveApi, queryParam.value, formValue.value).then(() => {
         ElMessage.success(t('operationSuccess'))
         emit('close', 'ok')
       })
+    } else {
+      doHttpPost(props.url, queryParam.value, formValue.value)
+        .then(() => {
+          ElMessage.success(t('operationSuccess'))
+          emit('close', 'ok')
+        })
+    }
   })
 }
 
@@ -142,7 +152,7 @@ function onClearForm() {
 }
 
 function onButtonClick(btnName) {
-  if(btnName === 'ok') {
+  if (btnName === 'ok') {
     onSaveClick()
   } else if (btnName === 'cancel') {
     onClearForm()
@@ -200,6 +210,7 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm, 
 /* ===================================== */
 .form-container:not(.drawer-mode) .form-grid {
   /* 普通弹窗 */
+
   .form-container:not(.fullscreen) & {
     @media (max-width: 820px) {
       grid-template-columns: repeat(1, 1fr);
@@ -219,6 +230,7 @@ defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm, 
   }
 
   /* 弹窗全屏 */
+
   .form-container.fullscreen & {
     @media (max-width: 520px) {
       grid-template-columns: repeat(1, 1fr);

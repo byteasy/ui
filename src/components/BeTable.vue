@@ -101,11 +101,6 @@ const props = defineProps<{
   apiImportPreview?: string
   apiImportBatchSave?: string
   apiExport?: string
-  permissionAddCode?: string
-  permissionEditCode?: string
-  permissionDeleteCode?: string
-  permissionImportCode?: string
-  permissionExportCode?: string
   titleColumnName?: string
   queryParams?: any
   formWidth?: string | number

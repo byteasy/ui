@@ -19,7 +19,7 @@ const metaData = ref({
   className: 'com.byteasy.platform.entity.Openapi',
   formComponent: '/views/microapp/easyBuilder/app/OpenApiForm.vue',
   queryParams: {
-    resourceId: undefined
+    resourceId: undefined,
   }
 })
 
