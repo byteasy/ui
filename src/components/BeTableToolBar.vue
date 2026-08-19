@@ -33,18 +33,31 @@
                 <el-button type="primary" icon="Search" @click="handleEvent('refresh')">
                   {{ $t('search') }}
                 </el-button>
-                <el-button type="primary" icon="Plus" v-if="props.tableProps.queryMode !== true" @click="handleEvent('add')">
-                  {{ $t('add') }}
-                </el-button>
               </slot>
-              <slot name="form-query-buttons-extra" :queryParam="queryParam" :queryMode="props.tableProps.queryMode"></slot>
+              <slot name="form-query-buttons-extra" :queryParam="queryParam"
+                    :queryMode="props.tableProps.queryMode"></slot>
             </el-form-item>
           </slot>
         </el-form>
       </div>
       <div class="flex-none">
+        <el-button-group direction="horizontal">
+          <el-button :title="$t('add')" @click="handleEvent('add')" type="primary">
+            <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)" />
+          </el-button>
+          <el-button :title="$t('batchEdit')" @click="handleEvent('batchEdit')" type="primary">
+            <IconLocalBatchEditTable style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+          </el-button>
+          <el-button :title="$t('batchDelete')" @click="handleEvent('batchDelete')" type="primary">
+            <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+          </el-button>
+        </el-button-group>
         <el-dropdown placement="bottom-start">
-          <el-button icon="More" circle text/>
+          <el-button circle text>
+            <el-icon style="width: 1rem; height: 1rem;">
+              <MoreFilled/>
+            </el-icon>
+          </el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="onMoreActionClick('switchView')">
@@ -140,7 +153,7 @@ const props = defineProps<{
 }>()
 
 const {t, locale} = useI18n()
-const emit = defineEmits(['refresh', 'add', 'moreAction'])
+const emit = defineEmits(['refresh', 'add', 'batchEdit', 'batchDelete', 'moreAction'])
 const queryParam = defineModel<any>('queryParams', {default: () => ({})})
 
 const queryBarRef = ref(null)

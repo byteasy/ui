@@ -1,5 +1,7 @@
 export default {
   add: '添加',
+  batchEdit: '批量编辑',
+  batchDelete: '批量删除',
   ok: '确定',
   save: '保存',
   close: '关闭',
