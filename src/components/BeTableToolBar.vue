@@ -9,7 +9,7 @@
                             v-if="col.isSearch === 'YES'">
                 <slot :name="'form-query-field-' + col.name" :column="col"
                       :queryParam="queryParam">
-                  <be-query-field
+                  <be-table-query-field
                     :column="col"
                     :placeholder="getLangText(col.displayName, locale)"
                     v-model="queryParam[col.name]"
@@ -107,6 +107,13 @@ import {useSessionStore} from "@/stores/session.ts";
 const props = defineProps<{
   tableProps: {
     className: string
+    apiQuery: string
+    apiSave?: string
+    apiDelete?: string
+    apiDownloadImportTemplate?: string
+    apiImportPreview?: string
+    apiImportBatchSave?: string
+    apiExport?: string
     titleColumnName?: string
     queryParams?: any
     formWidth?: string | number

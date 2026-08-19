@@ -1,14 +1,14 @@
 <template>
   <be-container>
     <template v-slot:topBar>
-      <be-query-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0"
+      <be-table-tool-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0"
                       :query-params="queryParam" :table-props="props" :fields="tableColumns"
                       class="w-full" @refresh="refresh()" @add="onAdd"
                       @moreAction="onMoreActionClick">
         <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
           <slot :name="name" v-bind="slotProps"></slot>
         </template>
-      </be-query-bar>
+      </be-table-tool-bar>
     </template>
     <template v-slot:mainContent>
       <el-auto-resizer>
