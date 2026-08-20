@@ -99,7 +99,7 @@
           </template>
           <el-scrollbar always class="w-full" :style="{ maxHeight: 'calc(100vh - 130px)' }">
             <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true"
-                       :height="calcDrawlerHeight()"
+                       :height="calcDrawlerHeight(item)"
                        @close="(data) => handleClose(item.id, data)"/>
           </el-scrollbar>
           <template #footer>
@@ -158,10 +158,10 @@ function onFullscreenClick(item) {
 }
 
 const getDrawlerWidth = (item: any) => {
-  return (item.fullscreen ? '98%' : undefined) || item.width
+  return (item.fullscreen ? '100%' : undefined) || item.width
 }
 
-const calcDrawlerHeight = () => {
+const calcDrawlerHeight = (item: any) => {
   const vh100 = window.innerHeight
   return vh100 - 130
 }
