@@ -1,11 +1,12 @@
 <template>
   <div :style="{ height: tableHeightCss }">
-    <be-object-list :meta-data="props.metaData" />
+    <be-std-page-layout :class-name="metaData.className" :layout-prams-id="metaData.layoutPramsId"
+                        :query-params="metaData.queryParams"/>
   </div>
 </template>
 <script lang="ts" setup>
-import BeObjectList from "@/views/template/BeObjectList.vue";
 import {computed} from "vue";
+import BeStdPageLayout from "@/views/template/BeStdPageLayout.vue";
 
 const props = defineProps<{
   metaData: object | null | undefined

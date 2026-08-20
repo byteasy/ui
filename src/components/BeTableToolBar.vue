@@ -7,16 +7,17 @@
             <template v-for="col in visibleFields" :key="col.name">
               <el-form-item :label="getLangText(col.displayName, locale)"
                             v-if="col.isSearch === 'YES'">
-                <slot :name="'form-query-field-' + col.name" :column="col"
-                      :queryParam="queryParam">
-                  <be-table-query-field
-                    :column="col"
-                    :placeholder="getLangText(col.displayName, locale)"
-                    v-model="queryParam[col.name]"
-                    clearable
-                    @change="handleEvent('refresh')"
-                    :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"/>
-                </slot>
+                <component
+                  :is="getComponent(parseComponent(col.fieldComponent || '/components/BeTableQueryField.vue'))"
+                  :param="parseComponentParam(col.fieldComponent || '/components/BeTableQueryField.vue')"
+                  v-model="queryParam[col.name]"
+                  type="query"
+                  :column="col"
+                  :placeholder="getLangText(col.displayName, locale)"
+                  :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
+                  clearable
+                  :row="queryParam">
+                </component>
               </el-form-item>
             </template>
             <slot name="form-query-extra" :queryParam="queryParam"/>
@@ -42,18 +43,21 @@
       </div>
       <div class="flex-none">
         <el-button-group direction="horizontal">
-          <el-button :title="$t('add')" @click="handleEvent('add')" type="primary" v-if="props.tableProps.apiSave && sessionStore.authorize(props.tableProps.apiSave)">
-            <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)" />
+          <el-button :title="$t('add')" @click="handleEvent('add')" type="primary">
+            <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <el-button :title="$t('batchEdit')" @click="handleEvent('batchEdit')" type="primary" v-if="props.tableProps.apiImportBatchSave && sessionStore.authorize(props.tableProps.apiImportBatchSave)">
-            <IconLocalBatchEditTable style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+          <el-button :title="$t('batchEdit')" @click="handleEvent('batchEdit')" type="primary">
+            <IconLocalBatchEditTable
+              style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <el-button :title="$t('batchDelete')" @click="handleEvent('batchDelete')" type="primary" v-if="props.tableProps.apiImportBatchSave && sessionStore.authorize(props.tableProps.apiImportBatchSave)">
+          <el-button :title="$t('batchDelete')" @click="handleEvent('batchDelete')" type="primary">
             <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
+          <slot name="tool-buttons-extra" :queryParam="queryParam"
+                :queryMode="props.tableProps.queryMode"></slot>
         </el-button-group>
         <el-dropdown placement="bottom-start">
-          <el-button text icon="MoreFilled" />
+          <el-button text icon="MoreFilled"/>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="onMoreActionClick('switchView')">
@@ -112,6 +116,10 @@ import {ArrowDown} from '@element-plus/icons-vue'
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {useSessionStore} from "@/stores/session.ts";
+import {parseComponent, parseComponentParam} from "@/util/common.ts";
+import {getRouteComponents} from "@/util/autoImportComponent.ts";
+
+const {modules} = getRouteComponents()
 
 const props = defineProps<{
   tableProps: {
@@ -244,4 +252,7 @@ const onMoreActionClick = (action) => {
   emit('moreAction', action)
 }
 
+function getComponent(path) {
+  return modules['..' + path]
+}
 </script>

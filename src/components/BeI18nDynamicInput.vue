@@ -1,9 +1,10 @@
 <template>
   <el-input ref="refInput" v-model="currentLangInput" @input="handleDirectInput" v-bind="$attrs">
     <template #append>
-      <div style="padding-left: 6px !important; padding-right: 6px !important; margin: 0 !important;" class="flex-row align-items-center">
-        <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }" v-bind="$attrs"
-                 @click="onI18nClick" >
+      <div
+        style="padding: 0 6px !important; margin: 0 !important; height: 100%; display: flex; align-items: center; justify-content: center;"
+      >
+        <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }" @click="onI18nClick" size="18" class="flex-row align-items-center">
           <IconLocalLanguage/>
         </el-icon>
       </div>
@@ -125,6 +126,9 @@ defineExpose({
 </script>
 <style scoped>
 :deep(.el-input-group__append) {
-  padding: 0 0; /* 减小内边距，根据需要调整 */
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

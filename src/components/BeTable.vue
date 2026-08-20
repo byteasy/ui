@@ -1,7 +1,7 @@
 <template>
   <be-container>
     <template v-slot:topBar>
-      <be-table-tool-bar v-if="props.queryFormVisible !== 0 && tableColumns.length > 0"
+      <be-table-tool-bar v-if="props.queryFormVisible !== false && tableColumns.length > 0"
                       :query-params="queryParam" :table-props="props" :fields="tableColumns"
                       class="w-full" @refresh="refresh()" @add="onAdd"
                       @moreAction="onMoreActionClick">
@@ -51,7 +51,7 @@
         </template>
       </el-auto-resizer>
     </template>
-    <template v-slot:bottomBar v-if="props.paginationVisible !== 0">
+    <template v-slot:bottomBar v-if="props.paginationVisible !== false">
       <el-pagination
         background
         layout="total, sizes, prev, pager, next"
@@ -105,8 +105,8 @@ const props = defineProps<{
   queryParams?: any
   formWidth?: string | number
   operationColumnWidth?: number
-  paginationVisible?: number
-  queryFormVisible?: number
+  paginationVisible?: boolean
+  queryFormVisible?: boolean
   dialogModel?: boolean
   rowKey?: string
   defaultExpandAll?: boolean
@@ -149,6 +149,7 @@ function loadTableColumns() {
   getEntitySchema(props.className)
     .then((response) => {
       const arrs = sortColumnsByShowOrder(mergeLocalStorage(response.data))
+      console.log('arrs', arrs)
       tableColumns.value = arrs
     })
     .catch((error) => {
@@ -387,11 +388,11 @@ function onView(row) {
 function onOpenTableDetail(column, row) {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + column.externalClass, {}).then(entityDefine => {
     const extrasParams = JSON.parse(column.extrasParams || '{}')
-    const queryParams = {}
+    const queryParams = { row: row, column: column}
     queryParams[column.externalClassPrimaryField + 'QueryType'] = 'eq'
     queryParams[column.externalClassPrimaryField] = row[column.innerPrimaryField]
     Object.assign(queryParams, extrasParams?.queryParams || {})
-    const metaData = { queryParams: JSON.stringify(queryParams), className: column.externalClass }
+    const metaData = { queryParams: queryParams, className: column.externalClass }
     open(
       BeTableContainer,
       {

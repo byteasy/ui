@@ -41,6 +41,8 @@ export default {
       scriptDebug: '脚本调试',
       scriptDebugRequest: '发起请求',
       scriptDebugResponse: '接口响应',
+      addFieldGroup: '添加分组',
+      inputFieldGroupName: '输入分组名称',
     }
   }
 } as const

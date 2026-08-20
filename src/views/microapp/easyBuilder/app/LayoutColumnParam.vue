@@ -1,8 +1,7 @@
 <template>
-  <el-link v-if="props.row.type === 'STAND'" @click="onLayoutParamsEdit">
-    {{ $t('platform.ebApp.params') }}
+  <el-link @click="onLayoutParamsEdit" underline="never" type="primary">
+    {{ $t('platform.ebApp.params') + (props.row.stdLayoutParamsId ? '(1)' : '(0)')}}
   </el-link>
-  <div v-else> -</div>
 </template>
 <script lang="ts" setup>
 
@@ -32,7 +31,8 @@ function openEditForm(row) {
       BeTableForm, // 要显示的组件
       {
         row: row,
-        className: 'com.byteasy.platform.entity.PlatformStdLayoutParams'
+        className: 'com.byteasy.platform.entity.PlatformStdLayoutParams',
+        saveApi: 'saveLayoutParams'
       }, // 传给组件的 props
       {
         title: t('table.edit') + getLangText(entityDefine.name, locale.value),
