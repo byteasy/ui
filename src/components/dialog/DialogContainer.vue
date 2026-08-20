@@ -45,7 +45,7 @@
                        :height="calcDialogHeight(item)"/>
           </el-scrollbar>
           <template #footer>
-            <div class="dialog-footer">
+            <div class="dialog-footer" v-if="item.footer === true">
               <el-button @click="onButtonClick('cancel', item)">
                 <be-svg-icon svg="Close" class="mr-1"/>
                 {{ t(item.btnCancelTitle || 'cancel') }}
@@ -103,7 +103,7 @@
                        @close="(data) => handleClose(item.id, data)"/>
           </el-scrollbar>
           <template #footer>
-            <div style="flex: auto">
+            <div style="flex: auto" v-if="item.footer === true">
               <el-button @click="onButtonClick('cancel', item)">
                 <be-svg-icon svg="Close" class="mr-1"/>
                 {{ t(item.btnCancelTitle || 'cancel') }}
@@ -187,6 +187,7 @@ const onButtonClick = (btn, item) => {
 
 function defaultButtonClickHandle(btnName, item) {
   if (btnName === 'ok') {
+    handleClose(item.id)
   } else if (btnName === 'cancel') {
     handleClose(item.id)
   }

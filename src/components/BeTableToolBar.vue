@@ -42,22 +42,18 @@
       </div>
       <div class="flex-none">
         <el-button-group direction="horizontal">
-          <el-button :title="$t('add')" @click="handleEvent('add')" type="primary">
+          <el-button :title="$t('add')" @click="handleEvent('add')" type="primary" v-if="props.tableProps.apiSave && sessionStore.authorize(props.tableProps.apiSave)">
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)" />
           </el-button>
-          <el-button :title="$t('batchEdit')" @click="handleEvent('batchEdit')" type="primary">
+          <el-button :title="$t('batchEdit')" @click="handleEvent('batchEdit')" type="primary" v-if="props.tableProps.apiImportBatchSave && sessionStore.authorize(props.tableProps.apiImportBatchSave)">
             <IconLocalBatchEditTable style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <el-button :title="$t('batchDelete')" @click="handleEvent('batchDelete')" type="primary">
+          <el-button :title="$t('batchDelete')" @click="handleEvent('batchDelete')" type="primary" v-if="props.tableProps.apiImportBatchSave && sessionStore.authorize(props.tableProps.apiImportBatchSave)">
             <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
         </el-button-group>
         <el-dropdown placement="bottom-start">
-          <el-button circle text>
-            <el-icon style="width: 1rem; height: 1rem;">
-              <MoreFilled/>
-            </el-icon>
-          </el-button>
+          <el-button text icon="MoreFilled" />
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="onMoreActionClick('switchView')">
@@ -73,21 +69,21 @@
                 {{ $t('table.customColumn') }}
               </el-dropdown-item>
               <el-dropdown-item divided @click="onMoreActionClick('downLoadExcelTemplate')"
-                                v-if="props.tableProps.excelImportEnable === true && sessionStore.authorize(props.tableProps.className + '.Import')">
+                                v-if="props.tableProps.apiImportBatchSave && sessionStore.authorize(props.tableProps.apiImportBatchSave)">
                 <el-icon>
                   <Download/>
                 </el-icon>
                 {{ $t('table.downLoadExcelTemplate') }}
               </el-dropdown-item>
               <el-dropdown-item @click="onMoreActionClick('excelImport')"
-                                v-if="props.tableProps.excelImportEnable === true && sessionStore.authorize(props.tableProps.className + '.Import')">
+                                v-if="props.tableProps.apiImportBatchSave && sessionStore.authorize(props.tableProps.apiImportBatchSave)">
                 <el-icon>
                   <IconLocalExcel/>
                 </el-icon>
                 {{ $t('table.importByExcel') }}
               </el-dropdown-item>
               <el-dropdown-item @click="onMoreActionClick('excelExport')"
-                                v-if="props.tableProps.excelImportEnable === true && sessionStore.authorize(props.tableProps.className + '.Export')">
+                                v-if="props.tableProps.apiExport && sessionStore.authorize(props.tableProps.apiExport)">
                 <el-icon>
                   <IconLocalExcelExport/>
                 </el-icon>
@@ -134,7 +130,6 @@ const props = defineProps<{
     paginationVisible?: number
     queryFormVisible?: number
     rowDbClick?: (row: any) => void
-    excelImportEnable?: boolean
     formComponent?: Component
     excelImportComponent?: Component
     excelExportComponent?: Component

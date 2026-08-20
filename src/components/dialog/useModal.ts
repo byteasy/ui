@@ -21,6 +21,7 @@ interface ModalState {
     btnOkTitle?: string
     btnCancelTitle?: string
     btnExtras?: Array<Record<string, string>>
+    footer?: boolean
   }>
 }
 
@@ -42,6 +43,7 @@ export const useModal = () => {
     const defaultOptions = {
       draggable: true, // 默认值
       fullscreen: false,
+      footer: true,
       dialogModel: (appSettingsStore.dialogModel) === '1',
       closeOnClickModal: (appSettingsStore.closeOnClickModal) === '1',
       width: '50%',

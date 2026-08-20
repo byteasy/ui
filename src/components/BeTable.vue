@@ -107,7 +107,6 @@ const props = defineProps<{
   operationColumnWidth?: number
   paginationVisible?: number
   queryFormVisible?: number
-  excelImportEnable?: boolean
   dialogModel?: boolean
   rowKey?: string
   defaultExpandAll?: boolean
@@ -387,22 +386,22 @@ function onView(row) {
 
 function onOpenTableDetail(column, row) {
   doHttpGet('/platformSvr/sapi/entityDefines/entity/' + column.externalClass, {}).then(entityDefine => {
-    const params = JSON.parse(column.extrasParams || '{}')
-    params[column.externalClassPrimaryField + 'QueryType'] = 'eq'
-    params[column.externalClassPrimaryField] = row[column.innerPrimaryField]
-    const query = {}
-    query.queryParams = JSON.stringify(params)
-    query.className = column.externalClass
+    const extrasParams = JSON.parse(column.extrasParams || '{}')
+    const queryParams = {}
+    queryParams[column.externalClassPrimaryField + 'QueryType'] = 'eq'
+    queryParams[column.externalClassPrimaryField] = row[column.innerPrimaryField]
+    Object.assign(queryParams, extrasParams?.queryParams || {})
+    const metaData = { queryParams: JSON.stringify(queryParams), className: column.externalClass }
     open(
       BeTableContainer,
       {
-        metaData: query,
-        dialogModel: props.dialogModel,
+        metaData: metaData,
       },
       {
         title: getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
         dialogModel: props.dialogModel,
+        footer: extrasParams.dialogOption?.footer === undefined ? true : extrasParams.dialogOption?.footer,
       },
     )
   })
