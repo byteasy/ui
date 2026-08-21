@@ -263,7 +263,7 @@ function getFormComponent() {
 }
 
 function getFormWidth() {
-  return props.formWidth !== undefined ? props.formWidth : '60%'
+  return props.formWidth ? props.formWidth : '60%'
 }
 
 function onMoreActionClick(action) {
