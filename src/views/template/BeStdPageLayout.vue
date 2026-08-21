@@ -18,8 +18,11 @@
     :default-expand-all="metaData.defaultExpandAll"
     :tree-props="metaData.treeProps"
     :query-mode="metaData.queryMode"
+    :multiple="metaData.multiple"
     :show-lang="metaData.showLang"
     :show-summary="metaData.showSummary"
+    :data-render-finish="props.dataRenderFinish"
+    :row-db-click="props.rowDbClick"
     v-if="loading === false"
   >
     <template v-slot:form-query-buttons-extra="scope">
@@ -41,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import {defineModel, onMounted, ref} from 'vue'
+import {defineExpose, defineModel, onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
@@ -52,7 +55,16 @@ const props = defineProps<{
   layoutPramsId?: string
   meta?: object
 
+  // 是否查询模式，开启后表格不能做编辑类操作
+  queryMode?: boolean
+  // 是否多选，仅由前端传递，适合对象的选择
+  multiple?: boolean
+
   formComponent?: string
+  // 页面数据加载完的回调函数
+  dataRenderFinish?: (tableData) => void
+  // 双击函数
+  rowDbClick?: (row: any) => void
 }>()
 
 const {t, locale} = useI18n()
@@ -61,8 +73,14 @@ const loading = ref(true)
 const {modules} = getRouteComponents()
 const formQueryButtonsExtra = ref([])
 const operationButtons = ref([])
-const metaData = ref({ ...props.meta })
-const queryParams = defineModel<any>('queryParams', {default: () => ({current: 1, size: 20, descColumns: []})})
+const metaData = ref({...props.meta})
+const queryParams = defineModel<any>('queryParams', {
+  default: () => ({
+    current: 1,
+    size: 20,
+    descColumns: []
+  })
+})
 
 function getComponent(path) {
   return modules['..' + path]
@@ -81,11 +99,33 @@ onMounted(() => {
     Object.assign(metaData.value.queryParams, JSON.parse(layoutParams.queryParams || "{}"))
     loading.value = false
 
-    if(props.formComponent) {
+    if (props.formComponent) {
       metaData.value.formComponent = props.formComponent
+    }
+    if (props.queryMode) {
+      metaData.value.queryMode = props.queryMode
+    }
+    if (props.multiple) {
+      metaData.value.multiple = props.multiple
     }
 
     console.log('className: ' + metaData.value.className + ' metaData: ', metaData.value)
   })
+})
+
+const setCurrentRow = (row) => {
+  refTable.value?.setCurrentRow(row)
+}
+
+const toggleRowSelection = (row, checked) => {
+  refTable.value?.toggleRowSelection(row, checked)
+}
+
+const getSelectionRows = () => {
+  return refTable.value?.getSelectionRows()
+}
+
+defineExpose({
+  setCurrentRow, toggleRowSelection, getSelectionRows
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <be-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }" :column="props.column" :query-mode="true"/>
+  <be-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }" :column="props.column" />
   <el-input
     v-else-if="props.column.type === 'STRING'"
     type="text"

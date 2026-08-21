@@ -17,27 +17,24 @@
                 :value="obj[props.column.externalClassPrimaryField]"
                 :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
     </el-radio-group>
-    <div v-if="props.column.uiComponent === 'TABLE' || props.column.uiComponent === undefined" :style="{ 'height': tableHeight }" class="w-full">
-      <be-table
-        ref="refTable"
-        class="w-full h-full"
-        :class-name="props.entityDefine.code"
-        :api-query="props.entityDefine.serviceInstance.contextPath + '/sapi/common/' + props.entityDefine.code"
-        :query-params="queryParams"
-        :query-form-visible="true"
-        :multiple="props.queryMode === true && props.column.multiple === 'YES' ? true : false"
-        :data-render-finish="onTableDataRenderFinish"
-        :row-db-click="onTableRowDoubleClick"
-        :operation-column-width="0">
-      </be-table>
+    <div v-if="props.column.uiComponent === 'TABLE' || props.column.uiComponent === undefined"
+         :style="{ 'height': tableHeight }" class="w-full">
+      <be-std-page-layout ref="refTable" class="w-full h-full"
+                          :class-name="props.entityDefine.code"
+                          :query-params="queryParams"
+                          :query-mode="props.queryMode"
+                          :multiple="props.column.multiple === 'YES'"
+                          :row-db-click="onTableRowDoubleClick"
+                          :data-render-finish="onTableDataRenderFinish"/>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import {computed, defineEmits, defineExpose, onMounted, ref} from "vue";
-import {doHttpGet, getEntitySchema} from "@/api/common/platform";
+import {doHttpGet} from "@/api/common/platform";
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
+import BeStdPageLayout from "@/views/template/BeStdPageLayout.vue";
 
 const props = defineProps<{
   modelValue: any
@@ -78,7 +75,6 @@ const props = defineProps<{
 const refTable = ref(null)
 const emit = defineEmits(['close'])
 const queryParams = ref({current: 1, size: 20, ...props.queryParams})
-const columns = ref([])
 const tableData = ref({total: '0'})
 const loading = ref(false)
 const selectedKey = ref(props.modelValue)
@@ -86,10 +82,6 @@ const {t, locale} = useI18n()
 
 onMounted(() => {
   if (props.column.uiComponent === 'TABLE') {
-    getEntitySchema(props.entityDefine.code).then(response => {
-      columns.value = response.data
-      loading.value = false
-    })
   } else { // RADIO OR SELECT
     refresh()
   }
@@ -179,7 +171,7 @@ function onTableDataRenderFinish(tableData) {
 }
 
 function onButtonClick(btnName) {
-  if(btnName === 'ok') {
+  if (btnName === 'ok') {
     onSaveClick()
   } else if (btnName === 'cancel') {
     onClearForm()

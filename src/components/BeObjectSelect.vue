@@ -53,7 +53,6 @@ const props = defineProps<{
     externalClassDisplayField: any
     uiComponent: 'SELECT' | 'RADIO' | 'TABLE'
   }
-  queryMode?: boolean
 }>()
 
 const {open} = useModal()
@@ -92,7 +91,7 @@ const onAppendIconClick = () => {
       {
         modelValue: props.column.multiple === 'YES' ? selectedObject.value.map(s => s[props.column.externalClassPrimaryField]) : selectedObject.value.map(s => s[props.column.externalClassPrimaryField])[0],
         column: props.column,
-        queryMode: props.queryMode,
+        queryMode: true,
         entityDefine: entityDefine,
       },
       {

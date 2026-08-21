@@ -42,7 +42,7 @@
         </el-form>
       </div>
       <div class="flex-none">
-        <el-button-group direction="horizontal">
+        <el-button-group direction="horizontal" v-if="props.tableProps.queryMode !== true">
           <el-button :title="$t('add')" @click="handleEvent('add')" type="primary">
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>

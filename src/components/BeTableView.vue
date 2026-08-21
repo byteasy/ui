@@ -1,7 +1,7 @@
 <template>
   <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable"
             @current-change="(row) => currentRow = row">
-    <el-table-column type="selection" width="55" v-if="props.tableProps.queryMode === true"/>
+    <el-table-column type="selection" width="55" v-if="props.tableProps.queryMode === true && props.tableProps.multiple === true"/>
     <template v-for="col in fields" :key="col.name">
       <slot :name="'table-column-def-' + col.name" :column="col">
         <el-table-column
@@ -62,7 +62,7 @@
     <el-table-column
       fixed="right"
       :label="$t('table.operation')"
-      v-if="props.tableProps.operationColumnWidth !== 0 && props.tableProps.queryMode !== true"
+      v-if="props.tableProps.queryMode !== true"
       align="center"
       :min-width="props.tableProps.operationColumnWidth ? props.tableProps.operationColumnWidth : 160"
     >
@@ -115,20 +115,20 @@ const {modules} = getRouteComponents()
 
 const props = defineProps<{
   tableProps: {
-    context: string
     className: string
+    apiQuery: string
+    apiSave?: string
+    apiDelete?: string
+    apiDownloadImportTemplate?: string
+    apiImportPreview?: string
+    apiImportBatchSave?: string
+    apiExport?: string
     titleColumnName?: string
-    queryParams?: any
     formWidth?: string | number
     operationColumnWidth?: number
-    paginationVisible?: number
-    queryFormVisible?: number
-    rowDbClick?: (row: any) => void
-    excelImportEnable?: boolean
-    formComponent?: Component
-    excelImportComponent?: Component
-    excelExportComponent?: Component
-    dialogModel?: any
+    paginationVisible?: boolean
+    queryFormVisible?: boolean
+    dialogModel?: boolean
     rowKey?: string
     defaultExpandAll?: boolean
     treeProps?: object
@@ -136,6 +136,10 @@ const props = defineProps<{
     queryMode?: boolean
     multiple?: boolean
     showSummary?: boolean
+    formComponent?: Component
+    excelImportComponent?: Component
+    excelExportComponent?: Component
+    rowDbClick?: (row: any) => void
     dataRenderFinish?: (tableData) => void
   },
   fields: Array<object>
