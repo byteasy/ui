@@ -1,7 +1,7 @@
 <template>
   <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable"
             @current-change="(row) => currentRow = row">
-    <el-table-column type="selection" width="55" v-if="props.tableProps.queryMode === true && props.tableProps.multiple === true"/>
+    <el-table-column type="selection" width="55" v-if="props.tableProps.multiple === true"/>
     <template v-for="col in fields" :key="col.name">
       <slot :name="'table-column-def-' + col.name" :column="col">
         <el-table-column

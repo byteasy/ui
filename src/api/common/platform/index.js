@@ -1,7 +1,7 @@
 import request from '../../request'
 import qs from 'qs'
 
-function getUrl(url, params) {
+export function getUrl(url, params) {
   return (
     url +
     (params !== null && params !== undefined

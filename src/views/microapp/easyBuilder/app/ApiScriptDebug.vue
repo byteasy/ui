@@ -30,7 +30,7 @@
 <script lang="ts" setup>
 
 import {defineModel, ref} from "vue";
-import {doHttpPost} from "@/api/common/platform";
+import {doHttpPost, getUrl} from "@/api/common/platform";
 import VueMonacoEditor from '@guolao/vue-monaco-editor'
 
 const props = defineProps<{
@@ -62,10 +62,25 @@ const onDebugClick = () => {
   const url = openApi.value.serviceInstance.contextPath + '/sapi/script/api/debug/script'
   const data = { header: header.value, body: body.value, script: scriptRow.value }
   response.value = ''
-  doHttpPost(url, params.value, data).then((res) => {
+  doHttpPost(url, convertToObj(params.value), data).then((res) => {
     response.value = JSON.stringify(res, null, 2)
   }).catch((err) => {
     response.value = JSON.stringify(err, null, 2)
   })
+}
+
+const convertToObj = (value) => {
+  const result = {};
+  if (value && typeof value === 'object') {
+    Object.entries(value).forEach(([key, val]) => {
+      if(val.startsWith('[')) {
+        result[key] = JSON.parse(val);
+      } else {
+        result[key] = val;
+      }
+    });
+  }
+  console.log(value, result)
+  return result;
 }
 </script>

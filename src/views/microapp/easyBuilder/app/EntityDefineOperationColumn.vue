@@ -33,10 +33,11 @@ function onOpenTableDetail(row) {
   getEntityDefine('com.byteasy.platform.entity.FieldDefine').then(entityDefine => {
     const queryParams = {row: row}
     queryParams.classNameQueryType = 'eq'
-    queryParams.className = 'com.byteasy.platform.entity.EntityDefine'
+    queryParams.className = row.code
     const metaData = {
       queryParams: queryParams,
-      className: 'com.byteasy.platform.entity.FieldDefine'
+      className: 'com.byteasy.platform.entity.FieldDefine',
+      multiple: true
     }
     open(
       BeTableContainer,
@@ -46,6 +47,7 @@ function onOpenTableDetail(row) {
       {
         title: t('table.edit') + getLangText(entityDefine.name, locale.value),
         width: '60%',
+        footer: false
       },
     )
   })
@@ -59,7 +61,7 @@ function onOpenApiTable(row) {
     queryParams.serviceCode = row.serviceCode
     const metaData = {
       queryParams: queryParams,
-      className: 'com.byteasy.platform.entity.Openapi'
+      className: 'com.byteasy.platform.entity.Openapi',
     }
     open(
       BeTableContainer,
@@ -69,6 +71,7 @@ function onOpenApiTable(row) {
       {
         title: t('table.edit') + getLangText(entityDefine.name, locale.value),
         width: '60%',
+        footer: false
       },
     )
   })

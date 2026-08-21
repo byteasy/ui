@@ -1,7 +1,13 @@
 <template>
   <div :style="{ height: tableHeightCss }">
     <be-std-page-layout :class-name="metaData.className" :layout-prams-id="metaData.layoutPramsId"
-                        :query-params="metaData.queryParams"/>
+                        :query-params="metaData.queryParams"
+                        :query-mode="metaData.queryMode"
+                        :multiple="metaData.multiple"
+                        :form-component="metaData.formComponent"
+                        :data-render-finish="metaData.dataRenderFinish"
+                        :row-db-click="metaData.rowDbClick"
+    />
   </div>
 </template>
 <script lang="ts" setup>
