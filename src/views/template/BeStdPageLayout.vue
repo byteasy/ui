@@ -50,7 +50,7 @@ import {executeOpenApi} from "@/api/common/platform";
 const props = defineProps<{
   className?: string
   layoutPramsId?: string
-  queryParams?: object
+  meta?: object
 }>()
 
 const {t, locale} = useI18n()
@@ -59,7 +59,8 @@ const loading = ref(true)
 const {modules} = getRouteComponents()
 const formQueryButtonsExtra = ref([])
 const operationButtons = ref([])
-const metaData = defineModel<any>('metaData', {default: () => ({})})
+const metaData = ref({ ...props.meta })
+const queryParams = defineModel<any>('queryParams', {default: () => ({current: 1, size: 20, descColumns: []})})
 
 function getComponent(path) {
   return modules['..' + path]
@@ -75,17 +76,10 @@ onMounted(() => {
     const layoutParams = rsp.data.records[0]
     Object.assign(metaData.value, layoutParams)
     metaData.value.queryParams = JSON.parse(layoutParams.queryParams || "{}")
-    Object.assign(metaData.value.queryParams, props.queryParams)
+    Object.assign(metaData.value.queryParams, queryParams.value)
     loading.value = false
 
     console.log('className: ' + metaData.value.className + ' metaData: ', metaData.value)
   })
 })
-
-function parseYesNoToBoolean(value) {
-  if (value === undefined) {
-    return undefined
-  }
-  return value === 'YES'
-}
 </script>

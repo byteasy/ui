@@ -3,24 +3,24 @@
     <div class="w-full flex-row">
       <div class="flex-grow flex-row justify-content-start">
         <el-form :inline="true" class="w-full">
-          <slot name="from-query" :fields="props.fields" :queryParam="queryParam">
+          <slot name="from-query" :fields="props.fields" :queryParams="queryParams">
             <template v-for="col in visibleFields" :key="col.name">
               <el-form-item :label="getLangText(col.displayName, locale)"
                             v-if="col.isSearch === 'YES'">
                 <component
                   :is="getComponent(parseComponent(col.fieldComponent || '/components/BeTableQueryField.vue'))"
                   :param="parseComponentParam(col.fieldComponent || '/components/BeTableQueryField.vue')"
-                  v-model="queryParam[col.name]"
+                  v-model="queryParams[col.name]"
                   type="query"
                   :column="col"
                   :placeholder="getLangText(col.displayName, locale)"
                   :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
                   clearable
-                  :row="queryParam">
+                  :row="queryParams">
                 </component>
               </el-form-item>
             </template>
-            <slot name="form-query-extra" :queryParam="queryParam"/>
+            <slot name="form-query-extra" :queryParams="queryParams"/>
             <el-form-item>
               <div v-if="showCollapseBtn === true"
                    @click="isCollapsed = !isCollapsed, updateVisibleFields()"
@@ -35,7 +35,7 @@
                   {{ $t('search') }}
                 </el-button>
               </slot>
-              <slot name="form-query-buttons-extra" :queryParam="queryParam"
+              <slot name="form-query-buttons-extra" :queryParams="queryParams"
                     :queryMode="props.tableProps.queryMode"></slot>
             </el-form-item>
           </slot>
@@ -53,7 +53,7 @@
           <el-button :title="$t('batchDelete')" @click="handleEvent('batchDelete')" type="primary">
             <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <slot name="tool-buttons-extra" :queryParam="queryParam"
+          <slot name="tool-buttons-extra" :queryParams="queryParams"
                 :queryMode="props.tableProps.queryMode"></slot>
         </el-button-group>
         <el-dropdown placement="bottom-start">
@@ -132,7 +132,6 @@ const props = defineProps<{
     apiImportBatchSave?: string
     apiExport?: string
     titleColumnName?: string
-    queryParams?: any
     formWidth?: string | number
     operationColumnWidth?: number
     paginationVisible?: number
@@ -152,12 +151,11 @@ const props = defineProps<{
     dataRenderFinish?: (tableData) => void
   },
   fields: Array<object>
-  queryParams?: object
 }>()
 
 const {t, locale} = useI18n()
 const emit = defineEmits(['refresh', 'add', 'batchEdit', 'batchDelete', 'moreAction'])
-const queryParam = defineModel<any>('queryParams', {default: () => ({})})
+const queryParams = defineModel<any>('queryParams', {default: () => ({})})
 
 const queryBarRef = ref(null)
 const isCollapsed = ref(true)
@@ -214,7 +212,7 @@ const updateVisibleFields = () => {
   }
 }
 
-const handleEvent = (event) => emit(event, JSON.parse(JSON.stringify(queryParam.value)))
+const handleEvent = (event) => emit(event, JSON.parse(JSON.stringify(queryParams.value)))
 
 // 监听 resize 自动刷新（防抖）
 let resizeTimer = null

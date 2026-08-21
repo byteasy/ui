@@ -2,7 +2,7 @@
   <be-container>
     <template v-slot:topBar>
       <be-table-tool-bar v-if="props.queryFormVisible !== false && tableColumns.length > 0"
-                      :query-params="queryParam" :table-props="props" :fields="tableColumns"
+                      :query-params="queryParams" :table-props="props" :fields="tableColumns"
                       class="w-full" @refresh="refresh()" @add="onAdd"
                       @moreAction="onMoreActionClick">
         <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
@@ -28,7 +28,6 @@
             @refresh="refresh"
             v-loading="loading"
             :row-key="props.rowKey"
-            :tree-props="props.treeProps"
             :default-expand-all="props.defaultExpandAll">
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
@@ -102,7 +101,6 @@ const props = defineProps<{
   apiImportBatchSave?: string
   apiExport?: string
   titleColumnName?: string
-  queryParams?: any
   formWidth?: string | number
   operationColumnWidth?: number
   paginationVisible?: boolean
@@ -130,9 +128,9 @@ const loading = ref(false)
 const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
 const refBeTableView = ref(null)
 const {open} = useModal()
-const queryParam = defineModel<any>('queryParams', {default: () => ({current: 1, size: 20, descColumns: []})})
+const queryParams = defineModel<any>('queryParams', {default: () => ({current: 1, size: 20, descColumns: []})})
 
-watchDebounced(queryParam, (newVal, oldVal) => {
+watchDebounced(queryParams, (newVal, oldVal) => {
   console.log('tableQueryParams', newVal)
   refresh()
 }, {
@@ -186,14 +184,14 @@ onMounted(() => {
 })
 
 function onPageChange(currentPage, pageSize) {
-  queryParam.value.current = currentPage
-  queryParam.value.size = pageSize
+  queryParams.value.current = currentPage
+  queryParams.value.size = pageSize
 }
 
 function refresh() {
   loading.value = true
   if(props.apiQuery.startsWith('/')) {
-    doHttpGet(props.apiQuery, queryParam.value)
+    doHttpGet(props.apiQuery, queryParams.value)
       .then((rsp) => {
         tableData.value = rsp.data
         loading.value = false
@@ -205,7 +203,7 @@ function refresh() {
         })
       })
   } else {
-    executeOpenApi(props.apiCode, queryParam.value, {}).then((rsp) => {
+    executeOpenApi(props.apiQuery, queryParams.value, {}).then((rsp) => {
       tableData.value = rsp.data
       loading.value = false
 
@@ -265,7 +263,7 @@ function getFormComponent() {
 }
 
 function getFormWidth() {
-  return props.formWidth !== undefined ? props.formWidth : undefined
+  return props.formWidth !== undefined ? props.formWidth : '60%'
 }
 
 function onMoreActionClick(action) {
@@ -351,7 +349,7 @@ function onExcelExportClick() {
       props.excelExportComponent || BeExcelExport,
       {
         columns: tableColumns.value,
-        queryParam: queryParam.value,
+        queryParams: queryParams.value,
       },
       {
         title: t('table.exportToExcel') + '>' + getLangText(entityDefine.name, locale.value),
@@ -453,13 +451,13 @@ function onEdit(row) {
 
 function onDelete(row) {
   if(props.apiDelete.startsWith('/')) {
-    doHttpDelete(props.apiDelete, queryParam.value, row)
+    doHttpDelete(props.apiDelete, queryParams.value, row)
       .then(() => {
         ElMessage.success(t('operationSuccess'))
         refresh()
       })
   } else {
-    executeOpenApi(props.apiDelete, queryParam.value, row).then(() => {
+    executeOpenApi(props.apiDelete, queryParams.value, row).then(() => {
       ElMessage.success(t('operationSuccess'))
       refresh()
     })
@@ -467,7 +465,7 @@ function onDelete(row) {
 }
 
 defineExpose({
-  queryParam,
+  queryParams,
   tableColumns,
   tableData,
   loading,

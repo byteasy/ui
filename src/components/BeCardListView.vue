@@ -115,7 +115,6 @@ const {t, locale} = useI18n()
 
 const props = defineProps<{
   tableProps: {
-    baseUrl: string
     context: string
     className: string
     titleColumnName?: string

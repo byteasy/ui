@@ -1,8 +1,7 @@
 <template>
   <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable"
             @current-change="(row) => currentRow = row">
-    <el-table-column type="selection" width="55"
-                     v-if="props.tableProps.queryMode === true && props.tableProps.multiple === true"/>
+    <el-table-column type="selection" width="55" v-if="props.tableProps.queryMode === true"/>
     <template v-for="col in fields" :key="col.name">
       <slot :name="'table-column-def-' + col.name" :column="col">
         <el-table-column
@@ -22,16 +21,19 @@
             <slot :name="'table-cell-' + col.name" :row="scope.row">
               <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'">
                 <be-i18n-value :model-value="scope.row[col.name]"
-                                 :lang="props.tableProps.showLang"
-                                 @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
+                               :lang="props.tableProps.showLang"
+                               @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
               </el-link>
-              <be-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]" :column="col" :lang="props.tableProps.showLang" v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
+              <be-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]"
+                                    :column="col" :lang="props.tableProps.showLang"
+                                    v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
               <component v-else-if="col.columnComponent"
                          :is="getComponent('..' + parseComponent(col.columnComponent))"
                          :param="parseComponentParam(col.columnComponent)"
-                         :model-value="scope.row[col.name]" :row="scope.row" :column="col" :lang="props.tableProps.showLang" @refresh="emit('refresh')"></component>
+                         :model-value="scope.row[col.name]" :row="scope.row" :column="col"
+                         :lang="props.tableProps.showLang" @refresh="emit('refresh')"></component>
               <be-i18n-value v-else-if="col.isI18n === 'YES'" :model-value="scope.row[col.name]"
-                               :lang="props.tableProps.showLang"/>
+                             :lang="props.tableProps.showLang"/>
               <el-switch v-model="scope.row[col.name]" v-else-if="col.type === 'BOOL'" disabled>
                 <template #active-action>
                   <span>T</span>
@@ -68,14 +70,14 @@
         <el-space direction="horizontal" :size="4">
           <slot name="table-operation" :row="scope.row">
             <be-popup-object-view :model-value="scope.row"
-                                    :column="{ externalClass: props.tableProps.className }"
-                                    :lang="props.tableProps.showLang">
+                                  :column="{ externalClass: props.tableProps.className }"
+                                  :lang="props.tableProps.showLang">
               <template v-slot:reference>
                 {{ t('table.view') }}
               </template>
             </be-popup-object-view>
             <el-link underline="never" @click="handleRowAction('edit', scope.row)" type="primary"
-                     >
+            >
               {{ t('table.edit') }}
             </el-link>
             <slot name="table-operation-extra" :row="scope.row"></slot>
@@ -113,7 +115,6 @@ const {modules} = getRouteComponents()
 
 const props = defineProps<{
   tableProps: {
-    baseUrl: string
     context: string
     className: string
     titleColumnName?: string
