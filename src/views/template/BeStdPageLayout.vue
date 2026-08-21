@@ -51,6 +51,8 @@ const props = defineProps<{
   className?: string
   layoutPramsId?: string
   meta?: object
+
+  formComponent?: string
 }>()
 
 const {t, locale} = useI18n()
@@ -78,6 +80,10 @@ onMounted(() => {
     metaData.value.queryParams = queryParams.value
     Object.assign(metaData.value.queryParams, JSON.parse(layoutParams.queryParams || "{}"))
     loading.value = false
+
+    if(props.formComponent) {
+      metaData.value.formComponent = props.formComponent
+    }
 
     console.log('className: ' + metaData.value.className + ' metaData: ', metaData.value)
   })

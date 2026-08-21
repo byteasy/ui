@@ -1,5 +1,5 @@
 <template>
-  <be-std-page-layout :class-name="metaData.className" :query-params="metaData.queryParams" class="h-full" />
+  <be-std-page-layout :class-name="metaData.className" :query-params="metaData.queryParams" :form-component="metaData.formComponent" class="h-full" />
 </template>
 
 <script lang="ts" setup>
@@ -17,7 +17,6 @@ const props = withDefaults(
 
 const metaData = ref({
   className: 'com.byteasy.platform.entity.Openapi',
-  formComponent: '/views/microapp/easyBuilder/app/OpenApiForm.vue',
   queryParams: {
     resourceId: undefined,
   }
