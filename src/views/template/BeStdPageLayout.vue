@@ -32,10 +32,22 @@
                  :param="parseComponentParam(btn)"
                  :queryParam="scope.queryParam" :queryMode="scope.queryMode"></component>
     </template>
+    <!-- 操作列的自定义组件， 分为整个操作列组件\编辑按钮后的组件\删除按钮后的组件 -->
+    <template v-slot:table-operation="scope">
+      <component :is="getComponent(parseComponent(metaData.operationColumnComponent))" v-if="metaData.operationColumnComponent"
+                 :param="parseComponentParam(metaData.operationColumnComponent)"
+                 :tableRef="refTable"
+                 :row="scope.row"></component>
+    </template>
     <template v-slot:table-operation-extra="scope">
-      <component v-for="btn in operationButtons" :key="btn + '_' + (scope.row.id || scope.$index)"
-                 :is="getComponent(parseComponent(btn))"
-                 :param="parseComponentParam(btn)"
+      <component :is="getComponent(parseComponent(metaData.operationColumnExtraComponent))" v-if="metaData.operationColumnExtraComponent"
+                 :param="parseComponentParam(metaData.operationColumnExtraComponent)"
+                 :tableRef="refTable"
+                 :row="scope.row"></component>
+    </template>
+    <template v-slot:table-operation-end-extra="scope">
+      <component :is="getComponent(parseComponent(metaData.operationColumnExtraEndComponent))" v-if="metaData.operationColumnExtraEndComponent"
+                 :param="parseComponentParam(metaData.operationColumnExtraEndComponent)"
                  :tableRef="refTable"
                  :row="scope.row"></component>
     </template>
@@ -72,7 +84,6 @@ const refTable = ref(null)
 const loading = ref(true)
 const {modules} = getRouteComponents()
 const formQueryButtonsExtra = ref([])
-const operationButtons = ref([])
 const metaData = ref({...props.meta})
 const queryParams = defineModel<any>('queryParams', {
   default: () => ({
