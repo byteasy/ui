@@ -2,9 +2,9 @@
   <be-container>
     <template v-slot:topBar>
       <be-table-tool-bar v-if="props.queryFormVisible !== false && tableColumns.length > 0"
-                      :query-params="queryParams" :table-props="props" :fields="tableColumns"
-                      class="w-full" @refresh="refresh()" @add="onAdd"
-                      @moreAction="onMoreActionClick">
+                         :query-params="queryParams" :table-props="props" :fields="tableColumns"
+                         class="w-full" @refresh="refresh()" @add="onAdd"
+                         @moreAction="onMoreActionClick">
         <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
           <slot :name="name" v-bind="slotProps"></slot>
         </template>
@@ -134,7 +134,13 @@ const loading = ref(false)
 const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
 const refBeTableView = ref(null)
 const {open} = useModal()
-const queryParams = defineModel<any>('queryParams', {default: () => ({current: 1, size: 20, descColumns: []})})
+const queryParams = defineModel<any>('queryParams', {
+  default: () => ({
+    current: 1,
+    size: 20,
+    descColumns: []
+  })
+})
 
 watchDebounced(queryParams, (newVal, oldVal) => {
   console.log('tableQueryParams', newVal)
@@ -196,9 +202,21 @@ function onPageChange(currentPage, pageSize) {
 
 function refresh() {
   loading.value = true
-  if(props.apiQuery.startsWith('/')) {
-    doHttpGet(props.apiQuery, queryParams.value)
-      .then((rsp) => {
+  if (props.apiQuery) {
+    if (props.apiQuery.startsWith('/')) {
+      doHttpGet(props.apiQuery, queryParams.value)
+        .then((rsp) => {
+          tableData.value = rsp.data
+          loading.value = false
+
+          nextTick(() => {
+            if (props.dataRenderFinish) {
+              props.dataRenderFinish(tableData.value)
+            }
+          })
+        })
+    } else {
+      executeOpenApi(props.apiQuery, queryParams.value, {}).then((rsp) => {
         tableData.value = rsp.data
         loading.value = false
 
@@ -208,17 +226,9 @@ function refresh() {
           }
         })
       })
+    }
   } else {
-    executeOpenApi(props.apiQuery, queryParams.value, {}).then((rsp) => {
-      tableData.value = rsp.data
-      loading.value = false
-
-      nextTick(() => {
-        if (props.dataRenderFinish) {
-          props.dataRenderFinish(tableData.value)
-        }
-      })
-    })
+    ElMessage.error(t('platform.ebApp.apiQueryNotDefine'))
   }
 }
 
@@ -392,11 +402,11 @@ function onView(row) {
 function onOpenTableDetail(column, row) {
   getEntityDefine(column.externalClass).then(entityDefine => {
     const extrasParams = JSON.parse(column.extrasParams || '{}')
-    const queryParams = { row: row, column: column}
+    const queryParams = {row: row, column: column}
     queryParams[column.externalClassPrimaryField + 'QueryType'] = 'eq'
     queryParams[column.externalClassPrimaryField] = row[column.innerPrimaryField]
     Object.assign(queryParams, extrasParams?.queryParams || {})
-    const metaData = { queryParams: queryParams, className: column.externalClass }
+    const metaData = {queryParams: queryParams, className: column.externalClass}
     open(
       BeTableContainer,
       {
@@ -417,7 +427,7 @@ function onAdd(row) {
   getEntityDefine(props.className).then(entityDefine => {
     open(
       getFormComponent(), // 要显示的组件
-      {row: row, className: props.className, apiSave: props.apiSave }, // 传给组件的 props
+      {row: row, className: props.className, apiSave: props.apiSave}, // 传给组件的 props
       {
         title: t('add') + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
@@ -456,7 +466,7 @@ function onEdit(row) {
 }
 
 function onDelete(row) {
-  if(props.apiDelete.startsWith('/')) {
+  if (props.apiDelete.startsWith('/')) {
     doHttpDelete(props.apiDelete, queryParams.value, row)
       .then(() => {
         ElMessage.success(t('operationSuccess'))
