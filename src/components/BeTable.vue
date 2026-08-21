@@ -75,7 +75,13 @@ import {
 } from 'vue'
 import {watchDebounced} from '@vueuse/core'
 import BeContainer from '@/components/BeContainer.vue'
-import {doHttpDelete, doHttpGet, executeOpenApi, getEntitySchema} from '@/api/common/platform'
+import {
+  doHttpDelete,
+  doHttpGet,
+  executeOpenApi,
+  getEntityDefine,
+  getEntitySchema
+} from '@/api/common/platform'
 import {ElMessage, type TableColumnCtx} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
@@ -324,7 +330,7 @@ function downLoadExcelTemplate() {
 }
 
 function onExcelImportClick() {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+  getEntityDefine(props.className).then(entityDefine => {
     open(
       props.excelImportComponent || BeExcelImport,
       {
@@ -344,7 +350,7 @@ function onExcelImportClick() {
 }
 
 function onExcelExportClick() {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+  getEntityDefine(props.className).then(entityDefine => {
     open(
       props.excelExportComponent || BeExcelExport,
       {
@@ -364,7 +370,7 @@ function onExcelExportClick() {
 }
 
 function onView(row) {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+  getEntityDefine(props.className).then(entityDefine => {
     open(
       getFormComponent(), // 要显示的组件
       {
@@ -384,7 +390,7 @@ function onView(row) {
 }
 
 function onOpenTableDetail(column, row) {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + column.externalClass, {}).then(entityDefine => {
+  getEntityDefine(column.externalClass).then(entityDefine => {
     const extrasParams = JSON.parse(column.extrasParams || '{}')
     const queryParams = { row: row, column: column}
     queryParams[column.externalClassPrimaryField + 'QueryType'] = 'eq'
@@ -408,7 +414,7 @@ function onOpenTableDetail(column, row) {
 
 
 function onAdd(row) {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+  getEntityDefine(props.className).then(entityDefine => {
     open(
       getFormComponent(), // 要显示的组件
       {row: row, className: props.className, apiSave: props.apiSave }, // 传给组件的 props
@@ -427,7 +433,7 @@ function onAdd(row) {
 }
 
 function onEdit(row) {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.className, {}).then(entityDefine => {
+  getEntityDefine(props.className).then(entityDefine => {
     open(
       getFormComponent(), // 要显示的组件
       {

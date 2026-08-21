@@ -1,11 +1,11 @@
 <template>
   <el-link @click="onLayoutParamsEdit" underline="never" type="primary">
-    {{ $t('platform.ebApp.params') + (props.row.stdLayoutParamsId ? '(1)' : '(0)')}}
+    {{ $t('platform.ebApp.params') + (props.row.stdLayoutParamsId ? '(1)' : '(0)') }}
   </el-link>
 </template>
 <script lang="ts" setup>
 
-import {doHttpGet, executeOpenApi} from "@/api/common/platform";
+import {executeOpenApi, getEntityDefine} from "@/api/common/platform";
 import {getLangText} from "@/locales/common.ts";
 import {useModal} from "@/components/dialog/useModal.ts";
 import {useI18n} from "vue-i18n";
@@ -26,7 +26,7 @@ function onLayoutParamsEdit() {
 }
 
 function openEditForm(row) {
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/com.byteasy.platform.entity.PlatformStdLayoutParams', {}).then(entityDefine => {
+  getEntityDefine('com.byteasy.platform.entity.PlatformStdLayoutParams').then(entityDefine => {
     open(
       BeTableForm, // 要显示的组件
       {

@@ -19,7 +19,7 @@ import {defineExpose, onMounted, ref, useAttrs} from 'vue'
 import {useModal} from '@/components/dialog/useModal.ts'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
-import {doHttpGet} from "@/api/common/platform";
+import {doHttpGet, getEntityDefine} from "@/api/common/platform";
 import BeObjectSelectDetail from "@/components/BeObjectSelectDetail.vue";
 
 const props = defineProps<{
@@ -69,7 +69,7 @@ onMounted(() => {
   console.log(props.modelValue)
   if (props.modelValue !== undefined && props.modelValue !== '') {
     if (!Array.isArray(props.modelValue) || props.modelValue.length === 1) {
-      doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {}).then(response => {
+      getEntityDefine(props.column.externalClass).then(response => {
         const url = response.serviceInstance.contextPath + '/sapi/common/' + props.column.externalClass
         const queryObj = {}
         queryObj[props.column.externalClassPrimaryField] = props.modelValue
@@ -84,7 +84,7 @@ onMounted(() => {
 
 const onAppendIconClick = () => {
   if (bindAttrs.disabled === true) return
-  doHttpGet('/platformSvr/sapi/entityDefines/entity/' + props.column.externalClass, {}).then(response => {
+  getEntityDefine(props.column.externalClass).then(response => {
     const entityDefine = response
     open(
       BeObjectSelectDetail,

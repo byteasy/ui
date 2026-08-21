@@ -130,3 +130,13 @@ export function genUri(url, params) {
     return match;
   })
 }
+
+export function getEntityDefine(className) {
+  return new Promise((resolve, reject) => {
+    executeOpenApi('queryEntityList', {code: className}, {}).then(response => {
+      resolve(response.data?.records[0])
+    }).catch(error => {
+      reject(error);
+    })
+  })
+}

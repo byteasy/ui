@@ -8,6 +8,8 @@
         </el-dropdown-item>
         <el-dropdown-item @click="onOpenTableDetail(props.row)">{{ $t('platform.ebApp.field') }}
         </el-dropdown-item>
+        <el-dropdown-item @click="onOpenTableDetail(props.row)">{{ $t('platform.ebApp.api') }}
+        </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
