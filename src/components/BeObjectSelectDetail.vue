@@ -24,7 +24,7 @@
         :class-name="props.entityDefine.code"
         :api-query="props.entityDefine.serviceInstance.contextPath + '/sapi/common/' + props.entityDefine.code"
         :query-params="queryParams"
-        :query-mode="true"
+        :query-form-visible="true"
         :multiple="props.queryMode === true && props.column.multiple === 'YES' ? true : false"
         :data-render-finish="onTableDataRenderFinish"
         :row-db-click="onTableRowDoubleClick"

@@ -1,9 +1,9 @@
 <template>
-  <be-stand-page-layout :meta-data="metaData" class="h-full" />
+  <be-std-page-layout :class-name="metaData.className" :query-params="metaData.queryParams" class="h-full" />
 </template>
 
 <script lang="ts" setup>
-import BeStandPageLayout from "@/views/template/BeStandPageLayout.vue";
+import BeStdPageLayout from "@/views/template/BeStdPageLayout.vue";
 import {ref, watch} from "vue";
 
 const props = withDefaults(

@@ -1,7 +1,7 @@
 <template>
   <el-scrollbar height="100%" class="pl-3 pr-3" always>
     <div style="height: 400px">
-      <be-stand-page-layout :meta-data="metaData" class="h-full"/>
+      <be-std-page-layout :class-name="metaData.className" :query-params="metaData.queryParams" class="h-full"/>
     </div>
   </el-scrollbar>
 </template>
@@ -10,8 +10,8 @@
 
 import {defineAsyncComponent, ref, watch} from "vue";
 
-const BeStandPageLayout = defineAsyncComponent(() =>
-  import('@/views/template/BeStandPageLayout.vue')
+const BeStdPageLayout = defineAsyncComponent(() =>
+  import('@/views/template/BeStdPageLayout.vue')
 )
 
 const props = withDefaults(

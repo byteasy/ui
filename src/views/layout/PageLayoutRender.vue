@@ -1,6 +1,6 @@
 <template>
-  <be-stand-page-layout v-if="loading && layout?.type === '0'"/>
-  <be-stand-page-layout v-else-if="loading && layout?.type === '2'"/>
+  <be-std-page-layout v-if="loading && layout?.type === '0'"/>
+  <be-std-page-layout v-else-if="loading && layout?.type === '2'"/>
   <el-skeleton :rows="5" animated v-else/>
 </template>
 <script lang="ts" setup>
@@ -8,7 +8,7 @@
 import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {executeOpenApi} from "@/api/common/platform";
-import BeStandPageLayout from "@/views/template/BeStandPageLayout.vue";
+import BeStdPageLayout from "@/views/template/BeStdPageLayout.vue";
 
 const props = defineProps<{
   layoutId?: object | null | undefined
