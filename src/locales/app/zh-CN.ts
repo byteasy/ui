@@ -43,6 +43,7 @@ export default {
       scriptDebugRequest: '发起请求',
       scriptDebugResponse: '接口响应',
       addFieldGroup: '添加分组',
+      expandAll: '展开所有',
       inputFieldGroupName: '输入分组名称',
     }
   }

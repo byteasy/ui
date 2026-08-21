@@ -13,8 +13,7 @@
       <div style="max-height: 50vh; max-width: 70vw; overflow: auto;">
         <el-descriptions border :column="props.cols || 2">
           <template v-for="col in columns" :key="col.name">
-            <el-descriptions-item :label="getLangText(col.displayName, locale)"
-                                  v-if="col.isShow === 'YES'">
+            <el-descriptions-item :label="getLangText(col.displayName, locale)">
               <slot :name="'view_' + col.name" :value="showValue[col.name]" style="width: 30vw">
                 <be-enum-viewer
                   v-if="col.type === 'ENUM' && showValue[col.name]"

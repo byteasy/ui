@@ -8,10 +8,12 @@
         :placeholder="$t('platform.searchTip')"
         suffix-icon="search"
       />
-      <el-button type="primary" icon="plus" class="ml-1" v-debounce="onAddTreeRootNodeClick"
-                 v-if="props.permissionAddCode === undefined || session.authorize(props.permissionAddCode)">
-        {{ $t('add') }}
-      </el-button>
+      <el-button-group direction="horizontal" class="flex-none">
+        <el-button :title="$t('add')" v-debounce="onAddTreeRootNodeClick" type="primary" v-if="props.permissionAddCode === undefined || session.authorize(props.permissionAddCode)">
+          <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+        </el-button>
+        <slot name="tool-buttons-extra"></slot>
+      </el-button-group>
     </div>
 
     <el-tree ref="treeRef"
@@ -133,6 +135,7 @@ const emit = defineEmits(['nodeClick', 'addNodeClick', 'editNodeClick', 'deleteN
 const session = useSessionStore()
 
 const {t, locale} = useI18n()
+const expandAll = ref( props.defaultExpandAll || false)
 const activeContextMenuNode = ref(undefined)
 const treeData = ref([])
 const filterText = ref('')
