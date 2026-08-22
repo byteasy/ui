@@ -481,6 +481,7 @@ function onDelete(row) {
 }
 
 defineExpose({
+  props,
   queryParams,
   tableColumns,
   tableData,

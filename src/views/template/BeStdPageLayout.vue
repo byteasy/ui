@@ -5,6 +5,10 @@
     :api-query="metaData.apiQuery"
     :api-save="metaData.apiSave"
     :api-delete="metaData.apiDelete"
+    :api-download-import-template="metaData.apiDownloadImportTemplate"
+    :api-export="metaData.apiExport"
+    :api-import-batch-save="metaData.apiImportBatchSave"
+    :api-import-preview="metaData.apiImportPreview"
     :query-params="metaData.queryParams"
     :excel-import-component="metaData.excelImportComponent"
     :title-column-name="metaData.titleColumnName || 'name'"
@@ -29,57 +33,57 @@
     <template v-slot:query-form="scope">
       <component :is="getComponent(parseComponent(metaData.queryFormComponent))" v-if="metaData.queryFormComponent"
                  :param="parseComponentParam(metaData.queryFormComponent)"
-                 :ref_table="refTable"
-                 :query-params="scope.queryParams"></component>
+                 :refTable="refTable"
+                 :queryParams="scope.queryParams"></component>
     </template>
     <template v-slot:query-form-extra="scope">
       <component :is="getComponent(parseComponent(metaData.queryFormExtraComponent))" v-if="metaData.queryFormExtraComponent"
                  :param="parseComponentParam(metaData.queryFormExtraComponent)"
-                 :ref_table="refTable"
-                 :query-params="scope.queryParams"></component>
+                 :refTable="refTable"
+                 :queryParams="scope.queryParams"></component>
     </template>
     <template v-slot:query-form-buttons="scope">
       <component :is="getComponent(parseComponent(metaData.queryFormButtonsComponent))" v-if="metaData.queryFormButtonsComponent"
                  :param="parseComponentParam(metaData.queryFormButtonsComponent)"
-                 :ref_table="refTable"
-                 :query-params="scope.queryParams"></component>
+                 :refTable="refTable"
+                 :queryParams="scope.queryParams"></component>
     </template>
     <template v-slot:query-form-buttons-extra="scope">
       <component :is="getComponent(parseComponent(metaData.queryFormButtonExtraComponent))" v-if="metaData.queryFormButtonExtraComponent"
                  :param="parseComponentParam(metaData.queryFormButtonExtraComponent)"
-                 :ref_table="refTable"
-                 :query-params="scope.queryParams"></component>
+                 :refTable="refTable"
+                 :queryParams="scope.queryParams"></component>
     </template>
     <!-- 工具栏自定义组件，分为工具栏按钮拓展组件和更多下拉菜单拓展组件 -->
     <template v-slot:tool-buttons-extra="scope">
       <component :is="getComponent(parseComponent(metaData.toolButtonsExtraComponent))" v-if="metaData.toolButtonsExtraComponent"
                  :param="parseComponentParam(metaData.toolButtonsExtraComponent)"
                  :refTable="refTable"
-                 :row="scope.row"></component>
+                 :queryParams="scope.queryParams"></component>
     </template>
     <template v-slot:more-action-extra="scope">
       <component :is="getComponent(parseComponent(metaData.moreActionExtraComponent))" v-if="metaData.moreActionExtraComponent"
                  :param="parseComponentParam(metaData.moreActionExtraComponent)"
-                 :ref_table="refTable"
-                 :row="scope.row"></component>
+                 :refTable="refTable"
+                 :queryParams="scope.queryParams"></component>
     </template>
     <!-- 操作列的自定义组件， 分为整个操作列组件\编辑按钮后的组件\删除按钮后的组件 -->
     <template v-slot:table-operation="scope">
       <component :is="getComponent(parseComponent(metaData.operationColumnComponent))" v-if="metaData.operationColumnComponent"
                  :param="parseComponentParam(metaData.operationColumnComponent)"
-                 :ref_table="refTable"
+                 :refTable="refTable"
                  :row="scope.row"></component>
     </template>
     <template v-slot:table-operation-extra="scope">
       <component :is="getComponent(parseComponent(metaData.operationColumnExtraComponent))" v-if="metaData.operationColumnExtraComponent"
                  :param="parseComponentParam(metaData.operationColumnExtraComponent)"
-                 :ref_table="refTable"
+                 :refTable="refTable"
                  :row="scope.row"></component>
     </template>
     <template v-slot:table-operation-end-extra="scope">
       <component :is="getComponent(parseComponent(metaData.operationColumnExtraEndComponent))" v-if="metaData.operationColumnExtraEndComponent"
                  :param="parseComponentParam(metaData.operationColumnExtraEndComponent)"
-                 :ref_table="refTable"
+                 :refTable="refTable"
                  :row="scope.row"></component>
     </template>
   </be-table>

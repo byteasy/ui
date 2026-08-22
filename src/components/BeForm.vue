@@ -13,7 +13,6 @@
                        :row="formValue"
                        :className="props.className"
                        :readonly="props.readonly"
-                       type="form"
                        :queryParam="queryParam">
               <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
                 <slot :name="name" v-bind="slotProps"></slot>

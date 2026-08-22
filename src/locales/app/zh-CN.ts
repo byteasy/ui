@@ -47,6 +47,7 @@ export default {
       scriptDebugResponse: '接口响应',
       addFieldGroup: '添加分组',
       moveFieldGroup: '批量修改字段分组',
+      selectFieldFirst: '请先选择要分组的字段',
       expandAll: '展开所有',
       apiQueryNotDefine: '查询接口未定义',
       inputFieldGroupName: '输入分组名称',
