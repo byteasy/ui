@@ -1,6 +1,8 @@
 <template>
   <el-scrollbar :height="props.height - 80">
-    <el-divider content-position="left">{{ $t('platform.ebApp.scriptInputParam') }}</el-divider>
+    <span style="font-size: var(--el-font-size-base)">{{
+        $t('platform.ebApp.scriptInputParam')
+      }}</span>
     <el-collapse expand-icon-position="left">
       <el-collapse-item title="params" name="1">
         <div>
@@ -27,13 +29,14 @@
         </div>
       </el-collapse-item>
     </el-collapse>
-    <el-divider content-position="left">{{ $t('platform.ebApp.scriptFunction') }}</el-divider>
+    <span style="font-size: var(--el-font-size-base)">{{
+        $t('platform.ebApp.scriptFunction')
+      }}</span>
     <be-tree query-api-code="queryScriptFunctionTree" node-key="code"
              permission-add-code="noExistPermission" @nodeClick="onFunctionClick" :context-menu-enable="false" />
-    <el-divider content-position="left">{{
+    <span style="font-size: var(--el-font-size-base)">{{
         $t('platform.ebApp.scriptFunctionHelpMsg')
-      }}
-    </el-divider>
+      }}</span>
     <div class="flex-column">
       <el-text v-for="des in descriptionList" class="w-full">{{ des }}</el-text>
     </div>
