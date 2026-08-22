@@ -113,6 +113,7 @@ const {t, locale} = useI18n()
 const currentRow = ref(undefined)
 const {modules} = getRouteComponents()
 
+// 此组件废弃删除
 const props = defineProps<{
   tableProps: {
     className: string
