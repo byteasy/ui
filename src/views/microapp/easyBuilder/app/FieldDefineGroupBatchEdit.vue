@@ -48,6 +48,7 @@ function batchSaveFieldGroup(group) {
     fieldGroupId: group.id,
     fieldIds: props.fields.map(field => field.id)
   }, {}).then(() => {
+    ElMessage.success(t('operationSuccess'))
     emit('close', 'ok')
   })
 }

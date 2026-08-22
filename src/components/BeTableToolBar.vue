@@ -16,7 +16,7 @@
                   :placeholder="getLangText(col.displayName, locale)"
                   :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
                   clearable
-                  :row="queryParams">
+                  :formModel="queryParams">
                 </component>
               </el-form-item>
             </template>

@@ -39,7 +39,10 @@ function batchMoveFieldGroup() {
       {
         title: t('table.edit') + getLangText(entityDefine.name, locale.value),
         width: '60%',
-        footer: true
+        footer: true,
+        onClose: (data) => {
+          if(data === 'ok') props.refTable.refresh()
+        },
       },
     )
   })
