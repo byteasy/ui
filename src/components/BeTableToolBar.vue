@@ -3,7 +3,7 @@
     <div class="w-full flex-row">
       <div class="flex-grow flex-row justify-content-start">
         <el-form :inline="true" class="w-full">
-          <slot name="from-query" :fields="props.fields" :queryParams="queryParams">
+          <slot name="query-form" :fields="props.fields" :queryParams="queryParams">
             <template v-for="col in visibleFields" :key="col.name">
               <el-form-item :label="getLangText(col.displayName, locale)"
                             v-if="col.isSearch === 'YES'">
@@ -20,7 +20,7 @@
                 </component>
               </el-form-item>
             </template>
-            <slot name="form-query-extra" :queryParams="queryParams"/>
+            <slot name="query-form-extra" :queryParams="queryParams"/>
             <el-form-item>
               <div v-if="showCollapseBtn === true"
                    @click="isCollapsed = !isCollapsed, updateVisibleFields()"
@@ -30,13 +30,12 @@
                   <ArrowUp v-else/>
                 </el-icon>
               </div>
-              <slot name="form-query-buttons">
+              <slot name="query-form-buttons">
                 <el-button type="primary" icon="Search" @click="handleEvent('refresh')">
                   {{ $t('search') }}
                 </el-button>
               </slot>
-              <slot name="form-query-buttons-extra" :queryParams="queryParams"
-                    :queryMode="props.tableProps.queryMode"></slot>
+              <slot name="query-form-buttons-extra" :queryParams="queryParams" :queryMode="props.tableProps.queryMode"></slot>
             </el-form-item>
           </slot>
         </el-form>
@@ -53,8 +52,7 @@
           <el-button :title="$t('batchDelete')" @click="handleEvent('batchDelete')" type="primary">
             <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <slot name="tool-buttons-extra" :queryParams="queryParams"
-                :queryMode="props.tableProps.queryMode"></slot>
+          <slot name="tool-buttons-extra" :queryParams="queryParams" :queryMode="props.tableProps.queryMode"></slot>
         </el-button-group>
         <el-dropdown placement="bottom-start">
           <el-button text icon="MoreFilled"/>
@@ -93,6 +91,7 @@
                 </el-icon>
                 {{ $t('table.exportToExcel') }}
               </el-dropdown-item>
+              <slot name="more-action-extra" :queryParams="queryParams" :queryMode="props.tableProps.queryMode" @actionClick="(action) => onMoreActionClick(action)"></slot>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -134,13 +133,9 @@ const props = defineProps<{
     titleColumnName?: string
     formWidth?: string | number
     operationColumnWidth?: number
-    paginationVisible?: number
-    queryFormVisible?: number
-    rowDbClick?: (row: any) => void
-    formComponent?: Component
-    excelImportComponent?: Component
-    excelExportComponent?: Component
-    dialogModel?: any
+    paginationVisible?: boolean
+    queryFormVisible?: boolean
+    dialogModel?: boolean
     rowKey?: string
     defaultExpandAll?: boolean
     treeProps?: object
@@ -148,9 +143,13 @@ const props = defineProps<{
     queryMode?: boolean
     multiple?: boolean
     showSummary?: boolean
+    formComponent?: Component
+    excelImportComponent?: Component
+    excelExportComponent?: Component
+    rowDbClick?: (row: any) => void
     dataRenderFinish?: (tableData) => void
   },
-  fields: Array<object>
+  fields: Array<object>,
 }>()
 
 const {t, locale} = useI18n()

@@ -25,30 +25,61 @@
     :row-db-click="props.rowDbClick"
     v-if="loading === false"
   >
-    <template v-slot:form-query-buttons-extra="scope">
-      <component v-for="btn in formQueryButtonsExtra"
-                 :key="btn + '_' + (scope.row.id || scope.$index)"
-                 :is="getComponent( parseComponent(btn))"
-                 :param="parseComponentParam(btn)"
-                 :queryParam="scope.queryParam" :queryMode="scope.queryMode"></component>
+    <!-- 查询栏自定义组件 -->
+    <template v-slot:query-form="scope">
+      <component :is="getComponent(parseComponent(metaData.queryFormComponent))" v-if="metaData.queryFormComponent"
+                 :param="parseComponentParam(metaData.queryFormComponent)"
+                 :ref_table="refTable"
+                 :query-params="scope.queryParams"></component>
+    </template>
+    <template v-slot:query-form-extra="scope">
+      <component :is="getComponent(parseComponent(metaData.queryFormExtraComponent))" v-if="metaData.queryFormExtraComponent"
+                 :param="parseComponentParam(metaData.queryFormExtraComponent)"
+                 :ref_table="refTable"
+                 :query-params="scope.queryParams"></component>
+    </template>
+    <template v-slot:query-form-buttons="scope">
+      <component :is="getComponent(parseComponent(metaData.queryFormButtonsComponent))" v-if="metaData.queryFormButtonsComponent"
+                 :param="parseComponentParam(metaData.queryFormButtonsComponent)"
+                 :ref_table="refTable"
+                 :query-params="scope.queryParams"></component>
+    </template>
+    <template v-slot:query-form-buttons-extra="scope">
+      <component :is="getComponent(parseComponent(metaData.queryFormButtonExtraComponent))" v-if="metaData.queryFormButtonExtraComponent"
+                 :param="parseComponentParam(metaData.queryFormButtonExtraComponent)"
+                 :ref_table="refTable"
+                 :query-params="scope.queryParams"></component>
+    </template>
+    <!-- 工具栏自定义组件，分为工具栏按钮拓展组件和更多下拉菜单拓展组件 -->
+    <template v-slot:tool-buttons-extra="scope">
+      <component :is="getComponent(parseComponent(metaData.toolButtonsExtraComponent))" v-if="metaData.toolButtonsExtraComponent"
+                 :param="parseComponentParam(metaData.toolButtonsExtraComponent)"
+                 :refTable="refTable"
+                 :row="scope.row"></component>
+    </template>
+    <template v-slot:more-action-extra="scope">
+      <component :is="getComponent(parseComponent(metaData.moreActionExtraComponent))" v-if="metaData.moreActionExtraComponent"
+                 :param="parseComponentParam(metaData.moreActionExtraComponent)"
+                 :ref_table="refTable"
+                 :row="scope.row"></component>
     </template>
     <!-- 操作列的自定义组件， 分为整个操作列组件\编辑按钮后的组件\删除按钮后的组件 -->
     <template v-slot:table-operation="scope">
       <component :is="getComponent(parseComponent(metaData.operationColumnComponent))" v-if="metaData.operationColumnComponent"
                  :param="parseComponentParam(metaData.operationColumnComponent)"
-                 :tableRef="refTable"
+                 :ref_table="refTable"
                  :row="scope.row"></component>
     </template>
     <template v-slot:table-operation-extra="scope">
       <component :is="getComponent(parseComponent(metaData.operationColumnExtraComponent))" v-if="metaData.operationColumnExtraComponent"
                  :param="parseComponentParam(metaData.operationColumnExtraComponent)"
-                 :tableRef="refTable"
+                 :ref_table="refTable"
                  :row="scope.row"></component>
     </template>
     <template v-slot:table-operation-end-extra="scope">
       <component :is="getComponent(parseComponent(metaData.operationColumnExtraEndComponent))" v-if="metaData.operationColumnExtraEndComponent"
                  :param="parseComponentParam(metaData.operationColumnExtraEndComponent)"
-                 :tableRef="refTable"
+                 :ref_table="refTable"
                  :row="scope.row"></component>
     </template>
   </be-table>
@@ -83,7 +114,6 @@ const {t, locale} = useI18n()
 const refTable = ref(null)
 const loading = ref(true)
 const {modules} = getRouteComponents()
-const formQueryButtonsExtra = ref([])
 const metaData = ref({...props.meta})
 const queryParams = defineModel<any>('queryParams', {
   default: () => ({

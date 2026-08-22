@@ -1,7 +1,7 @@
 <template>
   <be-container>
     <template v-slot:topBar>
-      <be-table-tool-bar v-if="props.queryFormVisible !== false && tableColumns.length > 0"
+      <be-table-tool-bar v-if="props.queryFormVisible && tableColumns.length > 0"
                          :query-params="queryParams" :table-props="props" :fields="tableColumns"
                          class="w-full" @refresh="refresh()" @add="onAdd"
                          @moreAction="onMoreActionClick">
@@ -18,7 +18,7 @@
             v-if="viewModel === 'table'"
             :table-props="props"
             :fields="tableColumns"
-            :show-summary="props.showSummary === true"
+            :show-summary="props.showSummary"
             :height="height"
             :data="tableData.records"
             @row-dblclick="onTableRowDoubleClick"
