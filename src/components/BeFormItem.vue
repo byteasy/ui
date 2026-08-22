@@ -3,7 +3,7 @@
     <span style="font-size: var(--el-font-size-base)" v-if="groupId !== 'default' && groupItems.length > 0" class="w-full">
       <be-i18n-value :model-value="groupMap[groupId]?.name"/>
     </span>
-    <el-divider direction="horizontal" style="margin-left: 0; margin-right: 0; margin-top: 0.5rem; margin-bottom: 0.5rem;"></el-divider>
+    <el-divider direction="horizontal" style="margin-left: 0; margin-right: 0; margin-top: 0.5rem; margin-bottom: 0.5rem;" v-if="groupId !== 'default' && groupItems.length > 0"></el-divider>
     <div class="form-grid w-full">
       <template v-for="col in groupItems" :key="col.name">
         <slot :name="'formItem_' + col.name" :column="col" :props="props" :row="formValue">
