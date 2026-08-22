@@ -9,7 +9,7 @@ import {executeOpenApi, getEntityDefine} from "@/api/common/platform";
 import {getLangText} from "@/locales/common.ts";
 import {useModal} from "@/components/dialog/useModal.ts";
 import {useI18n} from "vue-i18n";
-import BeTableForm from "@/components/BeTableForm.vue";
+import BeForm from "@/components/BeForm.vue";
 
 const {open} = useModal()
 const {t, locale} = useI18n()
@@ -28,11 +28,11 @@ function onLayoutParamsEdit() {
 function openEditForm(row) {
   getEntityDefine('com.byteasy.platform.entity.PlatformStdLayoutParams').then(entityDefine => {
     open(
-      BeTableForm, // 要显示的组件
+      BeForm, // 要显示的组件
       {
         row: row,
         className: 'com.byteasy.platform.entity.PlatformStdLayoutParams',
-        saveApi: 'saveLayoutParams'
+        apiSave: 'saveLayoutParams'
       }, // 传给组件的 props
       {
         title: t('table.edit') + getLangText(entityDefine.name, locale.value),

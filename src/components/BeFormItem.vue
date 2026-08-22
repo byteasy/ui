@@ -53,7 +53,6 @@ const appSettingsStore = useAppSettingsStore()
 const {modules} = getRouteComponents()
 
 const props = defineProps<{
-  columns?: Array<any>
   className?: string
   row?: any
   readonly?: boolean
@@ -62,16 +61,18 @@ const props = defineProps<{
 }>()
 
 const formValue = defineModel<any>('row', { default: () => ({}) })
-const tableColumns = ref(props.columns ?? [])
+const tableColumns = ref([])
 
 onMounted(() => {
-  if (!props.columns) loadTableColumns()
+  loadTableColumns()
 })
 
 function loadTableColumns() {
   getEntitySchema(props.className)
     .then((response) => {
       const arrs = sortColumnsByShowOrder(mergeLocalStorage(response.data))
+      const groupedColumns = Object.groupBy(arrs, (item) => item.groupId ?? 'default')
+      console.log('groupedColumns', groupedColumns)
       tableColumns.value = arrs
     })
     .catch(() => ElMessage.error(t('table.loadingTableColumnsError')))
