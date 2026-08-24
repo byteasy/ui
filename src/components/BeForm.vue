@@ -4,12 +4,12 @@
        style="container-type: inline-size;">
     <div class="form-scroll-wrap">
       <el-form ref="refForm" label-width="auto" label-position="right" class="form-root"
-               :model="formValue">
-        <slot name="formItem" :props="props" :row="formValue" :queryParam="queryParam"
+               :model="formModel">
+        <slot name="formItem" :props="props" :formModel="formModel" :queryParam="queryParam"
               :className="props.className">
           <component :is="getComponent(parseComponent(defaultFormItemComponent))"
                      :param="parseComponentParam(defaultFormItemComponent)"
-                     :row="formValue"
+                     :formModel="formModel"
                      :className="props.className"
                      :readonly="props.readonly"
                      :queryParam="queryParam">
@@ -18,7 +18,7 @@
             </template>
           </component>
         </slot>
-        <slot name="formItemExtra" :props="props" :row="formValue" :queryParam="queryParam"
+        <slot name="formItemExtra" :props="props" :formModel="formModel" :queryParam="queryParam"
               :className="props.className"/>
       </el-form>
     </div>
@@ -50,7 +50,7 @@ const props = defineProps<{
   formItemComponent?: string
 }>()
 
-const formValue = defineModel<any>('row', {default: () => ({})})
+const formModel = defineModel<any>('row', {default: () => ({})})
 const queryParam = ref({})
 const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue')
 
@@ -58,14 +58,14 @@ function onSaveClick() {
   refForm.value?.validate(valid => {
     if (!valid) return
     if (props.apiSave.startsWith('/')) {
-      doHttpPost(props.apiSave, queryParam.value, formValue.value).then(() => {
+      doHttpPost(props.apiSave, queryParam.value, formModel.value).then(() => {
         ElMessage.success(t('operationSuccess'))
         emit('close', 'ok')
       }).catch(err => {
         ElMessage.error(err.message)
       })
     } else {
-      executeOpenApi(props.apiSave, queryParam.value, formValue.value).then(() => {
+      executeOpenApi(props.apiSave, queryParam.value, formModel.value).then(() => {
         ElMessage.success(t('operationSuccess'))
         emit('close', 'ok')
       }).catch(err => {
@@ -98,7 +98,7 @@ function getComponent(path) {
   return modules['..' + path]
 }
 
-defineExpose({props, validate, queryParam, formValue, onSaveClick, onClearForm, onButtonClick})
+defineExpose({props, validate, queryParam, formModel, onSaveClick, onClearForm, onButtonClick})
 </script>
 
 <style scoped>

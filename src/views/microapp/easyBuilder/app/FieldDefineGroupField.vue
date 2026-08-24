@@ -19,6 +19,7 @@
           {{ $t('ok') }}
         </el-button>
         <el-button @click="onCancel" size="small">{{ $t('cancel') }}</el-button>
+        {{ formModel }}
       </template>
     </template>
   </el-select>
