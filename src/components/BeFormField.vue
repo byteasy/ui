@@ -1,8 +1,11 @@
 <template>
-  <be-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :column="props.column" />
+  <be-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :column="props.column"
+                    :formModel="formModel"/>
   <be-i18n-dynamic-input v-else-if="props.column.isI18n === 'YES' && props.column.type === 'STRING'"
-                           :maxlength="props.column.maxLength"
-                           :minlength="props.column.minLength"/>
+                         :maxlength="props.column.maxLength"
+                         :minlength="props.column.minLength"
+                         :formModel="formModel"
+  />
   <el-input
     type="text"
     :maxlength="props.column.maxLength"
@@ -47,10 +50,11 @@
     class="w-full"
   />
   <be-enum-select :code="props.column.typeClassName"
-               v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
-               :multiple="props.column.multiple === 'YES'"
+                  v-else-if="props.column.type === 'ENUM'" filterable clearable reserve-keyword
+                  :multiple="props.column.multiple === 'YES'"
   />
-  <be-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName" v-bind="$attrs">
+  <be-bean-input v-else-if="props.column.type === 'JSON'" :class-name="props.column.typeClassName"
+                 v-bind="$attrs" :formModel="formModel">
     <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
       <slot :name="name" v-bind="slotProps"></slot>
     </template>
@@ -59,6 +63,7 @@
 
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
+import {defineModel} from "vue";
 
 const {t} = useI18n()
 
@@ -89,7 +94,8 @@ const props = defineProps<{
     externalClass: string | null | undefined
     externalClassPrimaryField: string | null | undefined
     externalClassDisplayField: string | null | undefined
-    uiComponent: 'SELECT' | 'RADIO' | 'TABLE'
+    extrasParams: string
   }
 }>()
+const formModel = defineModel<any>('formModel', {default: () => ({})})
 </script>

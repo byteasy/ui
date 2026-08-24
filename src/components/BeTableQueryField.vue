@@ -79,7 +79,7 @@ const props = defineProps<{
     externalClass: string | null | undefined
     externalClassPrimaryField: string | null | undefined
     externalClassDisplayField: string | null | undefined
-    uiComponent: 'SELECT' | 'RADIO' | 'TABLE'
+    extrasParams: string
   }
 }>()
 </script>

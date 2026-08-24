@@ -32,6 +32,7 @@ export default {
       model: "模型",
       field: "字段定义",
       fieldGroup: "字段分组",
+      notGrouped: "未分组",
       params: '布局参数',
       pageLayout: "布局",
       api: "接口",

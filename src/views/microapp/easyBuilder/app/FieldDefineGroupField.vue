@@ -1,6 +1,6 @@
 <template>
   <el-select class="w-full" style="min-width: 160px;" @change="optionChange">
-    <el-option label="未分组" :value="0" />
+    <el-option :label="$t('platform.ebApp.notGrouped')" :value="0" />
     <el-option
       v-for="item in options"
       :key="item.id"
@@ -19,7 +19,6 @@
           {{ $t('ok') }}
         </el-button>
         <el-button @click="onCancel" size="small">{{ $t('cancel') }}</el-button>
-        {{ formModel }}
       </template>
     </template>
   </el-select>

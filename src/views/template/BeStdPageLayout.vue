@@ -141,7 +141,7 @@ onMounted(() => {
     const layoutParams = rsp.data.records[0]
     Object.assign(metaData.value, layoutParams)
     metaData.value.queryParams = queryParams.value
-    Object.assign(metaData.value.queryParams, JSON.parse(layoutParams.queryParams || "{}"))
+    Object.assign(metaData.value.queryParams, JSON.parse(layoutParams?.queryParams || "{}"))
     loading.value = false
 
     if (props.formComponent) {

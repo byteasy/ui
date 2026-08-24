@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 
-import {defineExpose, onMounted, ref, useAttrs} from 'vue'
+import {defineExpose, defineModel, onMounted, ref, useAttrs} from 'vue'
 import {useModal} from '@/components/dialog/useModal.ts'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
@@ -51,7 +51,7 @@ const props = defineProps<{
     externalClass: any
     externalClassPrimaryField: any
     externalClassDisplayField: any
-    uiComponent: 'SELECT' | 'RADIO' | 'TABLE'
+    extrasParams: string
   }
 }>()
 
@@ -63,17 +63,19 @@ const emit = defineEmits<{
   'update:modelValue': [val: string]
   'change': [val: string]
 }>()
+const formModel = defineModel<any>('formModel', {default: () => ({})})
 const selectedObject = ref([])
 
 onMounted(() => {
-  console.log(props.modelValue)
-  if (props.modelValue !== undefined && props.modelValue !== '') {
+  console.log('BeObjectSelect.vue', props.modelValue)
+  if (props.modelValue !== undefined && props.modelValue !== '' && props.modelValue !== null) {
     if (!Array.isArray(props.modelValue) || props.modelValue.length === 1) {
       getEntityDefine(props.column.externalClass).then(response => {
         const url = response.serviceInstance.contextPath + '/sapi/common/' + props.column.externalClass
         const queryObj = {}
         queryObj[props.column.externalClassPrimaryField] = props.modelValue
         queryObj[props.column.externalClassPrimaryField + 'QueryType'] = 'eq'
+        console.log('BeObjectSelect.vue query', queryObj)
         doHttpGet(url, queryObj).then(objResponse => {
           selectedObject.value = objResponse.data.records
         })
@@ -84,6 +86,7 @@ onMounted(() => {
 
 const onAppendIconClick = () => {
   if (bindAttrs.disabled === true) return
+  console.log('onAppendIconClick', formModel.value)
   getEntityDefine(props.column.externalClass).then(response => {
     const entityDefine = response
     open(
@@ -91,8 +94,8 @@ const onAppendIconClick = () => {
       {
         modelValue: props.column.multiple === 'YES' ? selectedObject.value.map(s => s[props.column.externalClassPrimaryField]) : selectedObject.value.map(s => s[props.column.externalClassPrimaryField])[0],
         column: props.column,
-        queryMode: true,
         entityDefine: entityDefine,
+        formModel: formModel.value
       },
       {
         title: getLangText(entityDefine.name, locale),
@@ -109,12 +112,8 @@ const onAppendIconClick = () => {
               emit('update:modelValue', data[props.column.externalClassPrimaryField])
               emit('change', data[props.column.externalClassPrimaryField])
             } else {
-              if (data.length < 1) {
-                onClearClick()
-              } else {
-                emit('update:modelValue', data.map(s => s[props.column.externalClassPrimaryField]))
-                emit('change', data.map(s => s[props.column.externalClassPrimaryField]))
-              }
+              emit('update:modelValue', data.map(s => s[props.column.externalClassPrimaryField]))
+              emit('change', data.map(s => s[props.column.externalClassPrimaryField]))
             }
           }
         },

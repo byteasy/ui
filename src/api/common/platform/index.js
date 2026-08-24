@@ -1,5 +1,7 @@
 import request from '../../request'
 import qs from 'qs'
+import {useSessionStorage} from "@vueuse/core";
+import {useSessionStore} from "@/stores/session.js";
 
 export function getUrl(url, params) {
   return (
@@ -42,11 +44,13 @@ export function doHttpDelete(url, params, data) {
   })
 }
 
+/**
+ * 获取枚举值（对外导出的函数）
+ * @param enumClassName 枚举类名
+ */
 export function getEnumValues(enumClassName) {
-  return request({
-    url: '/platformSvr/sapi/enums/' + enumClassName,
-    method: 'get',
-  })
+  const sessionStore = useSessionStore()
+  return sessionStore.fetchEnumValues(enumClassName)
 }
 
 export function getEntitySchema(enumClassName) {

@@ -29,6 +29,7 @@
                 :placeholder="getLangText(col.displayName, locale)"
                 clearable
                 :disabled="props.readonly"
+                :formModel="formModel"
                 v-model="formModel[col.name]"
                 @clear="formModel[col.name] = null"
               >

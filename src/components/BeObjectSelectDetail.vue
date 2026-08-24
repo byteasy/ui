@@ -2,25 +2,9 @@
   <div class="form-container"
        :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }"
        style="container-type: inline-size;">
-    <el-select v-model="selectedKey" v-bind="$attrs" class="w-full"
-               v-if="props.column.uiComponent === 'SELECT'"
-               :multiple="props.column.multiple === 'YES'">
-      <el-option v-for="obj in tableData.records"
-                 :key="obj[props.column.externalClassPrimaryField]"
-                 :value="obj[props.column.externalClassPrimaryField]"
-                 :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
-    </el-select>
-    <el-radio-group v-model="selectedKey" v-bind="$attrs" class="w-full"
-                    v-if="props.column.uiComponent === 'RADIO' && props.column.multiple === 'NO'">
-      <el-radio v-for="obj in tableData.records"
-                :key="obj[props.column.externalClassPrimaryField]"
-                :value="obj[props.column.externalClassPrimaryField]"
-                :label="getLangText(obj[props.column.externalClassDisplayField], locale)"/>
-    </el-radio-group>
-    <div v-if="props.column.uiComponent === 'TABLE' || props.column.uiComponent === undefined"
-         :style="{ 'height': tableHeight }" class="w-full">
+    <div :style="{ 'height': tableHeight }" class="w-full">
       <be-std-page-layout ref="refTable" class="w-full h-full"
-                          :class-name="props.entityDefine.code"
+                          :class-name="props.column.externalClass"
                           :query-params="queryParams"
                           :query-mode="props.queryMode"
                           :multiple="props.column.multiple === 'YES'"
@@ -30,9 +14,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {computed, defineEmits, defineExpose, onMounted, ref} from "vue";
-import {doHttpGet} from "@/api/common/platform";
-import {getLangText} from "@/locales/common.ts";
+import {computed, defineEmits, defineExpose, defineModel, onMounted, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import BeStdPageLayout from "@/views/template/BeStdPageLayout.vue";
 
@@ -64,27 +46,21 @@ const props = defineProps<{
     externalClass: any
     externalClassPrimaryField: any
     externalClassDisplayField: any
-    uiComponent: 'SELECT' | 'RADIO' | 'TABLE'
+    extrasParams: string
   }
-  entityDefine: object
-  queryParams?: Record<string, any>
   fullscreen?: boolean
   isDrawer?: boolean
   queryMode?: boolean
 }>()
 const refTable = ref(null)
 const emit = defineEmits(['close'])
-const queryParams = ref({current: 1, size: 20, ...props.queryParams})
-const tableData = ref({total: '0'})
-const loading = ref(false)
+const queryParams = ref({current: 1, size: 20})
 const selectedKey = ref(props.modelValue)
+const formModel = defineModel<any>('formModel', {default: () => ({})})
 const {t, locale} = useI18n()
 
 onMounted(() => {
-  if (props.column.uiComponent === 'TABLE') {
-  } else { // RADIO OR SELECT
-    refresh()
-  }
+  Object.assign(queryParams.value, genQueryParams())
 })
 
 const tableHeight = computed({
@@ -95,46 +71,15 @@ const tableHeight = computed({
   }
 })
 
-function refresh() {
-  loading.value = true
-  doHttpGet(props.entityDefine.serviceInstance.contextPath + '/sapi/common/' + props.entityDefine.code, queryParams.value).then((rsp) => {
-    tableData.value = rsp.data
-    loading.value = false
-  })
-}
-
 function onSaveClick() {
   // 表格选择模式
-  if (props.column.uiComponent === 'TABLE') {
-    selectedKey.value = refTable.value?.getSelectionRows().map(e => e[props.column.externalClassPrimaryField])
-    if (props.column.multiple === 'NO') {
-      const selObj = refTable.value?.getSelectionRows()[0]
-      emit('close', selObj)
-    } else {
-      const selObjs = refTable.value?.getSelectionRows()
-      emit('close', selObjs)
-    }
-    return
-  }
-
-  // SELECT/RADIO选择模式
+  selectedKey.value = refTable.value?.getSelectionRows().map(e => e[props.column.externalClassPrimaryField])
   if (props.column.multiple === 'NO') {
-    let selObj = {}
-    for (let i = 0; i < tableData.value.records.length; i++) {
-      if (tableData.value.records[i][props.column.externalClassPrimaryField] === selectedKey.value) {
-        selObj = tableData.value.records[i]
-      }
-    }
+    const selObj = refTable.value?.getSelectionRows()[0]
     emit('close', selObj)
   } else {
-    // 多选模式
-    const selObj = []
-    for (let i = 0; i < tableData.value.records.length; i++) {
-      if (selectedKey.value.includes(tableData.value.records[i][props.column.externalClassPrimaryField])) {
-        selObj.push(tableData.value.records[i])
-      }
-    }
-    emit('close', selObj)
+    const selObjs = refTable.value?.getSelectionRows()
+    emit('close', selObjs)
   }
 }
 
@@ -176,6 +121,18 @@ function onButtonClick(btnName) {
   } else if (btnName === 'cancel') {
     onClearForm()
   }
+}
+
+function genQueryParams() {
+  const result = {}
+  if(props.column.extrasParams) {
+    const params = JSON.parse(props.column.extrasParams)
+    for (const param of params) {
+      result[param.name] = formModel.value[param.name]
+      result[param.name + 'QueryType'] = param.type
+    }
+  }
+  return result
 }
 
 defineExpose({
