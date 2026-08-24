@@ -6,8 +6,8 @@
         <el-dropdown-item>
           <layout-column-param :row="props.row"/>
         </el-dropdown-item>
-        <el-dropdown-item @click="onOpenTableDetail(props.row)">{{ $t('platform.ebApp.field') }}
-        </el-dropdown-item>
+        <el-dropdown-item @click="onOpenTableDetail(props.row)">{{ $t('platform.ebApp.field') }}</el-dropdown-item>
+        <el-dropdown-item @click="onOpenFieldGropTable(props.row)">{{ $t('platform.ebApp.fieldGroup') }}</el-dropdown-item>
         <el-dropdown-item @click="onOpenApiTable(props.row)">{{ $t('platform.ebApp.api') }}
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -37,6 +37,30 @@ function onOpenTableDetail(row) {
     const metaData = {
       queryParams: queryParams,
       className: 'com.byteasy.platform.entity.FieldDefine',
+      multiple: true
+    }
+    open(
+      BeTableContainer,
+      {
+        metaData: metaData,
+      },
+      {
+        title: t('table.edit') + getLangText(entityDefine.name, locale.value),
+        width: '60%',
+        footer: false
+      },
+    )
+  })
+}
+
+function onOpenFieldGropTable(row) {
+  getEntityDefine('com.byteasy.platform.entity.FieldGroup').then(entityDefine => {
+    const queryParams = {row: row}
+    queryParams.classNameQueryType = 'eq'
+    queryParams.className = row.code
+    const metaData = {
+      queryParams: queryParams,
+      className: 'com.byteasy.platform.entity.FieldGroup',
       multiple: true
     }
     open(

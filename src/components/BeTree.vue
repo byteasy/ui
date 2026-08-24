@@ -79,7 +79,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {defineExpose, onMounted, ref, watch} from 'vue'
+import {defineExpose, nextTick, onMounted, ref, watch} from 'vue'
 import {ElMessageBox, type FilterNodeMethodFunction, type TreeInstance} from 'element-plus'
 import {executeOpenApi} from "@/api/common/platform";
 import {useI18n} from "vue-i18n"
@@ -135,7 +135,6 @@ const emit = defineEmits(['nodeClick', 'addNodeClick', 'editNodeClick', 'deleteN
 const session = useSessionStore()
 
 const {t, locale} = useI18n()
-const expandAll = ref( props.defaultExpandAll || false)
 const activeContextMenuNode = ref(undefined)
 const treeData = ref([])
 const filterText = ref('')
@@ -161,12 +160,36 @@ function loadTreeData() {
   })
 }
 
-function loadChildren(node, resolve, reject) {
-  executeOpenApi(props.queryApiCode, node.data, {}).then(res => {
-    resolve(res.data || [])
-  }).catch(err => {
+/**
+ * 懒加载子节点数据
+ * 当子节点数量只有 1 个时，自动展开下一层，实现链式递归自动展开
+ */
+async function loadChildren(node: any, resolve: (data: any[]) => void, reject: (err: any) => void) {
+  try {
+    // 根节点传 {}，子节点传对应的节点数据
+    const parentParam = node.level === 0 ? {} : (node.data || {})
+
+    // 请求子节点数据
+    const res: any = await executeOpenApi(props.queryApiCode, parentParam, {})
+    const result = res.data || []
+
+    // 1. 将当前获取到的子节点数据注入 el-tree
+    resolve(result)
+
+    // 2. 如果当前层级只有一个子节点，则自动展开该节点，自动触发下一层的 loadChildren
+    if (result.length === 1) {
+      await nextTick()
+      // 获取 el-tree 内部刚创建出来的唯一子节点
+      const singleChildNode = node.childNodes?.[0]
+      if (singleChildNode && !singleChildNode.isLeaf) {
+        // 主动展开子节点，el-tree 会自动再次调用 loadChildren
+        singleChildNode.expand()
+      }
+    }
+  } catch (err) {
+    console.error('加载子节点失败:', err)
     reject(err)
-  })
+  }
 }
 
 const handleCloseContextMenu = () => {
