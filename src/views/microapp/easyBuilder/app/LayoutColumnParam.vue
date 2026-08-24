@@ -30,7 +30,7 @@ function openEditForm(row) {
     open(
       BeForm, // 要显示的组件
       {
-        row: row,
+        formModel: row,
         className: 'com.byteasy.platform.entity.PlatformStdLayoutParams',
         apiSave: 'saveLayoutParams'
       }, // 传给组件的 props

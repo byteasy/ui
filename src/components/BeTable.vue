@@ -384,7 +384,7 @@ function onView(row) {
     open(
       getFormComponent(), // 要显示的组件
       {
-        row: row,
+        formModel: row,
         className: props.className,
         readonly: true,
       }, // 传给组件的 props
@@ -402,7 +402,7 @@ function onView(row) {
 function onOpenTableDetail(column, row) {
   getEntityDefine(column.externalClass).then(entityDefine => {
     const extrasParams = JSON.parse(column.extrasParams || '{}')
-    const queryParams = {row: row, column: column}
+    const queryParams = {formModel: row, column: column}
     queryParams[column.externalClassPrimaryField + 'QueryType'] = 'eq'
     queryParams[column.externalClassPrimaryField] = row[column.innerPrimaryField]
     Object.assign(queryParams, extrasParams?.queryParams || {})
@@ -427,7 +427,7 @@ function onAdd(row) {
   getEntityDefine(props.className).then(entityDefine => {
     open(
       getFormComponent(), // 要显示的组件
-      {row: row, className: props.className, apiSave: props.apiSave}, // 传给组件的 props
+      {formModel: row, className: props.className, apiSave: props.apiSave}, // 传给组件的 props
       {
         title: t('add') + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
@@ -447,7 +447,7 @@ function onEdit(row) {
     open(
       getFormComponent(), // 要显示的组件
       {
-        row: row,
+        formModel: row,
         className: props.className,
         apiSave: props.apiSave
       }, // 传给组件的 props

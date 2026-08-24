@@ -46,11 +46,10 @@ const props = defineProps<{
   direction?: string
   fullscreen?: boolean
   isDrawer?: boolean
-  row?: any
   formItemComponent?: string
 }>()
 
-const formModel = defineModel<any>('row', {default: () => ({})})
+const formModel = defineModel<any>('formModel', {default: () => ({})})
 const queryParam = ref({})
 const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue')
 
