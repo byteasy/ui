@@ -39,7 +39,7 @@
 <script setup lang="ts">
 
 import {onMounted, ref, watch} from 'vue'
-import {doHttpGet, getEntitySchema} from '@/api/common/platform'
+import {getEntitySchema} from '@/api/common/platform'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
 import {getClassFieldName} from "@/util/common.ts";
