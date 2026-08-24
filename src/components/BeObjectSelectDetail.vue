@@ -125,11 +125,13 @@ function onButtonClick(btnName) {
 
 function genQueryParams() {
   const result = {}
-  if(props.column.extrasParams) {
-    const params = JSON.parse(props.column.extrasParams)
-    for (const param of params) {
-      result[param.name] = formModel.value[param.name]
+  if (props.column.extrasParams) {
+    const extrasParams = JSON.parse(props.column.extrasParams)
+    for (const param of extrasParams) {
+      const targetName = param.targetName || param.name
+      result[targetName] = formModel.value[param.name]
       result[param.name + 'QueryType'] = param.type
+      result[param.name + 'Readonly'] = param.readonly
     }
   }
   return result

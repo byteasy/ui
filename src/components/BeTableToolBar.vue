@@ -16,6 +16,7 @@
                   :placeholder="getLangText(col.displayName, locale)"
                   :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
                   clearable
+                  :disabled="queryParams[col.name + 'Readonly'] === true"
                   :formModel="queryParams">
                 </component>
               </el-form-item>

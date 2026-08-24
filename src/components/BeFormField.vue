@@ -7,7 +7,8 @@
                          :formModel="formModel"
   />
   <el-input
-    type="text"
+    :type="props.column.textareaRows === 1 ? 'text' : 'textarea'"
+    :rows="props.column.textareaRows"
     :maxlength="props.column.maxLength"
     :minlength="props.column.minLength"
     v-else-if="(props.column.isI18n === 'NO' || !props.column.isI18n) && props.column.type === 'STRING'"

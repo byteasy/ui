@@ -75,6 +75,7 @@ onMounted(() => {
         const queryObj = {}
         queryObj[props.column.externalClassPrimaryField] = props.modelValue
         queryObj[props.column.externalClassPrimaryField + 'QueryType'] = 'eq'
+        Object.assign(queryObj, genQueryParams())
         console.log('BeObjectSelect.vue query', queryObj)
         doHttpGet(url, queryObj).then(objResponse => {
           selectedObject.value = objResponse.data.records
@@ -131,6 +132,20 @@ const onClearClick = () => {
 function getDisplayName() {
   const names = selectedObject.value.map(s => getLangText(s[props.column.externalClassDisplayField || 'name'], locale.value))
   return names.join(', ')
+}
+
+function genQueryParams() {
+  const result = {}
+  if (props.column.extrasParams) {
+    const extrasParams = JSON.parse(props.column.extrasParams)
+    for (const param of extrasParams) {
+      const targetName = param.targetName || param.name
+      result[targetName] = formModel.value[param.name]
+      result[param.name + 'QueryType'] = param.type
+      result[param.name + 'Readonly'] = param.readonly
+    }
+  }
+  return result
 }
 
 defineExpose({})

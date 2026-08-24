@@ -26,7 +26,7 @@
               </el-link>
               <be-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]"
                                     :column="col" :lang="props.tableProps.showLang"
-                                    v-else-if="col.relationType === 'EXTERNAL_KEY'"/>
+                                    v-else-if="col.relationType === 'EXTERNAL_KEY' && col.externalClassAutoFill === true"/>
               <component v-else-if="col.columnComponent"
                          :is="getComponent('..' + parseComponent(col.columnComponent))"
                          :param="parseComponentParam(col.columnComponent)"
