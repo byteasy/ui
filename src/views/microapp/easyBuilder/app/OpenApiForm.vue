@@ -6,18 +6,18 @@
         :placeholder="getLangText(scope.column.displayName, locale)"
         clearable
         :disabled="scope.props.readonly"
-        v-model="scope.row[scope.column.name]"
-        @clear="scope.row[scope.column.name] = null"
+        v-model="scope.formModel[scope.column.name]"
+        @clear="scope.formModel[scope.column.name] = null"
       />
     </template>
     <template v-slot:formItem_scriptId="scope">
       <el-form-item :label="getLangText(scope.column.displayName, locale)"
-                    v-if="scope.row.type === 'script'"
+                    v-if="scope.formModel.type === 'script'"
                     :prop="scope.column.name" :rules="[
                     { required: scope.column.isRequire === 'YES', message: getLangText(scope.column.displayName, locale) + ' ' + t('validate.required') },
                     { validator: (rule, value, callback) => validateColumnRule(scope.column, rule, value, locale, callback), trigger: 'blur' }
                   ]">
-        <api-script-field v-model="scope.row[scope.column.name]" :name="scope.row.name" :open-api="scope.row"/>
+        <api-script-field v-model="scope.formModel[scope.column.name]" :name="scope.formModel.name" :open-api="scope.formModel"/>
       </el-form-item>
       <div style="display: none;" v-else></div>
     </template>
@@ -38,10 +38,10 @@ const contextPath = ref('')
 
 onMounted(() => {
   onServiceChange()
-  watch(() => refBeForm.value?.formValue.type, (newType) => {
+  watch(() => refBeForm.value?.formModel.type, (newType) => {
     onTypeChange(newType)
   })
-  watch(() => refBeForm.value?.formValue.serviceCode, (code) => {
+  watch(() => refBeForm.value?.formModel.serviceCode, (code) => {
     onServiceChange()
   })
 })
@@ -51,9 +51,9 @@ function onButtonClick(btnName) {
 }
 
 function onServiceChange() {
-  if (refBeForm.value.formValue.serviceCode) {
+  if (refBeForm.value.formModel.serviceCode) {
     doHttpGet('/platformSvr/sapi/common/com.byteasy.platform.entity.ServiceInstance', {
-      code: refBeForm.value.formValue.serviceCode,
+      code: refBeForm.value.formModel.serviceCode,
       codeQueryType: 'eq'
     }).then(response => {
       contextPath.value = response.data.records[0].contextPath
@@ -64,35 +64,35 @@ function onServiceChange() {
 
 function onTypeChange(type) {
   if (type === 'query') {
-    refBeForm.value.formValue.httpMethod = 'GET'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className
+    refBeForm.value.formModel.httpMethod = 'GET'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
   } else if (type === 'list') {
-    refBeForm.value.formValue.httpMethod = 'GET'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className + '/all'
+    refBeForm.value.formModel.httpMethod = 'GET'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/all'
   } else if (type === 'getById') {
-    refBeForm.value.formValue.httpMethod = 'GET'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className + '/{id}'
+    refBeForm.value.formModel.httpMethod = 'GET'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/{id}'
   } else if (type === 'saveOrUpdate') {
-    refBeForm.value.formValue.httpMethod = 'POST'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className
+    refBeForm.value.formModel.httpMethod = 'POST'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
   } else if (type === 'delete') {
-    refBeForm.value.formValue.httpMethod = 'DELETE'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className
+    refBeForm.value.formModel.httpMethod = 'DELETE'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
   } else if (type === 'downloadImportTemplate') {
-    refBeForm.value.formValue.httpMethod = 'GET'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className + '/excel/template'
+    refBeForm.value.formModel.httpMethod = 'GET'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/template'
   } else if (type === 'importPreview') {
-    refBeForm.value.formValue.httpMethod = 'POST'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className + '/excel/importPreview'
+    refBeForm.value.formModel.httpMethod = 'POST'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/importPreview'
   } else if (type === 'batchImport') {
-    refBeForm.value.formValue.httpMethod = 'POST'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className + '/batch'
+    refBeForm.value.formModel.httpMethod = 'POST'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/batch'
   } else if (type === 'export') {
-    refBeForm.value.formValue.httpMethod = 'POST'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formValue.className + '/excel/export'
+    refBeForm.value.formModel.httpMethod = 'POST'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/export'
   } else if (type === 'script') {
-    refBeForm.value.formValue.httpMethod = 'POST'
-    refBeForm.value.formValue.uri = contextPath.value + '/sapi/script/api/' + refBeForm.value.formValue.code
+    refBeForm.value.formModel.httpMethod = 'POST'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/script/api/' + refBeForm.value.formModel.code
   }
 }
 
