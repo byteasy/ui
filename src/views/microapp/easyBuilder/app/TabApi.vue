@@ -18,7 +18,7 @@ const props = withDefaults(
 const metaData = ref({
   className: 'com.byteasy.platform.entity.Openapi',
   queryParams: {
-    resourceId: undefined,
+    resourceId: props.resource?.id,
   }
 })
 
