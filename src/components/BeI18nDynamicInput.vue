@@ -1,32 +1,54 @@
 <template>
-  <el-input ref="refInput" v-model="currentLangInput" @input="handleDirectInput" v-bind="$attrs">
-    <template #append>
-      <div
-        style="padding: 0 6px !important; margin: 0 !important; height: 100%; display: flex; align-items: center; justify-content: center;"
-      >
-        <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !props.disabled }" @click="onI18nClick" size="18" class="flex-row align-items-center">
-          <IconLocalLanguage/>
-        </el-icon>
-      </div>
-    </template>
-  </el-input>
+  <div class="be-i18n-wrapper flex flex-row items-stretch w-full">
+    <!-- 输入框/文本域主体 -->
+    <el-input
+      ref="refInput"
+      v-model="currentLangInput"
+      @input="handleDirectInput"
+      v-bind="$attrs"
+      class="flex-1 be-i18n-field"
+      :class="{ 'is-textarea-append': isTextarea }"
+    >
+      <!-- 普通单行 input 模式下：继续使用官方原生 append 插槽 -->
+      <template #append v-if="!isTextarea">
+        <div class="append-icon-box" @click="onI18nClick">
+          <el-icon
+            :class="['my-icon-color-primary flex-row align-items-center', { 'cursor-pointer': !isDisabled, 'is-disabled': isDisabled }]"
+            :size="18"
+          >
+            <IconLocalLanguage />
+          </el-icon>
+        </div>
+      </template>
+    </el-input>
+
+    <!-- textarea 模式下：在右侧无缝拼接一个与 append 样式完全一致的按钮条 -->
+    <div
+      v-if="isTextarea"
+      class="textarea-append-btn flex-none flex-row align-items-center justify-content-center"
+      :class="{ 'cursor-pointer': !isDisabled, 'is-disabled': isDisabled }"
+      @click="onI18nClick"
+      :title="t('i18nEditTitle') || '多语言配置'"
+    >
+      <el-icon :class="['my-icon-color-primary', { 'is-disabled': isDisabled }]" :size="18">
+        <IconLocalLanguage />
+      </el-icon>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-
-import {computed, defineExpose, onMounted, ref, useAttrs} from 'vue'
-import {useModal} from '@/components/dialog/useModal.ts'
+import { computed, defineExpose, onMounted, ref, useAttrs } from 'vue'
+import { useModal } from '@/components/dialog/useModal.ts'
 import BeI18NDynamicForm from "@/components/BeI18nDynamicForm.vue"
-import {useI18n} from 'vue-i18n'
-import {langMap} from "@/locales/common.ts"
+import { useI18n } from 'vue-i18n'
+import { langMap } from "@/locales/common.ts"
 
-const {locale} = useI18n()
-const {open} = useModal()
-const {t} = useI18n()
+const { locale, t } = useI18n()
+const { open } = useModal()
 const refInput = ref(null)
-
 const bindAttrs = useAttrs()
-// 🔥 核心修改：modelValue 改成 string 类型
+
 const props = defineProps<{
   modelValue?: string
   lang?: string
@@ -36,17 +58,18 @@ const emit = defineEmits<{
   'update:modelValue': [val: string]
 }>()
 
+const isTextarea = computed(() => bindAttrs.type === 'textarea')
+const isDisabled = computed(() => bindAttrs.disabled === true || bindAttrs.disabled === '')
+
 onMounted(() => {
-  const input = refInput.value?.input
-  if (input) {
-    input.maxLength = 1024
+  const inputEl = refInput.value?.input || refInput.value?.textarea
+  if (inputEl && !bindAttrs.maxlength) {
+    inputEl.maxLength = 1024
   }
 })
 
-// 最终正确的语言（zh_CN）
 const currentLang = computed(() => props.lang !== undefined ? props.lang : (langMap[locale.value] || locale.value))
 
-// 工具方法：安全解析 JSON 字符串
 const safeParseJson = (str: string | null | undefined): Record<string, string> => {
   if (!str) return {}
   try {
@@ -56,9 +79,6 @@ const safeParseJson = (str: string | null | undefined): Record<string, string> =
   }
 }
 
-/**
- * 1. 输入框显示当前语言的值（自动解析 string 类型的 JSON）
- */
 const currentLangInput = computed({
   get() {
     const jsonObj = safeParseJson(props.modelValue)
@@ -69,27 +89,18 @@ const currentLangInput = computed({
   }
 })
 
-/**
- * 2. 用户直接输入 → 只更新当前语言
- */
 function handleDirectInput(val: string) {
-  // 解析原字符串 -> 修改 -> 重新转成字符串
   const jsonObj = safeParseJson(props.modelValue)
   jsonObj[currentLang.value] = val
-  // 🔥  emit 出去的是 string 类型
   emit('update:modelValue', JSON.stringify(jsonObj))
 }
 
-/**
- * 3. 点击图标打开多语言弹窗
- */
 const onI18nClick = () => {
-  if (bindAttrs.disabled === true) return
+  if (isDisabled.value) return
 
   open(
     BeI18NDynamicForm,
     {
-      // 把 string 解析成对象传给弹窗
       i18nData: safeParseJson(props.modelValue) || {},
       maxlength: bindAttrs.maxlength
     },
@@ -99,7 +110,6 @@ const onI18nClick = () => {
       dialogModel: true,
       onClose: (data) => {
         if (data) {
-          // 🔥 弹窗返回对象，这里转成 string 再 emit
           emit('update:modelValue', JSON.stringify(data))
         }
       },
@@ -107,15 +117,10 @@ const onI18nClick = () => {
   )
 }
 
-const setCurrentLangValue = (value) => {
-  handleDirectInput(value)
-}
-
-const setLanguageValue = (lang, value) => {
-  // 解析原字符串 -> 修改 -> 重新转成字符串
+const setCurrentLangValue = (value: string) => handleDirectInput(value)
+const setLanguageValue = (lang: string, value: string) => {
   const jsonObj = safeParseJson(props.modelValue)
   jsonObj[lang] = value
-  // 🔥  emit 出去的是 string 类型
   emit('update:modelValue', JSON.stringify(jsonObj))
 }
 
@@ -124,11 +129,48 @@ defineExpose({
   setLanguageValue
 })
 </script>
+
 <style scoped>
+/* 单行 input 的 append 样式 */
+.append-icon-box {
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 :deep(.el-input-group__append) {
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* 多行 textarea 模式下的侧边连接条 */
+.is-textarea-append :deep(.el-textarea__inner) {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.textarea-append-btn {
+  width: 36px;
+  background-color: var(--el-fill-color-light, #f5f7fa);
+  color: var(--el-color-info);
+  border: 1px solid var(--el-border-color, #dcdfe6);
+  border-left: none;
+  border-top-right-radius: var(--el-border-radius-base, 4px);
+  border-bottom-right-radius: var(--el-border-radius-base, 4px);
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  box-sizing: border-box;
+}
+
+.textarea-append-btn:hover:not(.is-disabled) {
+  background-color: var(--el-fill-color, #e4e7ed);
+}
+
+.is-disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5;
 }
 </style>
