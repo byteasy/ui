@@ -12,6 +12,7 @@ import '@/assets/style/style.css'
 import * as Vue from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import * as ElementPlusModule from 'element-plus'
+import * as VueI18n from 'vue-i18n'
 import i18n from './locales'
 import App from './App.vue'
 import { loader } from '@guolao/vue-monaco-editor'
@@ -32,6 +33,7 @@ const render = (container) => {
   ;(window as any).__SHARED_VUE__ = Vue
   ;(window as any).__SHARED_ELEMENT_PLUS__ = ElementPlusModule
   ;(window as any).__SHARED_ELEMENT_ICONS__ = ElementPlusIconsVue
+  ;(window as any).__SHARED_VUE_I18N__ = VueI18n
 
   app = createApp(App)
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
