@@ -81,7 +81,7 @@ export function runDefaultValueScript(input, script) {
 export async function executeOpenApi(apiCode, params, data) {
   try {
     const response = await request({
-      url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi', { code: apiCode, codeQueryType: 'eq' }),
+      url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi/all', { code: apiCode, codeQueryType: 'eq' }),
       method: 'get'
     });
 
@@ -89,7 +89,7 @@ export async function executeOpenApi(apiCode, params, data) {
       throw response.error || new Error('获取OpenAPI配置失败');
     }
 
-    const openapi = response.data?.records?.[0];
+    const openapi = response.data?.[0];
     if (!openapi) {
       throw new Error(`未找到 apiCode: ${apiCode} 对应的配置信息`);
     }
