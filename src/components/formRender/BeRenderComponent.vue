@@ -8,8 +8,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {useI18n} from "vue-i18n";
+import {getComponent} from "@/util/componentLoader.ts";
 
 const props = defineProps<{
   formDefine: {
@@ -26,12 +26,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits(['click', 'update:modelValue'])
 
-const {modules} = getRouteComponents()
 const {t, locale} = useI18n()
-
-function getComponent(path) {
-  return modules['..' + path]
-}
 
 </script>
 <style scoped>

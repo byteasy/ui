@@ -114,9 +114,7 @@ import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {useSessionStore} from "@/stores/session.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
-
-const {modules} = getRouteComponents()
+import {getComponent} from "@/util/componentLoader.ts";
 
 const props = defineProps<{
   tableProps: {
@@ -247,7 +245,4 @@ const onMoreActionClick = (action) => {
   emit('moreAction', action)
 }
 
-function getComponent(path) {
-  return modules['..' + path]
-}
 </script>

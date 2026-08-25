@@ -55,11 +55,10 @@ import {validateColumnRule} from '@/util/validateUtils.ts'
 import {parseComponent, parseComponentParam, putValueIfValid} from '@/util/common.ts'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
 import {getLangText} from '@/locales/common.ts'
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
+import {getComponent} from "@/util/componentLoader.ts";
 
 const {t, locale} = useI18n()
 const appSettingsStore = useAppSettingsStore()
-const {modules} = getRouteComponents()
 
 const props = defineProps<{
   className?: string
@@ -119,9 +118,6 @@ function mergeLocalStorage(data) {
   return data
 }
 
-function getComponent(path) {
-  return modules['..' + path]
-}
 </script>
 <style scoped>
 .form-grid {

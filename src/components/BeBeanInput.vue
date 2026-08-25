@@ -53,9 +53,8 @@ import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
 import BeFormField from "@/components/BeFormField.vue";
 import {validateColumnRule} from '@/util/validateUtils.ts'
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
-const {modules } = getRouteComponents()
+import {getComponent} from "@/util/componentLoader.ts";
 
 const {t, locale} = useI18n() // 表单引用
 
@@ -72,10 +71,6 @@ const emit = defineEmits(['update:modelValue'])
 const tableColumns = ref([])
 const formValue = ref({...props.modelValue})
 const refBeanFields = ref({})
-
-function getComponent(path) {
-  return modules['..' + path]
-}
 
 onMounted(() => {
   loadDynamicFields()

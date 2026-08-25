@@ -26,14 +26,12 @@
 </template>
 
 <script setup lang="ts">
-import {defineEmits, defineExpose, defineModel, onMounted, ref} from 'vue'
+import {defineEmits, defineExpose, defineModel, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {doHttpPost, executeOpenApi} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
-
-const {modules} = getRouteComponents()
+import {getComponent} from "@/util/componentLoader.ts";
 
 const {t, locale} = useI18n()
 const emit = defineEmits(['close'])
@@ -91,10 +89,6 @@ function onButtonClick(btnName) {
   } else if (btnName === 'cancel') {
     onClearForm()
   }
-}
-
-function getComponent(path) {
-  return modules['..' + path]
 }
 
 defineExpose({props, validate, queryParam, formModel, onSaveClick, onClearForm, onButtonClick})

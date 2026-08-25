@@ -106,12 +106,11 @@ import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {type Component, defineExpose, ref} from "vue";
 import {getClassFieldName, parseComponent, parseComponentParam} from "@/util/common.ts";
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
+import {getComponent} from "@/util/componentLoader.ts";
 
 const refElTable = ref(null)
 const {t, locale} = useI18n()
 const currentRow = ref(undefined)
-const {modules} = getRouteComponents()
 
 // 此组件废弃删除
 const props = defineProps<{
@@ -147,10 +146,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['rowAction', 'refresh'])
-
-function getComponent(path) {
-  return modules[path]
-}
 
 function handleRowAction(action, args) {
   emit('rowAction', action, args)
