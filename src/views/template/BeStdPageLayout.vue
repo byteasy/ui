@@ -54,7 +54,7 @@
                  :refTable="refTable"
                  :queryParams="scope.queryParams"></component>
     </template>
-    <!-- 工具栏自定义组件 -->
+    <!-- 工具栏自定义组件，分为工具栏按钮拓展组件和更多下拉菜单拓展组件 -->
     <template v-slot:tool-buttons-extra="scope">
       <component :is="getComponent(parseComponent(metaData.toolButtonsExtraComponent))" v-if="metaData.toolButtonsExtraComponent"
                  :param="parseComponentParam(metaData.toolButtonsExtraComponent)"
@@ -68,7 +68,7 @@
                  :queryParams="scope.queryParams"></component>
     </template>
 
-    <!-- 操作列自定义组件（已享受预解析性能优化） -->
+    <!-- 🔥 操作列的自定义组件：直接读取预解析缓存，避免每行重复计算 -->
     <template v-slot:table-operation="scope">
       <component
         :is="operationComponents.main.component"
@@ -101,12 +101,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineExpose, defineModel, onMounted, ref, defineAsyncComponent, type Component } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { getRouteComponents } from "@/util/autoImportComponent.ts"
-import { parseComponent, parseComponentParam } from "@/util/common.ts"
-import { executeOpenApi } from "@/api/common/platform"
-import { isFederationPath, loadFederationComponent } from "@/util/federationLoader.ts" // 引入模块联邦解析器
+import {computed, defineExpose, defineModel, onMounted, ref} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {getRouteComponents} from "@/util/autoImportComponent.ts";
+import {parseComponent, parseComponentParam} from "@/util/common.ts";
+import {executeOpenApi} from "@/api/common/platform";
 
 const props = defineProps<{
   className?: string
@@ -125,11 +124,11 @@ const props = defineProps<{
   rowDbClick?: (row: any) => void
 }>()
 
-const { t, locale } = useI18n()
+const {t, locale} = useI18n()
 const refTable = ref(null)
 const loading = ref(true)
-const { modules } = getRouteComponents()
-const metaData = ref({ ...props.meta })
+const {modules} = getRouteComponents()
+const metaData = ref({...props.meta})
 const queryParams = defineModel<any>('queryParams', {
   default: () => ({
     current: 1,
@@ -138,37 +137,14 @@ const queryParams = defineModel<any>('queryParams', {
   })
 })
 
-/**
- * ⚡ 核心改造：双模式智能组件加载器
- * 1. 若为模块联邦路径（如 'micro_marketing/MarketingForm'）：走模块联邦动态拉取
- * 2. 若为本地相对路径（如 '/src/views/xxx.vue'）：走现有 modules 本地索引
- */
-function getComponent(path: string | undefined): Component | null {
+function getComponent(path) {
   if (!path) return null
-
-  // 模式 A：判断是否命中模块联邦格式
-  if (isFederationPath(path)) {
-    const federationComp = loadFederationComponent(path)
-    if (federationComp) {
-      return federationComp
-    }
-  }
-
-  // 模式 B：兼容现有的本地 Vite glob 路径
-  const localComp = modules['..' + path]
-  if (localComp) {
-    // 若返回的是动态 import 函数则包裹 defineAsyncComponent，若已是组件对象直接返回
-    return typeof localComp === 'function' && !localComp.name && !localComp.__vccOpts
-      ? defineAsyncComponent(localComp as any)
-      : localComp
-  }
-
-  console.warn(`[ComponentLoader] 未能找到组件，路径: ${path}`)
-  return null
+  return modules['..' + path]
 }
 
 /**
- * 预计算并缓存操作列组件与参数，避免表格逐行渲染高频计算
+ * ⚡ 优化：预先计算并缓存操作列的组件实例和参数
+ * 避免在表格每行渲染时重复调用 parseComponent 和 getComponent
  */
 const operationComponents = computed(() => {
   return {
@@ -227,8 +203,6 @@ const getSelectionRows = () => {
 }
 
 defineExpose({
-  setCurrentRow,
-  toggleRowSelection,
-  getSelectionRows
+  setCurrentRow, toggleRowSelection, getSelectionRows
 })
 </script>
