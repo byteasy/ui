@@ -71,22 +71,19 @@
                 </el-icon>
                 {{ $t('table.customColumn') }}
               </el-dropdown-item>
-              <el-dropdown-item divided @click="onMoreActionClick('downLoadExcelTemplate')"
-                                v-if="props.tableProps.apiImportBatchSave && sessionStore.authorize(props.tableProps.apiImportBatchSave)">
+              <el-dropdown-item divided @click="onMoreActionClick('downLoadExcelTemplate')">
                 <el-icon>
                   <Download/>
                 </el-icon>
                 {{ $t('table.downLoadExcelTemplate') }}
               </el-dropdown-item>
-              <el-dropdown-item @click="onMoreActionClick('excelImport')"
-                                v-if="props.tableProps.apiImportBatchSave && sessionStore.authorize(props.tableProps.apiImportBatchSave)">
+              <el-dropdown-item @click="onMoreActionClick('excelImport')">
                 <el-icon>
                   <IconLocalExcel/>
                 </el-icon>
                 {{ $t('table.importByExcel') }}
               </el-dropdown-item>
-              <el-dropdown-item @click="onMoreActionClick('excelExport')"
-                                v-if="props.tableProps.apiExport && sessionStore.authorize(props.tableProps.apiExport)">
+              <el-dropdown-item @click="onMoreActionClick('excelExport')">
                 <el-icon>
                   <IconLocalExcelExport/>
                 </el-icon>

@@ -122,7 +122,7 @@ export default {
     startDate: '开始时间',
     endDate: '结束时间',
     rangeSeparator: '到',
-    downLoadExcelTemplate: '导入模板',
+    downLoadExcelTemplate: '下载模板',
     importByExcel: '模板导入',
     exportToExcel: 'Excel导出',
     importByExcelTip: '将文件拖入或者点击进行上传',
