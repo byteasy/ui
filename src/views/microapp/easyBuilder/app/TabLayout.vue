@@ -1,9 +1,6 @@
 <template>
-  <el-scrollbar height="100%" class="pl-3 pr-3" always>
-    <div style="height: 400px">
-      <be-std-page-layout :class-name="metaData.className" :query-params="metaData.queryParams" class="h-full"/>
-    </div>
-  </el-scrollbar>
+  <be-std-page-layout :class-name="metaData.className" :query-params="metaData.queryParams"
+                      class="h-full"/>
 </template>
 
 <script lang="ts" setup>

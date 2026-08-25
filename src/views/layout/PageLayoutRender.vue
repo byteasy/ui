@@ -1,6 +1,5 @@
 <template>
-  <be-std-page-layout v-if="loading && layout?.type === '0'"/>
-  <be-std-page-layout v-else-if="loading && layout?.type === '2'"/>
+  <be-std-page-layout v-if="loading && layout?.type === 'STAND'" :layout-prams-id="layout.stdLayoutParamsId"/>
   <el-skeleton :rows="5" animated v-else/>
 </template>
 <script lang="ts" setup>
