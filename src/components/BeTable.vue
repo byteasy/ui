@@ -119,7 +119,7 @@ const props = defineProps<{
   queryMode?: boolean
   multiple?: boolean
   showSummary?: boolean
-  formComponent?: Component
+  formComponent?: Component | null | undefined
   excelImportComponent?: Component
   excelExportComponent?: Component
   rowDbClick?: (row: any) => void

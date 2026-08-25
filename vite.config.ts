@@ -1,29 +1,39 @@
-import {fileURLToPath, URL} from 'node:url'
-import {defineConfig, loadEnv} from 'vite' // 新增 loadEnv 导入
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Icons from 'unplugin-icons/vite'
-import {FileSystemIconLoader} from 'unplugin-icons/loaders'
-import {resolve} from 'path'
+import { FileSystemIconLoader } from 'unplugin-icons/loaders'
+import { resolve } from 'path'
 import IconsResolver from 'unplugin-icons/resolver'
 import qiankun from 'vite-plugin-qiankun'
+import federation from '@originjs/vite-plugin-federation'
 
 // https://vite.dev/config/
-// 改为带环境参数的函数形式，核心改造点
-export default defineConfig(({mode}) => {
-  // 加载对应环境的 .env 文件（.env.dev / .env.pro）
-  // 第三个参数为空字符串，确保能加载所有 VITE_ 开头的环境变量
+export default defineConfig(({ mode, command }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  const isProd = mode === 'production' || mode === 'pro'
+  const isBuild = command === 'build' // 识别当前是否是打包构建阶段
 
   return {
     base: '/platformSvr/common',
     plugins: [
       vue(),
       vueJsx(),
+      // 1. 🔥 核心修复：仅在 build 打包时加载模块联邦插件，彻底避开 dev 模式下的拦截与 500 报错
+      isBuild &&
+      federation({
+        name: 'platform_service',
+        remotes: {
+          micro_marketing: env.VITE_MICRO_MARKETING_ENTRY || '/marketing/assets/remoteEntry.js',
+          micro_biz: env.VITE_MICRO_BIZ_ENTRY || '/biz/assets/remoteEntry.js',
+        },
+        shared: ['vue', 'vue-router', 'pinia', 'element-plus', 'vue-i18n']
+      }),
       qiankun('platform-service', {
         useDevMode: true
       }),
@@ -42,25 +52,24 @@ export default defineConfig(({mode}) => {
         dts: 'src/components.d.ts',
       }),
       Icons({
-        autoInstall: true, // 自动安装图标集
-        compiler: 'vue3', // 编译器
-        // 默认样式
+        autoInstall: true,
+        compiler: 'vue3',
         defaultStyle: 'display: inline-block;',
-        // 默认类名
         defaultClass: 'icon',
         customCollections: {
-          // 本地 SVG 图标
           local: FileSystemIconLoader(resolve(__dirname, 'src/icons')),
         },
       }),
-    ],
-    // 注入环境模式标识，让 env.d.ts 能识别当前环境
+    ].filter(Boolean),
     define: {
       'import.meta.env.MODE': JSON.stringify(mode),
     },
     server: {
       cors: true,
       port: 7998,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
       proxy: {
         '/platformSvr/sapi': {
           target: 'http://localhost:18080',
@@ -68,29 +77,25 @@ export default defineConfig(({mode}) => {
         },
       },
     },
+    esbuild: {
+      supported: {
+        'top-level-await': true
+      }
+    },
     build: {
+      target: 'esnext',
       outDir: 'dist/static/common',
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 1500,
       rollupOptions: {
         output: {
-          // 自定义拆包策略
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              // 1. 把 Monaco Editor 单独拆分 (极其庞大)
               if (id.includes('monaco-editor') || id.includes('@guolao/vue-monaco-editor')) {
                 return 'monaco-editor'
               }
-              // 2. 把 Element Plus 及图标库单独拆分
-              if (id.includes('element-plus') || id.includes('@element-plus')) {
-                return 'element-plus'
+              if (id.includes('axios') || id.includes('dayjs') || id.includes('qs') || id.includes('md5') || id.includes('xe-utils')) {
+                return 'utils-vendor'
               }
-              // 3. 把 Vue 全家桶 (Vue, Router, Pinia, i18n) 拆分为核心 vendor
-              if (id.includes('node_modules/vue/') || id.includes('vue-router') ||
-                id.includes('pinia') || id.includes('vue-i18n')) {
-                return 'vue-core'
-              }
-              // 4. 剩余的其他第三方库 (axios, dayjs, vueuse, md5 等) 统一打入 vendor
-              return 'vendor'
             }
           }
         }
@@ -99,15 +104,16 @@ export default defineConfig(({mode}) => {
     css: {
       preprocessorOptions: {
         scss: {
+          api: 'modern-compiler',
           additionalData: '@import "src/assets/styles/global.scss";',
         },
       },
     },
     resolve: {
-      extensions: ['.js', '.ts', '.json'], // 自动补全扩展名
+      extensions: ['.js', '.ts', '.json', '.vue'],
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
+        // 2. 🔥 核心修复：彻底删除了 'vue-i18n' 的文件级别名，防止模块联邦解析路径时出现 package.json 找不到的 500 异常
       },
     },
   }
