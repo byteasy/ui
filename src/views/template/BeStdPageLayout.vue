@@ -67,31 +67,41 @@
                  :refTable="refTable"
                  :queryParams="scope.queryParams"></component>
     </template>
-    <!-- 操作列的自定义组件， 分为整个操作列组件\编辑按钮后的组件\删除按钮后的组件 -->
+
+    <!-- 🔥 操作列的自定义组件：直接读取预解析缓存，避免每行重复计算 -->
     <template v-slot:table-operation="scope">
-      <component :is="getComponent(parseComponent(metaData.operationColumnComponent))" v-if="metaData.operationColumnComponent"
-                 :param="parseComponentParam(metaData.operationColumnComponent)"
-                 :refTable="refTable"
-                 :row="scope.row"></component>
+      <component
+        :is="operationComponents.main.component"
+        v-if="operationComponents.main.component"
+        :param="operationComponents.main.param"
+        :refTable="refTable"
+        :row="scope.row"
+      ></component>
     </template>
     <template v-slot:table-operation-extra="scope">
-      <component :is="getComponent(parseComponent(metaData.operationColumnExtraComponent))" v-if="metaData.operationColumnExtraComponent"
-                 :param="parseComponentParam(metaData.operationColumnExtraComponent)"
-                 :refTable="refTable"
-                 :row="scope.row"></component>
+      <component
+        :is="operationComponents.extra.component"
+        v-if="operationComponents.extra.component"
+        :param="operationComponents.extra.param"
+        :refTable="refTable"
+        :row="scope.row"
+      ></component>
     </template>
     <template v-slot:table-operation-end-extra="scope">
-      <component :is="getComponent(parseComponent(metaData.operationColumnExtraEndComponent))" v-if="metaData.operationColumnExtraEndComponent"
-                 :param="parseComponentParam(metaData.operationColumnExtraEndComponent)"
-                 :refTable="refTable"
-                 :row="scope.row"></component>
+      <component
+        :is="operationComponents.endExtra.component"
+        v-if="operationComponents.endExtra.component"
+        :param="operationComponents.endExtra.param"
+        :refTable="refTable"
+        :row="scope.row"
+      ></component>
     </template>
   </be-table>
   <el-skeleton :rows="5" animated v-else/>
 </template>
 
 <script lang="ts" setup>
-import {defineExpose, defineModel, onMounted, ref} from 'vue'
+import {computed, defineExpose, defineModel, onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
@@ -128,8 +138,30 @@ const queryParams = defineModel<any>('queryParams', {
 })
 
 function getComponent(path) {
+  if (!path) return null
   return modules['..' + path]
 }
+
+/**
+ * ⚡ 优化：预先计算并缓存操作列的组件实例和参数
+ * 避免在表格每行渲染时重复调用 parseComponent 和 getComponent
+ */
+const operationComponents = computed(() => {
+  return {
+    main: {
+      component: metaData.value.operationColumnComponent ? getComponent(parseComponent(metaData.value.operationColumnComponent)) : null,
+      param: metaData.value.operationColumnComponent ? parseComponentParam(metaData.value.operationColumnComponent) : undefined
+    },
+    extra: {
+      component: metaData.value.operationColumnExtraComponent ? getComponent(parseComponent(metaData.value.operationColumnExtraComponent)) : null,
+      param: metaData.value.operationColumnExtraComponent ? parseComponentParam(metaData.value.operationColumnExtraComponent) : undefined
+    },
+    endExtra: {
+      component: metaData.value.operationColumnExtraEndComponent ? getComponent(parseComponent(metaData.value.operationColumnExtraEndComponent)) : null,
+      param: metaData.value.operationColumnExtraEndComponent ? parseComponentParam(metaData.value.operationColumnExtraEndComponent) : undefined
+    }
+  }
+})
 
 onMounted(() => {
   executeOpenApi('getLayoutParamsByIdOrClassName', {
