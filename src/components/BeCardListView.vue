@@ -115,20 +115,20 @@ const {t, locale} = useI18n()
 
 const props = defineProps<{
   tableProps: {
-    context: string
     className: string
+    apiQuery: string
+    apiSave?: string
+    apiDelete?: string
+    apiDownloadImportTemplate?: string
+    apiImportPreview?: string
+    apiImportBatchSave?: string
+    apiExport?: string
     titleColumnName?: string
-    queryParams?: any
     formWidth?: string | number
     operationColumnWidth?: number
-    paginationVisible?: number
-    queryFormVisible?: number
-    rowDbClick?: (row: any) => void
-    excelImportEnable?: boolean
-    formComponent?: Component
-    excelImportComponent?: Component
-    excelExportComponent?: Component
-    dialogModel?: any
+    paginationVisible?: boolean
+    queryFormVisible?: boolean
+    dialogModel?: boolean
     rowKey?: string
     defaultExpandAll?: boolean
     treeProps?: object
@@ -136,6 +136,10 @@ const props = defineProps<{
     queryMode?: boolean
     multiple?: boolean
     showSummary?: boolean
+    formComponent?: Component
+    excelImportComponent?: Component
+    excelExportComponent?: Component
+    rowDbClick?: (row: any) => void
     dataRenderFinish?: (tableData) => void
   },
   fields: Array<object>
