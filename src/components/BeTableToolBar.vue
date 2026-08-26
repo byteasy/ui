@@ -46,42 +46,35 @@
       <div class="flex-none">
         <!-- BeTableView 工具栏 -->
         <el-button-group direction="horizontal" v-if="props.tableProps.queryMode !== true && batchEditModel !== true">
-          <el-button :title="$t('add')"
-                     @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))"
-                     type="primary">
+          <el-button :title="$t('add')" @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))" type="primary">
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <el-button :title="$t('batchEdit')"
-                     @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_EDIT, selectionRows)"
-                     type="primary">
-            <IconLocalBatchEditTable
-              style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+
+          <el-button :title="$t('batchAdd')" @click="onToolbarActionClick(TableToolbarActionEnum.BATCH_ADD, JSON.parse(JSON.stringify(queryParams)))" type="primary">
+            <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+          </el-button>
+
+          <el-button :title="$t('batchEdit')" @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_EDIT, selectionRows)" type="primary">
+            <IconLocalBatchEditTable style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
           <el-popconfirm
             :confirm-button-text="$t('ok')"
             :cancel-button-text="$t('cancel')"
             :title="$t('batchDeleteWarn')"
             :hide-after="10"
-            @confirm="onToolbarActionClick(TableToolbarActionEnum.BATCH_DELETE, selectionRows)"
-          >
+            @confirm="onToolbarActionClick(TableToolbarActionEnum.BATCH_DELETE, selectionRows)">
             <template #reference>
-              <el-button :title="$t('batchDelete')"
-                         type="primary"
-                         v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
-                <IconLocalBatchDelete
-                  style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+              <el-button :title="$t('batchDelete')" type="primary" v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
+                <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
               </el-button>
             </template>
           </el-popconfirm>
-          <slot name="tool-buttons-extra" :queryParams="queryParams"
-                :queryMode="props.tableProps.queryMode"></slot>
+          <slot name="tool-buttons-extra" :queryParams="queryParams" :queryMode="props.tableProps.queryMode"></slot>
         </el-button-group>
 
         <!-- BeTableEditor 工具栏 -->
         <el-button-group direction="horizontal" v-if="batchEditModel === true">
-          <el-button :title="$t('add')"
-                     @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))"
-                     type="primary">
+          <el-button :title="$t('add')" @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))" type="primary">
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
           <el-popconfirm :confirm-button-text="$t('ok')"
@@ -103,9 +96,7 @@
                      icon="Check" type="primary">
             {{ $t('save') }}
           </el-button>
-          <el-button :title="$t('cancel')"
-                     @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_CANCEL, undefined)"
-                     icon="Check" type="danger">
+          <el-button :title="$t('cancel')" @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_CANCEL, undefined)" icon="Check" type="danger">
             {{ $t('cancel') }}
           </el-button>
         </el-button-group>

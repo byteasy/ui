@@ -192,6 +192,9 @@ export enum TableToolbarActionEnum {
   /** 添加 */
   ADD = 'add',
 
+  /** 批量添加 */
+  BATCH_ADD = "batchAdd",
+
   /** 批量编辑 */
   TABLE_EDITOR_BATCH_EDIT = 'tableEditorBatchEdit',
 
