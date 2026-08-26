@@ -103,9 +103,14 @@
                      icon="Check" type="primary">
             {{ $t('save') }}
           </el-button>
+          <el-button :title="$t('cancel')"
+                     @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_CANCEL, undefined)"
+                     icon="Check" type="danger">
+            {{ $t('cancel') }}
+          </el-button>
         </el-button-group>
 
-        <el-dropdown placement="bottom-start">
+        <el-dropdown placement="bottom-start" v-if="batchEditModel !== true">
           <el-button text icon="MoreFilled" v-if="batchEditModel !== true"/>
           <template #dropdown>
             <el-dropdown-menu>

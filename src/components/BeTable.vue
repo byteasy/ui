@@ -53,7 +53,7 @@
                            :fields="tableColumns"
                            :show-summary="props.showSummary"
                            :height="height"
-                           :tableData="tableData.records"
+                           :tableData="batchEditData"
                            @row-click="onTableRowClick"
                            @header-dragend="onHeaderDrag"
                            @row-action="onRowActionHandle"
@@ -61,7 +61,7 @@
                            @selection-change="(rows) => selectionRows = rows"
                            v-loading="loading"
                            :row-key="props.rowKey"
-                           :default-expand-all="props.defaultExpandAll">>
+                           :default-expand-all="props.defaultExpandAll">
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
@@ -128,6 +128,7 @@ const selectionRows = ref([])
 const loading = ref(false)
 const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
 const batchEditModel = ref(false)
+const batchEditData = ref([])
 const refBeTableView = ref(null)
 const {open} = useModal()
 const queryParams = defineModel<any>('queryParams', {
@@ -278,7 +279,7 @@ function getFormWidth() {
   return props.formWidth ? props.formWidth : '60%'
 }
 
-function onToolbarAction(action, args) {
+function onToolbarAction(action : TableToolbarActionEnum, args) {
   if (action === TableToolbarActionEnum.SWITCH_VIEW) {
     switchViewModel()
   } else if (action === TableToolbarActionEnum.COLUMN_DEFINE) {
@@ -299,9 +300,17 @@ function onToolbarAction(action, args) {
       refresh()
     })
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_EDIT) {
+    batchEditData.value = JSON.parse(JSON.stringify(tableData.value.records))
     batchEditModel.value = true
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_SAVE) {
+    refBeTableView.value.save().then(() => {
+      batchEditModel.value = false
+      refresh()
+    })
+  } else if (action === TableToolbarActionEnum.TABLE_EDITOR_CANCEL) {
     batchEditModel.value = false
+  } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_REMOVE) {
+    refBeTableView.value.batchRemove()
   }
 }
 

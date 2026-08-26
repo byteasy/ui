@@ -198,6 +198,8 @@ export enum TableToolbarActionEnum {
   /** 批量保存 */
   TABLE_EDITOR_BATCH_SAVE = 'tableEditorBatchSave',
 
+  TABLE_EDITOR_CANCEL = 'tableEditorCancel',
+
   /** 增加行 */
   TABLE_EDITOR_ADD_ROW = 'tableEditorAddRow',
 

@@ -69,7 +69,7 @@ import {useI18n} from "vue-i18n";
 import {defineExpose, ref} from "vue";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
 import {getComponent} from "@/util/componentLoader.ts";
-import {type BeTableProps, TableRowActionEnum} from "@/components/BeTable.ts";
+import {type BeTableProps} from "@/components/BeTable.ts";
 
 const refElTable = ref<any>(null)
 const tableData = defineModel<any>('tableData', {default: () => ({})})
@@ -84,10 +84,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['rowAction', 'refresh', 'selection-change'])
-
-function handleRowAction(action: TableRowActionEnum, args: any) {
-  emit('rowAction', action, args)
-}
 
 /**
  * 监听 Element Plus 原生选择变化
@@ -151,10 +147,24 @@ function removeLocalRow(row: any, index: number) {
   }
 }
 
+const batchRemove = () => {
+  return new Promise(resolve => {
+    resolve('')
+  })
+}
+
+const save = () => {
+  return new Promise(resolve => {
+    resolve('')
+  })
+}
+
 defineExpose({
   getSelectionRows,
   toggleRowSelection,
-  setCurrentRow
+  setCurrentRow,
+  batchRemove,
+  save
 })
 </script>
 
