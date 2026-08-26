@@ -3,7 +3,7 @@
     <span style="font-size: var(--el-font-size-base)" v-if="groupId !== 'default' && groupItems.length > 0" class="w-full">
       <be-i18n-value :model-value="groupMap[groupId]?.name"/>
     </span>
-    <el-divider direction="horizontal" style="margin-left: 0; margin-right: 0; margin-top: 0.5rem; margin-bottom: 0.5rem;"></el-divider>
+    <el-divider direction="horizontal" style="margin-left: 0; margin-right: 0; margin-top: 0.5rem; margin-bottom: 0.5rem;" v-if="hasMultipleColumns"></el-divider>
     <div class="form-grid w-full">
       <template v-for="col in groupItems" :key="col.name">
         <slot :name="'formItem_' + col.name" :column="col" :props="props" :formModel="formModel">
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineModel, onMounted, ref} from 'vue'
+import {computed, defineModel, onMounted, ref} from 'vue'
 import BeFormField from '@/components/BeFormField.vue'
 import {useI18n} from 'vue-i18n'
 import {executeOpenApi, getEntitySchema} from '@/api/common/platform'
@@ -70,6 +70,11 @@ const props = defineProps<{
 const formModel = defineModel<any>('formModel', {default: () => ({})})
 const tableColumns = ref({})
 const groupMap = ref({})
+
+const hasMultipleColumns = computed(() => {
+  if (!tableColumns.value) return false
+  return Object.keys(tableColumns.value).length > 1
+})
 
 onMounted(() => {
   loadTableColumns()

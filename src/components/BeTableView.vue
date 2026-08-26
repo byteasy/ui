@@ -1,13 +1,42 @@
 <template>
-  <el-table fix border scrollbar-always-on stripe highlight-current-row ref="refElTable"
-            @current-change="(row) => currentRow = row">
-    <el-table-column type="selection" width="55" v-if="props.tableProps.multiple === true"/>
+  <el-table
+    fix
+    border
+    scrollbar-always-on
+    stripe
+    highlight-current-row
+    ref="refElTable"
+    class="hover-selection-table"
+    @current-change="(row) => currentRow = row"
+    @selection-change="handleSelectionChange">
+    <!-- 🔥 改造后的智能多选/序号列 -->
+    <el-table-column
+      type="selection"
+      width="55"
+      align="center"
+      v-if="props.tableProps.multiple === true"
+    >
+      <template #default="scope">
+        <div class="selection-cell-wrapper" :class="{ 'is-selected': isRowSelected(scope.row) }">
+          <!-- 默认常态显示：行号 -->
+          <span class="row-index-text">{{ scope.$index + 1 }}</span>
+          <!-- 鼠标 Hover 或勾选时显示：复选框 -->
+          <el-checkbox
+            :model-value="isRowSelected(scope.row)"
+            @change="(val: boolean) => toggleRowSelection(scope.row, val)"
+            @click.stop
+            class="row-checkbox-btn"
+          />
+        </div>
+      </template>
+    </el-table-column>
+
     <template v-for="col in fields" :key="col.name">
       <slot :name="'table-column-def-' + col.name" :column="col">
         <el-table-column
           :align="
-                    col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
-                  "
+            col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'
+          "
           :fixed="col.isFixed === 'YES'"
           :label="getLangText(col.displayName, locale)"
           :prop="col.name"
@@ -47,7 +76,7 @@
           </template>
         </el-table-column>
         <be-enum-column
-          :align=" col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
+          :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
           :code="col.typeClassName"
           :context="props.tableProps.context"
           :fixed="col.isFixed === 'YES'"
@@ -76,8 +105,7 @@
                 {{ t('table.view') }}
               </template>
             </be-popup-object-view>
-            <el-link underline="never" @click="handleRowAction('edit', scope.row)" type="primary"
-            >
+            <el-link underline="never" @click="handleRowAction(TableRowActionEnum.EDIT, scope.row)" type="primary">
               {{ t('table.edit') }}
             </el-link>
             <slot name="table-operation-extra" :row="scope.row"></slot>
@@ -86,7 +114,7 @@
               :cancel-button-text="$t('cancel')"
               :title="$t('deleteWarn')"
               :hide-after="10"
-              @confirm="handleRowAction('delete', scope.row)"
+              @confirm="handleRowAction(TableRowActionEnum.DELETE, scope.row)"
             >
               <template #reference>
                 <el-link underline="never" type="danger">
@@ -101,73 +129,65 @@
     </el-table-column>
   </el-table>
 </template>
+
 <script setup lang="ts">
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {type Component, defineExpose, ref} from "vue";
 import {getClassFieldName, parseComponent, parseComponentParam} from "@/util/common.ts";
 import {getComponent} from "@/util/componentLoader.ts";
+import {type BeTableProps, TableRowActionEnum} from "@/components/BeTable.ts";
 
-const refElTable = ref(null)
-const {t, locale} = useI18n()
+const refElTable = ref<any>(null)
+const { t, locale } = useI18n()
 const currentRow = ref(undefined)
+// 维护当前选中的所有行集合
+const selectedRows = ref<any[]>([])
 
-// 此组件废弃删除
 const props = defineProps<{
-  tableProps: {
-    className: string
-    apiQuery: string
-    apiSave?: string
-    apiDelete?: string
-    apiDownloadImportTemplate?: string
-    apiImportPreview?: string
-    apiImportBatchSave?: string
-    apiExport?: string
-    titleColumnName?: string
-    formWidth?: string | number
-    operationColumnWidth?: number
-    paginationVisible?: boolean
-    queryFormVisible?: boolean
-    dialogModel?: boolean
-    rowKey?: string
-    defaultExpandAll?: boolean
-    treeProps?: object
-    showLang?: string
-    queryMode?: boolean
-    multiple?: boolean
-    showSummary?: boolean
-    formComponent?: Component
-    excelImportComponent?: Component
-    excelExportComponent?: Component
-    rowDbClick?: (row: any) => void
-    dataRenderFinish?: (tableData) => void
-  },
-  fields: Array<object>
+  tableProps: BeTableProps,
+  fields: Array<any>
 }>()
 
-const emit = defineEmits(['rowAction', 'refresh'])
+const emit = defineEmits(['rowAction', 'refresh', 'selection-change'])
 
-function handleRowAction(action, args) {
+function handleRowAction(action: string, args: any) {
   emit('rowAction', action, args)
+}
+
+/**
+ * 监听 Element Plus 原生选择变化
+ */
+function handleSelectionChange(selection: any[]) {
+  selectedRows.value = selection
+  emit('selection-change', selection)
+}
+
+/**
+ * 判断某一行是否被勾选（支持有 rowKey 和 无 rowKey 对象比对）
+ */
+function isRowSelected(row: any) {
+  if (!row || selectedRows.value.length === 0) return false
+  const rowKey = props.tableProps.rowKey || 'id'
+  if (row[rowKey] !== undefined) {
+    return selectedRows.value.some(item => item[rowKey] === row[rowKey])
+  }
+  return selectedRows.value.includes(row)
 }
 
 function getSelectionRows() {
   if (props.tableProps.multiple === true) {
-    return refElTable.value?.getSelectionRows()
+    return refElTable.value?.getSelectionRows() || selectedRows.value
   } else {
-    if (currentRow.value !== undefined) {
-      return [currentRow.value]
-    } else {
-      return []
-    }
+    return currentRow.value !== undefined ? [currentRow.value] : []
   }
 }
 
-function toggleRowSelection(row, sel) {
+function toggleRowSelection(row: any, sel?: boolean) {
   return refElTable.value?.toggleRowSelection(row, sel)
 }
 
-function setCurrentRow(row) {
+function setCurrentRow(row: any) {
   refElTable.value?.setCurrentRow(row)
 }
 
@@ -177,3 +197,49 @@ defineExpose({
   setCurrentRow
 })
 </script>
+
+<style scoped>
+/* 单元格容器：相对定位 */
+.selection-cell-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* 序号文字样式 */
+.row-index-text {
+  display: inline-block;
+  color: var(--el-text-color-secondary, #909399);
+  transition: opacity 0.15s ease;
+}
+
+/* 复选框样式（默认绝对定位居中，隐藏） */
+.row-checkbox-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  margin-right: 0 !important;
+}
+
+/* 🌟 核心悬浮逻辑：当表格行 hover 时，隐藏序号，显示复选框 */
+:deep(.el-table__row:hover) .selection-cell-wrapper:not(.is-selected) .row-index-text {
+  display: none;
+}
+
+:deep(.el-table__row:hover) .selection-cell-wrapper:not(.is-selected) .row-checkbox-btn {
+  display: inline-flex;
+}
+
+/* 🌟 核心勾选常驻逻辑：若当前行已选中，永久隐藏序号并显示复选框 */
+.selection-cell-wrapper.is-selected .row-index-text {
+  display: none;
+}
+
+.selection-cell-wrapper.is-selected .row-checkbox-btn {
+  display: inline-flex;
+}
+</style>

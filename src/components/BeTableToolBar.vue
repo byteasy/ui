@@ -32,64 +32,81 @@
                 </el-icon>
               </div>
               <slot name="query-form-buttons">
-                <el-button type="primary" icon="Search" @click="handleEvent('refresh')">
+                <el-button type="primary" icon="Search"
+                           @click="onToolbarActionClick(TableToolbarActionEnum.REFRESH, undefined)">
                   {{ $t('search') }}
                 </el-button>
               </slot>
-              <slot name="query-form-buttons-extra" :queryParams="queryParams" :queryMode="props.tableProps.queryMode"></slot>
+              <slot name="query-form-buttons-extra" :queryParams="queryParams"
+                    :queryMode="props.tableProps.queryMode"></slot>
             </el-form-item>
           </slot>
         </el-form>
       </div>
       <div class="flex-none">
         <el-button-group direction="horizontal" v-if="props.tableProps.queryMode !== true">
-          <el-button :title="$t('add')" @click="handleEvent('add')" type="primary">
+          <el-button :title="$t('add')"
+                     @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))"
+                     type="primary">
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <el-button :title="$t('batchEdit')" @click="handleEvent('batchEdit')" type="primary">
+          <el-button :title="$t('batchEdit')"
+                     @click="onToolbarActionClick(TableToolbarActionEnum.BATCH_EDIT, selectionRows)"
+                     type="primary">
             <IconLocalBatchEditTable
               style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <el-button :title="$t('batchDelete')" @click="handleEvent('batchDelete')" type="primary">
+          <el-button :title="$t('batchDelete')"
+                     @click="onToolbarActionClick(TableToolbarActionEnum.BATCH_DELETE, selectionRows)"
+                     type="primary"
+                     v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
             <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <slot name="tool-buttons-extra" :queryParams="queryParams" :queryMode="props.tableProps.queryMode"></slot>
+          <slot name="tool-buttons-extra" :queryParams="queryParams"
+                :queryMode="props.tableProps.queryMode"></slot>
         </el-button-group>
         <el-dropdown placement="bottom-start">
           <el-button text icon="MoreFilled"/>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="onMoreActionClick('switchView')">
+              <el-dropdown-item
+                @click="onToolbarActionClick(TableToolbarActionEnum.SWITCH_VIEW, undefined)">
                 <el-icon>
                   <List/>
                 </el-icon>
                 {{ $t('table.viewModel') }}
               </el-dropdown-item>
-              <el-dropdown-item @click="onMoreActionClick('columnDefine')">
+              <el-dropdown-item
+                @click="onToolbarActionClick(TableToolbarActionEnum.COLUMN_DEFINE, undefined)">
                 <el-icon>
                   <SetUp/>
                 </el-icon>
                 {{ $t('table.customColumn') }}
               </el-dropdown-item>
-              <el-dropdown-item divided @click="onMoreActionClick('downLoadExcelTemplate')">
+              <el-dropdown-item divided
+                                @click="onToolbarActionClick(TableToolbarActionEnum.DOWNLOAD_EXCEL_TEMPLATE, undefined)">
                 <el-icon>
                   <Download/>
                 </el-icon>
                 {{ $t('table.downLoadExcelTemplate') }}
               </el-dropdown-item>
-              <el-dropdown-item @click="onMoreActionClick('excelImport')">
+              <el-dropdown-item
+                @click="onToolbarActionClick(TableToolbarActionEnum.EXCEL_IMPORT, undefined)">
                 <el-icon>
                   <IconLocalExcel/>
                 </el-icon>
                 {{ $t('table.importByExcel') }}
               </el-dropdown-item>
-              <el-dropdown-item @click="onMoreActionClick('excelExport')">
+              <el-dropdown-item
+                @click="onToolbarActionClick(TableToolbarActionEnum.EXCEL_EXPORT, undefined)">
                 <el-icon>
                   <IconLocalExcelExport/>
                 </el-icon>
                 {{ $t('table.exportToExcel') }}
               </el-dropdown-item>
-              <slot name="more-action-extra" :queryParams="queryParams" :queryMode="props.tableProps.queryMode" @actionClick="(action) => onMoreActionClick(action)"></slot>
+              <slot name="more-action-extra" :queryParams="queryParams"
+                    :queryMode="props.tableProps.queryMode"
+                    @actionClick="(action) => onToolbarActionClick(action, undefined)"></slot>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -99,15 +116,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type Component, defineModel,
-  nextTick,
-  onActivated,
-  onDeactivated,
-  onMounted,
-  onUnmounted,
-  ref
-} from 'vue'
+import {defineModel, nextTick, onActivated, onDeactivated, onMounted, onUnmounted, ref} from 'vue'
 import {ElIcon} from 'element-plus'
 import {ArrowDown} from '@element-plus/icons-vue'
 import {getLangText} from "@/locales/common.ts";
@@ -115,42 +124,17 @@ import {useI18n} from "vue-i18n";
 import {useSessionStore} from "@/stores/session.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
 import {getComponent} from "@/util/componentLoader.ts";
+import {type BeTableProps, TableToolbarActionEnum} from "@/components/BeTable.ts";
 
 const props = defineProps<{
-  tableProps: {
-    className: string
-    apiQuery: string
-    apiSave?: string
-    apiDelete?: string
-    apiDownloadImportTemplate?: string
-    apiImportPreview?: string
-    apiImportBatchSave?: string
-    apiExport?: string
-    titleColumnName?: string
-    formWidth?: string | number
-    operationColumnWidth?: number
-    paginationVisible?: boolean
-    queryFormVisible?: boolean
-    dialogModel?: boolean
-    rowKey?: string
-    defaultExpandAll?: boolean
-    treeProps?: object
-    showLang?: string
-    queryMode?: boolean
-    multiple?: boolean
-    showSummary?: boolean
-    formComponent?: Component
-    excelImportComponent?: Component
-    excelExportComponent?: Component
-    rowDbClick?: (row: any) => void
-    dataRenderFinish?: (tableData) => void
-  },
+  tableProps: BeTableProps,
   fields: Array<object>,
 }>()
 
 const {t, locale} = useI18n()
-const emit = defineEmits(['refresh', 'add', 'batchEdit', 'batchDelete', 'moreAction'])
+const emit = defineEmits(['toolbarAction'])
 const queryParams = defineModel<any>('queryParams', {default: () => ({})})
+const selectionRows = defineModel<any>('selectionRows', {default: () => ({})})
 
 const queryBarRef = ref(null)
 const isCollapsed = ref(true)
@@ -241,8 +225,8 @@ onDeactivated(() => {
   window.removeEventListener('resize', onResize)
 })
 
-const onMoreActionClick = (action) => {
-  emit('moreAction', action)
+const onToolbarActionClick = (action, args) => {
+  emit('toolbarAction', action, args)
 }
 
 </script>

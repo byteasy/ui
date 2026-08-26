@@ -3,8 +3,8 @@
     <template v-slot:topBar>
       <be-table-tool-bar v-if="props.queryFormVisible && tableColumns.length > 0"
                          :query-params="queryParams" :table-props="props" :fields="tableColumns"
-                         class="w-full" @refresh="refresh()" @add="onAdd"
-                         @moreAction="onMoreActionClick">
+                         class="w-full" :selectionRows="selectionRows"
+                         @ToolbarAction="onToolbarAction">
         <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
           <slot :name="name" v-bind="slotProps"></slot>
         </template>
@@ -26,6 +26,7 @@
             @header-dragend="onHeaderDrag"
             @row-action="onRowActionHandle"
             @refresh="refresh"
+            @selection-change="(rows) => selectionRows = rows"
             v-loading="loading"
             :row-key="props.rowKey"
             :default-expand-all="props.defaultExpandAll">
@@ -63,16 +64,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type Component,
-  defineEmits,
-  defineExpose,
-  defineModel,
-  nextTick,
-  onBeforeMount,
-  onMounted,
-  ref,
-} from 'vue'
+import {defineEmits, defineExpose, defineModel, nextTick, onBeforeMount, onMounted, ref,} from 'vue'
 import {watchDebounced} from '@vueuse/core'
 import BeContainer from '@/components/BeContainer.vue'
 import {
@@ -93,43 +85,28 @@ import BeExcelExport from "@/components/BeExcelExport.vue";
 import {useModal} from "@/components/dialog/useModal.ts";
 import BeTableContainer from "@/components/BeTableContainer.vue";
 import BeForm from "@/components/BeForm.vue";
+import {type BeTableProps, TableToolbarActionEnum, TableRowActionEnum} from "@/components/BeTable.ts";
 
 const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
 
-const props = defineProps<{
-  className: string
-  apiQuery: string
-  apiSave?: string
-  apiDelete?: string
-  apiDownloadImportTemplate?: string
-  apiImportPreview?: string
-  apiImportBatchSave?: string
-  apiExport?: string
-  titleColumnName?: string
-  formWidth?: string | number
-  operationColumnWidth?: number
-  paginationVisible?: boolean
-  queryFormVisible?: boolean
-  dialogModel?: boolean
-  rowKey?: string
-  defaultExpandAll?: boolean
-  treeProps?: object
-  showLang?: string
-  queryMode?: boolean
-  multiple?: boolean
-  showSummary?: boolean
-  formComponent?: Component
-  excelImportComponent?: Component
-  excelExportComponent?: Component
-  rowDbClick?: (row: any) => void
-  dataRenderFinish?: (tableData) => void
-}>()
+const props = withDefaults(defineProps<BeTableProps>(), {
+  titleColumnName: 'name',
+  rowKey: 'id',
+  paginationVisible: true,
+  queryFormVisible: true,
+  dialogModel: false,
+  queryMode: false,
+  multiple: false,
+  showSummary: false,
+  operationColumnWidth: 160
+})
 
 const emit = defineEmits(['rowClick'])
 
 const tableColumns = ref([])
 const tableData = ref({total: '0'})
+const selectionRows = ref([])
 const loading = ref(false)
 const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
 const refBeTableView = ref(null)
@@ -282,28 +259,32 @@ function getFormWidth() {
   return props.formWidth ? props.formWidth : '60%'
 }
 
-function onMoreActionClick(action) {
-  if (action === 'switchView') {
+function onToolbarAction(action, args) {
+  if (action === TableToolbarActionEnum.SWITCH_VIEW) {
     switchViewModel()
-  } else if (action === 'columnDefine') {
+  } else if (action === TableToolbarActionEnum.COLUMN_DEFINE) {
     onColumnDefineClick()
-  } else if (action === 'downLoadExcelTemplate') {
+  } else if (action === TableToolbarActionEnum.DOWNLOAD_EXCEL_TEMPLATE) {
     downLoadExcelTemplate()
-  } else if (action === 'excelImport') {
+  } else if (action === TableToolbarActionEnum.EXCEL_IMPORT) {
     onExcelImportClick()
-  } else if (action === 'excelExport') {
+  } else if (action === TableToolbarActionEnum.EXCEL_EXPORT) {
     onExcelExportClick()
+  } else if (action === TableToolbarActionEnum.ADD) {
+    onAdd(args)
+  } else if (action === TableToolbarActionEnum.REFRESH) {
+    refresh()
   }
 }
 
 function onRowActionHandle(action, args) {
-  if (action === 'edit') {
+  if (action === TableRowActionEnum.EDIT) {
     onEdit(args)
-  } else if (action === 'view') {
+  } else if (action === TableRowActionEnum.VIEW) {
     onView(args)
-  } else if (action === 'delete') {
+  } else if (action === TableRowActionEnum.DELETE) {
     onDelete(args)
-  } else if (action === 'detailTable') {
+  } else if (action === TableRowActionEnum.DETAIL_TABLE) {
     onOpenTableDetail(args.column, args.row)
   }
 }

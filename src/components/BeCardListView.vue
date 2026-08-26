@@ -12,11 +12,11 @@
             <div class="mt-3">
               <el-space direction="horizontal" :size="4" class="mt-1 mr-2">
                 <slot name="table-operation" :row="entity">
-                  <el-link underline="never" @click="handleRowAction('view', entity)" type="primary"
+                  <el-link underline="never" @click="handleRowAction(TableRowActionEnum.VIEW, entity)" type="primary"
                            v-if="props.tableProps.queryMode !== true">
                     {{ t('table.view') }}
                   </el-link>
-                  <el-link underline="never" @click="handleRowAction('edit', entity)" type="primary"
+                  <el-link underline="never" @click="handleRowAction(TableRowActionEnum.EDIT, entity)" type="primary"
                            v-permission="props.tableProps.className + '.Edit'"
                            v-if="props.tableProps.queryMode !== true">
                     {{ t('table.edit') }}
@@ -27,7 +27,7 @@
                     :cancel-button-text="$t('cancel')"
                     :title="$t('deleteWarn')"
                     :hide-after="10"
-                    @confirm="handleRowAction('delete', entity)"
+                    @confirm="handleRowAction(TableRowActionEnum.DELETE, entity)"
                     v-if="props.tableProps.queryMode !== true"
                   >
                     <template #reference>
@@ -46,7 +46,7 @@
           <template #title>
             <div class="mt-3">
               <slot name="table-column-title" :row="entity">
-                <el-link type="primary" @click="handleRowAction('view', entity)" class="ml-3">
+                <el-link type="primary" @click="handleRowAction(TableRowActionEnum.VIEW, entity)" class="ml-3">
                   <el-text size="large" class="my-font-bold">
                     <be-i18n-value
                       :model-value="entity[props.tableProps.titleColumnName || 'name' ]"
@@ -108,40 +108,14 @@
 <script setup lang="ts">
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
-import {type Component, defineExpose, ref} from "vue";
+import {defineExpose, ref} from "vue";
 import {getClassFieldName, isObjectEqual} from "@/util/common.ts";
+import {type BeTableProps, TableRowActionEnum} from "@/components/BeTable.ts";
 
 const {t, locale} = useI18n()
 
 const props = defineProps<{
-  tableProps: {
-    className: string
-    apiQuery: string
-    apiSave?: string
-    apiDelete?: string
-    apiDownloadImportTemplate?: string
-    apiImportPreview?: string
-    apiImportBatchSave?: string
-    apiExport?: string
-    titleColumnName?: string
-    formWidth?: string | number
-    operationColumnWidth?: number
-    paginationVisible?: boolean
-    queryFormVisible?: boolean
-    dialogModel?: boolean
-    rowKey?: string
-    defaultExpandAll?: boolean
-    treeProps?: object
-    showLang?: string
-    queryMode?: boolean
-    multiple?: boolean
-    showSummary?: boolean
-    formComponent?: Component
-    excelImportComponent?: Component
-    excelExportComponent?: Component
-    rowDbClick?: (row: any) => void
-    dataRenderFinish?: (tableData) => void
-  },
+  tableProps: BeTableProps,
   fields: Array<object>
   data: Array<object> | undefined
   height: number
