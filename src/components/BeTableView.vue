@@ -6,7 +6,6 @@
     stripe
     highlight-current-row
     ref="refElTable"
-    class="hover-selection-table"
     @current-change="(row) => currentRow = row"
     @selection-change="handleSelectionChange">
     <!-- 🔥 改造后的智能多选/序号列 -->

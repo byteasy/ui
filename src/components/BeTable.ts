@@ -188,10 +188,20 @@ export enum TableToolbarActionEnum {
   /** 刷新数据 */
   REFRESH = 'refresh',
 
+  /** 添加 */
   ADD = 'add',
 
   /** 批量编辑 */
-  BATCH_EDIT = 'batchEdit',
+  TABLE_EDITOR_BATCH_EDIT = 'tableEditorBatchEdit',
+
+  /** 批量保存 */
+  TABLE_EDITOR_BATCH_SAVE = 'tableEditorBatchSave',
+
+  /** 增加行 */
+  TABLE_EDITOR_ADD_ROW = 'tableEditorAddRow',
+
+  /** 批量删除  */
+  TABLE_EDITOR_BATCH_REMOVE = 'tableEditorBatchRemove',
 
   /** 批量删除 */
   BATCH_DELETE = 'batchDelete',

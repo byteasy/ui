@@ -1,55 +1,53 @@
 <template>
-  <div >
-    <!-- 操作按钮 -->
-    <div class="table-operate" style="margin-bottom:12px">
-      <el-button type="primary" @click="addRow" icon="Plus"></el-button>
-      <el-button type="danger" @click="clearAll" icon="Delete"></el-button>
-    </div>
+  <el-table
+    fix
+    border
+    scrollbar-always-on
+    stripe
+    highlight-current-row
+    ref="refElTable">
+    <!-- 动态渲染列 -->
+    <el-table-column
+      v-for="field in props.fields"
+      :key="field.name"
+      :label="field.name"
+    >
+      <template #default="scope">
+        <!-- 根据字段type渲染不同录入组件 -->
+        <component
+          :is="getInputTag(field.type)"
+          v-model="scope.row[field.name]"
+          v-bind="field.props"
+          @change="syncParent"
+        >
+          <!-- 下拉/单选选项插槽，props传入options时渲染 -->
+          <template v-if="['radio','select'].includes(field.type)" #default>
+            <el-option
+              v-for="opt in field.props.options || []"
+              :key="opt.value"
+              :label="opt.label"
+              :value="opt.value"
+            />
+          </template>
+        </component>
+        <!-- 校验错误提示 -->
+        <div v-if="getFieldError(scope.row, field)" class="error-tip">
+          {{ getFieldError(scope.row, field) }}
+        </div>
+      </template>
+    </el-table-column>
 
-    <el-table v-model:data="localList" border style="width:100%">
-      <!-- 动态渲染列 -->
-      <el-table-column
-        v-for="field in props.fields"
-        :key="field.name"
-        :label="field.name"
-      >
-        <template #default="scope">
-          <!-- 根据字段type渲染不同录入组件 -->
-          <component
-            :is="getInputTag(field.type)"
-            v-model="scope.row[field.name]"
-            v-bind="field.props"
-            @change="syncParent"
-          >
-            <!-- 下拉/单选选项插槽，props传入options时渲染 -->
-            <template v-if="['radio','select'].includes(field.type)" #default>
-              <el-option
-                v-for="opt in field.props.options || []"
-                :key="opt.value"
-                :label="opt.label"
-                :value="opt.value"
-              />
-            </template>
-          </component>
-          <!-- 校验错误提示 -->
-          <div v-if="getFieldError(scope.row, field)" class="error-tip">
-            {{ getFieldError(scope.row, field) }}
-          </div>
-        </template>
-      </el-table-column>
-
-      <!-- 删除操作列 -->
-      <el-table-column label="操作" width="80">
-        <template #default="scope">
-          <el-button text type="danger" @click="delRow(scope.$index)" icon="Delete"></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+    <!-- 删除操作列 -->
+    <el-table-column label="操作" width="80">
+      <template #default="scope">
+        <el-button text type="danger" @click="delRow(scope.$index)" icon="Delete"></el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, reactive } from 'vue'
+import {ref, watch, reactive} from 'vue'
 
 // 字段类型定义（优化：props不再宽泛object，validator支持返回错误文本）
 type FieldType = {
@@ -63,7 +61,6 @@ type FieldType = {
 
 // 组件入参
 const props = defineProps<{
-  modelValue: Record<string, any>[] | undefined
   fields: FieldType[]
 }>()
 
@@ -84,7 +81,7 @@ watch(
     localList.value = Array.isArray(val) ? JSON.parse(JSON.stringify(val)) : []
     clearAllError()
   },
-  { immediate: true, deep: true }
+  {immediate: true, deep: true}
 )
 
 // 同步数据给父组件
@@ -111,9 +108,14 @@ function addRow() {
   // 根据fields初始化空值
   props.fields.forEach(field => {
     switch (field.type) {
-      case 'number': newRow[field.name] = undefined; break
-      case 'boolean': newRow[field.name] = false; break
-      default: newRow[field.name] = ''
+      case 'number':
+        newRow[field.name] = undefined;
+        break
+      case 'boolean':
+        newRow[field.name] = false;
+        break
+      default:
+        newRow[field.name] = ''
     }
   })
   localList.value.push(newRow)
@@ -161,10 +163,3 @@ function validateAllRow() {
 }
 </script>
 
-<style scoped>
-.error-tip {
-  color: #f53f3f;
-  font-size: 12px;
-  margin-top: 4px;
-}
-</style>

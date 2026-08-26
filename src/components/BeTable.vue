@@ -3,7 +3,7 @@
     <template v-slot:topBar>
       <be-table-tool-bar v-if="props.queryFormVisible && tableColumns.length > 0"
                          :query-params="queryParams" :table-props="props" :fields="tableColumns"
-                         class="w-full" :selectionRows="selectionRows"
+                         class="w-full" :selectionRows="selectionRows" :batchEditModel="batchEditModel"
                          @ToolbarAction="onToolbarAction">
         <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
           <slot :name="name" v-bind="slotProps"></slot>
@@ -15,7 +15,7 @@
         <template #default="{ height, width }">
           <be-table-view
             ref="refBeTableView"
-            v-if="viewModel === 'table'"
+            v-if="viewModel === 'table' && batchEditModel === false"
             :table-props="props"
             :fields="tableColumns"
             :show-summary="props.showSummary"
@@ -34,7 +34,7 @@
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
           </be-table-view>
-          <be-card-list-view v-else
+          <be-card-list-view v-else-if="batchEditModel === false"
                              ref="refBeTableView"
                              :table-props="props"
                              :fields="tableColumns"
@@ -48,6 +48,25 @@
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
           </be-card-list-view>
+          <be-table-editor v-if="batchEditModel === true" ref="refBeTableView"
+                           :table-props="props"
+                           :fields="tableColumns"
+                           :show-summary="props.showSummary"
+                           :height="height"
+                           :data="tableData.records"
+                           @row-dblclick="onTableRowDoubleClick"
+                           @row-click="onTableRowClick"
+                           @header-dragend="onHeaderDrag"
+                           @row-action="onRowActionHandle"
+                           @refresh="refresh"
+                           @selection-change="(rows) => selectionRows = rows"
+                           v-loading="loading"
+                           :row-key="props.rowKey"
+                           :default-expand-all="props.defaultExpandAll">>
+            <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
+              <slot :name="name" v-bind="slotProps"></slot>
+            </template>
+          </be-table-editor>
         </template>
       </el-auto-resizer>
     </template>
@@ -109,6 +128,7 @@ const tableData = ref({total: '0'})
 const selectionRows = ref([])
 const loading = ref(false)
 const viewModel = ref(appSettingsStore.getValue(props.className + '.viewModel') || 'table')
+const batchEditModel = ref(false)
 const refBeTableView = ref(null)
 const {open} = useModal()
 const queryParams = defineModel<any>('queryParams', {
@@ -279,7 +299,10 @@ function onToolbarAction(action, args) {
       ElMessage.success(t('operationSuccess'))
       refresh()
     })
-  } else if (action === TableToolbarActionEnum.BATCH_EDIT) {
+  } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_EDIT) {
+    batchEditModel.value = true
+  } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_SAVE) {
+    batchEditModel.value = false
   }
 }
 

@@ -44,14 +44,15 @@
         </el-form>
       </div>
       <div class="flex-none">
-        <el-button-group direction="horizontal" v-if="props.tableProps.queryMode !== true">
+        <el-button-group direction="horizontal"
+                         v-if="props.tableProps.queryMode !== true && batchEditModel !== true">
           <el-button :title="$t('add')"
                      @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))"
                      type="primary">
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
           <el-button :title="$t('batchEdit')"
-                     @click="onToolbarActionClick(TableToolbarActionEnum.BATCH_EDIT, selectionRows)"
+                     @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_EDIT, selectionRows)"
                      type="primary">
             <IconLocalBatchEditTable
               style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
@@ -67,15 +68,45 @@
               <el-button :title="$t('batchDelete')"
                          type="primary"
                          v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
-                <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+                <IconLocalBatchDelete
+                  style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
               </el-button>
             </template>
           </el-popconfirm>
           <slot name="tool-buttons-extra" :queryParams="queryParams"
                 :queryMode="props.tableProps.queryMode"></slot>
         </el-button-group>
+
+        <!-- 表格批量工具栏 -->
+        <el-button-group direction="horizontal" v-if="batchEditModel === true">
+          <el-button :title="$t('add')"
+                     @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))"
+                     type="primary">
+            <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+          </el-button>
+          <el-popconfirm :confirm-button-text="$t('ok')"
+                         :cancel-button-text="$t('cancel')"
+                         :title="$t('batchDeleteWarn')"
+                         :hide-after="10"
+                         @confirm="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_REMOVE, selectionRows)">
+            <template #reference>
+              <el-button :title="$t('batchDelete')"
+                         type="primary"
+                         v-if="selectionRows.length > 0">
+                <IconLocalBatchDelete
+                  style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+              </el-button>
+            </template>
+          </el-popconfirm>
+          <el-button :title="$t('save')"
+                     @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_SAVE, undefined)"
+                     icon="Check" type="primary">
+            {{ $t('save') }}
+          </el-button>
+        </el-button-group>
+
         <el-dropdown placement="bottom-start">
-          <el-button text icon="MoreFilled"/>
+          <el-button text icon="MoreFilled" v-if="batchEditModel !== true"/>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item
@@ -133,11 +164,7 @@ import {useI18n} from "vue-i18n";
 import {useSessionStore} from "@/stores/session.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
 import {getComponent} from "@/util/componentLoader.ts";
-import {
-  type BeTableProps,
-  TableRowActionEnum,
-  TableToolbarActionEnum
-} from "@/components/BeTable.ts";
+import {type BeTableProps, TableToolbarActionEnum} from "@/components/BeTable.ts";
 
 const props = defineProps<{
   tableProps: BeTableProps,
@@ -148,6 +175,7 @@ const {t, locale} = useI18n()
 const emit = defineEmits(['toolbarAction'])
 const queryParams = defineModel<any>('queryParams', {default: () => ({})})
 const selectionRows = defineModel<any>('selectionRows', {default: () => ({})})
+const batchEditModel = defineModel<any>('batchEditModel', {default: () => ({})})
 
 const queryBarRef = ref(null)
 const isCollapsed = ref(true)
