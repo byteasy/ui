@@ -3,10 +3,14 @@
              v-debounce="batchMoveFieldGroup">
     <IconLocalGroup style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
   </el-button>
+  <el-button :title="$t('platform.ebApp.syncToDb')" type="primary"
+             v-debounce="syncToDb">
+    <IconLocalSyncColumns style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+  </el-button>
 </template>
 <script lang="ts" setup>
 import {useI18n} from "vue-i18n";
-import {getEntityDefine} from "@/api/common/platform";
+import {doHttpPost, getEntityDefine} from "@/api/common/platform";
 import {getLangText} from "@/locales/common.ts";
 import {useModal} from "@/components/dialog/useModal.ts";
 import {ElMessage} from "element-plus";
@@ -45,6 +49,14 @@ function batchMoveFieldGroup() {
         },
       },
     )
+  })
+}
+
+function syncToDb() {
+  getEntityDefine('com.byteasy.platform.entity.FieldGroup').then(entityDefine => {
+    doHttpPost(entityDefine.serviceInstance.contextPath + '/sapi/fields/database/currentSchema/' + props.queryParams.className, {}, {}).then(() => {
+      ElMessage.success(t('operationSuccess'))
+    })
   })
 }
 </script>
