@@ -44,8 +44,8 @@
         </el-form>
       </div>
       <div class="flex-none">
-        <el-button-group direction="horizontal"
-                         v-if="props.tableProps.queryMode !== true && batchEditModel !== true">
+        <!-- BeTableView 工具栏 -->
+        <el-button-group direction="horizontal" v-if="props.tableProps.queryMode !== true && batchEditModel !== true">
           <el-button :title="$t('add')"
                      @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))"
                      type="primary">
@@ -77,7 +77,7 @@
                 :queryMode="props.tableProps.queryMode"></slot>
         </el-button-group>
 
-        <!-- 表格批量工具栏 -->
+        <!-- BeTableEditor 工具栏 -->
         <el-button-group direction="horizontal" v-if="batchEditModel === true">
           <el-button :title="$t('add')"
                      @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))"
@@ -164,11 +164,11 @@ import {useI18n} from "vue-i18n";
 import {useSessionStore} from "@/stores/session.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
 import {getComponent} from "@/util/componentLoader.ts";
-import {type BeTableProps, TableToolbarActionEnum} from "@/components/BeTable.ts";
+import {type BeColumn, type BeTableProps, TableToolbarActionEnum} from "@/components/BeTable.ts";
 
 const props = defineProps<{
   tableProps: BeTableProps,
-  fields: Array<object>,
+  fields: Array<BeColumn>,
 }>()
 
 const {t, locale} = useI18n()
@@ -181,7 +181,7 @@ const queryBarRef = ref(null)
 const isCollapsed = ref(true)
 const showCollapseBtn = ref(true)
 const containerWidth = ref(600)
-const visibleFields = ref([])
+const visibleFields = ref<BeColumn[]>([])
 const sessionStore = useSessionStore()
 
 onMounted(() => {
@@ -232,9 +232,6 @@ const updateVisibleFields = () => {
   }
 }
 
-const handleEvent = (event) => emit(event, JSON.parse(JSON.stringify(queryParams.value)))
-
-// 监听 resize 自动刷新（防抖）
 let resizeTimer = null
 const onResize = () => {
   clearTimeout(resizeTimer)

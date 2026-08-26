@@ -17,37 +17,11 @@
 import {computed, defineEmits, defineExpose, defineModel, onMounted, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import BeStdPageLayout from "@/views/template/BeStdPageLayout.vue";
+import type {BeColumn} from "@/components/BeTable.ts";
 
 const props = defineProps<{
   modelValue: any
-  column: {
-    className: string
-    name: string
-    displayName: string
-    type: string // 若值固定（如 STRING/Number），可改为 "STRING" | "NUMBER" 限定
-    typeClassName: string
-    isShow: 'YES' | 'NO' // 枚举值用联合类型限定
-    isSort: 'YES' | 'NO'
-    isOverflow: 'YES' | 'NO'
-    isSearch: 'YES' | 'NO'
-    isFixed: 'YES' | 'NO'
-    isRequire: 'YES' | 'NO'
-    isForm: 'YES' | 'NO'
-    align: 'LEFT' | 'CENTER' | 'RIGHT' // 对齐方式限定
-    width: number
-    showOrder: number
-    minLength: number
-    maxLength: number
-    min: number
-    max: number
-    precision: number
-    multiple: 'YES' | 'NO'
-    relationType: 'EXTERNAL_KEY' | 'DETAIL_TABLE' | null | undefined
-    externalClass: any
-    externalClassPrimaryField: any
-    externalClassDisplayField: any
-    extrasParams: string
-  }
+  column: BeColumn
   fullscreen?: boolean
   isDrawer?: boolean
   queryMode?: boolean

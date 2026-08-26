@@ -67,38 +67,12 @@
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
 import {defineModel} from "vue";
+import type {BeColumn} from "@/components/BeTable.ts";
 
 const {t} = useI18n()
 
 const props = defineProps<{
-  column: {
-    className: string
-    name: string
-    displayName: string
-    type: string // 若值固定（如 STRING/Number），可改为 "STRING" | "NUMBER" 限定
-    typeClassName: string
-    isShow: 'YES' | 'NO' // 枚举值用联合类型限定
-    isSort: 'YES' | 'NO'
-    isOverflow: 'YES' | 'NO'
-    isSearch: 'YES' | 'NO'
-    isFixed: 'YES' | 'NO'
-    isRequire: 'YES' | 'NO'
-    isForm: 'YES' | 'NO'
-    align: 'LEFT' | 'CENTER' | 'RIGHT' // 对齐方式限定
-    width: number
-    showOrder: number
-    minLength: number
-    maxLength: number
-    min: number
-    max: number
-    precision: number
-    multiple: 'YES' | 'NO'
-    relationType: 'EXTERNAL_KEY' | 'DETAIL_TABLE' | null | undefined
-    externalClass: string | null | undefined
-    externalClassPrimaryField: string | null | undefined
-    externalClassDisplayField: string | null | undefined
-    extrasParams: string
-  }
+  column: BeColumn
 }>()
 const formModel = defineModel<any>('formModel', {default: () => ({})})
 </script>

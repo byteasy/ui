@@ -1,8 +1,5 @@
 <template>
-  <el-input ref="refInput"
-            :model-value="getDisplayName()"
-            clearable
-            @clear="onClearClick"
+  <el-input ref="refInput" :model-value="getDisplayName()" clearable @clear="onClearClick"
             v-bind="bindAttrs">
     <template #append>
       <el-icon :class="{'my-icon-color-primary': true, 'cursor-pointer': !bindAttrs.disabled }"
@@ -15,44 +12,17 @@
 
 <script setup lang="ts">
 
-import {defineExpose, defineModel, onMounted, ref, useAttrs} from 'vue'
+import {defineExpose, defineModel, onMounted, ref, useAttrs, watch} from 'vue'
 import {useModal} from '@/components/dialog/useModal.ts'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
 import {doHttpGet, getEntityDefine} from "@/api/common/platform";
 import BeObjectSelectDetail from "@/components/BeObjectSelectDetail.vue";
+import type {BeColumn} from "@/components/BeTable.ts";
 
 const props = defineProps<{
-  modelValue?: any
   lang?: string
-  column: {
-    className: string
-    name: string
-    displayName: string
-    type: string // 若值固定（如 STRING/Number），可改为 "STRING" | "NUMBER" 限定
-    typeClassName: string
-    isShow: 'YES' | 'NO' // 枚举值用联合类型限定
-    isSort: 'YES' | 'NO'
-    isOverflow: 'YES' | 'NO'
-    isSearch: 'YES' | 'NO'
-    isFixed: 'YES' | 'NO'
-    isRequire: 'YES' | 'NO'
-    isForm: 'YES' | 'NO'
-    align: 'LEFT' | 'CENTER' | 'RIGHT' // 对齐方式限定
-    width: number
-    showOrder: number
-    minLength: number
-    maxLength: number
-    min: number
-    max: number
-    precision: number
-    multiple: 'YES' | 'NO'
-    relationType: 'EXTERNAL_KEY' | 'DETAIL_TABLE' | null | undefined
-    externalClass: any
-    externalClassPrimaryField: any
-    externalClassDisplayField: any
-    extrasParams: string
-  }
+  column: BeColumn
 }>()
 
 const {open} = useModal()
@@ -67,13 +37,16 @@ const formModel = defineModel<any>('formModel', {default: () => ({})})
 const selectedObject = ref([])
 
 onMounted(() => {
-  console.log('BeObjectSelect.vue', props.modelValue)
-  if (props.modelValue !== undefined && props.modelValue !== '' && props.modelValue !== null) {
-    if (!Array.isArray(props.modelValue) || props.modelValue.length === 1) {
+  initDisplayName()
+})
+
+const initDisplayName = () => {
+  if (formModel.value !== undefined && formModel.value !== '' && formModel.value !== null) {
+    if (!Array.isArray(formModel.value) || formModel.value.length === 1) {
       getEntityDefine(props.column.externalClass).then(response => {
         const url = response.serviceInstance.contextPath + '/sapi/common/' + props.column.externalClass
         const queryObj = {}
-        queryObj[props.column.externalClassPrimaryField] = props.modelValue
+        queryObj[props.column.externalClassPrimaryField] = formModel.value
         queryObj[props.column.externalClassPrimaryField + 'QueryType'] = 'eq'
         Object.assign(queryObj, genQueryParams())
         console.log('BeObjectSelect.vue query', queryObj)
@@ -83,6 +56,10 @@ onMounted(() => {
       })
     }
   }
+}
+
+watch(() => formModel.value, () => {
+  initDisplayName()
 })
 
 const onAppendIconClick = () => {

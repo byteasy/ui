@@ -1,5 +1,5 @@
 // src/types/table.ts
-import type { Component } from 'vue'
+import type {Component} from 'vue'
 
 /**
  * 树形结构配置项
@@ -8,6 +8,7 @@ export interface TreePropsConfig {
   hasChildren?: string
   children?: string
   checkStrictly?: boolean
+
   [key: string]: any
 }
 
@@ -232,3 +233,34 @@ export enum TableRowActionEnum {
  */
 export type TableMoreActionType = `${TableToolbarActionEnum}`
 export type TableRowActionType = `${TableRowActionEnum}`
+
+export interface BeColumn {
+  className: string
+  name: string
+  displayName: string
+  description: string
+  type: string // 若值固定（如 STRING/Number），可改为 "STRING" | "NUMBER" 限定
+  typeClassName: string
+  isShow: 'YES' | 'NO' // 枚举值用联合类型限定
+  isSort: 'YES' | 'NO'
+  isOverflow: 'YES' | 'NO'
+  isSearch: 'YES' | 'NO'
+  isFixed: 'YES' | 'NO'
+  isRequire: 'YES' | 'NO'
+  isForm: 'YES' | 'NO'
+  align: 'LEFT' | 'CENTER' | 'RIGHT'
+  width: number
+  showOrder: number
+  minLength: number
+  maxLength: number
+  min: number
+  max: number
+  precision: number
+  multiple: 'YES' | 'NO'
+  relationType: 'EXTERNAL_KEY' | 'DETAIL_TABLE' | null | undefined
+  externalClass: string | null | undefined
+  externalClassPrimaryField: string | null | undefined
+  externalClassDisplayField: string | null | undefined
+  extrasParams: string
+  fieldComponent: string
+}
