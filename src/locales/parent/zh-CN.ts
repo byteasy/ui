@@ -8,6 +8,7 @@ export default {
   cancel: '取消',
   search: '查询',
   deleteWarn: '确定要删除这条记录？',
+  batchDeleteWarn: '确定要删除选中记录？',
   warning: '提醒',
   i18nEditTitle: '多语言设置',
   authenticationEmptyTitle: '访问失败',

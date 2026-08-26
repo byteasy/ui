@@ -5,6 +5,7 @@
     :api-query="metaData.apiQuery"
     :api-save="metaData.apiSave"
     :api-delete="metaData.apiDelete"
+    :api-batch-delete="metaData.apiBatchDelete"
     :api-download-import-template="metaData.apiDownloadImportTemplate"
     :api-export="metaData.apiExport"
     :api-import-batch-save="metaData.apiImportBatchSave"

@@ -274,6 +274,12 @@ function onToolbarAction(action, args) {
     onAdd(args)
   } else if (action === TableToolbarActionEnum.REFRESH) {
     refresh()
+  } else if (action === TableToolbarActionEnum.BATCH_DELETE) {
+    executeOpenApi(props.apiBatchDelete, {}, selectionRows.value).then(() => {
+      ElMessage.success(t('operationSuccess'))
+      refresh()
+    })
+  } else if (action === TableToolbarActionEnum.BATCH_EDIT) {
   }
 }
 

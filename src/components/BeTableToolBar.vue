@@ -56,12 +56,21 @@
             <IconLocalBatchEditTable
               style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
-          <el-button :title="$t('batchDelete')"
-                     @click="onToolbarActionClick(TableToolbarActionEnum.BATCH_DELETE, selectionRows)"
-                     type="primary"
-                     v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
-            <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
-          </el-button>
+          <el-popconfirm
+            :confirm-button-text="$t('ok')"
+            :cancel-button-text="$t('cancel')"
+            :title="$t('batchDeleteWarn')"
+            :hide-after="10"
+            @confirm="onToolbarActionClick(TableToolbarActionEnum.BATCH_DELETE, selectionRows)"
+          >
+            <template #reference>
+              <el-button :title="$t('batchDelete')"
+                         type="primary"
+                         v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
+                <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+              </el-button>
+            </template>
+          </el-popconfirm>
           <slot name="tool-buttons-extra" :queryParams="queryParams"
                 :queryMode="props.tableProps.queryMode"></slot>
         </el-button-group>
@@ -124,7 +133,11 @@ import {useI18n} from "vue-i18n";
 import {useSessionStore} from "@/stores/session.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
 import {getComponent} from "@/util/componentLoader.ts";
-import {type BeTableProps, TableToolbarActionEnum} from "@/components/BeTable.ts";
+import {
+  type BeTableProps,
+  TableRowActionEnum,
+  TableToolbarActionEnum
+} from "@/components/BeTable.ts";
 
 const props = defineProps<{
   tableProps: BeTableProps,

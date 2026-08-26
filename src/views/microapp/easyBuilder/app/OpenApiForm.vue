@@ -78,6 +78,9 @@ function onTypeChange(type) {
   } else if (type === 'delete') {
     refBeForm.value.formModel.httpMethod = 'DELETE'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
+  } else if (type === 'batchDelete') {
+    refBeForm.value.formModel.httpMethod = 'DELETE'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/batch'
   } else if (type === 'downloadImportTemplate') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/template'

@@ -105,7 +105,8 @@
                 {{ t('table.view') }}
               </template>
             </be-popup-object-view>
-            <el-link underline="never" @click="handleRowAction(TableRowActionEnum.EDIT, scope.row)" type="primary">
+            <el-link underline="never" @click="handleRowAction(TableRowActionEnum.EDIT, scope.row)"
+                     type="primary">
               {{ t('table.edit') }}
             </el-link>
             <slot name="table-operation-extra" :row="scope.row"></slot>
@@ -133,13 +134,13 @@
 <script setup lang="ts">
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
-import {type Component, defineExpose, ref} from "vue";
+import {defineExpose, ref} from "vue";
 import {getClassFieldName, parseComponent, parseComponentParam} from "@/util/common.ts";
 import {getComponent} from "@/util/componentLoader.ts";
 import {type BeTableProps, TableRowActionEnum} from "@/components/BeTable.ts";
 
 const refElTable = ref<any>(null)
-const { t, locale } = useI18n()
+const {t, locale} = useI18n()
 const currentRow = ref(undefined)
 // 维护当前选中的所有行集合
 const selectedRows = ref<any[]>([])
