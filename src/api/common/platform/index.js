@@ -1,6 +1,5 @@
 import request from '../../request'
 import qs from 'qs'
-import {useSessionStorage} from "@vueuse/core";
 import {useSessionStore} from "@/stores/session.js";
 
 export function getUrl(url, params) {
@@ -80,6 +79,9 @@ export function runDefaultValueScript(input, script) {
 
 export async function executeOpenApi(apiCode, params, data) {
   try {
+    if(!apiCode) {
+      throw new Error('apiCode argument missing');
+    }
     const response = await request({
       url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi/all', { code: apiCode, codeQueryType: 'eq' }),
       method: 'get'

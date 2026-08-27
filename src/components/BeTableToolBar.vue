@@ -65,7 +65,7 @@
             v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete"
             @confirm="onToolbarActionClick(TableToolbarActionEnum.BATCH_DELETE, selectionRows)">
             <template #reference>
-              <el-button :title="$t('batchDelete')" type="primary" v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
+              <el-button :title="$t('batchDelete')" type="danger" v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
                 <IconLocalBatchDelete style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
               </el-button>
             </template>
@@ -85,7 +85,7 @@
                          v-if="selectionRows.length > 0"
                          @confirm="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_REMOVE, selectionRows)">
             <template #reference>
-              <el-button :title="$t('batchDelete')" type="primary" v-if="selectionRows.length > 0">
+              <el-button :title="$t('batchDelete')" type="danger" v-if="selectionRows.length > 0">
                 <IconLocalBatchDelete
                   style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
               </el-button>

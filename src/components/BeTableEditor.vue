@@ -64,16 +64,18 @@
 </template>
 
 <script setup lang="ts">
-import {getLangText} from "@/locales/common.ts";
-import {useI18n} from "vue-i18n";
-import {defineExpose, ref} from "vue";
-import {parseComponent, parseComponentParam} from "@/util/common.ts";
-import {getComponent} from "@/util/componentLoader.ts";
-import {type BeTableProps} from "@/components/BeTable.ts";
+import { getLangText } from "@/locales/common.ts";
+import { useI18n } from "vue-i18n";
+import { defineExpose, ref } from "vue";
+import { parseComponent, parseComponentParam } from "@/util/common.ts";
+import { getComponent } from "@/util/componentLoader.ts";
+import { type BeTableProps, TableRowActionEnum } from "@/components/BeTable.ts";
+import { ElMessage } from "element-plus";
+import {executeOpenApi} from "@/api/common/platform";
 
 const refElTable = ref<any>(null)
-const tableData = defineModel<any>('tableData', {default: () => ({})})
-const {t, locale} = useI18n()
+const tableData = defineModel<any[]>('tableData', { default: () => [] })
+const { t, locale } = useI18n()
 const currentRow = ref(undefined)
 // 维护当前选中的所有行集合
 const selectedRows = ref<any[]>([])
@@ -122,7 +124,7 @@ function setCurrentRow(row: any) {
 }
 
 /**
- * 从前端绑定的 tableData 数组中移除对应行
+ * 从前端绑定的 tableData 数组中移除单行
  */
 function removeLocalRow(row: any, index: number) {
   if (!Array.isArray(tableData.value)) return
@@ -145,17 +147,69 @@ function removeLocalRow(row: any, index: number) {
   if (currentRow.value === row) {
     currentRow.value = undefined
   }
+  emit('selection-change', selectedRows.value)
+  // 复用主表中的删除功能
+  emit('rowAction', TableRowActionEnum.DELETE, row)
 }
 
-const batchRemove = () => {
-  return new Promise(resolve => {
-    resolve('')
+/**
+ * 🔥 核心实现：批量删除行函数
+ */
+const batchRemove = (rows?: any[]): Promise<any[]> => {
+  return new Promise((resolve) => {
+    // 1. 获取要删除的行列表
+    const targetRows = (rows && rows.length > 0) ? rows : getSelectionRows()
+
+    // 2. 空防御
+    if (!targetRows || targetRows.length === 0) {
+      resolve([])
+      return
+    }
+
+    if (!Array.isArray(tableData.value) || tableData.value.length === 0) {
+      resolve([])
+      return
+    }
+
+    executeOpenApi(props.tableProps.apiBatchDelete, {}, selectedRows.value).then(() => {
+      const rowKey = props.tableProps.rowKey || 'id'
+      const targetSet = new Set(targetRows)
+      const targetKeySet = new Set(
+        targetRows
+          .map(item => item?.[rowKey])
+          .filter(id => id !== undefined && id !== null && id !== '')
+      )
+
+      tableData.value = tableData.value.filter((row: any) => {
+        if (targetSet.has(row)) return false
+        if (row?.[rowKey] !== undefined && targetKeySet.has(row[rowKey])) return false
+        return true
+      })
+      ElMessage.success(t('operationSuccess'))
+      // 4. 重置选中态与高亮
+      selectedRows.value = []
+      refElTable.value?.clearSelection()
+      if (currentRow.value && (targetSet.has(currentRow.value) || targetKeySet.has(currentRow.value?.[rowKey]))) {
+        currentRow.value = undefined
+      }
+
+      // 5. 触发外部事件与消息提示
+      emit('selection-change', [])
+      resolve(targetRows)
+    }).catch(err => {
+      ElMessage.error(err.message)
+    })
   })
 }
 
 const save = () => {
   return new Promise(resolve => {
-    resolve('')
+    executeOpenApi(props.tableProps.apiImportBatchSave, {}, tableData.value).then(() => {
+      ElMessage.success(t('operationSuccess'))
+      resolve(tableData.value)
+    }).catch(err => {
+      ElMessage.error(err.message)
+    })
   })
 }
 
@@ -163,6 +217,7 @@ defineExpose({
   getSelectionRows,
   toggleRowSelection,
   setCurrentRow,
+  removeLocalRow,
   batchRemove,
   save
 })
