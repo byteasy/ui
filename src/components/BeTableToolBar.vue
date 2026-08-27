@@ -185,63 +185,13 @@
 
     <!-- 更多搜索条件，默认关闭 -->
     <div class="w-full flex-row" v-if="advanceSearch">
-      <el-form :inline="true" class="w-full">
-        <slot name="query-form" :fields="props.fields" :queryParams="queryParams">
-          <template v-for="col in visibleFields" :key="col.name">
-            <el-form-item
-              :label="getLangText(col.displayName, locale)"
-              v-if="col.isSearch === 'YES'"
-            >
-              <component
-                :is="
-                  getComponent(
-                    parseComponent(col.fieldComponent || '/components/BeTableQueryField.vue'),
-                  )
-                "
-                :param="
-                  parseComponentParam(col.fieldComponent || '/components/BeTableQueryField.vue')
-                "
-                v-model="queryParams[col.name]"
-                type="query"
-                :column="col"
-                :placeholder="getLangText(col.displayName, locale)"
-                :align="col.align === 'LEFT' ? 'left' : col.align === 'RIGHT' ? 'right' : 'center'"
-                clearable
-                :disabled="queryParams[col.name + 'Readonly'] === true"
-                :formModel="queryParams"
-              >
-              </component>
-            </el-form-item>
-          </template>
-          <slot name="query-form-extra" :queryParams="queryParams" />
-          <el-form-item>
-            <div
-              v-if="showCollapseBtn === true"
-              @click="((isCollapsed = !isCollapsed), updateVisibleFields())"
-              class="mr-2"
-            >
-              <el-icon :class="{ rotate: !isCollapsed }">
-                <ArrowDown v-if="isCollapsed" />
-                <ArrowUp v-else />
-              </el-icon>
-            </div>
-            <slot name="query-form-buttons">
-              <el-button
-                type="primary"
-                icon="Search"
-                @click="onToolbarActionClick(TableToolbarActionEnum.REFRESH, undefined)"
-              >
-                {{ $t('search') }}
-              </el-button>
-            </slot>
-            <slot
-              name="query-form-buttons-extra"
-              :queryParams="queryParams"
-              :queryMode="props.tableProps.queryMode"
-            ></slot>
-          </el-form-item>
-        </slot>
-      </el-form>
+      <BeTableAdvanceQueryPanel
+        v-if="advanceSearch"
+        v-model:visible="advanceSearch"
+        v-model:queryParams="queryParams"
+        :tableProps="props.tableProps"
+        :fields="props.fields"
+      />
     </div>
   </div>
 </template>

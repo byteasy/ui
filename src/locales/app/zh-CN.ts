@@ -8,7 +8,7 @@ export default {
     role: {
       name: '角色',
       permission: '权限',
-      permissionAllocate: '权限分配'
+      permissionAllocate: '权限分配',
     },
     more: '更多',
     selectComponent: '组件选择',
@@ -20,24 +20,24 @@ export default {
       syncSchemaFromDatabase: '从数据库同步',
     },
     resourceGroup: {
-      name: '分组'
+      name: '分组',
     },
     resource: {
       name: '菜单',
       standardPermission: '标准权限',
       queryParams: 'URL参数',
-      standardTableComponent: '标准模板'
+      standardTableComponent: '标准模板',
     },
     ebApp: {
-      model: "模型",
-      field: "字段定义",
-      fieldGroup: "字段分组",
-      notGrouped: "未分组",
+      model: '模型',
+      field: '字段定义',
+      fieldGroup: '字段分组',
+      notGrouped: '未分组',
       params: '布局参数',
-      pageLayout: "布局",
-      api: "接口",
-      permission: "权限",
-      scriptEditor: "脚本开发",
+      pageLayout: '布局',
+      api: '接口',
+      permission: '权限',
+      scriptEditor: '脚本开发',
       scriptInputParam: '脚本入参',
       scriptFunction: '脚本函数',
       scriptFunctionHelpMsg: '使用帮助',
@@ -58,6 +58,6 @@ export default {
       pleaseInputOneKeySearch: '请输入查询条件',
       closeAdvance: '收起高级筛选',
       openAdvance: '展开高级筛选',
-    }
-  }
-} as const
+    },
+  },
+} as const;
