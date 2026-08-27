@@ -55,6 +55,7 @@ export default {
       apiQueryNotDefine: '查询接口未定义',
       inputFieldGroupName: '输入分组名称',
       formValidateFailed: '表格内存在未通过校验的项，请检查修正后再保存',
+      pleaseInputOneKeySearch: '请输入查询条件',
     }
   }
 } as const
