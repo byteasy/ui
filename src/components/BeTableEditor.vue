@@ -5,6 +5,7 @@
     scrollbar-always-on
     stripe
     :data="tableData"
+    :row-key="getRowKey"
     highlight-current-row
     ref="refElTable"
     @current-change="(row) => currentRow = row"
@@ -74,8 +75,7 @@
       <template #default="scope">
         <el-space direction="horizontal" :size="4">
           <slot name="table-editor-operation" :row="scope.row" :$index="scope.$index">
-            <slot name="table-editor-operation-extra" :row="scope.row"
-                  :$index="scope.$index"></slot>
+            <slot name="table-editor-operation-extra" :row="scope.row" :$index="scope.$index"></slot>
             <el-popconfirm
               :confirm-button-text="$t('ok')"
               :cancel-button-text="$t('cancel')"
@@ -97,18 +97,18 @@
 </template>
 
 <script setup lang="ts">
-import {getLangText} from "@/locales/common.ts";
-import {useI18n} from "vue-i18n";
-import {defineExpose, ref} from "vue";
-import {parseComponent, parseComponentParam} from "@/util/common.ts";
-import {getComponent} from "@/util/componentLoader.ts";
-import {type BeColumn, type BeTableProps, TableRowActionEnum} from "@/components/BeTable.ts";
-import {ElMessage} from "element-plus";
-import {executeOpenApi} from "@/api/common/platform";
+import { getLangText } from "@/locales/common.ts";
+import { useI18n } from "vue-i18n";
+import {defineEmits, defineExpose, ref, toRaw} from "vue";
+import { parseComponent, parseComponentParam } from "@/util/common.ts";
+import { getComponent } from "@/util/componentLoader.ts";
+import { type BeColumn, type BeTableProps, TableRowActionEnum } from "@/components/BeTable.ts";
+import { ElMessage } from "element-plus";
+import { executeOpenApi } from "@/api/common/platform";
 
 const refElTable = ref<any>(null)
-const tableData = defineModel<any[]>('tableData', {default: () => []})
-const {t, locale} = useI18n()
+const tableData = defineModel<any[]>('tableData', { default: () => [] })
+const { t, locale } = useI18n()
 const currentRow = ref(undefined)
 // 维护当前选中的所有行集合
 const selectedRows = ref<any[]>([])
@@ -117,15 +117,28 @@ const props = defineProps<{
   tableProps: BeTableProps,
   fields: Array<BeColumn>
 }>()
-
-const emit = defineEmits(['rowAction', 'refresh', 'selection-change', 'rowDelete'])
+const emit = defineEmits(['rowAction', 'refresh', 'selection-change'])
 
 /**
- * 获取主键字段名（优先取 BeColumn 中 isPrimary === 'YES' 的字段名，未找到则取 rowKey 或 'id'）
+ * 获取主键字段名
  */
 function getPrimaryFieldName(): string {
   const primaryCol = props.fields?.find(f => f.isPrimary === 'YES')
   return primaryCol?.name || props.tableProps.rowKey || 'id'
+}
+
+/**
+ * 获取行的唯一 key（如果数据库主键为空，则取前端临时生成的 _rowKey）
+ */
+function getRowKey(row: any): string {
+  const primaryField = getPrimaryFieldName()
+  if (row && row[primaryField] !== undefined && row[primaryField] !== null && row[primaryField] !== '') {
+    return String(row[primaryField])
+  }
+  if (!row._rowKey) {
+    row._rowKey = 'row_' + Math.random().toString(36).slice(2, 10)
+  }
+  return row._rowKey
 }
 
 /**
@@ -137,16 +150,22 @@ function handleSelectionChange(selection: any[]) {
 }
 
 /**
- * 判断某一行是否被勾选（支持有主键和无主键的对象引用比对）
+ * 判断某一行是否被勾选（支持主键比对、_rowKey 比对与对象代理比对）
  */
 function isRowSelected(row: any) {
   if (!row || selectedRows.value.length === 0) return false
   const primaryField = getPrimaryFieldName()
   const rowId = row[primaryField]
+
   if (rowId !== undefined && rowId !== null && rowId !== '') {
     return selectedRows.value.some(item => item[primaryField] === rowId)
   }
-  return selectedRows.value.includes(row)
+  if (row._rowKey) {
+    return selectedRows.value.some(item => item._rowKey === row._rowKey)
+  }
+
+  const rawTarget = toRaw(row)
+  return selectedRows.value.some(item => item === row || toRaw(item) === rawTarget)
 }
 
 function getSelectionRows() {
@@ -166,7 +185,7 @@ function setCurrentRow(row: any) {
 }
 
 /**
- * 纯前端内存删除单行公共逻辑
+ * 纯前端内存删除单行（使用 splice 原地操作）
  */
 function spliceLocalRow(row: any, index?: number) {
   if (!Array.isArray(tableData.value)) return
@@ -174,7 +193,8 @@ function spliceLocalRow(row: any, index?: number) {
   if (typeof index === 'number' && tableData.value[index] === row) {
     tableData.value.splice(index, 1)
   } else {
-    const targetIndex = tableData.value.indexOf(row)
+    const rawTarget = toRaw(row)
+    const targetIndex = tableData.value.findIndex(item => item === row || toRaw(item) === rawTarget)
     if (targetIndex !== -1) {
       tableData.value.splice(targetIndex, 1)
     }
@@ -182,25 +202,24 @@ function spliceLocalRow(row: any, index?: number) {
 
   // 同步清理选中态
   if (selectedRows.value.length > 0) {
-    selectedRows.value = selectedRows.value.filter(item => item !== row)
+    const rawTarget = toRaw(row)
+    selectedRows.value = selectedRows.value.filter(item => item !== row && toRaw(item) !== rawTarget)
   }
   // 清理当前高亮行
-  if (currentRow.value === row) {
+  if (currentRow.value === row || (currentRow.value && toRaw(currentRow.value) === toRaw(row))) {
     currentRow.value = undefined
   }
 
-  emit('selection-change', selectedRows.value)
 }
 
 /**
- * 🔥 单行删除：如果主键不为空且配置了 apiDelete 则调用后端，否则仅在前端直接删除
+ * 单行删除
  */
 async function removeLocalRow(row: any, index?: number) {
   const primaryField = getPrimaryFieldName()
   const primaryVal = row?.[primaryField]
   const hasPrimaryValue = primaryVal !== undefined && primaryVal !== null && primaryVal !== ''
 
-  // 场景 A：主键不为空 且 配置了后端删除接口 -> 调用后端删除
   if (hasPrimaryValue && props.tableProps.apiDelete) {
     try {
       row._deleting = true
@@ -224,14 +243,13 @@ async function removeLocalRow(row: any, index?: number) {
 }
 
 /**
- * 🔥 批量删除函数：如果选中的行主键全部为空，则完全不调用后端接口
+ * 🔥 核心修复：批量删除函数（采用 splice 倒序原地删除，不破坏数组引用）
  */
 const batchRemove = (rows?: any[]): Promise<any[]> => {
   return new Promise((resolve, reject) => {
-    // 1. 获取要删除的行列表
+    // 1. 获取目标行集合
     const targetRows = (rows && rows.length > 0) ? rows : getSelectionRows()
 
-    // 2. 空防御
     if (!targetRows || targetRows.length === 0) {
       resolve([])
       return
@@ -244,47 +262,62 @@ const batchRemove = (rows?: any[]): Promise<any[]> => {
 
     const primaryField = getPrimaryFieldName()
 
-    // 3. 区分已入库（有主键）的数据与纯前端草稿（无主键）的数据
+    // 2. 筛选出具有真实后端主键的行
     const rowsWithPrimary = targetRows.filter(row => {
       const val = row?.[primaryField]
       return val !== undefined && val !== null && val !== ''
     })
 
-    // 执行前端内存过滤清理的内部公共闭包
+    // 🔥 核心：采用 splice 倒序原地修改 tableData.value，绝不产生新数组引用
     const executeLocalBatchFilter = () => {
-      const targetSet = new Set(targetRows)
-      const targetKeySet = new Set(rowsWithPrimary.map(item => item[primaryField]))
+      const rawTargetList = targetRows.map(r => toRaw(r))
+      const targetSet = new Set([...targetRows, ...rawTargetList])
 
-      tableData.value = tableData.value.filter((row: any) => {
-        if (targetSet.has(row)) return false
-        if (row?.[primaryField] !== undefined && targetKeySet.has(row[primaryField])) return false
-        return true
-      })
+      const targetKeySet = new Set(
+        rowsWithPrimary.map(item => String(item[primaryField]))
+      )
+      const targetRowKeySet = new Set(
+        targetRows.map(item => item._rowKey).filter(Boolean)
+      )
 
-      // 重置选中态与高亮
+      // 倒序 splice 删除
+      for (let i = tableData.value.length - 1; i >= 0; i--) {
+        const item = tableData.value[i]
+        const rawItem = toRaw(item)
+        const itemPrimary = item?.[primaryField]
+        const hasPrimary = itemPrimary !== undefined && itemPrimary !== null && itemPrimary !== ''
+
+        const isMatch = targetSet.has(item) ||
+          targetSet.has(rawItem) ||
+          (hasPrimary && targetKeySet.has(String(itemPrimary))) ||
+          (item._rowKey && targetRowKeySet.has(item._rowKey))
+
+        if (isMatch) {
+          tableData.value.splice(i, 1)
+        }
+      }
+
+      // 重置选中状态与高亮行
       selectedRows.value = []
       refElTable.value?.clearSelection()
-      if (currentRow.value && (targetSet.has(currentRow.value) || targetKeySet.has(currentRow.value?.[primaryField]))) {
-        currentRow.value = undefined
-      }
+      currentRow.value = undefined
 
       emit('selection-change', [])
       resolve(targetRows)
     }
 
-    // 场景 A：有持久化数据 且 配置了批量删除接口 -> 调用后端接口
+    // 场景 A：存在后端持久化主键 且 配置了批量删除 API
     if (rowsWithPrimary.length > 0 && props.tableProps.apiBatchDelete) {
       executeOpenApi(props.tableProps.apiBatchDelete, {}, rowsWithPrimary)
         .then(() => {
           executeLocalBatchFilter()
-          emit('refresh')
         })
         .catch(err => {
           ElMessage.error(err?.message || '批量删除失败')
           reject(err)
         })
     } else {
-      // 场景 B：所有选中的行都没有主键（全是新增未入库的行）或 未配置 apiBatchDelete -> 直接前端移除，不调后端
+      // 场景 B：纯草稿行或未配置批量删除接口 -> 前端原地移除
       executeLocalBatchFilter()
     }
   })
@@ -306,10 +339,20 @@ const save = () => {
   })
 }
 
+/**
+ * 🔥 核心修复：添加新行时注入唯一 _rowKey
+ */
 const addNewRow = (defaultValue: any = {}) => {
-  const row = {...defaultValue}
-  tableData.value.push(JSON.parse(JSON.stringify(row)))
+  const row = {
+    ...defaultValue,
+    _rowKey: 'row_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)
+  }
+  if (!Array.isArray(tableData.value)) {
+    tableData.value = []
+  }
+  tableData.value.push(row)
 }
+
 
 defineExpose({
   getSelectionRows,

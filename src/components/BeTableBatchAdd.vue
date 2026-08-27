@@ -39,7 +39,6 @@
               :show-summary="props.tableProps.showSummary"
               :height="height"
               :tableData="batchEditData"
-              @row-click="onTableRowClick"
               @row-action="onRowActionHandle"
               @selection-change="(rows) => selectionRows = rows"
               v-loading="loading"
@@ -66,6 +65,7 @@ import {
   TableRowActionEnum,
   TableToolbarActionEnum
 } from "@/components/BeTable.ts";
+import {ElMessage} from "element-plus";
 
 const {t, locale} = useI18n()
 
@@ -75,7 +75,7 @@ const props = defineProps<{
   fields: Array<BeColumn>,
 }>()
 
-const emit = defineEmits(['rowClick'])
+const emit = defineEmits(['close'])
 
 const tableColumns = ref([])
 const tableData = ref({total: '0'})
@@ -84,10 +84,6 @@ const loading = ref(false)
 const batchEditData = ref([])
 const refBeTableView = ref(null)
 const {open} = useModal()
-
-function onTableRowClick(row) {
-  emit('rowClick', row)
-}
 
 function getSelectionRows() {
   return refBeTableView.value?.getSelectionRows()
@@ -130,6 +126,19 @@ const tableHeightCss = computed({
   }
 })
 
+
+function onButtonClick(btnName) {
+  if (btnName === 'ok') {
+    refBeTableView.value?.save().then(() => {
+      emit('close', 'ok')
+    }).catch((err) => {
+      ElMessage.error(err?.message || '删除失败')
+    })
+  } else if (btnName === 'cancel') {
+    emit('close', 'cancel')
+  }
+}
+
 defineExpose({
   props,
   tableColumns,
@@ -137,6 +146,7 @@ defineExpose({
   loading,
   getSelectionRows,
   toggleRowSelection,
-  setCurrentRow
+  setCurrentRow,
+  onButtonClick
 })
 </script>
