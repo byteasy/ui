@@ -19,8 +19,8 @@
         :class="{ 'is-active': isAdvanceSearchActive }"
         :title="
           isAdvanceSearchActive
-            ? $t('common.closeAdvance') || '收起高级筛选'
-            : $t('common.openAdvance') || '展开高级筛选'
+            ? $t('platform.ebApp.closeAdvance')
+            : $t('platform.ebApp.openAdvance')
         "
         @click="toggleAdvanceSearch"
       >

@@ -56,6 +56,8 @@ export default {
       inputFieldGroupName: '输入分组名称',
       formValidateFailed: '表格内存在未通过校验的项，请检查修正后再保存',
       pleaseInputOneKeySearch: '请输入查询条件',
+      closeAdvance: '收起高级筛选',
+      openAdvance: '展开高级筛选',
     }
   }
 } as const
