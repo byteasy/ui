@@ -69,7 +69,7 @@ import { useI18n } from "vue-i18n";
 import { defineExpose, ref } from "vue";
 import { parseComponent, parseComponentParam } from "@/util/common.ts";
 import { getComponent } from "@/util/componentLoader.ts";
-import { type BeTableProps, TableRowActionEnum } from "@/components/BeTable.ts";
+import {type BeColumn, type BeTableProps, TableRowActionEnum} from "@/components/BeTable.ts";
 import { ElMessage } from "element-plus";
 import {executeOpenApi} from "@/api/common/platform";
 
@@ -82,7 +82,7 @@ const selectedRows = ref<any[]>([])
 
 const props = defineProps<{
   tableProps: BeTableProps,
-  fields: Array<any>
+  fields: Array<BeColumn>
 }>()
 
 const emit = defineEmits(['rowAction', 'refresh', 'selection-change'])

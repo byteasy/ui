@@ -242,6 +242,7 @@ export type TableRowActionType = `${TableRowActionEnum}`
 export interface BeColumn {
   className: string
   name: string
+  fieldName: string
   displayName: string
   description: string
   type: string // 若值固定（如 STRING/Number），可改为 "STRING" | "NUMBER" 限定
@@ -253,6 +254,8 @@ export interface BeColumn {
   isFixed: 'YES' | 'NO'
   isRequire: 'YES' | 'NO'
   isForm: 'YES' | 'NO'
+  isPrimary: 'YES' | 'NO'
+  isI18n: 'YES' | 'NO'
   align: 'LEFT' | 'CENTER' | 'RIGHT'
   width: number
   showOrder: number
@@ -260,12 +263,16 @@ export interface BeColumn {
   maxLength: number
   min: number
   max: number
+  groupId: number
+  textareaRows: number
+  externalClassAutoFill: boolean
   precision: number
   multiple: 'YES' | 'NO'
   relationType: 'EXTERNAL_KEY' | 'DETAIL_TABLE' | null | undefined
   externalClass: string | null | undefined
   externalClassPrimaryField: string | null | undefined
   externalClassDisplayField: string | null | undefined
+  innerPrimaryField: string | null | undefined
   extrasParams: string
   fieldComponent: string
 }
