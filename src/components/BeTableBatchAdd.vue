@@ -109,6 +109,7 @@ function onToolbarActionClick(action: TableToolbarActionEnum, args) {
   } else if (action === TableToolbarActionEnum.BATCH_ADD) {
   } else if (action === TableToolbarActionEnum.REFRESH) {
   } else if (action === TableToolbarActionEnum.BATCH_DELETE) {
+    refBeTableView.value?.batchRemove(args)
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_EDIT) {
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_SAVE) {
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_CANCEL) {
