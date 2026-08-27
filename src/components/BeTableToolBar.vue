@@ -51,7 +51,7 @@
           </el-button>
 
           <el-button :title="$t('batchAdd')" @click="onToolbarActionClick(TableToolbarActionEnum.BATCH_ADD, JSON.parse(JSON.stringify(queryParams)))" type="primary">
-            <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
+            <IconLocalBatchAdd style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
 
           <el-button :title="$t('batchEdit')" @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_EDIT, selectionRows)" type="primary">
