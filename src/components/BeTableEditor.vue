@@ -213,13 +213,19 @@ const save = () => {
   })
 }
 
+const addNewRow = (defaultValue) => {
+  const row = { ...defaultValue }
+  tableData.value.push(JSON.parse(JSON.stringify(row)))
+}
+
 defineExpose({
   getSelectionRows,
   toggleRowSelection,
   setCurrentRow,
   removeLocalRow,
   batchRemove,
-  save
+  save,
+  addNewRow,
 })
 </script>
 

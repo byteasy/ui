@@ -104,6 +104,7 @@ import {useModal} from "@/components/dialog/useModal.ts";
 import BeTableContainer from "@/components/BeTableContainer.vue";
 import BeForm from "@/components/BeForm.vue";
 import {type BeTableProps, TableToolbarActionEnum, TableRowActionEnum} from "@/components/BeTable.ts";
+import BeTableBatchAdd from "@/components/BeTableBatchAdd.vue";
 
 const appSettingsStore = useAppSettingsStore()
 const {t, locale} = useI18n()
@@ -292,6 +293,8 @@ function onToolbarAction(action : TableToolbarActionEnum, args) {
     onExcelExportClick()
   } else if (action === TableToolbarActionEnum.ADD) {
     onAdd(args)
+  } else if (action === TableToolbarActionEnum.BATCH_ADD) {
+    onBatchAdd(args)
   } else if (action === TableToolbarActionEnum.REFRESH) {
     refresh()
   } else if (action === TableToolbarActionEnum.BATCH_DELETE) {
@@ -309,6 +312,8 @@ function onToolbarAction(action : TableToolbarActionEnum, args) {
     })
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_CANCEL) {
     batchEditModel.value = false
+  } else if (action === TableToolbarActionEnum.TABLE_EDITOR_ADD_ROW) {
+    refBeTableView.value.addNewRow(args)
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_REMOVE) {
     refBeTableView.value.batchRemove()
   }
@@ -354,7 +359,7 @@ function onColumnDefineClick() {
 }
 
 function downLoadExcelTemplate() {
-  window.open(props.baseUrl + '/excel/template?lang=' + appSettingsStore.lang, '_blank')
+  window.open(props.apiDownloadImportTemplate + '?lang=' + appSettingsStore.lang, '_blank')
 }
 
 function onExcelImportClick() {
@@ -448,6 +453,25 @@ function onAdd(row) {
       {formModel: row, className: props.className, apiSave: props.apiSave}, // 传给组件的 props
       {
         title: t('add') + getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+        onClose: (data) => {
+          if (data === 'ok') {
+            refresh()
+          }
+        },
+      },
+    )
+  })
+}
+
+function onBatchAdd(row) {
+  getEntityDefine(props.className).then(entityDefine => {
+    open(
+      BeTableBatchAdd,
+      {fields: tableColumns.value, tableProps: props, formModel: row },
+      {
+        title: t('batchAdd') + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
         dialogModel: props.dialogModel,
         onClose: (data) => {
