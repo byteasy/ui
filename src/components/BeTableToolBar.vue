@@ -62,6 +62,7 @@
             :cancel-button-text="$t('cancel')"
             :title="$t('batchDeleteWarn')"
             :hide-after="10"
+            v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete"
             @confirm="onToolbarActionClick(TableToolbarActionEnum.BATCH_DELETE, selectionRows)">
             <template #reference>
               <el-button :title="$t('batchDelete')" type="primary" v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete">
@@ -74,18 +75,17 @@
 
         <!-- BeTableEditor 工具栏 -->
         <el-button-group direction="horizontal" v-if="batchEditModel === true">
-          <el-button :title="$t('add')" @click="onToolbarActionClick(TableToolbarActionEnum.ADD, JSON.parse(JSON.stringify(queryParams)))" type="primary">
+          <el-button :title="$t('add')" @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_ADD_ROW, JSON.parse(JSON.stringify(queryParams)))" type="primary">
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
           </el-button>
           <el-popconfirm :confirm-button-text="$t('ok')"
                          :cancel-button-text="$t('cancel')"
                          :title="$t('batchDeleteWarn')"
                          :hide-after="10"
+                         v-if="selectionRows.length > 0"
                          @confirm="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_REMOVE, selectionRows)">
             <template #reference>
-              <el-button :title="$t('batchDelete')"
-                         type="primary"
-                         v-if="selectionRows.length > 0">
+              <el-button :title="$t('batchDelete')" type="primary" v-if="selectionRows.length > 0">
                 <IconLocalBatchDelete
                   style="width: 1rem; height: 1rem; color: var(--my-text-color)"/>
               </el-button>
@@ -101,51 +101,53 @@
           </el-button>
         </el-button-group>
 
-        <el-dropdown placement="bottom-start" v-if="batchEditModel !== true">
-          <el-button text icon="MoreFilled" v-if="batchEditModel !== true"/>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item
-                @click="onToolbarActionClick(TableToolbarActionEnum.SWITCH_VIEW, undefined)">
-                <el-icon>
-                  <List/>
-                </el-icon>
-                {{ $t('table.viewModel') }}
-              </el-dropdown-item>
-              <el-dropdown-item
-                @click="onToolbarActionClick(TableToolbarActionEnum.COLUMN_DEFINE, undefined)">
-                <el-icon>
-                  <SetUp/>
-                </el-icon>
-                {{ $t('table.customColumn') }}
-              </el-dropdown-item>
-              <el-dropdown-item divided
-                                @click="onToolbarActionClick(TableToolbarActionEnum.DOWNLOAD_EXCEL_TEMPLATE, undefined)">
-                <el-icon>
-                  <Download/>
-                </el-icon>
-                {{ $t('table.downLoadExcelTemplate') }}
-              </el-dropdown-item>
-              <el-dropdown-item
-                @click="onToolbarActionClick(TableToolbarActionEnum.EXCEL_IMPORT, undefined)">
-                <el-icon>
-                  <IconLocalExcel/>
-                </el-icon>
-                {{ $t('table.importByExcel') }}
-              </el-dropdown-item>
-              <el-dropdown-item
-                @click="onToolbarActionClick(TableToolbarActionEnum.EXCEL_EXPORT, undefined)">
-                <el-icon>
-                  <IconLocalExcelExport/>
-                </el-icon>
-                {{ $t('table.exportToExcel') }}
-              </el-dropdown-item>
-              <slot name="more-action-extra" :queryParams="queryParams"
-                    :queryMode="props.tableProps.queryMode"
-                    @actionClick="(action) => onToolbarActionClick(action, undefined)"></slot>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <template v-if="batchEditModel !== true">
+          <el-dropdown placement="bottom-start">
+            <el-button text icon="MoreFilled"/>
+            <template #dropdown>
+              <el-dropdown-menu >
+                <el-dropdown-item
+                  @click="onToolbarActionClick(TableToolbarActionEnum.SWITCH_VIEW, undefined)">
+                  <el-icon>
+                    <List/>
+                  </el-icon>
+                  {{ $t('table.viewModel') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  @click="onToolbarActionClick(TableToolbarActionEnum.COLUMN_DEFINE, undefined)">
+                  <el-icon>
+                    <SetUp/>
+                  </el-icon>
+                  {{ $t('table.customColumn') }}
+                </el-dropdown-item>
+                <el-dropdown-item divided
+                                  @click="onToolbarActionClick(TableToolbarActionEnum.DOWNLOAD_EXCEL_TEMPLATE, undefined)">
+                  <el-icon>
+                    <Download/>
+                  </el-icon>
+                  {{ $t('table.downLoadExcelTemplate') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  @click="onToolbarActionClick(TableToolbarActionEnum.EXCEL_IMPORT, undefined)">
+                  <el-icon>
+                    <IconLocalExcel/>
+                  </el-icon>
+                  {{ $t('table.importByExcel') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  @click="onToolbarActionClick(TableToolbarActionEnum.EXCEL_EXPORT, undefined)">
+                  <el-icon>
+                    <IconLocalExcelExport/>
+                  </el-icon>
+                  {{ $t('table.exportToExcel') }}
+                </el-dropdown-item>
+                <slot name="more-action-extra" :queryParams="queryParams"
+                      :queryMode="props.tableProps.queryMode"
+                      @actionClick="(action) => onToolbarActionClick(action, undefined)"></slot>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
       </div>
     </div>
   </div>
