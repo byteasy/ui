@@ -3,12 +3,12 @@
     <!-- 1. 顶部逻辑关系选择 -->
     <div class="panel-top-bar">
       <div class="logic-selector-box">
-        <span class="label-text">{{ $t('table.matchBelow') || '满足以下' }}</span>
-        <el-select v-model="matchLogic" size="small" class="logic-select">
-          <el-option label="所有 (AND)" value="AND" />
-          <el-option label="任一 (OR)" value="OR" />
+        <span class="label-text">{{ $t('platform.ebApp.matchBelow') }}</span>
+        <el-select v-model="queryParams.matchLogic" size="small" class="logic-select">
+          <el-option :label="$t('platform.ebApp.matchLogicAnd')" value="AND" />
+          <el-option :label="$t('platform.ebApp.matchLogicOr')" value="OR" />
         </el-select>
-        <span class="label-text">{{ $t('table.conditions') || '条件' }}</span>
+        <span class="label-text">{{ $t('platform.ebApp.conditions') }}</span>
       </div>
     </div>
 
@@ -16,13 +16,17 @@
     <div class="panel-main-content">
       <div class="section-header">
         <div class="section-title">
-          <span>{{ $t('table.commonConditions') || '常用条件' }}</span>
+          <span>{{ $t('platform.ebApp.commonConditions') }}</span>
         </div>
         <div class="section-actions">
-          <el-icon class="action-icon" :title="$t('table.customConditions') || '自定义条件配置'" @click="handleOpenCustomConfig">
+          <el-icon
+            class="action-icon"
+            :title="$t('platform.ebApp.customConditions')"
+            @click="handleOpenCustomConfig"
+          >
             <Setting />
           </el-icon>
-          <el-icon class="action-icon" :title="$t('common.collapse') || '收起'" @click="handleClose">
+          <el-icon class="action-icon" :title="$t('platform.ebApp.collapse')" @click="handleClose">
             <ArrowUp />
           </el-icon>
         </div>
@@ -33,14 +37,17 @@
         <el-row :gutter="24">
           <template v-for="col in searchFields" :key="col.name">
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="filter-col-item">
-              <el-form-item :label="`${getLangText(col.displayName, locale)} :`" class="filter-form-item">
+              <el-form-item
+                :label="`${getLangText(col.displayName, locale)} :`"
+                class="filter-form-item"
+              >
                 <div class="filter-control-group">
                   <!-- 操作符下拉框 -->
                   <el-select
                     v-model="queryParams[col.name + 'QueryType']"
                     class="operator-select"
                     size="default"
-                    :placeholder="$t('table.operator') || '操作符'"
+                    :placeholder="$t('platform.ebApp.operatorPlaceholder')"
                   >
                     <el-option
                       v-for="op in getOperatorsByFieldType(col.type)"
@@ -53,11 +60,21 @@
                   <!-- 具体的输入控件（复用 BeTableQueryField） -->
                   <div class="field-input-box">
                     <component
-                      :is="getComponent(parseComponent(col.fieldComponent || '/components/BeTableQueryField.vue'))"
-                      :param="parseComponentParam(col.fieldComponent || '/components/BeTableQueryField.vue')"
+                      :is="
+                        getComponent(
+                          parseComponent(col.fieldComponent || '/components/BeTableQueryField.vue'),
+                        )
+                      "
+                      :param="
+                        parseComponentParam(
+                          col.fieldComponent || '/components/BeTableQueryField.vue',
+                        )
+                      "
                       v-model="queryParams[col.name]"
                       :column="col"
-                      :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
+                      :placeholder="
+                        getLangText(col.description || col.displayName || col.name, locale)
+                      "
                       :disabled="queryParams[col.name + 'Readonly'] === true"
                       :formModel="queryParams"
                       clearable
@@ -77,21 +94,17 @@
 
     <!-- 3. 底部操作栏 -->
     <div class="panel-bottom-bar">
-      <div class="bottom-left">
-        <el-button plain size="default" class="btn-save-filter" @click="handleSaveCommonFilter">
-          {{ $t('table.saveAsCommonFilter') || '保存常用筛选' }}
-        </el-button>
-      </div>
+      <div class="bottom-left"></div>
 
       <div class="bottom-center-right">
         <el-button type="primary" class="btn-search" @click="handleSearch">
-          {{ $t('search') || '搜索' }}
+          {{ $t('platform.ebApp.search') }}
         </el-button>
         <el-button plain class="btn-reset" @click="handleReset">
-          {{ $t('reset') || '重置' }}
+          {{ $t('platform.ebApp.reset') }}
         </el-button>
         <el-button plain class="btn-collapse" @click="handleClose">
-          {{ $t('common.collapse') || '收起' }}
+          {{ $t('platform.ebApp.collapse') }}
         </el-button>
       </div>
     </div>
@@ -100,13 +113,12 @@
 
 <script setup lang="ts">
 import { computed, defineEmits, defineModel, onMounted } from 'vue';
-import { Setting, ArrowUp } from '@element-plus/icons-vue';
+import { ArrowUp, Setting } from '@element-plus/icons-vue';
 import { useI18n } from 'vue-i18n';
 import { getLangText } from '@/locales/common.ts';
 import { parseComponent, parseComponentParam } from '@/util/common.ts';
 import { getComponent } from '@/util/componentLoader.ts';
-import { type BeColumn, type BeTableProps } from '@/components/BeTable.ts';
-import { ElMessage } from 'element-plus';
+import { type BeColumn, type BeTableProps, TableToolbarActionEnum } from '@/components/BeTable.ts';
 
 const props = defineProps<{
   tableProps: BeTableProps;
@@ -117,7 +129,7 @@ const emit = defineEmits<{
   (e: 'search', query: Record<string, any>): void;
   (e: 'reset'): void;
   (e: 'close'): void;
-  (e: 'save-filter', currentQuery: Record<string, any>): void;
+  (e: 'columnDefine'): void;
 }>();
 
 const { t, locale } = useI18n();
@@ -125,7 +137,6 @@ const { t, locale } = useI18n();
 // 双向绑定的可见性开关与查询条件
 const visible = defineModel<boolean>('visible', { default: false });
 const queryParams = defineModel<Record<string, any>>('queryParams', { default: () => ({}) });
-const matchLogic = defineModel<string>('matchLogic', { default: 'AND' });
 
 // 筛选所有允许查询的字段
 const searchFields = computed(() => {
@@ -133,18 +144,18 @@ const searchFields = computed(() => {
 });
 
 /**
- * 根据列字段类型动态获取可用的查询操作符
+ * 根据列字段类型动态获取可用的查询操作符（全量使用国际化词条）
  */
 function getOperatorsByFieldType(type: string) {
   if (type === 'STRING') {
     return [
-      { label: t('table.opLike') || '包含', value: 'like' },
-      { label: t('table.opEq') || '等于', value: 'eq' },
-      { label: t('table.opNe') || '不等于', value: 'ne' },
-      { label: t('table.opLikeLeft') || '开头为', value: 'likeLeft' },
-      { label: t('table.opLikeRight') || '结尾为', value: 'likeRight' },
-      { label: t('table.opNull') || '为空', value: 'isNull' },
-      { label: t('table.opNotNull') || '不为空', value: 'isNotNull' },
+      { label: t('platform.ebApp.opLike'), value: 'like' },
+      { label: t('platform.ebApp.opEq'), value: 'eq' },
+      { label: t('platform.ebApp.opNe'), value: 'ne' },
+      { label: t('platform.ebApp.opLikeLeft'), value: 'likeLeft' },
+      { label: t('platform.ebApp.opLikeRight'), value: 'likeRight' },
+      { label: t('platform.ebApp.opNull'), value: 'isNull' },
+      { label: t('platform.ebApp.opNotNull'), value: 'isNotNull' },
     ];
   }
   if (
@@ -156,27 +167,27 @@ function getOperatorsByFieldType(type: string) {
     type === 'BYTE'
   ) {
     return [
-      { label: t('table.opEq') || '等于', value: 'eq' },
-      { label: t('table.opGt') || '大于', value: 'gt' },
-      { label: t('table.opGe') || '大于等于', value: 'ge' },
-      { label: t('table.opLt') || '小于', value: 'lt' },
-      { label: t('table.opLe') || '小于等于', value: 'le' },
-      { label: t('table.opBetween') || '介于', value: 'between' },
+      { label: t('platform.ebApp.opEq'), value: 'eq' },
+      { label: t('platform.ebApp.opGt'), value: 'gt' },
+      { label: t('platform.ebApp.opGe'), value: 'ge' },
+      { label: t('platform.ebApp.opLt'), value: 'lt' },
+      { label: t('platform.ebApp.opLe'), value: 'le' },
+      { label: t('platform.ebApp.opBetween'), value: 'between' },
     ];
   }
   if (type === 'LOCAL_DATE' || type === 'LOCAL_DATE_TIME') {
     return [
-      { label: t('table.opBetween') || '范围', value: 'between' },
-      { label: t('table.opEq') || '等于', value: 'eq' },
-      { label: t('table.opGe') || '之后', value: 'ge' },
-      { label: t('table.opLe') || '之前', value: 'le' },
+      { label: t('platform.ebApp.opBetween'), value: 'between' },
+      { label: t('platform.ebApp.opEq'), value: 'eq' },
+      { label: t('platform.ebApp.opAfter'), value: 'ge' },
+      { label: t('platform.ebApp.opBefore'), value: 'le' },
     ];
   }
   // ENUM / 参照 等默认使用包含或相等
   return [
-    { label: t('table.opIn') || '包含', value: 'in' },
-    { label: t('table.opEq') || '等于', value: 'eq' },
-    { label: t('table.opNe') || '不等于', value: 'ne' },
+    { label: t('platform.ebApp.opIn'), value: 'in' },
+    { label: t('platform.ebApp.opEq'), value: 'eq' },
+    { label: t('platform.ebApp.opNe'), value: 'ne' },
   ];
 }
 
@@ -184,13 +195,15 @@ function getOperatorsByFieldType(type: string) {
  * 初始化默认查询操作符
  */
 onMounted(() => {
+  if (!queryParams.value.matchLogic) {
+    queryParams.value.matchLogic = 'AND';
+  }
   searchFields.value.forEach((col) => {
     const key = col.name + 'QueryType';
     if (!queryParams.value[key]) {
-      // 默认 STRING 赋 'like'，其余赋 'eq' 或 'between'
       if (col.type === 'STRING') {
         queryParams.value[key] = 'like';
-      } else if (col.type.includes('DATE')) {
+      } else if (col.type?.includes('DATE')) {
         queryParams.value[key] = 'between';
       } else if (col.type === 'ENUM' || col.multiple === 'YES') {
         queryParams.value[key] = 'in';
@@ -207,7 +220,6 @@ onMounted(() => {
 function handleSearch() {
   const finalParams = {
     ...queryParams.value,
-    _matchLogic: matchLogic.value,
   };
   emit('search', finalParams);
 }
@@ -231,16 +243,8 @@ function handleClose() {
   emit('close');
 }
 
-/**
- * 保存常用筛选方案
- */
-function handleSaveCommonFilter() {
-  ElMessage.success(t('table.saveFilterSuccess') || '常用筛选方案已保存');
-  emit('save-filter', queryParams.value);
-}
-
 function handleOpenCustomConfig() {
-  ElMessage.info(t('table.openCustomConfig') || '打开筛选字段配置');
+  emit(TableToolbarActionEnum.COLUMN_DEFINE);
 }
 </script>
 
@@ -273,7 +277,7 @@ function handleOpenCustomConfig() {
 }
 
 .logic-select {
-  width: 100px;
+  width: 108px;
 }
 
 /* 分隔与标题栏 */
@@ -382,7 +386,7 @@ function handleOpenCustomConfig() {
   gap: 8px;
 }
 
-/* 搜索主按钮（支持墨绿/主题色） */
+/* 搜索主按钮 */
 .btn-search {
   background-color: #0b8235 !important;
   border-color: #0b8235 !important;

@@ -184,13 +184,15 @@
     </div>
 
     <!-- 更多搜索条件，默认关闭 -->
-    <div class="w-full flex-row" v-if="advanceSearch">
+    <div class="w-full flex-row mt-2" v-if="advanceSearch">
       <BeTableAdvanceQueryPanel
         v-if="advanceSearch"
         v-model:visible="advanceSearch"
         v-model:queryParams="queryParams"
         :tableProps="props.tableProps"
         :fields="props.fields"
+        @search="onToolbarActionClick(TableToolbarActionEnum.REFRESH, undefined)"
+        @columnDefine="onToolbarActionClick(TableToolbarActionEnum.COLUMN_DEFINE, undefined)"
       />
     </div>
   </div>
@@ -207,12 +209,9 @@ import {
   ref,
 } from 'vue';
 import { ElIcon } from 'element-plus';
-import { ArrowDown } from '@element-plus/icons-vue';
 import { getLangText } from '@/locales/common.ts';
 import { useI18n } from 'vue-i18n';
 import { useSessionStore } from '@/stores/session.ts';
-import { parseComponent, parseComponentParam } from '@/util/common.ts';
-import { getComponent } from '@/util/componentLoader.ts';
 import { type BeColumn, type BeTableProps, TableToolbarActionEnum } from '@/components/BeTable.ts';
 
 const props = defineProps<{
