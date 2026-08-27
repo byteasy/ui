@@ -312,6 +312,7 @@ function onToolbarAction(action : TableToolbarActionEnum, args) {
     })
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_CANCEL) {
     batchEditModel.value = false
+    refresh()
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_ADD_ROW) {
     refBeTableView.value.addNewRow(args)
   } else if (action === TableToolbarActionEnum.TABLE_EDITOR_BATCH_REMOVE) {
