@@ -132,7 +132,7 @@ function onButtonClick(btnName) {
     refBeTableView.value?.save().then(() => {
       emit('close', 'ok')
     }).catch((err) => {
-      ElMessage.error(err?.message || '删除失败')
+      ElMessage.error(err?.message)
     })
   } else if (btnName === 'cancel') {
     emit('close', 'cancel')

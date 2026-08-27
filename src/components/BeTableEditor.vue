@@ -10,6 +10,7 @@
     ref="refElTable"
     @current-change="(row) => (currentRow = row)"
     @selection-change="handleSelectionChange"
+    class="be-table-editor"
   >
     <!-- 多选/智能序号列 -->
     <el-table-column
@@ -34,37 +35,53 @@
     <!-- 动态表单列渲染 -->
     <template v-for="col in props.fields" :key="col.name">
       <el-table-column v-if="col.isForm === 'YES'" :label="getLangText(col.displayName, locale)">
-        <template #header v-if="col.isRequire === 'YES'">
-          <span style="color: var(--el-color-danger)">*</span>
+        <!-- 必填红星标识 -->
+        <template #header>
+          <span v-if="col.isRequire === 'YES'" class="required-star">*</span>
           {{ getLangText(col.displayName, locale) }}
         </template>
 
         <template #default="scope">
-          <component
-            :is="getComponent(parseComponent(col.fieldComponent))"
-            :param="parseComponentParam(col.fieldComponent)"
-            :formModel="scope.row"
-            v-if="col.fieldComponent"
-            :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
-            :column="col"
-            clearable
-            type="form"
-            v-model="scope.row[col.name]"
-          />
-          <be-form-field
-            v-else
-            :column="col"
-            :placeholder="getLangText(col.displayName, locale)"
-            clearable
-            :formModel="scope.row"
-            v-model="scope.row[col.name]"
-            @clear="scope.row[col.name] = null"
+          <div
+            class="editor-cell-box"
+            :class="{ 'has-error': !!getCellError(scope.row, col.name) }"
           >
-            <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
-              <slot :name="name" v-bind="slotProps"></slot>
-            </template>
-          </be-form-field>
-          <div class="error-tip"></div>
+            <component
+              :is="getComponent(parseComponent(col.fieldComponent))"
+              :param="parseComponentParam(col.fieldComponent)"
+              :formModel="scope.row"
+              v-if="col.fieldComponent"
+              :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
+              :column="col"
+              clearable
+              type="form"
+              v-model="scope.row[col.name]"
+              @change="() => validateCell(scope.row, col)"
+              @blur="() => validateCell(scope.row, col)"
+            />
+            <be-form-field
+              v-else
+              :column="col"
+              :placeholder="getLangText(col.displayName, locale)"
+              clearable
+              :formModel="scope.row"
+              v-model="scope.row[col.name]"
+              @clear="((scope.row[col.name] = null), validateCell(scope.row, col))"
+              @change="() => validateCell(scope.row, col)"
+              @blur="() => validateCell(scope.row, col)"
+            >
+              <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
+                <slot :name="name" v-bind="slotProps"></slot>
+              </template>
+            </be-form-field>
+
+            <!-- 错误信息提示气泡/提示文案 -->
+            <transition name="el-zoom-in-top">
+              <div class="error-tip" v-if="getCellError(scope.row, col.name)">
+                {{ getCellError(scope.row, col.name) }}
+              </div>
+            </transition>
+          </div>
         </template>
       </el-table-column>
     </template>
@@ -108,12 +125,13 @@
 <script setup lang="ts">
 import { getLangText } from '@/locales/common.ts';
 import { useI18n } from 'vue-i18n';
-import { defineEmits, defineExpose, ref, toRaw } from 'vue';
+import { defineEmits, defineExpose, reactive, ref, toRaw } from 'vue';
 import { parseComponent, parseComponentParam } from '@/util/common.ts';
 import { getComponent } from '@/util/componentLoader.ts';
 import { type BeColumn, type BeTableProps } from '@/components/BeTable.ts';
 import { ElMessage } from 'element-plus';
 import { executeOpenApi } from '@/api/common/platform';
+import { validateColumnRule } from '@/util/validateUtils.ts'; // 引入你的校验函数
 
 const refElTable = ref<any>(null);
 const tableData = defineModel<any[]>('tableData', { default: () => [] });
@@ -121,6 +139,9 @@ const { t, locale } = useI18n();
 const currentRow = ref(undefined);
 // 维护当前选中的所有行集合
 const selectedRows = ref<any[]>([]);
+
+// 维护表格内每个单元格的错误状态字典: key: `${rowKey}_${columnName}` -> errMsg
+const errorsMap = reactive<Record<string, string>>({});
 
 const props = defineProps<{
   tableProps: BeTableProps;
@@ -137,7 +158,7 @@ function getPrimaryFieldName(): string {
 }
 
 /**
- * 获取行的唯一 key（如果数据库主键为空，则取前端临时生成的 _rowKey）
+ * 获取行的唯一 key
  */
 function getRowKey(row: any): string {
   const primaryField = getPrimaryFieldName();
@@ -156,6 +177,83 @@ function getRowKey(row: any): string {
 }
 
 /**
+ * 获取某个单元格的错误信息
+ */
+function getCellError(row: any, colName: string): string {
+  const key = `${getRowKey(row)}_${colName}`;
+  return errorsMap[key] || '';
+}
+
+/**
+ * 单个单元格的实时校验
+ */
+function validateCell(row: any, col: BeColumn): Promise<boolean> {
+  return new Promise((resolve) => {
+    const key = `${getRowKey(row)}_${col.name}`;
+    const value = row[col.name];
+
+    // 调用封装的规则校验
+    validateColumnRule(col, {}, value, locale.value, (error?: Error) => {
+      if (error && error.message) {
+        errorsMap[key] = error.message;
+        resolve(false);
+      } else {
+        delete errorsMap[key];
+        resolve(true);
+      }
+    });
+  });
+}
+
+/**
+ * 清理指定行的校验错误信息
+ */
+function clearRowErrors(row: any) {
+  const rKey = getRowKey(row);
+  Object.keys(errorsMap).forEach((k) => {
+    if (k.startsWith(`${rKey}_`)) {
+      delete errorsMap[k];
+    }
+  });
+}
+
+/**
+ * 🔥 整表全量异步校验函数：遍历所有行与可编辑字段
+ */
+async function validateTable(): Promise<boolean> {
+  if (!Array.isArray(tableData.value) || tableData.value.length === 0) {
+    return true;
+  }
+
+  const formFields = props.fields.filter((col) => col.isForm === 'YES');
+  let isValid = true;
+  let firstErrorRow: any = null;
+
+  for (const row of tableData.value) {
+    for (const col of formFields) {
+      const isCellValid = await validateCell(row, col);
+      if (!isCellValid) {
+        isValid = false;
+        if (!firstErrorRow) {
+          firstErrorRow = row;
+        }
+      }
+    }
+  }
+
+  if (!isValid) {
+    ElMessage.warning(
+      t('platform.ebApp.formValidateFailed'),
+    );
+    if (firstErrorRow) {
+      setCurrentRow(firstErrorRow);
+    }
+  }
+
+  return isValid;
+}
+
+/**
  * 监听 Element Plus 原生选择变化
  */
 function handleSelectionChange(selection: any[]) {
@@ -164,7 +262,7 @@ function handleSelectionChange(selection: any[]) {
 }
 
 /**
- * 判断某一行是否被勾选（支持主键比对、_rowKey 比对与对象代理比对）
+ * 判断某一行是否被勾选
  */
 function isRowSelected(row: any) {
   if (!row || selectedRows.value.length === 0) return false;
@@ -199,10 +297,13 @@ function setCurrentRow(row: any) {
 }
 
 /**
- * 纯前端内存删除单行（使用 splice 原地操作）
+ * 纯前端内存删除单行
  */
 function spliceLocalRow(row: any, index?: number) {
   if (!Array.isArray(tableData.value)) return;
+
+  // 清除该行所有未消的错误信息
+  clearRowErrors(row);
 
   if (typeof index === 'number' && tableData.value[index] === row) {
     tableData.value.splice(index, 1);
@@ -264,11 +365,10 @@ async function removeLocalRow(row: any, index?: number) {
 }
 
 /**
- * 🔥 核心修复：批量删除函数（采用 splice 倒序原地删除，不破坏数组引用）
+ * 批量删除函数
  */
 const batchRemove = (rows?: any[]): Promise<any[]> => {
   return new Promise((resolve, reject) => {
-    // 1. 获取目标行集合
     const targetRows = rows && rows.length > 0 ? rows : getSelectionRows();
 
     if (!targetRows || targetRows.length === 0) {
@@ -282,20 +382,20 @@ const batchRemove = (rows?: any[]): Promise<any[]> => {
     }
 
     const primaryField = getPrimaryFieldName();
-
-    // 2. 筛选出具有真实后端主键的行
     const rowsWithPrimary = targetRows.filter((row) => {
       const val = row?.[primaryField];
       return val !== undefined && val !== null && val !== '';
     });
 
-    // 🔥 核心：采用 splice 倒序原地修改 tableData.value，绝不产生新数组引用
     const executeLocalBatchFilter = () => {
       const rawTargetList = targetRows.map((r) => toRaw(r));
       const targetSet = new Set([...targetRows, ...rawTargetList]);
 
       const targetKeySet = new Set(rowsWithPrimary.map((item) => String(item[primaryField])));
       const targetRowKeySet = new Set(targetRows.map((item) => item._rowKey).filter(Boolean));
+
+      // 清除被删除行的校验错误
+      targetRows.forEach((r) => clearRowErrors(r));
 
       // 倒序 splice 删除
       for (let i = tableData.value.length - 1; i >= 0; i--) {
@@ -315,7 +415,6 @@ const batchRemove = (rows?: any[]): Promise<any[]> => {
         }
       }
 
-      // 重置选中状态与高亮行
       selectedRows.value = [];
       refElTable.value?.clearSelection();
       currentRow.value = undefined;
@@ -324,7 +423,6 @@ const batchRemove = (rows?: any[]): Promise<any[]> => {
       resolve(targetRows);
     };
 
-    // 场景 A：存在后端持久化主键 且 配置了批量删除 API
     if (rowsWithPrimary.length > 0 && props.tableProps.apiBatchDelete) {
       executeOpenApi(props.tableProps.apiBatchDelete, {}, rowsWithPrimary)
         .then(() => {
@@ -335,18 +433,33 @@ const batchRemove = (rows?: any[]): Promise<any[]> => {
           reject(err);
         });
     } else {
-      // 场景 B：纯草稿行或未配置批量删除接口 -> 前端原地移除
       executeLocalBatchFilter();
     }
   });
 };
 
+/**
+ * 🔥 完善后的保存逻辑：内置前置校验，校验不通过则拦截保存
+ */
 const save = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    // 1. 前置整表校验
+    const isPassed = await validateTable();
+    if (!isPassed) {
+      return;
+    }
+
+    // 2. 校验通过，提交保存
     if (!props.tableProps.apiImportBatchSave) {
       reject('apiImportBatchSave not available');
       return;
     }
+
+    if (tableData.value.length < 1) {
+      resolve([]);
+      return;
+    }
+
     executeOpenApi(props.tableProps.apiImportBatchSave, {}, tableData.value)
       .then(() => {
         ElMessage.success(t('operationSuccess') || '保存成功');
@@ -360,7 +473,7 @@ const save = () => {
 };
 
 /**
- * 🔥 核心修复：添加新行时注入唯一 _rowKey
+ * 添加新行
  */
 const addNewRow = (defaultValue: any = {}) => {
   const row = {
@@ -381,10 +494,43 @@ defineExpose({
   batchRemove,
   save,
   addNewRow,
+  validateTable, // 导出整表校验
+  validateCell, // 导出单单元格校验
 });
 </script>
 
 <style scoped>
+/* 必填星号 */
+.required-star {
+  color: var(--el-color-danger, #f56c6c);
+  margin-right: 4px;
+  font-weight: bold;
+}
+
+/* 单元格编辑容器 */
+.editor-cell-box {
+  position: relative;
+  width: 100%;
+  padding-bottom: 2px;
+}
+
+/* 校验失败时组件高亮红框 */
+.editor-cell-box.has-error :deep(.el-input__wrapper),
+.editor-cell-box.has-error :deep(.el-select__wrapper),
+.editor-cell-box.has-error :deep(.el-textarea__inner) {
+  box-shadow: 0 0 0 1px var(--el-color-danger, #f56c6c) inset !important;
+}
+
+/* 错误提示文字 */
+.error-tip {
+  color: var(--el-color-danger, #f56c6c);
+  font-size: 12px;
+  line-height: 1.2;
+  margin-top: 4px;
+  text-align: left;
+  word-break: break-all;
+}
+
 /* 单元格容器：相对定位 */
 .selection-cell-wrapper {
   position: relative;
@@ -411,7 +557,7 @@ defineExpose({
   margin-right: 0 !important;
 }
 
-/* 🌟 核心悬浮逻辑：当表格行 hover 时，隐藏序号，显示复选框 */
+/* 核心悬浮逻辑：当表格行 hover 时，隐藏序号，显示复选框 */
 :deep(.el-table__row:hover) .selection-cell-wrapper:not(.is-selected) .row-index-text {
   display: none;
 }
@@ -420,7 +566,7 @@ defineExpose({
   display: inline-flex;
 }
 
-/* 🌟 核心勾选常驻逻辑：若当前行已选中，永久隐藏序号并显示复选框 */
+/* 核心勾选常驻逻辑：若当前行已选中，永久隐藏序号并显示复选框 */
 .selection-cell-wrapper.is-selected .row-index-text {
   display: none;
 }
