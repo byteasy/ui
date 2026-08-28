@@ -43,6 +43,9 @@ const _Vue = window.__SHARED_VUE__ || {};
 const _ElementPlus = window.__SHARED_ELEMENT_PLUS__ || {};
 const _ElementIcons = window.__SHARED_ELEMENT_ICONS__ || {};
 const _VueI18n = window.__SHARED_VUE_I18N__ || {};
+const _Axios = window.__SHARED_AXIOS__ || {};
+const _Request = window.__SHARED_REQUEST__ || _Axios;
+const _PlatformApi = window.__SHARED_PLATFORM_API__ || {};
 `
 
   // 3. 精准转换各个模块的 import 语句
@@ -72,6 +75,11 @@ const _VueI18n = window.__SHARED_VUE_I18N__ || {};
   code = transformImport(code, 'element-plus', '_ElementPlus')
   code = transformImport(code, '@element-plus/icons-vue', '_ElementIcons')
   code = transformImport(code, 'vue-i18n', '_VueI18n')
+  // 3. 🔥 支持远程组件中使用 import axios from 'axios'
+  code = transformImport(code, 'axios', '_Axios')
+  // 4. 🔥 甚至支持远程组件中使用宿主项目封装的 request 或 platform api（可选）
+  code = transformImport(code, '@/util/request', '_Request')
+  code = transformImport(code, '@/api/common/platform', '_PlatformApi')
 
   // 4. 转成 Blob URL 并通过浏览器原生 dynamic import 执行
   const blob = new Blob([bridgeHeader + '\n' + code], { type: 'application/javascript' })

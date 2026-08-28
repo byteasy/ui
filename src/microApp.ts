@@ -13,6 +13,9 @@ import * as Vue from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import * as ElementPlusModule from 'element-plus'
 import * as VueI18n from 'vue-i18n'
+import axios from 'axios'
+import request from '@/api/request'
+import * as platformApi from '@/api/common/platform'
 import i18n from './locales'
 import App from './App.vue'
 import { loader } from '@guolao/vue-monaco-editor'
@@ -34,6 +37,9 @@ const render = (container) => {
   ;(window as any).__SHARED_ELEMENT_PLUS__ = ElementPlusModule
   ;(window as any).__SHARED_ELEMENT_ICONS__ = ElementPlusIconsVue
   ;(window as any).__SHARED_VUE_I18N__ = VueI18n
+  ;(window as any).__SHARED_AXIOS__ = axios
+  ;(window as any).__SHARED_REQUEST__ = request
+  ;(window as any).__SHARED_PLATFORM_API__ = platformApi
 
   app = createApp(App)
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

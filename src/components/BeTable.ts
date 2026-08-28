@@ -23,6 +23,11 @@ export interface BeTableProps {
   className: string
 
   /**
+   * 布局ID
+   */
+  layoutPramsId?: string
+
+  /**
    * 查询列表数据的 OpenAPI 方法名或接口 URL（必填）
    */
   apiQuery: string

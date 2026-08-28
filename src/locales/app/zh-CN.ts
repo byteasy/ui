@@ -58,6 +58,9 @@ export default {
       pleaseInputOneKeySearch: '请输入查询条件',
       closeAdvance: '收起高级筛选',
       openAdvance: '展开高级筛选',
+      retry: '刷新重试',
+      layoutLoadFailed: '布局加载失败',
+      layoutLoadFailedReason: '布局配置有误',
 
       // 🔥 针对 BeTableAdvanceQueryPanel 新增的高级查询国际化词条
       matchBelow: '满足以下',
