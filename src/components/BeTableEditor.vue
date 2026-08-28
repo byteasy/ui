@@ -34,7 +34,7 @@
 
     <!-- 动态表单列渲染 -->
     <template v-for="col in props.fields" :key="col.name">
-      <el-table-column v-if="col.isForm === 'YES'" :label="getLangText(col.displayName, locale)">
+      <el-table-column v-if="col.isForm === 'YES'" :label="getLangText(col.displayName, locale)" :min-width="col.width === 0 ? undefined : col.width" resizable>
         <!-- 必填红星标识 -->
         <template #header>
           <span v-if="col.isRequire === 'YES'" class="required-star">*</span>
