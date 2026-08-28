@@ -237,14 +237,13 @@ async function validateTable(): Promise<boolean> {
         if (!firstErrorRow) {
           firstErrorRow = row;
         }
+        console.log('validateTable err', firstErrorRow)
       }
     }
   }
 
   if (!isValid) {
-    ElMessage.warning(
-      t('platform.ebApp.formValidateFailed'),
-    );
+    ElMessage.warning(t('platform.ebApp.formValidateFailed'));
     if (firstErrorRow) {
       setCurrentRow(firstErrorRow);
     }
@@ -445,13 +444,14 @@ const save = () => {
   return new Promise(async (resolve, reject) => {
     // 1. 前置整表校验
     const isPassed = await validateTable();
+    console.log('isPassed', isPassed);
     if (!isPassed) {
       return;
     }
 
     // 2. 校验通过，提交保存
     if (!props.tableProps.apiImportBatchSave) {
-      reject('apiImportBatchSave not available');
+      reject(new Error('apiImportBatchSave not available'));
       return;
     }
 
@@ -486,7 +486,19 @@ const addNewRow = (defaultValue: any = {}) => {
   tableData.value.push(row);
 };
 
+/**
+ * 批量添加新行
+ */
+const batchAddRow = (rows: any[]) => {
+  if (!Array.isArray(rows) || rows.length === 0) return;
+
+  rows.forEach((row: any) => {
+    addNewRow(row);
+  });
+};
+
 defineExpose({
+  tableData,
   getSelectionRows,
   toggleRowSelection,
   setCurrentRow,
@@ -494,6 +506,7 @@ defineExpose({
   batchRemove,
   save,
   addNewRow,
+  batchAddRow,
   validateTable, // 导出整表校验
   validateCell, // 导出单单元格校验
 });

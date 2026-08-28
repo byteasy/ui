@@ -31,6 +31,12 @@ export default {
     ebApp: {
       model: '模型',
       field: '字段定义',
+      stdField: '标准属性',
+      stdFieldBase: '基础实体属性',
+      stdFieldImmutably: '不可变实体属性',
+      stdFieldAudit: '审计实体属性',
+      stdFieldLogicDelete: '逻辑删除实体属性',
+      stdFieldRelation: '关系实体属性',
       fieldGroup: '字段分组',
       notGrouped: '未分组',
       params: '布局参数',

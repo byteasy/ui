@@ -24,7 +24,7 @@
                   :cancel-button-text="$t('cancel')"
                   :title="$t('batchDeleteWarn')"
                   :hide-after="10"
-                  v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete"
+                  v-if="selectionRows.length > 0"
                   @confirm="
                     onToolbarActionClick(TableToolbarActionEnum.BATCH_DELETE, selectionRows)
                   "
@@ -33,7 +33,7 @@
                     <el-button
                       :title="$t('batchDelete')"
                       type="danger"
-                      v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete"
+                      v-if="selectionRows.length > 0"
                     >
                       <IconLocalBatchDelete
                         style="width: 1rem; height: 1rem; color: var(--my-text-color)"
@@ -45,7 +45,8 @@
                   :is="getComponent(parseComponent(layout.batchAddExtraToolComponent))"
                   v-if="layout.batchAddExtraToolComponent"
                   :param="parseComponentParam(layout.batchAddExtraToolComponent)"
-                  :refTable="refBeTableView.value"
+                  :ref-table="refBeTableView"
+                  :queryParams="props.formModel"
                 ></component>
               </el-button-group>
             </div>
