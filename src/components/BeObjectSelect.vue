@@ -67,7 +67,7 @@ onMounted(() => {
  * ⚡ 优化后的初始化函数：自动聚合请求与缓存
  */
 const initDisplayName = async () => {
-  const targetVal = modelValue.value ?? formModel.value?.[props.column.name] ?? formModel.value
+  const targetVal = modelValue.value ?? formModel.value?.[props.column.name]
 
   if (targetVal === undefined || targetVal === '' || targetVal === null) {
     selectedObject.value = []
