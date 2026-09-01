@@ -3,6 +3,7 @@
     <div class="w-full flex-row justify-content-end">
       <be-table-one-key-search
         v-model="queryParams.oneKeySearch"
+        @refresh="onToolbarActionClick(TableToolbarActionEnum.REFRESH, undefined)"
         v-model:isAdvanceSearchActive="advanceSearch"
       />
 

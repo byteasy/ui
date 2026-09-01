@@ -3,6 +3,7 @@
     style="width: 240px; margin-right: 1rem"
     :placeholder="$t('platform.ebApp.pleaseInputOneKeySearch')"
     clearable
+    @keyup.enter="() => emit('refresh')"
     class="advance-suffix-input"
   >
     <!-- 左侧：搜索放大镜 -->
@@ -37,6 +38,7 @@ import { Search } from '@element-plus/icons-vue';
 const isAdvanceSearchActive = defineModel<boolean>('isAdvanceSearchActive');
 
 const emit = defineEmits<{
+  (e: 'refresh'): void;
   (e: 'advance-change', active: boolean): void;
 }>();
 
