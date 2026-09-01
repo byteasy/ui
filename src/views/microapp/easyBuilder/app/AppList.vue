@@ -1,7 +1,7 @@
 <template>
   <el-splitter>
     <el-splitter-panel size="300" collapsible :min="300" :max="600">
-      <be-tree api-query="getEbAppTree" node-key="code" :lazy="true" @nodeClick="onTreeNodeClick"/>
+      <be-tree api-query="getEbAppTree" api-save="test" node-key="code" :lazy="true" @nodeClick="onTreeNodeClick"/>
     </el-splitter-panel>
     <el-splitter-panel :min="200" class="pl-2">
       <el-tabs v-model="activeName" class="h-full">

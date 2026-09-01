@@ -8,22 +8,20 @@
       <el-skeleton :rows="6" animated />
     </div>
 
-    <!-- 2. 树容器：使用 v-show 或在骨架屏结束后平滑显示，并屏蔽加载中的空数据提示 -->
+    <!-- 2. 树容器 -->
     <div v-show="!loading" class="w-full">
       <div class="flex-row align-items-center w-full">
         <el-input
           v-model="filterText"
-          class=""
           clearable
-          :placeholder="$t('platform.searchTip')"
+          :placeholder="$t('platform.searchTip') || '输入关键字过滤'"
           suffix-icon="search"
         />
         <el-button-group direction="horizontal" class="flex-none">
           <el-button
             :title="$t('add')"
-            v-debounce="onAddTreeRootNodeClick"
+            @click="handleAddNode(undefined)"
             type="primary"
-            v-if="props.apiSave === undefined || session.authorize(props.apiSave)"
           >
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)" />
           </el-button>
@@ -72,22 +70,19 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item
-              @click="onTreeNodeAddClick"
-              v-if="props.apiSave === undefined || session.authorize(props.apiSave)"
+              @click="handleAddNode(activeContextMenuNode)"
             >
               <el-icon><FolderAdd /></el-icon>
               {{ $t('add') }}
             </el-dropdown-item>
             <el-dropdown-item
-              @click="onTreeNodeEditClick"
-              v-if="props.apiSave === undefined || session.authorize(props.apiSave)"
+              @click="handleEditNode(activeContextMenuNode)"
             >
               <el-icon><FolderOpened /></el-icon>
               {{ $t('table.edit') }}
             </el-dropdown-item>
             <el-dropdown-item
-              @click="onTreeNodeDeleteClick"
-              v-if="props.apiDelete === undefined || session.authorize(props.apiDelete)"
+              @click="handleDeleteNode(activeContextMenuNode)"
             >
               <el-icon><FolderDelete /></el-icon>
               {{ $t('table.delete') }}
@@ -105,18 +100,44 @@
         </template>
       </el-dropdown>
     </div>
+
+    <!-- 极简模式：内置多语言弹窗对话框 -->
+    <el-dialog
+      v-model="simpleDialogVisible"
+      :title="simpleDialogTitle"
+      width="480px"
+      append-to-body
+      destroy-on-close
+    >
+      <el-form label-position="top" class="pt-2">
+        <el-form-item :label="$t('platform.name') || '名称'" required>
+          <be-i18n-dynamic-input
+            v-model="simpleFormValue"
+            class="w-full"
+            :placeholder="$t('platform.pleaseInputName') || '请输入名称'"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="flex-row justify-content-end">
+          <el-button @click="simpleDialogVisible = false">{{ $t('cancel') || '取消' }}</el-button>
+          <el-button type="primary" :loading="simpleDialogSaving" @click="handleSimpleDialogConfirm">
+            {{ $t('ok') || '确定' }}
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
+
 <script lang="ts" setup>
-import { defineExpose, nextTick, onMounted, ref, watch } from 'vue';
-import { ElMessageBox, type FilterNodeMethodFunction, type TreeInstance } from 'element-plus';
+import { computed, defineEmits, defineExpose, nextTick, onMounted, ref, watch } from 'vue';
+import { ElMessage, ElMessageBox, type FilterNodeMethodFunction, type TreeInstance } from 'element-plus';
 import { executeOpenApi } from '@/api/common/platform';
 import { useI18n } from 'vue-i18n';
 import { useSessionStore } from '@/stores/session.ts';
-
-interface Tree {
-  [key: string]: any;
-}
+import { useModal } from '@/components/dialog/useModal.ts';
+import BeI18nDynamicInput from '@/components/BeI18nDynamicInput.vue';
 
 interface ExtraItem {
   label: string;
@@ -127,20 +148,32 @@ interface ExtraItem {
 
 const props = withDefaults(
   defineProps<{
-    /**
-     * 查询列表数据的 OpenAPI 方法名或接口 URL（必填）
-     */
     apiQuery: string;
-
-    /**
-     * 保存/新增/修改接口
-     */
     apiSave?: string;
+    apiDelete?: string;
 
     /**
-     * 单条删除接口
+     * 实体模型类名（用于弹窗表单自动加载字段定义，如 "com.byteasy.platform.entity.Dept"）
      */
-    apiDelete?: string;
+    className?: string;
+
+    /**
+     * 树形父级关联字段名（默认 'parentId' 或 'parentCode'）
+     */
+    parentKey?: string;
+
+    /**
+     * 自定义弹窗表单组件（若提供，默认增/改会弹该组件）
+     */
+    formComponent?: any;
+
+    /**
+     * 自定义行为拦截器 / 覆盖处理器（返回 false 或自行处理异步弹窗）
+     */
+    beforeAdd?: (parentNode?: any) => boolean | Promise<boolean>;
+    beforeEdit?: (nodeData: any) => boolean | Promise<boolean>;
+    beforeDelete?: (nodeData: any) => boolean | Promise<boolean>;
+
     contextExtraItems?: Array<ExtraItem>;
     label?: string;
     children?: string;
@@ -156,6 +189,9 @@ const props = withDefaults(
     apiQuery: undefined,
     apiSave: undefined,
     apiDelete: undefined,
+    className: undefined,
+    parentKey: 'parentId',
+    formComponent: undefined,
     contextExtraItems: undefined,
     label: 'name',
     children: 'children',
@@ -175,33 +211,191 @@ const emit = defineEmits([
   'editNodeClick',
   'deleteNodeClick',
   'extraNodeClick',
+  'saveSuccess',
+  'deleteSuccess',
 ]);
-const session = useSessionStore();
 
+const session = useSessionStore();
 const { t } = useI18n();
-const loading = ref(true); // 初始为 true，等待首批数据返回
-const activeContextMenuNode = ref(undefined);
-const treeData = ref([]);
+const { open } = useModal();
+
+const loading = ref(true);
+const activeContextMenuNode = ref<any>(undefined);
+const treeData = ref<any[]>([]);
 const filterText = ref('');
 const treeRef = ref<TreeInstance>();
-const dropDownMenuRef = ref(null);
-const contextMenuPosition = ref({
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-} as DOMRect);
+const dropDownMenuRef = ref<any>(null);
+const contextMenuPosition = ref({ top: 0, left: 0, bottom: 0, right: 0 } as DOMRect);
 const contextMenuTriggerRef = ref({
   getBoundingClientRect: () => contextMenuPosition.value,
 });
+
+// 极简多语言弹窗状态
+const simpleDialogVisible = ref(false);
+const simpleDialogTitle = ref('');
+const simpleDialogSaving = ref(false);
+const simpleFormValue = ref<any>('');
+const currentOperationType = ref<'add' | 'edit'>('add');
+const currentEditingTarget = ref<any>(null);
 
 watch(filterText, (val) => {
   treeRef.value?.filter(val);
 });
 
+// =========================================================================
+// 1. 默认增、改、删核心动作与生命周期拦截
+// =========================================================================
+
 /**
- * 非懒加载模式：加载整棵树
+ * 统一处理新增节点
  */
+async function handleAddNode(parentNode?: any) {
+  emit('addNodeClick', parentNode);
+
+  if (props.beforeAdd) {
+    const shouldContinue = await props.beforeAdd(parentNode);
+    if (shouldContinue === false) return;
+  }
+
+  if (props.formComponent) {
+    const initialFormModel: Record<string, any> = {};
+    if (parentNode) {
+      initialFormModel[props.parentKey] = parentNode[props.nodeKey] || parentNode.id;
+    }
+    open(props.formComponent, { formModel: initialFormModel, parentNode }, {
+      title: t('add') || '新增节点',
+      onClose: (data: string) => {
+        if (data === 'ok') {
+          ElMessage.success(t('operationSuccess') || '新增成功');
+          refreshCurrentNode(parentNode);
+          emit('saveSuccess', parentNode);
+        }
+      }
+    });
+  } else if (props.apiSave) {
+    // 🔥 极简模式：打开 BeI18nDynamicInput 多语言录入框
+    currentOperationType.value = 'add';
+    currentEditingTarget.value = parentNode;
+    simpleFormValue.value = '';
+    simpleDialogTitle.value = t('add') || '新增节点';
+    simpleDialogVisible.value = true;
+  }
+}
+
+/**
+ * 统一处理编辑节点
+ */
+async function handleEditNode(nodeData: any) {
+  if (!nodeData) return;
+
+  emit('editNodeClick', nodeData);
+
+  if (props.beforeEdit) {
+    const shouldContinue = await props.beforeEdit(nodeData);
+    if (shouldContinue === false) return;
+  }
+
+  if (props.formComponent) {
+    open(props.formComponent, { formModel: JSON.parse(JSON.stringify(nodeData)), isEdit: true }, {
+      title: t('table.edit') || '编辑节点',
+      onClose: (data: string) => {
+        if (data === 'ok') {
+          ElMessage.success(t('operationSuccess') || '修改成功');
+          refreshCurrentNode(nodeData);
+          emit('saveSuccess', nodeData);
+        }
+      }
+    });
+  } else if (props.apiSave) {
+    // 🔥 极简模式：回显当前多语言值并打开
+    currentOperationType.value = 'edit';
+    currentEditingTarget.value = nodeData;
+    simpleFormValue.value = nodeData[props.label];
+    simpleDialogTitle.value = t('table.edit') || '编辑节点';
+    simpleDialogVisible.value = true;
+  }
+}
+
+/**
+ * 极简多语言弹窗保存确认
+ */
+async function handleSimpleDialogConfirm() {
+  if (!simpleFormValue.value) {
+    ElMessage.warning(t('platform.nameRequired') || '名称不能为空');
+    return;
+  }
+
+  simpleDialogSaving.value = true;
+  try {
+    let payload: Record<string, any> = {};
+
+    if (currentOperationType.value === 'add') {
+      const parentNode = currentEditingTarget.value;
+      payload = {
+        [props.label]: simpleFormValue.value,
+      };
+      if (parentNode) {
+        payload[props.parentKey] = parentNode[props.nodeKey] || parentNode.id;
+      }
+      if (props.className) {
+        payload.className = props.className;
+      }
+      await executeOpenApi(props.apiSave!, {}, payload);
+      ElMessage.success(t('operationSuccess') || '新增成功');
+      refreshCurrentNode(parentNode);
+      emit('saveSuccess', payload);
+    } else {
+      const nodeData = currentEditingTarget.value;
+      payload = {
+        ...nodeData,
+        [props.label]: simpleFormValue.value,
+      };
+      await executeOpenApi(props.apiSave!, {}, payload);
+      ElMessage.success(t('operationSuccess') || '修改成功');
+      refreshCurrentNode(nodeData);
+      emit('saveSuccess', payload);
+    }
+
+    simpleDialogVisible.value = false;
+  } catch (error: any) {
+    ElMessage.error(error?.message || '保存失败');
+  } finally {
+    simpleDialogSaving.value = false;
+  }
+}
+
+/**
+ * 统一处理删除节点
+ */
+async function handleDeleteNode(nodeData: any) {
+  if (!nodeData) return;
+
+  emit('deleteNodeClick', nodeData);
+
+  if (props.beforeDelete) {
+    const shouldContinue = await props.beforeDelete(nodeData);
+    if (shouldContinue === false) return;
+  }
+
+  ElMessageBox.confirm(t('deleteWarn') || '确定要删除该节点及其子节点吗？', t('warning') || '警告', {
+    confirmButtonText: t('ok') || '确定',
+    cancelButtonText: t('cancel') || '取消',
+    type: 'warning',
+  }).then(async () => {
+    if (props.apiDelete) {
+      const primaryKeyVal = nodeData[props.nodeKey] || nodeData.id;
+      await executeOpenApi(props.apiDelete, { id: primaryKeyVal, [props.nodeKey]: primaryKeyVal }, nodeData);
+      ElMessage.success(t('operationSuccess') || '删除成功');
+    }
+    refreshCurrentNode(nodeData);
+    emit('deleteSuccess', nodeData);
+  }).catch(() => {});
+}
+
+// =========================================================================
+// 2. 数据加载与局部/全量刷新
+// =========================================================================
+
 function loadTreeData() {
   loading.value = true;
   executeOpenApi(props.apiQuery, {}, {})
@@ -217,9 +411,6 @@ function loadTreeData() {
     });
 }
 
-/**
- * 懒加载子节点数据
- */
 async function loadChildren(node: any, resolve: (data: any[]) => void, reject: (err: any) => void) {
   try {
     const parentParam = node.level === 0 ? {} : node.data || {};
@@ -228,12 +419,10 @@ async function loadChildren(node: any, resolve: (data: any[]) => void, reject: (
 
     resolve(result);
 
-    // 只要是第一层（根节点）数据返回，立刻关闭骨架屏
     if (node.level === 0) {
       loading.value = false;
     }
 
-    // 单个子节点自动递归展开
     if (result.length === 1) {
       await nextTick();
       const singleChildNode = node.childNodes?.[0];
@@ -250,75 +439,36 @@ async function loadChildren(node: any, resolve: (data: any[]) => void, reject: (
   }
 }
 
-const handleCloseContextMenu = () => {
-  dropDownMenuRef.value?.handleClose();
-};
-
 const handleContextmenuOpen = (event: MouseEvent) => {
   const { clientX, clientY } = event;
-  contextMenuPosition.value = DOMRect.fromRect({
-    x: clientX,
-    y: clientY,
-  });
+  contextMenuPosition.value = DOMRect.fromRect({ x: clientX, y: clientY });
   event.preventDefault();
   dropDownMenuRef.value?.handleOpen();
 };
 
 function onContextMenuClick(event: MouseEvent, data: any) {
-  if (!props.contextMenuEnable) {
-    return;
-  }
+  if (!props.contextMenuEnable) return;
   activeContextMenuNode.value = data;
   handleContextmenuOpen(event);
 }
 
-const filterNode: FilterNodeMethodFunction = (value: string, data: Tree) => {
+const filterNode: FilterNodeMethodFunction = (value: string, data: any) => {
   if (!value) return true;
   const labelKey = props.label || 'name';
-  return data[labelKey]?.includes(value) ?? false;
+  const val = data[labelKey];
+  return typeof val === 'string' ? val.includes(value) : JSON.stringify(val).includes(value);
 };
-
-function onAddTreeRootNodeClick() {
-  emit('addNodeClick', undefined);
-}
-
-function onTreeNodeAddClick() {
-  emit('addNodeClick', activeContextMenuNode.value);
-  executeOpenApi(props.apiQuery, activeContextMenuNode.value, {})
-    .then((res: any) => {
-      activeContextMenuNode.value.children = res.data;
-    })
-    .catch(() => {});
-}
-
-function onTreeNodeEditClick() {
-  emit('editNodeClick', activeContextMenuNode.value);
-  refreshCurrentNode(activeContextMenuNode.value);
-}
 
 function onTreeNodeExtraClick(name: string) {
   emit('extraNodeClick', name, activeContextMenuNode.value);
-  refreshCurrentNode(activeContextMenuNode.value);
-}
-
-function onTreeNodeDeleteClick() {
-  ElMessageBox.confirm(t('deleteWarn'), t('warning'), {
-    confirmButtonText: t('ok'),
-    cancelButtonText: t('cancel'),
-    type: 'warning',
-  }).then(() => {
-    emit('deleteNodeClick', activeContextMenuNode.value);
-    refreshCurrentNode(activeContextMenuNode.value);
-  });
 }
 
 function getParentData(currentData: any) {
   const currentNode = treeRef.value?.getNode(currentData);
-  let parentData = undefined;
   if (currentNode && currentNode.parent && currentNode.parent.level > 0) {
-    parentData = currentNode.parent.data;
+    return currentNode.parent.data;
   }
-  return parentData;
+  return undefined;
 }
 
 function onTreeNodeClick(data: any) {
@@ -327,7 +477,6 @@ function onTreeNodeClick(data: any) {
 
 function refresh() {
   if (props.lazy) {
-    // 懒加载模式重置根节点
     const rootNode = treeRef.value?.root;
     if (rootNode) {
       rootNode.loaded = false;
@@ -340,30 +489,33 @@ function refresh() {
   }
 }
 
-onMounted(() => {
-  if (!props.lazy) {
-    loadTreeData();
-  }
-  // 如果是 lazy 模式，el-tree 会在挂载时由其自身生命周期自动调用 loadChildren (node.level === 0)
-});
-
 function refreshCurrentNode(nodeData: any) {
+  if (!nodeData) {
+    refresh();
+    return;
+  }
   const parent = getParentData(nodeData);
-  if (parent !== undefined) {
+  if (parent !== undefined && props.lazy) {
     executeOpenApi(props.apiQuery, parent, {})
       .then((res: any) => {
         const parentKey = parent[props.nodeKey];
-        treeRef.value!.updateKeyChildren(parentKey, res.data || []);
+        treeRef.value?.updateKeyChildren(parentKey, res.data || []);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((err) => console.error(err));
   } else {
     refresh();
   }
 }
 
+onMounted(() => {
+  if (!props.lazy) {
+    loadTreeData();
+  }
+});
+
 defineExpose({
   refresh,
+  refreshCurrentNode,
+  treeRef,
 });
 </script>
