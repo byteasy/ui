@@ -10,6 +10,24 @@
         @clear="scope.formModel[scope.column.name] = null"
       />
     </template>
+    <template v-slot:formItem_preScriptId="scope">
+      <el-form-item :label="getLangText(scope.column.displayName, locale)"
+                    :prop="scope.column.name" :rules="[
+                    { required: scope.column.isRequire === 'YES', message: getLangText(scope.column.displayName, locale) + ' ' + t('validate.required') },
+                    { validator: (rule, value, callback) => validateColumnRule(scope.column, rule, value, locale, callback), trigger: 'blur' }
+                  ]">
+        <api-script-field v-model="scope.formModel[scope.column.name]" :name="scope.formModel.name" :open-api="scope.formModel"/>
+      </el-form-item>
+    </template>
+    <template v-slot:formItem_postScriptId="scope">
+      <el-form-item :label="getLangText(scope.column.displayName, locale)"
+                    :prop="scope.column.name" :rules="[
+                    { required: scope.column.isRequire === 'YES', message: getLangText(scope.column.displayName, locale) + ' ' + t('validate.required') },
+                    { validator: (rule, value, callback) => validateColumnRule(scope.column, rule, value, locale, callback), trigger: 'blur' }
+                  ]">
+        <api-script-field v-model="scope.formModel[scope.column.name]" :name="scope.formModel.name" :open-api="scope.formModel"/>
+      </el-form-item>
+    </template>
     <template v-slot:formItem_scriptId="scope">
       <el-form-item :label="getLangText(scope.column.displayName, locale)"
                     v-if="scope.formModel.type === 'script'"
@@ -63,19 +81,19 @@ function onServiceChange() {
 
 
 function onTypeChange(type) {
-  if (type === 'query') {
+  if (type === 'page') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
   } else if (type === 'list') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/all'
-  } else if (type === 'getById') {
+  } else if (type === 'getByPrimaryKey') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/{id}'
   } else if (type === 'saveOrUpdate') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
-  } else if (type === 'delete') {
+  } else if (type === 'removeByEntity') {
     refBeForm.value.formModel.httpMethod = 'DELETE'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
   } else if (type === 'batchDelete') {
@@ -87,10 +105,10 @@ function onTypeChange(type) {
   } else if (type === 'importPreview') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/importPreview'
-  } else if (type === 'batchImport') {
+  } else if (type === 'saveOrUpdateBatch') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/batch'
-  } else if (type === 'export') {
+  } else if (type === 'exportExcel') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/export'
   } else if (type === 'script') {

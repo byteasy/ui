@@ -78,7 +78,7 @@ const openEditor = () => {
 }
 
 const onClearClick = () => {
-  modelValue.value = undefined
+  modelValue.value = null
   scriptRow.value = undefined
 }
 
