@@ -28,6 +28,11 @@ export default {
       queryParams: 'URL参数',
       standardTableComponent: '标准模板',
     },
+    beTree: {
+      nodeName: '名称',
+      pleaseInputNodeName: '请输入名称',
+      nodeNameRequired: '名称必须输入',
+    },
     ebApp: {
       model: '模型',
       field: '字段定义',

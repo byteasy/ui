@@ -1,5 +1,6 @@
 <template>
-  <div class="form-container"
+  <el-skeleton :rows="5" animated v-if="loading" />
+  <div class="form-container" v-else
        :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }"
        style="container-type: inline-size;">
     <div class="form-scroll-wrap">
@@ -26,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineEmits, defineExpose, defineModel, ref} from 'vue'
+import {defineEmits, defineExpose, defineModel, onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {doHttpPost, executeOpenApi} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
@@ -36,6 +37,7 @@ import {getComponent} from "@/util/componentLoader.ts";
 const {t, locale} = useI18n()
 const emit = defineEmits(['close'])
 const refForm = ref(null)
+const loading = ref(true)
 
 const props = defineProps<{
   apiSave?: string
@@ -45,11 +47,22 @@ const props = defineProps<{
   fullscreen?: boolean
   isDrawer?: boolean
   formItemComponent?: string
+  beforeMount?: () => Promise<void>
 }>()
 
 const formModel = defineModel<any>('formModel', {default: () => ({})})
 const queryParam = ref({})
 const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue')
+
+onMounted(() => {
+  if(props.beforeMount) {
+    props.beforeMount().then(() => {
+      loading.value = false
+    })
+  } else {
+    loading.value = false
+  }
+})
 
 function onSaveClick() {
   refForm.value?.validate(valid => {

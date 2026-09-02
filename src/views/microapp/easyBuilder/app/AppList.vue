@@ -1,7 +1,7 @@
 <template>
   <el-splitter>
     <el-splitter-panel size="300" collapsible :min="300" :max="600">
-      <be-tree api-query="getEbAppTree" api-save="test" node-key="code" :lazy="true" @nodeClick="onTreeNodeClick"/>
+      <eb-resource-exploer @nodeClick="onTreeNodeClick"/>
     </el-splitter-panel>
     <el-splitter-panel :min="200" class="pl-2">
       <el-tabs v-model="activeName" class="h-full">
@@ -23,6 +23,7 @@ import {ref} from "vue";
 import TabApi from "@/views/microapp/easyBuilder/app/TabApi.vue";
 import TabEntity from "@/views/microapp/easyBuilder/app/TabEntity.vue";
 import TabLayout from "@/views/microapp/easyBuilder/app/TabLayout.vue";
+import EbResourceExploer from '@/views/microapp/easyBuilder/app/EbResourceExploer.vue';
 
 const activeName = ref('model')
 const activeTreeNode = ref(undefined)

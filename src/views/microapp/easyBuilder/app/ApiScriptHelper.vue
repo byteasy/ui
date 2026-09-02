@@ -32,8 +32,7 @@
     <span style="font-size: var(--el-font-size-base)">{{
         $t('platform.ebApp.scriptFunction')
       }}</span>
-    <be-tree query-api-code="queryScriptFunctionTree" node-key="code"
-             permission-add-code="noExistPermission" @nodeClick="onFunctionClick" :context-menu-enable="false" />
+    <be-tree api-query="queryScriptFunctionTree" node-key="code" @nodeClick="onFunctionClick" :context-menu-enable="false" />
     <span style="font-size: var(--el-font-size-base)">{{
         $t('platform.ebApp.scriptFunctionHelpMsg')
       }}</span>
