@@ -47,7 +47,7 @@ const props = defineProps<{
   fullscreen?: boolean
   isDrawer?: boolean
   formItemComponent?: string
-  beforeMount?: () => Promise<void>
+  beforeMount?: (formModel) => Promise<void>
 }>()
 
 const formModel = defineModel<any>('formModel', {default: () => ({})})
@@ -56,7 +56,7 @@ const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeF
 
 onMounted(() => {
   if(props.beforeMount) {
-    props.beforeMount().then(() => {
+    props.beforeMount(formModel.value).then(() => {
       loading.value = false
     })
   } else {
