@@ -9,7 +9,10 @@
         @update:size="onLeftMenuSizeUpdate"
       >
         <div class="mt-1">
-          <common-left-menu ref="refLeftMenu" v-if="route.fullPath.startsWith('/platformCommon')"></common-left-menu>
+          <common-left-menu
+            ref="refLeftMenu"
+            v-if="route.fullPath.startsWith('/platformCommon')"
+          ></common-left-menu>
           <left-menu ref="refLeftMenu" v-else></left-menu>
         </div>
       </el-splitter-panel>
@@ -26,13 +29,19 @@
                   <transition name="fade" mode="out-in">
                     <!-- include 会受组件名称的限制，必须保持平台配置的路由信息和前端组件一致，否则缓存不生效，另外通用的模板组件的组件名称是一样的，多个业务板块会共用，所以没有办法用组件名做缓存 -->
                     <keep-alive>
-                      <component :is="Component" :key="route.path"
-                                 v-if="permissionLoaded && (!route.meta.noCache || componentCacheEnable === '1') "/>
+                      <component
+                        :is="Component"
+                        :key="route.path"
+                        v-if="!route.meta.noCache || componentCacheEnable === '1'"
+                      />
                     </keep-alive>
                   </transition>
                   <transition name="fade" mode="out-in">
-                    <component :is="Component" :key="route.path"
-                               v-if="permissionLoaded && (route.meta.noCache === true && componentCacheEnable === '0')"/>
+                    <component
+                      :is="Component"
+                      :key="route.path"
+                      v-if="route.meta.noCache === true && componentCacheEnable === '0'"
+                    />
                   </transition>
                 </router-view>
               </div>
@@ -45,43 +54,28 @@
 </template>
 
 <script lang="ts" setup>
-import LeftMenu from '@/views/layout/LeftMenu.vue'
-import BeBreadCrumb from '@/components/BeBreadCrumb.vue'
-import { useAppSettingsStore } from '@/stores/appSettings.ts'
-import { storeToRefs } from 'pinia'
-import {computed, onBeforeMount, ref} from 'vue'
-import { elementLocales } from '@/locales/common.ts'
+import LeftMenu from '@/views/layout/LeftMenu.vue';
+import BeBreadCrumb from '@/components/BeBreadCrumb.vue';
+import { useAppSettingsStore } from '@/stores/appSettings.ts';
+import { storeToRefs } from 'pinia';
+import { computed, ref } from 'vue';
+import { elementLocales } from '@/locales/common.ts';
 
-import CommonLeftMenu from "@/views/layout/CommonLeftMenu.vue";
-import BeTagView from "@/components/BeTagView.vue";
-import {useRoute} from "vue-router";
-import {doHttpGet} from "@/api/common/platform";
-import {useSessionStore} from "@/stores/session.ts";
-const sessionStore = useSessionStore()
-const route = useRoute()
-const permissionLoaded = ref(false)
+import CommonLeftMenu from '@/views/layout/CommonLeftMenu.vue';
+import BeTagView from '@/components/BeTagView.vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 
-const appSettingsStore = useAppSettingsStore()
-const { componentSize, lang, componentCacheEnable } = storeToRefs(appSettingsStore)
-const locale = computed(() => elementLocales[lang.value])
-const { tagView } = storeToRefs(appSettingsStore)
-const refLeftMenu = ref()
+const appSettingsStore = useAppSettingsStore();
+const { componentSize, lang, componentCacheEnable } = storeToRefs(appSettingsStore);
+const locale = computed(() => elementLocales[lang.value]);
+const { tagView } = storeToRefs(appSettingsStore);
+const refLeftMenu = ref();
 
 function onLeftMenuSizeUpdate(size) {
-  refLeftMenu.value.closeOrOpenMenu(size)
+  refLeftMenu.value.closeOrOpenMenu(size);
 }
-
-onBeforeMount((hook) => {
-  doHttpGet('/platformSvr/sapi/resources/leftMenu/permissions', {
-    fullPath: route.fullPath,
-  }).then((response) => {
-    response.data.forEach((item) => {
-      sessionStore.addAuthorizedCode(item)
-    })
-    permissionLoaded.value = true
-  })
-})
 </script>
 
 <style scoped>
