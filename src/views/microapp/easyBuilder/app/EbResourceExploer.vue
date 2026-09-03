@@ -53,6 +53,23 @@ const beforeAdd = (parentNode) => {
     return false;
   }
   if ('CategoryChild' === parentNode.type) {
+    // 添加service instance
+    open(
+      BeForm,
+      {
+        formModel: { categoryId: parentNode?.id, status: 'ENABLE' },
+        className: 'com.byteasy.platform.entity.ServiceInstance',
+        apiSave: 'saveServiceInstance',
+      },
+      {
+        title: t('add'),
+        onClose: (data) => {
+          if (data === 'ok') {
+            refBeTree.value?.refreshCurrentNode(parentNode);
+          }
+        },
+      },
+    );
     return false;
   }
   return false;
@@ -77,30 +94,65 @@ const beforeEdit = (nodeData: any) => {
         },
       },
     );
+  } else if (nodeData.type === 'Service') {
+    open(
+      BeForm,
+      {
+        formModel: { id: nodeData?.id },
+        className: 'com.byteasy.platform.entity.ServiceInstance',
+        apiSave: 'saveServiceInstance',
+        beforeMount: loadServiceInstance,
+      },
+      {
+        title: t('add'),
+        onClose: (data) => {
+          if (data === 'ok') {
+            refBeTree.value?.refreshCurrentNode(nodeData);
+          }
+        },
+      },
+    );
   }
   return false;
 };
 
 const beforeDelete = (nodeData: any) => {
-  if (nodeData.type === 'CategoryRoot' || nodeData.type === 'CategoryChild') {
-    ElMessageBox.confirm(t('deleteWarn'), t('warning'), {
-      confirmButtonText: t('ok'),
-      cancelButtonText: t('cancel'),
-      type: 'warning',
-    })
-      .then(() => {
-        executeOpenApi('deleteResourceCategory', {}, nodeData).then(() => {
-          ElMessage.success(t('operationSuccess'));
-          refBeTree.value?.refreshCurrentNode(nodeData);
-        });
-      })
-  }
+  ElMessageBox.confirm(t('deleteWarn'), t('warning'), {
+    confirmButtonText: t('ok'),
+    cancelButtonText: t('cancel'),
+    type: 'warning',
+  }).then(() => {
+    if (nodeData.type === 'CategoryRoot' || nodeData.type === 'CategoryChild') {
+      executeOpenApi('deleteResourceCategory', {}, nodeData).then(() => {
+        ElMessage.success(t('operationSuccess'));
+        refBeTree.value?.refreshCurrentNode(nodeData);
+      });
+    } else if (nodeData.type === 'Service') {
+      executeOpenApi('deleteServiceInstance', {}, nodeData).then(() => {
+        ElMessage.success(t('operationSuccess'));
+        refBeTree.value?.refreshCurrentNode(nodeData);
+      });
+    }
+  });
   return false;
 };
 
 const loadResourceCategory = (formModel: any) => {
   return new Promise((resolve, reject) => {
     executeOpenApi('listResourceCategory', { id: formModel.id }, {})
+      .then((rsp) => {
+        Object.assign(formModel, rsp.data[0]);
+        resolve(formModel);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+const loadServiceInstance = (formModel: any) => {
+  return new Promise((resolve, reject) => {
+    executeOpenApi('listServiceInstance', { id: formModel.id }, {})
       .then((rsp) => {
         Object.assign(formModel, rsp.data[0]);
         resolve(formModel);
