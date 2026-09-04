@@ -155,8 +155,8 @@ function genQueryParams() {
       for (const param of extrasParams) {
         const targetName = param.targetName || param.name
         result[targetName] = formModel.value?.[param.name]
-        result[param.name + 'QueryType'] = param.type
-        result[param.name + 'Readonly'] = param.readonly
+        result[targetName + 'QueryType'] = param.type
+        result[targetName + 'Readonly'] = param.readonly
       }
     } catch (e) {
       console.warn('解析 extrasParams 失败:', e)
