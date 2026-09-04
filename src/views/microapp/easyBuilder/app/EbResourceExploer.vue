@@ -5,7 +5,7 @@
     api-save="saveEbAppTreeNode"
     api-delete="deleteEbAppTreeNode"
     node-key="code"
-    parent-key="id"
+    parent-key="parentId"
     :lazy="true"
     :before-add="beforeAdd"
     :before-edit="beforeEdit"
@@ -45,14 +45,13 @@ const beforeAdd = (parentNode) => {
         title: t('add'),
         onClose: (data) => {
           if (data === 'ok') {
-            refBeTree.value?.refreshCurrentNode(parentNode);
+            refBeTree.value?.refreshNodeAndExpand(parentNode);
           }
         },
       },
     );
     return false;
-  }
-  if ('CategoryChild' === parentNode.type) {
+  } else if ('CategoryChild' === parentNode.type) {
     // 添加service instance
     open(
       BeForm,
@@ -65,7 +64,27 @@ const beforeAdd = (parentNode) => {
         title: t('add'),
         onClose: (data) => {
           if (data === 'ok') {
-            refBeTree.value?.refreshCurrentNode(parentNode);
+            refBeTree.value?.refreshNodeAndExpand(parentNode);
+          }
+        },
+      },
+    );
+    return false;
+  } else if ('Service' === parentNode.type) {
+    // 添加 Resource Group
+    open(
+      BeForm,
+      {
+        formModel: { serviceCode: parentNode?.code, isMicroapp: 'YES', navbarMenu: 'NO' },
+        className: 'com.byteasy.platform.entity.ResourceGroup',
+        apiSave: 'saveResourceGroup',
+        beforeMount: loadServiceInstanceRef,
+      },
+      {
+        title: t('add'),
+        onClose: (data) => {
+          if (data === 'ok') {
+            refBeTree.value?.refreshNodeAndExpand(parentNode);
           }
         },
       },
@@ -86,7 +105,7 @@ const beforeEdit = (nodeData: any) => {
         beforeMount: loadResourceCategory,
       },
       {
-        title: t('add'),
+        title: t('table.edit'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshCurrentNode(nodeData);
@@ -104,7 +123,25 @@ const beforeEdit = (nodeData: any) => {
         beforeMount: loadServiceInstance,
       },
       {
-        title: t('add'),
+        title: t('table.edit'),
+        onClose: (data) => {
+          if (data === 'ok') {
+            refBeTree.value?.refreshCurrentNode(nodeData);
+          }
+        },
+      },
+    );
+  } else if (nodeData.type === 'ResourceGroup') {
+    open(
+      BeForm,
+      {
+        formModel: { id: nodeData?.id },
+        className: 'com.byteasy.platform.entity.ResourceGroup',
+        apiSave: 'saveResourceGroup',
+        beforeMount: loadResourceGroup,
+      },
+      {
+        title: t('table.edit'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshCurrentNode(nodeData);
@@ -125,12 +162,17 @@ const beforeDelete = (nodeData: any) => {
     if (nodeData.type === 'CategoryRoot' || nodeData.type === 'CategoryChild') {
       executeOpenApi('deleteResourceCategory', {}, nodeData).then(() => {
         ElMessage.success(t('operationSuccess'));
-        refBeTree.value?.refreshCurrentNode(nodeData);
+        refBeTree.value?.removeNode(nodeData);
       });
     } else if (nodeData.type === 'Service') {
       executeOpenApi('deleteServiceInstance', {}, nodeData).then(() => {
         ElMessage.success(t('operationSuccess'));
-        refBeTree.value?.refreshCurrentNode(nodeData);
+        refBeTree.value?.removeNode(nodeData);
+      });
+    } else if (nodeData.type === 'ResourceGroup') {
+      executeOpenApi('deleteResourceGroup', {}, nodeData).then(() => {
+        ElMessage.success(t('operationSuccess'));
+        refBeTree.value?.removeNode(nodeData);
       });
     }
   });
@@ -153,6 +195,31 @@ const loadResourceCategory = (formModel: any) => {
 const loadServiceInstance = (formModel: any) => {
   return new Promise((resolve, reject) => {
     executeOpenApi('listServiceInstance', { id: formModel.id }, {})
+      .then((rsp) => {
+        Object.assign(formModel, rsp.data[0]);
+        resolve(formModel);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+const loadServiceInstanceRef = (formModel: any) => {
+  return new Promise((resolve, reject) => {
+    loadServiceInstance({}).then((svr) => {
+      formModel.categoryId = svr.categoryId
+      formModel.serviceCode = svr.code
+      resolve(formModel);
+    }).catch((err) => {
+      reject(err);
+    })
+  })
+}
+
+const loadResourceGroup = (formModel: any) => {
+  return new Promise((resolve, reject) => {
+    executeOpenApi('listResourceGroup', { id: formModel.id }, {})
       .then((rsp) => {
         Object.assign(formModel, rsp.data[0]);
         resolve(formModel);

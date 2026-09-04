@@ -3,7 +3,7 @@ import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { doHttpGet } from '@/api/common/platform'
 import AsideMain from '@/views/layout/AsideMain.vue'
 import XEUtils from 'xe-utils'
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
+import { getComponent } from '@/util/componentLoader.ts';
 
 const router = createRouter({
   history: createWebHashHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/' : '/'),
@@ -16,8 +16,6 @@ const router = createRouter({
  */
 let isMicroAppRouterLoad = false
 let activeMicroAppRouter = 'noActive'
-const { modules } = getRouteComponents()
-console.log('all ui component', modules)
 
 router.beforeEach(async (to, from, next) => {
   const paths = to.fullPath.split('/')
@@ -149,10 +147,11 @@ function hasChildrenMenu(menu) {
 }
 
 function getModule(name) {
-  if (modules['..' + name] !== undefined) {
-    return modules['..' + name]
+  const component = getComponent(name)
+  if (component === undefined) {
+    return getComponent('/views/common/Error404.vue')
   }
-  return modules['../views/common/Error404.vue']
+  return component;
 }
 
 export default router
