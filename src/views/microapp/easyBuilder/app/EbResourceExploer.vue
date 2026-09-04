@@ -50,7 +50,6 @@ const beforeAdd = (parentNode) => {
         },
       },
     );
-    return false;
   } else if ('CategoryChild' === parentNode.type) {
     // 添加service instance
     open(
@@ -69,7 +68,6 @@ const beforeAdd = (parentNode) => {
         },
       },
     );
-    return false;
   } else if ('Service' === parentNode.type) {
     // 添加 Resource Group
     open(
@@ -89,7 +87,43 @@ const beforeAdd = (parentNode) => {
         },
       },
     );
-    return false;
+  } else if ('ResourceGroup' === parentNode.type) {
+    // 添加 Resource
+    open(
+      BeForm,
+      {
+        formModel: { parentId: null, groupId: parentNode.id },
+        className: 'com.byteasy.platform.entity.Resource',
+        apiSave: 'saveResource',
+      },
+      {
+        title: t('add'),
+        onClose: (data) => {
+          if (data === 'ok') {
+            refBeTree.value?.refreshNodeAndExpand(parentNode);
+          }
+        },
+      },
+    );
+  } else if ('Resource' === parentNode.type) {
+    // 添加 Resource
+    open(
+      BeForm,
+      {
+        formModel: { parentId: parentNode.id },
+        className: 'com.byteasy.platform.entity.Resource',
+        apiSave: 'saveResource',
+        beforeMount: loadResourceRef,
+      },
+      {
+        title: t('add'),
+        onClose: (data) => {
+          if (data === 'ok') {
+            refBeTree.value?.refreshNodeAndExpand(parentNode);
+          }
+        },
+      },
+    );
   }
   return false;
 };
@@ -139,6 +173,24 @@ const beforeEdit = (nodeData: any) => {
         className: 'com.byteasy.platform.entity.ResourceGroup',
         apiSave: 'saveResourceGroup',
         beforeMount: loadResourceGroup,
+      },
+      {
+        title: t('table.edit'),
+        onClose: (data) => {
+          if (data === 'ok') {
+            refBeTree.value?.refreshCurrentNode(nodeData);
+          }
+        },
+      },
+    );
+  } else if (nodeData.type === 'Resource') {
+    open(
+      BeForm,
+      {
+        formModel: { id: nodeData?.id },
+        className: 'com.byteasy.platform.entity.Resource',
+        apiSave: 'saveResource',
+        beforeMount: loadResource,
       },
       {
         title: t('table.edit'),
@@ -222,6 +274,32 @@ const loadResourceGroup = (formModel: any) => {
     executeOpenApi('listResourceGroup', { id: formModel.id }, {})
       .then((rsp) => {
         Object.assign(formModel, rsp.data[0]);
+        resolve(formModel);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+const loadResourceRef = (formModel: any) => {
+  return new Promise((resolve, reject) => {
+    executeOpenApi('getResourceByKey', { id: formModel.parentId }, {})
+      .then((rsp) => {
+        formModel.groupId = rsp.data.groupId;
+        resolve(formModel);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+const loadResource = (formModel: any) => {
+  return new Promise((resolve, reject) => {
+    executeOpenApi('getResourceByKey', { id: formModel.id }, {})
+      .then((rsp) => {
+        Object.assign(formModel, rsp.data);
         resolve(formModel);
       })
       .catch((err) => {

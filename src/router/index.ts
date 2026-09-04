@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 import { doHttpGet } from '@/api/common/platform'
-import AsideMain from '@/views/layout/AsideMain.vue'
 import XEUtils from 'xe-utils'
 import { getComponent } from '@/util/componentLoader.ts';
 
@@ -54,6 +53,7 @@ router.beforeEach(async (to, from, next) => {
 
 function rebuildLeftMenus(node, menu) {
   console.log('menu', menu)
+  const AsideMain = getComponent('/views/layout/AsideMain.vue')
   // 支持一级菜单
   if (menu.type === 'MENU' && (menu.parentId === null || menu.parentId === undefined)) {
     const idx = (menu.routerUrl || '').lastIndexOf('/')
