@@ -65,16 +65,16 @@
       >
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="handleAddNode(activeContextMenuNode)">
+            <el-dropdown-item @click="handleAddNode(activeContextMenuData)">
               <el-icon><FolderAdd /></el-icon>
               {{ $t('add') }}
             </el-dropdown-item>
-            <el-dropdown-item @click="handleEditNode(activeContextMenuNode)">
+            <el-dropdown-item @click="handleEditNode(activeContextMenuData)">
               <el-icon><FolderOpened /></el-icon>
               {{ $t('table.edit') }}
             </el-dropdown-item>
-            <el-dropdown-item @click="handleDeleteNode(activeContextMenuNode)">
-              <el-icon><FolderDelete /></el-icon>
+            <el-dropdown-item @click="handleDeleteNode(activeContextMenuData)">
+              <el-icon style="color: var(--el-color-danger)"><FolderDelete /></el-icon>
               {{ $t('table.delete') }}
             </el-dropdown-item>
             <template v-for="extra in props.contextExtraItems" :key="extra.name">
@@ -125,7 +125,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineEmits, defineExpose, nextTick, onMounted, ref, watch } from 'vue';
+import { defineEmits, defineExpose, nextTick, onMounted, ref, watch } from 'vue';
 import {
   ElMessage,
   ElMessageBox,
@@ -219,7 +219,6 @@ const { t } = useI18n();
 const { open } = useModal();
 
 const loading = ref(true);
-const activeContextMenuNode = ref<any>(undefined);
 const treeData = ref<any[]>([]);
 const filterText = ref('');
 const treeRef = ref<TreeInstance>();
@@ -228,6 +227,10 @@ const contextMenuPosition = ref({ top: 0, left: 0, bottom: 0, right: 0 } as DOMR
 const contextMenuTriggerRef = ref({
   getBoundingClientRect: () => contextMenuPosition.value,
 });
+
+// 🔥 核心存储：右键选中的业务数据对象与其底层真实的 el-tree Node 实例对象
+const activeContextMenuData = ref<any>(null);
+const activeContextMenuNodeInstance = ref<any>(null);
 
 // 极简多语言弹窗状态
 const simpleDialogVisible = ref(false);
@@ -269,14 +272,14 @@ async function handleAddNode(parentNode?: any) {
         onClose: (data) => {
           if (data === 'ok') {
             ElMessage.success(t('operationSuccess'));
-            refreshCurrentNode(parentNode);
+            refreshNodeAndExpand(parentNode);
             emit('saveSuccess', parentNode);
           }
         },
       },
     );
   } else if (props.apiSave) {
-    // 🔥 极简模式：打开 BeI18nDynamicInput 多语言录入框
+    // 极简模式：打开 BeI18nDynamicInput 多语言录入框
     currentOperationType.value = 'add';
     currentEditingTarget.value = parentNode;
     simpleFormValue.value = '';
@@ -314,7 +317,7 @@ async function handleEditNode(nodeData: any) {
       },
     );
   } else if (props.apiSave) {
-    // 🔥 极简模式：回显当前多语言值并打开
+    // 极简模式：回显当前多语言值并打开
     currentOperationType.value = 'edit';
     currentEditingTarget.value = nodeData;
     simpleFormValue.value = nodeData[props.label];
@@ -349,7 +352,7 @@ async function handleSimpleDialogConfirm() {
       }
       await executeOpenApi(props.apiSave!, {}, payload);
       ElMessage.success(t('operationSuccess'));
-      refreshCurrentNode(parentNode);
+      refreshNodeAndExpand(parentNode);
       emit('saveSuccess', payload);
     } else {
       const nodeData = currentEditingTarget.value;
@@ -399,29 +402,19 @@ async function handleDeleteNode(nodeData: any) {
         );
         ElMessage.success(t('operationSuccess'));
       }
-      refreshCurrentNode(nodeData);
+      removeNode(nodeData);
       emit('deleteSuccess', nodeData);
     })
     .catch(() => {});
 }
 
 // =========================================================================
-// 2. 数据加载与局部/全量刷新
+// 2. 数据加载与树事件监听
 // =========================================================================
-/**
- * {
- *             "code": "EasyBuilder",
- *             "icon": "Notebook",
- *             "name": "{\"zh_CN\":\"低代码平台\"}",
- *             "id": 11.0,
- *             "type": "ResourceGroup",
- *             "parentId": "3"
- * }
- */
 
-function loadTreeData() {
+function loadTreeData(): Promise<void> {
   loading.value = true;
-  executeOpenApi(props.apiQuery, {}, {})
+  return executeOpenApi(props.apiQuery, {}, {})
     .then((res: any) => {
       treeData.value = res.data || [];
     })
@@ -469,9 +462,13 @@ const handleContextmenuOpen = (event: MouseEvent) => {
   dropDownMenuRef.value?.handleOpen();
 };
 
-function onContextMenuClick(event: MouseEvent, data: any) {
+/**
+ * 右键监听：通过第 3 个参数直接拿到 el-tree 内部真正的 Node 实例
+ */
+function onContextMenuClick(event: MouseEvent, data: any, node: any) {
   if (!props.contextMenuEnable) return;
-  activeContextMenuNode.value = data;
+  activeContextMenuData.value = data;
+  activeContextMenuNodeInstance.value = node; // 🔥 锁死当前底层 Node
   handleContextmenuOpen(event);
 }
 
@@ -483,21 +480,20 @@ const filterNode: FilterNodeMethodFunction = (value: string, data: any) => {
 };
 
 function onTreeNodeExtraClick(name: string) {
-  emit('extraNodeClick', name, activeContextMenuNode.value);
-}
-
-function getParentData(currentData: any) {
-  const currentNode = treeRef.value?.getNode(currentData);
-  if (currentNode && currentNode.parent && currentNode.parent.level > 0) {
-    return currentNode.parent.data;
-  }
-  return undefined;
+  emit('extraNodeClick', name, activeContextMenuData.value);
 }
 
 function onTreeNodeClick(data: any) {
   emit('nodeClick', data);
 }
 
+// =========================================================================
+// 3. 针对懒加载与普通模式的高可靠 Node 定位与展开/刷新机制
+// =========================================================================
+
+/**
+ * 全量刷新整棵树
+ */
 function refresh() {
   if (props.lazy) {
     const rootNode = treeRef.value?.root;
@@ -512,21 +508,120 @@ function refresh() {
   }
 }
 
-function refreshCurrentNode(nodeData: any) {
-  if (!nodeData) {
+/**
+ * 定位 el-tree Node 实例（多层级兜底保证 100% 命中）
+ */
+function findNode(target: any) {
+  // 1. 如果本身就是 Node 实例
+  if (target && target.childNodes !== undefined && target.level !== undefined) {
+    return target;
+  }
+
+  // 2. 如果传入的业务数据对象与当前右键的数据是同一个，直接返回保存的 node 实例
+  if (
+    activeContextMenuNodeInstance.value &&
+    activeContextMenuData.value &&
+    target &&
+    (target === activeContextMenuData.value ||
+      target[props.nodeKey] === activeContextMenuData.value[props.nodeKey])
+  ) {
+    return activeContextMenuNodeInstance.value;
+  }
+
+  // 3. 按指定的 nodeKey 查找
+  if (target) {
+    const key = typeof target === 'object' ? target[props.nodeKey] : target;
+    let n = treeRef.value?.getNode(key);
+    if (n) return n;
+    // 按原生对象查找
+    n = treeRef.value?.getNode(target);
+    if (n) return n;
+  }
+
+  // 4. 兜底返回右键时捕获的实例
+  return activeContextMenuNodeInstance.value || null;
+}
+
+/**
+ * 重新拉取某个父节点的子项并强制展开
+ */
+function reloadNodeChildren(parentNode: any) {
+  if (!parentNode) {
     refresh();
     return;
   }
-  const parent = getParentData(nodeData);
-  if (parent !== undefined && props.lazy) {
-    executeOpenApi(props.apiQuery, parent, {})
-      .then((res: any) => {
-        const parentKey = parent[props.nodeKey];
-        treeRef.value?.updateKeyChildren(parentKey, res.data || []);
-      })
-      .catch((err) => console.error(err));
+
+  if (props.lazy) {
+    // 懒加载模式：清空子级缓存并重新走 loadChildren，保持展开状态
+    parentNode.loaded = false;
+    parentNode.loading = false;
+    parentNode.childNodes = [];
+    parentNode.expand();
+  } else {
+    loadTreeData();
+  }
+}
+
+/**
+ * 【新增子节点后调用】
+ * 刷新当前选中的节点自身，并将其【自动展开】以显示新子节点
+ * @param parentNodeData 父节点数据对象（为 undefined 时代表刷新一级根节点）
+ */
+function refreshNodeAndExpand(parentNodeData?: any) {
+  if (!parentNodeData) {
+    refresh();
+    return;
+  }
+  const node = findNode(parentNodeData);
+  if (node) {
+    reloadNodeChildren(node);
   } else {
     refresh();
+  }
+}
+
+/**
+ * 【编辑当前节点后调用】
+ * 刷新当前节点的【直属父节点】，重新拉取同级列表，保持其父级展开（绝不会整树收起）
+ */
+function refreshCurrentNode(nodeData: any) {
+  const node = findNode(nodeData);
+
+  if (node) {
+    const parentNode = node.parent;
+    // 如果不是最顶层的一级根节点，重载父节点子级
+    if (parentNode && parentNode.level > 0) {
+      reloadNodeChildren(parentNode);
+    } else {
+      // 顶层一级根节点被编辑时刷新根列表
+      refresh();
+    }
+  } else {
+    refresh();
+  }
+}
+
+/**
+ * 【删除当前节点后调用】
+ * 从前端树上物理剔除当前节点；如果父级没有其他子节点了，父级自动变为叶子节点（去除小箭头）
+ */
+function removeNode(nodeData: any) {
+  const node = findNode(nodeData);
+
+  if (node) {
+    const parentNode = node.parent;
+    // 1. 从前端树中物理移除
+    treeRef.value?.remove(node);
+
+    // 2. 检查父节点是否已无子节点
+    if (parentNode && parentNode.level > 0) {
+      if (!parentNode.childNodes || parentNode.childNodes.length === 0) {
+        parentNode.isLeaf = true;
+        parentNode.loaded = true;
+      }
+    }
+  } else {
+    refreshCurrentNode(nodeData);
   }
 }
 
@@ -538,7 +633,9 @@ onMounted(() => {
 
 defineExpose({
   refresh,
-  refreshCurrentNode,
+  refreshNodeAndExpand, // 🔥 新增子节点后调用
+  refreshCurrentNode, // 🔥 编辑节点后调用
+  removeNode, // 🔥 删除节点后调用
   treeRef,
 });
 </script>
