@@ -66,6 +66,12 @@ const openEditor = () => {
     {
       title: t('platform.ebApp.scriptEditor'),
       width: '100%',
+      btnExtras: [{
+        key: 'save',
+        name: t('save'),
+        type: 'primary',
+        icon: 'DocumentChecked',
+      }],
       onClose: (data) => {
         console.log('data', data)
         if (data) {
