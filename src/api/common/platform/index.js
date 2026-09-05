@@ -1,21 +1,21 @@
-import request from '../../request'
-import qs from 'qs'
-import {useSessionStore} from "@/stores/session.js";
+import request from '../../request';
+import qs from 'qs';
+import { useSessionStore } from '@/stores/session.js';
 
 export function getUrl(url, params) {
   return (
     url +
     (params !== null && params !== undefined
-      ? '?' + qs.stringify(params, {arrayFormat: 'repeat'})
+      ? '?' + qs.stringify(params, { arrayFormat: 'repeat' })
       : '')
-  )
+  );
 }
 
 export function doHttpGet(url, params) {
   return request({
     url: getUrl(genUri(url, params), params),
     method: 'get',
-  })
+  });
 }
 
 export function doHttpPut(url, params, data) {
@@ -23,7 +23,7 @@ export function doHttpPut(url, params, data) {
     url: getUrl(genUri(url, params), params),
     method: 'put',
     data: data,
-  })
+  });
 }
 
 export function doHttpPost(url, params, data, config = {}) {
@@ -32,7 +32,7 @@ export function doHttpPost(url, params, data, config = {}) {
     method: 'post',
     data: data,
     ...config,
-  })
+  });
 }
 
 export function doHttpDelete(url, params, data) {
@@ -40,7 +40,7 @@ export function doHttpDelete(url, params, data) {
     url: getUrl(genUri(url, params), params),
     method: 'delete',
     data: data,
-  })
+  });
 }
 
 /**
@@ -48,22 +48,22 @@ export function doHttpDelete(url, params, data) {
  * @param enumClassName 枚举类名
  */
 export function getEnumValues(enumClassName) {
-  const sessionStore = useSessionStore()
-  return sessionStore.fetchEnumValues(enumClassName)
+  const sessionStore = useSessionStore();
+  return sessionStore.fetchEnumValues(enumClassName);
 }
 
 export function getEntitySchema(enumClassName) {
   return request({
     url: '/platformSvr/sapi/fields/' + enumClassName,
     method: 'get',
-  })
+  });
 }
 
 export function getDictionaryValues(code) {
   return request({
     url: '/platformSvr/sapi/dictionarys/codes/' + code,
-    method: 'get'
-  })
+    method: 'get',
+  });
 }
 
 export function runDefaultValueScript(input, script) {
@@ -72,19 +72,22 @@ export function runDefaultValueScript(input, script) {
     method: 'post',
     data: {
       input: input,
-      script: script
-    }
-  })
+      script: script,
+    },
+  });
 }
 
 export async function executeOpenApi(apiCode, params, data) {
   try {
-    if(!apiCode) {
+    if (!apiCode) {
       throw new Error('apiCode argument missing');
     }
     const response = await request({
-      url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi/all', { code: apiCode, codeQueryType: 'eq' }),
-      method: 'get'
+      url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi/all', {
+        code: apiCode,
+        codeQueryType: 'eq',
+      }),
+      method: 'get',
     });
 
     if (response.success !== true) {
@@ -101,14 +104,14 @@ export async function executeOpenApi(apiCode, params, data) {
       return request({
         url: getUrl(`${contextPath}/sapi/script/api/${apiCode}`, params),
         method: 'post',
-        data: data
+        data: data,
       });
     }
 
     return request({
       url: getUrl(genUri(openapi.uri, params), params),
       method: openapi.httpMethod,
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(`[调试] 💥 发生异常，函数执行被提前中断！错误信息:`, error);
@@ -134,15 +137,17 @@ export function genUri(url, params) {
     }
     // 如果没有传这个参数，保留原样（或者你也可以 return '' 将其置空）
     return match;
-  })
+  });
 }
 
 export function getEntityDefine(className) {
   return new Promise((resolve, reject) => {
-    executeOpenApi('queryEntityList', {code: className}, {}).then(response => {
-      resolve(response.data?.records[0])
-    }).catch(error => {
-      reject(error);
-    })
-  })
+    executeOpenApi('queryEntityList', { code: className, codeQueryType: 'eq' }, {})
+      .then((response) => {
+        resolve(response.data?.records[0]);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
