@@ -1,139 +1,183 @@
 <template>
   <el-skeleton :rows="5" animated v-if="loading" />
-  <div class="form-container" v-else
-       :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }"
-       style="container-type: inline-size;">
+  <div
+    class="form-container"
+    v-else
+    :class="{ fullscreen: props.fullscreen, 'drawer-mode': props.isDrawer === true }"
+    style="container-type: inline-size"
+  >
     <div class="form-scroll-wrap">
-      <el-form ref="refForm" label-width="auto" label-position="right" class="form-root"
-               :model="formModel">
-        <slot name="formItem" :props="props" :formModel="formModel" :queryParam="queryParam"
-              :className="props.className">
-          <component :is="getComponent(parseComponent(defaultFormItemComponent))"
-                     :param="parseComponentParam(defaultFormItemComponent)"
-                     :formModel="formModel"
-                     :cascadeModel="cascadeModel"
-                     :className="props.className"
-                     :readonly="props.readonly"
-                     :queryParam="queryParam">
+      <el-form
+        ref="refForm"
+        label-width="auto"
+        label-position="right"
+        class="form-root"
+        :model="formModel"
+      >
+        <slot
+          name="formItem"
+          :props="props"
+          :formModel="formModel"
+          :queryParam="queryParam"
+          :className="props.className"
+        >
+          <component
+            :is="getComponent(parseComponent(defaultFormItemComponent))"
+            :param="parseComponentParam(defaultFormItemComponent)"
+            :formModel="formModel"
+            :cascadeModel="cascadeModel"
+            :className="props.className"
+            :readonly="props.readonly"
+            :queryParam="queryParam"
+          >
             <template v-for="(slot, name) in $slots" v-slot:[name]="slotProps">
               <slot :name="name" v-bind="slotProps"></slot>
             </template>
           </component>
         </slot>
-        <slot name="formItemExtra" :props="props" :formModel="formModel" :queryParam="queryParam"
-              :className="props.className"/>
+        <slot
+          name="formItemExtra"
+          :props="props"
+          :formModel="formModel"
+          :queryParam="queryParam"
+          :className="props.className"
+        />
       </el-form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {defineEmits, defineExpose, defineModel, onMounted, ref, watch } from 'vue'
-import {useI18n} from 'vue-i18n'
-import {doHttpPost, executeOpenApi} from '@/api/common/platform'
-import {ElMessage} from 'element-plus'
-import {parseComponent, parseComponentParam} from "@/util/common.ts";
-import {getComponent} from "@/util/componentLoader.ts";
+import { defineEmits, defineExpose, defineModel, onMounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { doHttpPost, executeOpenApi } from '@/api/common/platform';
+import { ElMessage } from 'element-plus';
+import { parseComponent, parseComponentParam } from '@/util/common.ts';
+import { getComponent } from '@/util/componentLoader.ts';
 
-const {t, locale} = useI18n()
-const emit = defineEmits(['close'])
-const refForm = ref(null)
-const loading = ref(true)
+const { t, locale } = useI18n();
+const emit = defineEmits(['close']);
+const refForm = ref(null);
+const loading = ref(true);
 
 const props = defineProps<{
-  apiSave?: string
-  apiCascade?: string
-  className: string
-  readonly?: boolean
-  direction?: string
-  fullscreen?: boolean
-  isDrawer?: boolean
-  formItemComponent?: string
-  beforeMount?: (formModel) => Promise<void>
-}>()
+  apiSave?: string;
+  apiCascade?: string;
+  className: string;
+  readonly?: boolean;
+  direction?: string;
+  fullscreen?: boolean;
+  isDrawer?: boolean;
+  formItemComponent?: string;
+  beforeMount?: (formModel) => Promise<void>;
+}>();
 
-const formModel = defineModel<any>('formModel', {default: () => ({})})
+const formModel = defineModel<any>('formModel', { default: () => ({}) });
 // 表单联动 visible/disable/require
-const cascadeModel = ref({})
+const cascadeModel = ref({});
 
-const queryParam = ref({})
-const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue')
+const queryParam = ref({});
+const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue');
 
 onMounted(() => {
-  if(props.beforeMount) {
+  if (props.beforeMount) {
     props.beforeMount(formModel.value).then(() => {
-      loading.value = false
-    })
+      if (props.apiCascade) {
+        loadCascade(formModel.value).then(() => {
+          loading.value = false;
+        });
+      } else {
+        loading.value = false;
+      }
+    });
   } else {
-    loading.value = false
+    if (props.apiCascade) {
+      loadCascade(formModel.value).then(() => {
+        loading.value = false;
+      });
+    } else {
+      loading.value = false;
+    }
   }
-})
+});
 
 function onSaveClick() {
-  refForm.value?.validate(valid => {
-    if (!valid) return
+  refForm.value?.validate((valid) => {
+    if (!valid) return;
     if (props.apiSave.startsWith('/')) {
-      doHttpPost(props.apiSave, queryParam.value, formModel.value).then(() => {
-        ElMessage.success(t('operationSuccess'))
-        emit('close', 'ok')
-      }).catch(err => {
-        ElMessage.error(err.message)
-      })
+      doHttpPost(props.apiSave, queryParam.value, formModel.value)
+        .then(() => {
+          ElMessage.success(t('operationSuccess'));
+          emit('close', 'ok');
+        })
+        .catch((err) => {
+          ElMessage.error(err.message);
+        });
     } else {
-      executeOpenApi(props.apiSave, queryParam.value, formModel.value).then(() => {
-        ElMessage.success(t('operationSuccess'))
-        emit('close', 'ok')
-      }).catch(err => {
-        ElMessage.error(err.message)
-      })
+      executeOpenApi(props.apiSave, queryParam.value, formModel.value)
+        .then(() => {
+          ElMessage.success(t('operationSuccess'));
+          emit('close', 'ok');
+        })
+        .catch((err) => {
+          ElMessage.error(err.message);
+        });
     }
-  })
+  });
 }
 
 const validate = () => {
-  return new Promise(resolve => {
-    refForm.value?.validate(valid => resolve(valid))
-  })
-}
+  return new Promise((resolve) => {
+    refForm.value?.validate((valid) => resolve(valid));
+  });
+};
 
 function onClearForm() {
-  refForm.value?.resetFields()
-  emit('close', 'cancel')
+  refForm.value?.resetFields();
+  emit('close', 'cancel');
 }
 
 function onButtonClick(btnName) {
   if (btnName === 'ok') {
-    onSaveClick()
+    onSaveClick();
   } else if (btnName === 'cancel') {
-    onClearForm()
+    onClearForm();
   }
 }
 
 // 表单联动
-let timer: any = null
+let timer: any = null;
 
 watch(
   () => formModel.value,
   (newVal) => {
-    if (!props.apiCascade) return
+    if (!props.apiCascade) return;
 
     // 每次输入重置定时器，用户停顿 300ms 后才发请求
-    clearTimeout(timer)
+    clearTimeout(timer);
     timer = setTimeout(() => {
-      console.log('触发级联联动请求:', newVal)
-      loadCascade(newVal)
-    }, 300)
+      console.log('触发级联联动请求:', newVal);
+      loadCascade(newVal);
+    }, 300);
   },
-  { deep: true }
-)
+  { deep: true },
+);
 
 const loadCascade = (newVal) => {
-  executeOpenApi(props.apiCascade, {}, newVal).then((rsp) => {
-    Object.assign(cascadeModel.value, rsp.data || {})
-  })
-}
+  return new Promise((resolve, reject) => {
+    executeOpenApi(props.apiCascade, {}, newVal)
+      .then((rsp) => {
+        Object.assign(cascadeModel.value, rsp.data.cascadeModel || {});
+        Object.assign(formModel.value, rsp.data.formModel || {});
+        resolve({});
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 
-defineExpose({props, validate, queryParam, formModel, onSaveClick, onClearForm, onButtonClick})
+defineExpose({ props, validate, queryParam, formModel, onSaveClick, onClearForm, onButtonClick });
 </script>
 
 <style scoped>
