@@ -11,6 +11,7 @@
           <component :is="getComponent(parseComponent(defaultFormItemComponent))"
                      :param="parseComponentParam(defaultFormItemComponent)"
                      :formModel="formModel"
+                     :cascadeModel="cascadeModel"
                      :className="props.className"
                      :readonly="props.readonly"
                      :queryParam="queryParam">
@@ -27,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineEmits, defineExpose, defineModel, onMounted, ref} from 'vue'
+import {defineEmits, defineExpose, defineModel, onMounted, ref, watch } from 'vue'
 import {useI18n} from 'vue-i18n'
 import {doHttpPost, executeOpenApi} from '@/api/common/platform'
 import {ElMessage} from 'element-plus'
@@ -41,6 +42,7 @@ const loading = ref(true)
 
 const props = defineProps<{
   apiSave?: string
+  apiCascade?: string
   className: string
   readonly?: boolean
   direction?: string
@@ -51,6 +53,9 @@ const props = defineProps<{
 }>()
 
 const formModel = defineModel<any>('formModel', {default: () => ({})})
+// 表单联动 visible/disable/require
+const cascadeModel = ref({})
+
 const queryParam = ref({})
 const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue')
 
@@ -102,6 +107,30 @@ function onButtonClick(btnName) {
   } else if (btnName === 'cancel') {
     onClearForm()
   }
+}
+
+// 表单联动
+let timer: any = null
+
+watch(
+  () => formModel.value,
+  (newVal) => {
+    if (!props.apiCascade) return
+
+    // 每次输入重置定时器，用户停顿 300ms 后才发请求
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      console.log('触发级联联动请求:', newVal)
+      loadCascade(newVal)
+    }, 300)
+  },
+  { deep: true }
+)
+
+const loadCascade = (newVal) => {
+  executeOpenApi(props.apiCascade, {}, newVal).then((rsp) => {
+    Object.assign(cascadeModel.value, rsp.data || {})
+  })
 }
 
 defineExpose({props, validate, queryParam, formModel, onSaveClick, onClearForm, onButtonClick})

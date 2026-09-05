@@ -95,6 +95,7 @@ const beforeAdd = (parentNode) => {
         formModel: { parentId: null, groupId: parentNode.id },
         className: 'com.byteasy.platform.entity.Resource',
         apiSave: 'saveResource',
+        apiCascade: 'cascadeResource',
       },
       {
         title: t('add'),
@@ -113,6 +114,7 @@ const beforeAdd = (parentNode) => {
         formModel: { parentId: parentNode.id },
         className: 'com.byteasy.platform.entity.Resource',
         apiSave: 'saveResource',
+        apiCascade: 'cascadeResource',
         beforeMount: loadResourceRef,
       },
       {

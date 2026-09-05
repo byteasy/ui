@@ -6,6 +6,7 @@
     :layout-prams-id="props.layoutPramsId"
     :api-query="metaData.apiQuery"
     :api-save="metaData.apiSave"
+    :api-cascade="metaData.apiCascade"
     :api-delete="metaData.apiDelete"
     :api-batch-delete="metaData.apiBatchDelete"
     :api-download-import-template="metaData.apiDownloadImportTemplate"

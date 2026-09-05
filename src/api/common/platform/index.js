@@ -1,6 +1,7 @@
 import request from '../../request';
 import qs from 'qs';
 import { useSessionStore } from '@/stores/session.js';
+const openapiConfigCache = new Map()
 
 export function getUrl(url, params) {
   return (
@@ -77,48 +78,6 @@ export function runDefaultValueScript(input, script) {
   });
 }
 
-export async function executeOpenApi(apiCode, params, data) {
-  try {
-    if (!apiCode) {
-      throw new Error('apiCode argument missing');
-    }
-    const response = await request({
-      url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi/all', {
-        code: apiCode,
-        codeQueryType: 'eq',
-      }),
-      method: 'get',
-    });
-
-    if (response.success !== true) {
-      throw response.error || new Error('获取OpenAPI配置失败');
-    }
-
-    const openapi = response.data?.[0];
-    if (!openapi) {
-      throw new Error(`未找到 apiCode: ${apiCode} 对应的配置信息`);
-    }
-
-    if (openapi.scriptId && openapi.type === 'script') {
-      const contextPath = openapi?.serviceInstance?.contextPath || '';
-      return request({
-        url: getUrl(`${contextPath}/sapi/script/api/${apiCode}`, params),
-        method: 'post',
-        data: data,
-      });
-    }
-
-    return request({
-      url: getUrl(genUri(openapi.uri, params), params),
-      method: openapi.httpMethod,
-      data: data,
-    });
-  } catch (error) {
-    console.error(`[调试] 💥 发生异常，函数执行被提前中断！错误信息:`, error);
-    throw error;
-  }
-}
-
 /**
  * 根据带有占位符的 url 和 params 对象生成最终的 uri
  * @param url 带有占位符的 URL，例如: /api/{code}/{id}
@@ -150,4 +109,82 @@ export function getEntityDefine(className) {
         reject(error);
       });
   });
+}
+
+/**
+ * 辅助函数：优先从内存缓存获取 OpenAPI 配置，无缓存则请求远程后台
+ * @param {string} apiCode
+ * @returns {Promise<object>}
+ */
+async function getOpenapiConfig(apiCode) {
+  // 1. 命中缓存：直接返回缓存中的配置（或正在 pending 的 Promise）
+  if (openapiConfigCache.has(apiCode)) {
+    return openapiConfigCache.get(apiCode);
+  }
+
+  // 2. 未命中缓存：创建请求 Promise 并立刻写入缓存（防止同一时刻并发重复请求）
+  const fetchPromise = (async () => {
+    try {
+      const response = await request({
+        url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi/all', {
+          code: apiCode,
+          codeQueryType: 'eq',
+        }),
+        method: 'get',
+      });
+
+      if (response.success !== true) {
+        throw response.error || new Error('获取OpenAPI配置失败');
+      }
+
+      const openapi = response.data?.[0];
+      if (!openapi) {
+        throw new Error(`未找到 apiCode: ${apiCode} 对应的配置信息`);
+      }
+
+      // 请求成功后，将缓存值从 Promise 更新为纯配置对象
+      openapiConfigCache.set(apiCode, openapi);
+      return openapi;
+    } catch (err) {
+      // 若请求失败，必须清除缓存，避免后续调用一直报错
+      openapiConfigCache.delete(apiCode);
+      throw err;
+    }
+  })();
+
+  // 立即将进行中的 Promise 缓存
+  openapiConfigCache.set(apiCode, fetchPromise);
+  return fetchPromise;
+}
+
+/**
+ * 执行 OpenAPI 请求
+ */
+export async function executeOpenApi(apiCode, params, data) {
+  try {
+    if (!apiCode) {
+      throw new Error('apiCode argument missing');
+    }
+
+    // 🔥 核心优化：走内存缓存获取 openapi 配置信息
+    const openapi = await getOpenapiConfig(apiCode);
+
+    if (openapi.scriptId && openapi.type === 'script') {
+      const contextPath = openapi?.serviceInstance?.contextPath || '';
+      return request({
+        url: getUrl(`${contextPath}/sapi/script/api/${apiCode}`, params),
+        method: 'post',
+        data: data,
+      });
+    }
+
+    return request({
+      url: getUrl(genUri(openapi.uri, params), params),
+      method: openapi.httpMethod,
+      data: data,
+    });
+  } catch (error) {
+    console.error(`[调试] 💥 发生异常，函数执行被提前中断！错误信息:`, error);
+    throw error;
+  }
 }

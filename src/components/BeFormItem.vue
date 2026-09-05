@@ -19,11 +19,11 @@
           <slot :name="'formItem_' + col.name" :column="col" :props="props" :formModel="formModel">
             <el-form-item
               :label="getLangText(col.displayName, locale)"
-              v-if="col.isForm === 'YES'"
+              v-if="col.isForm === 'YES' && cascadeModel[col.name + 'Visible'] !== false"
               :prop="col.name"
               :rules="[
                 {
-                  required: col.isRequire === 'YES',
+                  required: col.isRequire === 'YES' || cascadeModel[col.name + 'Required'] === true,
                   message: getLangText(col.displayName, locale) + ' ' + t('validate.required'),
                 },
                 {
@@ -43,12 +43,13 @@
                   :is="getComponent(parseComponent(col.fieldComponent))"
                   :param="parseComponentParam(col.fieldComponent)"
                   :formModel="formModel"
+                  :cascadeModel="cascadeModel"
                   v-if="col.fieldComponent"
                   :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                   :column="col"
                   clearable
                   type="form"
-                  :disabled="props.readonly"
+                  :disabled="props.readonly || cascadeModel[col.name + 'Readonly'] === true"
                   v-model="formModel[col.name]"
                 />
                 <be-form-field
@@ -56,8 +57,9 @@
                   :column="col"
                   :placeholder="getLangText(col.displayName, locale)"
                   clearable
-                  :disabled="props.readonly"
+                  :disabled="props.readonly || cascadeModel[col.name + 'Readonly'] === true"
                   :formModel="formModel"
+                  :cascadeModel="cascadeModel"
                   v-model="formModel[col.name]"
                   @clear="formModel[col.name] = null"
                 >
@@ -97,6 +99,8 @@ const props = defineProps<{
 }>();
 
 const formModel = defineModel<any>('formModel', { default: () => ({}) });
+const cascadeModel = defineModel<any>('cascadeModel', {default: () => ({})})
+
 const tableColumns = ref({});
 const groupMap = ref({});
 const loading = ref(true);

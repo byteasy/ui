@@ -485,7 +485,12 @@ function onAdd(row) {
   getEntityDefine(props.className).then((entityDefine) => {
     open(
       getFormComponent(), // 要显示的组件
-      { formModel: row, className: props.className, apiSave: props.apiSave }, // 传给组件的 props
+      {
+        formModel: row,
+        className: props.className,
+        apiSave: props.apiSave,
+        apiCascade: props.apiCascade,
+      }, // 传给组件的 props
       {
         title: t('add') + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
@@ -527,6 +532,7 @@ function onEdit(row) {
         formModel: row,
         className: props.className,
         apiSave: props.apiSave,
+        apiCascade: props.apiCascade,
       }, // 传给组件的 props
       {
         title: t('table.edit') + getLangText(entityDefine.name, locale.value),

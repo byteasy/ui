@@ -33,6 +33,11 @@ export interface BeTableProps {
   apiQuery: string
 
   /**
+   * 表单字段联动api
+   */
+  apiCascade?: string
+
+  /**
    * 保存/新增/修改接口
    */
   apiSave?: string
