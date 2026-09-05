@@ -42,7 +42,7 @@ const beforeAdd = (parentNode) => {
         beforeMount: generateCode,
       },
       {
-        title: t('add'),
+        title: t('add') + t('platform.ebApp.resourceCategory'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshNodeAndExpand(parentNode);
@@ -60,7 +60,7 @@ const beforeAdd = (parentNode) => {
         apiSave: 'saveServiceInstance',
       },
       {
-        title: t('add'),
+        title: t('add') + t('platform.ebApp.serviceInstance'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshNodeAndExpand(parentNode);
@@ -79,7 +79,7 @@ const beforeAdd = (parentNode) => {
         beforeMount: loadServiceInstanceRef,
       },
       {
-        title: t('add'),
+        title: t('add') + t('platform.ebApp.resourceGroup'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshNodeAndExpand(parentNode);
@@ -98,7 +98,7 @@ const beforeAdd = (parentNode) => {
         apiCascade: 'cascadeResource',
       },
       {
-        title: t('add'),
+        title: t('add') + t('platform.ebApp.resource'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshNodeAndExpand(parentNode);
@@ -118,7 +118,7 @@ const beforeAdd = (parentNode) => {
         beforeMount: loadResourceRef,
       },
       {
-        title: t('add'),
+        title: t('add') + t('platform.ebApp.resource'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshNodeAndExpand(parentNode);
@@ -141,7 +141,7 @@ const beforeEdit = (nodeData: any) => {
         beforeMount: loadResourceCategory,
       },
       {
-        title: t('table.edit'),
+        title: t('table.edit')  + t('platform.ebApp.resourceCategory'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshCurrentNode(nodeData);
@@ -159,7 +159,7 @@ const beforeEdit = (nodeData: any) => {
         beforeMount: loadServiceInstance,
       },
       {
-        title: t('table.edit'),
+        title: t('table.edit') + t('platform.ebApp.serviceInstance'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshCurrentNode(nodeData);
@@ -177,7 +177,7 @@ const beforeEdit = (nodeData: any) => {
         beforeMount: loadResourceGroup,
       },
       {
-        title: t('table.edit'),
+        title: t('table.edit') + t('platform.ebApp.resourceGroup'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshCurrentNode(nodeData);
@@ -192,10 +192,11 @@ const beforeEdit = (nodeData: any) => {
         formModel: { id: nodeData?.id },
         className: 'com.byteasy.platform.entity.Resource',
         apiSave: 'saveResource',
+        apiCascade: 'cascadeResource',
         beforeMount: loadResource,
       },
       {
-        title: t('table.edit'),
+        title: t('table.edit') + t('platform.ebApp.resource'),
         onClose: (data) => {
           if (data === 'ok') {
             refBeTree.value?.refreshCurrentNode(nodeData);
@@ -225,6 +226,11 @@ const beforeDelete = (nodeData: any) => {
       });
     } else if (nodeData.type === 'ResourceGroup') {
       executeOpenApi('deleteResourceGroup', {}, nodeData).then(() => {
+        ElMessage.success(t('operationSuccess'));
+        refBeTree.value?.removeNode(nodeData);
+      });
+    } else if (nodeData.type === 'Resource') {
+      executeOpenApi('deleteResource', {}, nodeData).then(() => {
         ElMessage.success(t('operationSuccess'));
         refBeTree.value?.removeNode(nodeData);
       });
