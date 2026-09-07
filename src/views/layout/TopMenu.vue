@@ -1,102 +1,141 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref, watch} from 'vue'
-import {useRoute, useRouter} from 'vue-router'
-import {doHttpGet} from '@/api/common/platform'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { doHttpGet } from '@/api/common/platform'
 
 const router = useRouter()
-const route = useRoute() // 新增：获取当前路由参数（redirect）
 
 const popoverWidth = ref(500)
 const refPopWindow = ref()
-/**
- * 默认页面打开后，打开第一个group的router地址，如果有redirectUrl，则打开redirectUrl
- */
-const activeGroup = ref(undefined)
+const activeGroup = ref<any>(undefined)
 
-const quickMenus = ref([])
-const menuEntries = ref([])
-const groupEntries = ref([])
+const quickMenus = ref<any[]>([])
+const menuEntries = ref<any[]>([])
+const groupEntries = ref<any[]>([])
+
 const calculateWidth = () => {
   const viewportWidth = window.innerWidth
-
   if (viewportWidth < 768) {
-    // 移动端：接近全屏
     popoverWidth.value = Math.min(viewportWidth - 40, 500)
   } else if (viewportWidth < 1024) {
-    // 平板端：适中宽度
     popoverWidth.value = 600
   } else if (viewportWidth < 1280) {
-    // 小桌面端
     popoverWidth.value = 700
   } else if (viewportWidth < 1536) {
-    // 标准桌面端
     popoverWidth.value = 800
   } else {
-    // 大屏幕
     popoverWidth.value = 900
   }
 }
 
-watch(
-  () => route.path,
-  () => {
-    const path = activeGroup.value?.router
-    if (route.fullPath === '/' || route.fullPath.startsWith('/platformCommon/loading')) {
-      return
+/**
+ * 纯粹基于当前浏览器的 location 路径实时计算高亮
+ */
+function updateActiveByLocation() {
+  // 1. 获取当前浏览器物理路径（兼容 hash 与 history）
+  let currentPath = window.location.hash ? window.location.hash.replace(/^#/, '') : window.location.pathname
+  if (currentPath.includes('?')) {
+    currentPath = currentPath.split('?')[0]
+  }
+
+  if (!currentPath || currentPath === '/' || currentPath.includes('/platformCommon/loading')) {
+    return
+  }
+
+  const pathSegments = currentPath.split('/').filter(Boolean)
+  // 取出前两级路径作为模块根路径，例如 "/SystemManage/EasyBuilder"
+  const rootPath = pathSegments.length >= 2 ? `/${pathSegments[0]}/${pathSegments[1]}` : currentPath
+
+  // 2. 优先在快捷菜单 quickMenus 中匹配
+  const matchedQuick = quickMenus.value.find((item) => {
+    if (!item?.router) return false
+    const base = item.router.split('?')[0]
+    return currentPath.startsWith(base) || base.startsWith(rootPath)
+  })
+
+  if (matchedQuick) {
+    activeGroup.value = matchedQuick
+    return
+  }
+
+  // 3. 在全部菜单树 menuEntries 中匹配（修复了原代码中的下标变量越界 Bug）
+  let foundGroup: any = null
+  for (let i = 0; i < menuEntries.value.length; i++) {
+    const parent = menuEntries.value[i]
+    if (!parent?.children) continue
+
+    for (let j = 0; j < parent.children.length; j++) {
+      const entry = parent.children[j]
+      if (!entry?.resourceGroups) continue
+
+      for (let m = 0; m < entry.resourceGroups.length; m++) {
+        // 🔥 修复了原代码中把 m 误写成 j 的重大 Bug
+        const group = entry.resourceGroups[m]
+        if (!group?.router) continue
+
+        const base = group.router.split('?')[0]
+        if (currentPath.startsWith(base) || base.startsWith(rootPath)) {
+          foundGroup = group
+          break
+        }
+      }
+      if (foundGroup) break
     }
-    const arrs = (path || '').split('/')
-    if (!route.fullPath.startsWith('/' + arrs[1])) {
-      console.log('fullPath', route.fullPath, path)
-      activeGroup.value = undefined
-    }
-  },
-)
+    if (foundGroup) break
+  }
+
+  if (foundGroup) {
+    activeGroup.value = foundGroup
+  }
+}
+
+// 浏览器地址变化时的原生事件回调
+function onLocationChange() {
+  nextTick(() => {
+    updateActiveByLocation()
+  })
+}
 
 onMounted(() => {
-  console.log('TopMenu mounted, clear active micro app')
   calculateWidth()
   window.addEventListener('resize', calculateWidth)
 
-  doHttpGet('/platformSvr/sapi/resourceCategorys/topMenu').then((res) => {
-    menuEntries.value = res.data.resourceCategoryVOS
-    quickMenus.value = res.data.resourceGroups
+  // 🔥 核心：直接监听浏览器原生的 hashchange 与 popstate，无视沙箱与路由框架
+  window.addEventListener('hashchange', onLocationChange)
+  window.addEventListener('popstate', onLocationChange)
 
-    const fullPath = route.fullPath
-    const fullPathArras = (fullPath || '').split('/')
-    const rootPath = '/' + fullPathArras[1] + '/' + fullPathArras[2]
-    const microApps = []
-    for (let i = 0; i < menuEntries.value.length; i++) {
-      const parent = menuEntries.value[i]
-      for (let j = 0; j < parent.children.length; j++) {
-        const entry = parent.children[j]
-        for (let m = 0; m < entry.resourceGroups.length; m++) {
-          const group = entry.resourceGroups[j]
-          // 默认打开第一个
-          if (group.router.startsWith(rootPath)) {
-            activeGroup.value = group
-          }
-        }
-      }
+  doHttpGet('/platformSvr/sapi/resourceCategorys/topMenu').then((res) => {
+    menuEntries.value = res.data?.resourceCategoryVOS || []
+    quickMenus.value = res.data?.resourceGroups || []
+
+    if (menuEntries.value.length > 0 && menuEntries.value[0].children) {
+      groupEntries.value = menuEntries.value[0].children
     }
-    console.log('micro app config load complete', microApps)
+
+    // 接口返回后立即执行一次高亮定位，彻底解决 F5 刷新无状态的问题
+    nextTick(() => {
+      updateActiveByLocation()
+    })
   })
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', calculateWidth)
+  window.removeEventListener('hashchange', onLocationChange)
+  window.removeEventListener('popstate', onLocationChange)
 })
 
-function onItemClick(group) {
+function onItemClick(group: any) {
   if (group.code === activeGroup.value?.code) {
     return
   }
-  refPopWindow.value.hide()
+  refPopWindow.value?.hide()
   activeGroup.value = group
   router.push(group.router)
 }
 
-function onGroupClick(category) {
-  groupEntries.value = category.children
+function onGroupClick(category: any) {
+  groupEntries.value = category.children || []
 }
 </script>
 <template>
