@@ -18,12 +18,14 @@
             <el-sub-menu :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)"
                          v-if="subMenu.hasOwnProperty('childrenList') && subMenu.childrenList !== null && subMenu.type === 'DIRECTORY' && subMenu.visible === 'YES'">
               <template #title>
+                <be-svg-icon :svg="subMenu.icon" :style-var="'var(--my-menu-icon-color)'" v-if="subMenu.icon"/>
                 <be-i18n-value :model-value="subMenu.name" class="pl-3"/>
               </template>
               <template v-for="subsubMenu in subMenu.childrenList" :key="subsubMenu.code">
                 <el-menu-item
                   :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl) + '/' + getUrl(subsubMenu.routerUrl)"
                   @click="openResource(root.routerUrl + '/' + subMenu.routerUrl + '/' + subsubMenu.routerUrl, subsubMenu)">
+                  <be-svg-icon :svg="subsubMenu.icon" :style-var="'var(--my-menu-icon-color)'" v-if="subsubMenu.icon"/>
                   <be-i18n-value :model-value="subsubMenu.name" class="pl-3"/>
                 </el-menu-item>
               </template>
@@ -31,6 +33,7 @@
             <el-menu-item :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)"
                           @click="openResource(root.routerUrl + '/' + subMenu.routerUrl, subMenu)"
                           v-if="subMenu.type === 'MENU' && subMenu.visible === 'YES'">
+              <be-svg-icon :svg="subMenu.icon" :style-var="'var(--my-menu-icon-color)'" v-if="subMenu.icon"/>
               <be-i18n-value :model-value="subMenu.name" class="pl-3"/>
             </el-menu-item>
           </template>
@@ -38,9 +41,7 @@
 
         <el-menu-item :index="getUrl(root.routerUrl)" v-else-if="root.type === 'MENU' && root.visible === 'YES'"
                       @click="openResource(root.routerUrl, root)">
-          <el-icon style="color: var(--my-menu-icon-color)">
-            <component :is="'IconLocalHome'" />
-          </el-icon>
+          <be-svg-icon :svg="root.icon" :style-var="'var(--my-menu-icon-color)'"/>
           <be-i18n-value :model-value="root.name" class="pl-3"/>
         </el-menu-item>
       </template>
