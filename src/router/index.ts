@@ -61,7 +61,7 @@ function rebuildLeftMenus(node, menu) {
     node.component = AsideMain;
     node.children = [
       {
-        path: filteredQueryParameter(menu.routerUrl.substring(idx)),
+        path: filteredQueryParameter(menu.routerUrl.substring(idx + 1)),
         name: menu.code,
         meta: { title: menu.title, noCache: menu.keepAlive === 'NO' },
         component: getModule(menu.component),
