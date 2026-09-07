@@ -89,6 +89,9 @@ onMounted(() => {
       } else {
         loading.value = false;
       }
+    }).catch((err) => {
+      ElMessage.error(t(err));
+      emit('close', 'cancel');
     });
   } else {
     if (props.apiCascade) {

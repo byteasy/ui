@@ -39,6 +39,7 @@ const beforeAdd = (parentNode) => {
         formModel: { parentId: parentNode?.id },
         className: 'com.byteasy.platform.entity.ResourceCategory',
         apiSave: 'saveResourceCategory',
+        apiCascade: 'cascadeResourceCategory',
         beforeMount: generateCode,
       },
       {
@@ -73,10 +74,10 @@ const beforeAdd = (parentNode) => {
     open(
       BeForm,
       {
-        formModel: { serviceCode: parentNode?.code, isMicroapp: 'YES', navbarMenu: 'NO' },
+        formModel: { serviceCode: parentNode?.code, isMicroapp: 'YES', navbarMenu: 'NO', categoryId: parentNode?.categoryId },
         className: 'com.byteasy.platform.entity.ResourceGroup',
         apiSave: 'saveResourceGroup',
-        beforeMount: loadServiceInstanceRef,
+        apiCascade: 'cascadeResourceGroup',
       },
       {
         title: t('add') + t('platform.ebApp.resourceGroup'),
@@ -106,7 +107,7 @@ const beforeAdd = (parentNode) => {
         },
       },
     );
-  } else if ('Resource' === parentNode.type) {
+  } else if ('Resource' === parentNode.type ) {
     // 添加 Resource
     open(
       BeForm,
@@ -138,6 +139,7 @@ const beforeEdit = (nodeData: any) => {
         formModel: { id: nodeData?.id },
         className: 'com.byteasy.platform.entity.ResourceCategory',
         apiSave: 'saveResourceCategory',
+        apiCascade: 'cascadeResourceCategory',
         beforeMount: loadResourceCategory,
       },
       {
@@ -174,6 +176,7 @@ const beforeEdit = (nodeData: any) => {
         formModel: { id: nodeData?.id },
         className: 'com.byteasy.platform.entity.ResourceGroup',
         apiSave: 'saveResourceGroup',
+        apiCascade: 'cascadeResourceGroup',
         beforeMount: loadResourceGroup,
       },
       {
@@ -265,18 +268,6 @@ const loadServiceInstance = (formModel: any) => {
   });
 };
 
-const loadServiceInstanceRef = (formModel: any) => {
-  return new Promise((resolve, reject) => {
-    loadServiceInstance({}).then((svr) => {
-      formModel.categoryId = svr.categoryId
-      formModel.serviceCode = svr.code
-      resolve(formModel);
-    }).catch((err) => {
-      reject(err);
-    })
-  })
-}
-
 const loadResourceGroup = (formModel: any) => {
   return new Promise((resolve, reject) => {
     executeOpenApi('listResourceGroup', { id: formModel.id }, {})
@@ -294,8 +285,12 @@ const loadResourceRef = (formModel: any) => {
   return new Promise((resolve, reject) => {
     executeOpenApi('getResourceByKey', { id: formModel.parentId }, {})
       .then((rsp) => {
-        formModel.groupId = rsp.data.groupId;
-        resolve(formModel);
+        if(rsp.data.type === 'DIRECTORY') {
+          formModel.groupId = rsp.data.groupId;
+          resolve(formModel);
+        } else {
+          reject('platform.ebApp.resourceMenuMustHasNoChildren');
+        }
       })
       .catch((err) => {
         reject(err);

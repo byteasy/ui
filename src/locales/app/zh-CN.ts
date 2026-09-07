@@ -46,6 +46,7 @@ export default {
       serviceInstance: '服务实例',
       resourceGroup: '菜单分组',
       resource: '菜单',
+      resourceMenuMustHasNoChildren: '菜单类型下不允许添加子菜单',
       fieldGroup: '字段分组',
       notGrouped: '未分组',
       params: '布局参数',

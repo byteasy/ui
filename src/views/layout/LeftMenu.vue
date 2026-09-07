@@ -7,41 +7,43 @@
       unique-opened
       ref="refMenu"
     >
-      <el-sub-menu :index="getUrl(root.routerUrl)" v-for="root in menuTree" :key="root.code">
-        <template #title>
-          <be-svg-icon :svg="root.icon" :style-var="'var(--my-menu-icon-color)'"/>
-          <be-i18n-value :model-value="root.name" class="my-font-size-md"/>
-        </template>
-        <el-menu-item :index="getUrl(root.routerUrl)"
-                      v-if="root.type === 'MENU' && root.visible === 'YES'"
+      <template v-for="root in menuTree" :key="root.code">
+        <el-sub-menu :index="getUrl(root.routerUrl)" v-if="root.type === 'DIRECTORY' && root.visible === 'YES'">
+          <template #title>
+            <be-svg-icon :svg="root.icon" :style-var="'var(--my-menu-icon-color)'"/>
+            <be-i18n-value :model-value="root.name" class="my-font-size-md"/>
+          </template>
+
+          <template v-for="subMenu in root.childrenList" :key="subMenu.code">
+            <el-sub-menu :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)"
+                         v-if="subMenu.hasOwnProperty('childrenList') && subMenu.childrenList !== null && subMenu.type === 'DIRECTORY' && subMenu.visible === 'YES'">
+              <template #title>
+                <be-i18n-value :model-value="subMenu.name" class="pl-3"/>
+              </template>
+              <template v-for="subsubMenu in subMenu.childrenList" :key="subsubMenu.code">
+                <el-menu-item
+                  :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl) + '/' + getUrl(subsubMenu.routerUrl)"
+                  @click="openResource(root.routerUrl + '/' + subMenu.routerUrl + '/' + subsubMenu.routerUrl, subsubMenu)">
+                  <be-i18n-value :model-value="subsubMenu.name" class="pl-3"/>
+                </el-menu-item>
+              </template>
+            </el-sub-menu>
+            <el-menu-item :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)"
+                          @click="openResource(root.routerUrl + '/' + subMenu.routerUrl, subMenu)"
+                          v-if="subMenu.type === 'MENU' && subMenu.visible === 'YES'">
+              <be-i18n-value :model-value="subMenu.name" class="pl-3"/>
+            </el-menu-item>
+          </template>
+        </el-sub-menu>
+
+        <el-menu-item :index="getUrl(root.routerUrl)" v-else-if="root.type === 'MENU' && root.visible === 'YES'"
                       @click="openResource(root.routerUrl, root)">
           <el-icon style="color: var(--my-menu-icon-color)">
             <component :is="'IconLocalHome'" />
           </el-icon>
           <be-i18n-value :model-value="root.name" class="pl-3"/>
         </el-menu-item>
-
-        <template v-else v-for="subMenu in root.childrenList" :key="subMenu.code">
-          <el-sub-menu :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)"
-                       v-if="subMenu.hasOwnProperty('childrenList') && subMenu.childrenList !== null && subMenu.type === 'DIRECTORY' && subMenu.visible === 'YES'">
-            <template #title>
-              <be-i18n-value :model-value="subMenu.name" class="pl-3"/>
-            </template>
-            <template v-for="subsubMenu in subMenu.childrenList" :key="subsubMenu.code">
-              <el-menu-item
-                :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl) + '/' + getUrl(subsubMenu.routerUrl)"
-                @click="openResource(root.routerUrl + '/' + subMenu.routerUrl + '/' + subsubMenu.routerUrl, subsubMenu)">
-                <be-i18n-value :model-value="subsubMenu.name" class="pl-3"/>
-              </el-menu-item>
-            </template>
-          </el-sub-menu>
-          <el-menu-item :index="getUrl(root.routerUrl) + '/' + getUrl(subMenu.routerUrl)"
-                        @click="openResource(root.routerUrl + '/' + subMenu.routerUrl, subMenu)"
-                        v-if="subMenu.type === 'MENU' && subMenu.visible === 'YES'">
-            <be-i18n-value :model-value="subMenu.name" class="pl-3"/>
-          </el-menu-item>
-        </template>
-      </el-sub-menu>
+      </template>
     </el-menu>
   </div>
 </template>
