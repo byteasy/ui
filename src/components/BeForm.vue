@@ -150,16 +150,24 @@ function onButtonClick(btnName) {
 
 // 表单联动
 let timer: any = null;
+let lastJsonStr = ''; // 记录上一次真正请求时的内容快照
 
 watch(
   () => formModel.value,
   (newVal) => {
     if (!props.apiCascade) return;
 
-    // 每次输入重置定时器，用户停顿 300ms 后才发请求
+    // 🔥 核心关键：将当前值与上次请求时的参数进行深层比对
+    // 如果属性值实际上没有变（或者是浅拷贝无意义触发），直接忽略！
+    const currentJsonStr = JSON.stringify(newVal);
+    if (currentJsonStr === lastJsonStr) {
+      return; // 内容完全一致，直接终止，掐断死循环！
+    }
+
     clearTimeout(timer);
     timer = setTimeout(() => {
       console.log('触发级联联动请求:', newVal);
+      lastJsonStr = currentJsonStr; // 更新快照
       loadCascade(newVal);
     }, 300);
   },
