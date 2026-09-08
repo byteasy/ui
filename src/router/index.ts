@@ -65,7 +65,7 @@ router.beforeEach(async (to, from, next) => {
  * 构建路由树
  */
 function rebuildLeftMenus(node, menu) {
-  const AsideMain = getComponent('/views/layout/AsideMain.vue');
+  const Layout = getComponent(menu.layout || '/views/layout/AsideMain.vue');
 
   // 情况 A：处理独立的一级菜单（自身是 MENU，没有父节点）
   if (menu.type === 'MENU' && (!menu.parentId || menu.parentId === '0')) {
@@ -78,7 +78,7 @@ function rebuildLeftMenus(node, menu) {
 
     node.path = parentPath;
     node.name = menu.code + 'Parent';
-    node.component = AsideMain;
+    node.component = Layout;
     node.children = [
       {
         path: subPath, // 正确的相对路径（如 "4FscHb4pi"）
@@ -100,7 +100,7 @@ function rebuildLeftMenus(node, menu) {
   if (hasChildrenMenu(menu)) {
     node.path = filteredQueryParameter(menu.routerUrl || '');
     node.name = menu.code;
-    node.component = AsideMain;
+    node.component = Layout;
     node.redirect = menu.redirectUrl;
     node.meta = { title: menu.name };
     node.children = [];

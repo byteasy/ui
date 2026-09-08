@@ -19,6 +19,7 @@ const layout = ref(undefined)
 const loading = ref(true)
 
 onMounted(() => {
+  /** TODO 这里根据路由地址自动寻找平台配置的界面布局 */
   let layoutId = props.layoutId
   const params = {...route.query}
   if (params && params.layoutId) {
