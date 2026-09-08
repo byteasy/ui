@@ -486,7 +486,7 @@ function onAdd(row) {
     open(
       getFormComponent(), // 要显示的组件
       {
-        formModel: row,
+        formModel: JSON.parse(JSON.stringify(row || '{}')),
         className: props.className,
         apiSave: props.apiSave,
         apiCascade: props.apiCascade,
@@ -509,7 +509,7 @@ function onBatchAdd(row) {
   getEntityDefine(props.className).then((entityDefine) => {
     open(
       BeTableBatchAdd,
-      { fields: tableColumns.value, tableProps: props, formModel: row },
+      { fields: tableColumns.value, tableProps: props, formModel: JSON.parse(JSON.stringify(row || '{}')) },
       {
         title: t('batchAdd') + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
@@ -529,7 +529,7 @@ function onEdit(row) {
     open(
       getFormComponent(), // 要显示的组件
       {
-        formModel: row,
+        formModel: JSON.parse(JSON.stringify(row || '{}')),
         className: props.className,
         apiSave: props.apiSave,
         apiCascade: props.apiCascade,
