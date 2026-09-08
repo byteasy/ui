@@ -75,24 +75,28 @@ const props = defineProps<{
 const formModel = defineModel<any>('formModel', { default: () => ({}) });
 // 表单联动 visible/disable/require
 const cascadeModel = ref({});
+const validError = ref({});
 
 const queryParam = ref({});
 const defaultFormItemComponent = ref(props.formItemComponent || '/components/BeFormItem.vue');
 
 onMounted(() => {
   if (props.beforeMount) {
-    props.beforeMount(formModel.value).then(() => {
-      if (props.apiCascade) {
-        loadCascade(formModel.value).then(() => {
+    props
+      .beforeMount(formModel.value)
+      .then(() => {
+        if (props.apiCascade) {
+          loadCascade(formModel.value).then(() => {
+            loading.value = false;
+          });
+        } else {
           loading.value = false;
-        });
-      } else {
-        loading.value = false;
-      }
-    }).catch((err) => {
-      ElMessage.error(t(err));
-      emit('close', 'cancel');
-    });
+        }
+      })
+      .catch((err) => {
+        ElMessage.error(t(err));
+        emit('close', 'cancel');
+      });
   } else {
     if (props.apiCascade) {
       loadCascade(formModel.value).then(() => {
@@ -105,6 +109,11 @@ onMounted(() => {
 });
 
 function onSaveClick() {
+  if (Object.keys(validError.value).length > 0) {
+    setFieldsErrors(validError.value);
+    return;
+  }
+
   refForm.value?.validate((valid) => {
     if (!valid) return;
     if (props.apiSave.startsWith('/')) {
@@ -174,12 +183,61 @@ watch(
   { deep: true },
 );
 
+/**
+ * 手动设置某个字段的错误提示
+ * @param prop 字段名（即 el-form-item 上绑定的 prop 属性，如 'userCode'）
+ * @param errorMessage 需要显示的错误文案
+ */
+function setFieldError(prop: string, errorMessage: string) {
+  if (!refForm.value) return;
+
+  // 1. 从 refForm 的 fields 内部集合中找到对应字段的 FormItem 实例
+  // @ts-ignore fields 是 Element Plus FormInstance 内部维护的子项数组
+  const fieldItem = refForm.value.fields?.find((f: any) => f.prop === prop);
+
+  if (fieldItem) {
+    // 2. 标记状态为 error（输入框变红）
+    fieldItem.validateState = 'error';
+    // 3. 填充错误提示文本（下方出现红色文字）
+    fieldItem.validateMessage = errorMessage;
+  } else {
+    console.warn(`未找到 prop 为 ${prop} 的表单项`);
+  }
+}
+
+/**
+ * 批量设置后端返回的多个错误字段
+ * 例如传入：{ userCode: '编码重复', phone: '手机号格式不正确' }
+ */
+function setFieldsErrors(errorMap: Record<string, string>) {
+  if (!refForm.value) return;
+
+  Object.keys(errorMap).forEach((prop) => {
+    setFieldError(prop, errorMap[prop]);
+  });
+}
+
+/**
+ * 清除某个字段的手动错误标记
+ */
+function clearFieldError(prop: string) {
+  if (!refForm.value) return;
+  // @ts-ignore
+  const fieldItem = refForm.value.fields?.find((f: any) => f.prop === prop);
+  if (fieldItem) {
+    fieldItem.validateState = '';
+    fieldItem.validateMessage = '';
+  }
+}
+
 const loadCascade = (newVal) => {
   return new Promise((resolve, reject) => {
     executeOpenApi(props.apiCascade, {}, newVal)
       .then((rsp) => {
         Object.assign(cascadeModel.value, rsp.data.cascadeModel || {});
         Object.assign(formModel.value, rsp.data.formModel || {});
+        validError.value = rsp.data.validError;
+        setFieldsErrors(rsp.data.validError);
         resolve({});
       })
       .catch((err) => {
