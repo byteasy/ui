@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-rou
 import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper';
 import { doHttpGet } from '@/api/common/platform';
 import { getComponent } from '@/util/componentLoader.ts';
+import { defineComponent, h } from 'vue';
 
 const router = createRouter({
   history: createWebHashHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/' : '/'),
@@ -89,7 +90,7 @@ function rebuildLeftMenus(node, menu) {
           affix: menu.affix === 'YES',
           query: parseQueryParameter(menu.routerUrl),
         },
-        component: getModule(menu.component),
+        component: wrapDynamicComponent(menu.component, menu.code),
       },
     ];
     return;
@@ -130,7 +131,7 @@ function collectLeafMenus(childrenList, parentPrefix, targetChildren) {
           noCache: child.keepAlive === 'NO',
           query: parseQueryParameter(child.routerUrl),
         },
-        component: getModule(child.component),
+        component: wrapDynamicComponent(child.component, child.code),
       });
     } else if (child.type === 'DIRECTORY' && child.childrenList && child.childrenList.length > 0) {
       // 遇到中间目录继续递归向下收集，累加路径前缀
@@ -163,6 +164,20 @@ function getModule(name) {
     return getComponent('/views/common/Error404.vue');
   }
   return component;
+}
+
+// 🔥 2. 核心包装函数：根据菜单唯一的 code，动态为通用模板组件赋予唯一的 name
+function wrapDynamicComponent(componentPath, uniqueName) {
+  const RawComponent = getModule(componentPath);
+  if (!RawComponent) return RawComponent;
+
+  // 包装一层高阶组件，让它的 name 严格等于 route.name (即 menu.code)
+  return defineComponent({
+    name: uniqueName, // 🔥 核心：在这里把组件名重写为菜单唯一的 code！
+    render() {
+      return h(RawComponent);
+    },
+  });
 }
 
 export default router;
