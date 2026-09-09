@@ -98,6 +98,7 @@
         :param="operationComponents.main.param"
         :refTable="refTable"
         :row="scope.row"
+        :queryParams="scope.queryParams"
       ></component>
     </template>
     <template v-slot:table-operation-extra="scope">
@@ -107,6 +108,7 @@
         :param="operationComponents.extra.param"
         :refTable="refTable"
         :row="scope.row"
+        :queryParams="scope.queryParams"
       ></component>
     </template>
     <template v-slot:table-operation-end-extra="scope">
@@ -116,6 +118,7 @@
         :param="operationComponents.endExtra.param"
         :refTable="refTable"
         :row="scope.row"
+        :queryParams="scope.queryParams"
       ></component>
     </template>
   </be-table>
@@ -135,7 +138,7 @@ import { getComponent } from '@/util/componentLoader.ts';
 
 const props = defineProps<{
   className?: string;
-  layoutPramsId?: string;
+  layoutPramsId?: string | number;
   meta?: object;
 
   // 是否查询模式，开启后表格不能做编辑类操作

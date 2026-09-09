@@ -67,7 +67,7 @@ const props = defineProps<{
 
 const id = {
   name: 'id',
-  fieldName: 'ID',
+  fieldName: 'id',
   displayName: '{"zh_CN":"编号"}',
   type: 'LONG',
   className: 'com.byteasy.platform.entity.EntityDefine',
@@ -90,7 +90,7 @@ const id = {
 
 const version = {
   isSort: 'NO',
-  fieldName: 'VERSION',
+  fieldName: 'version',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"版本"}',
   className: 'com.byteasy.platform.entity.EntityDefine',
@@ -114,7 +114,7 @@ const version = {
 
 const creatorId = {
   isSort: 'NO',
-  fieldName: 'CREATOR_ID',
+  fieldName: 'creator_id',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"创建人编号"}',
   minLength: 0,
@@ -141,7 +141,7 @@ const creatorId = {
 
 const createdBy = {
   isSort: 'NO',
-  fieldName: 'CREATED_BY',
+  fieldName: 'created_by',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"创建人"}',
   minLength: 0,
@@ -169,7 +169,7 @@ const createdBy = {
 
 const createdTime = {
   isSort: 'NO',
-  fieldName: 'CREATED_TIME',
+  fieldName: 'created_time',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"创建时间"}',
   pattern: 'NONE',
@@ -195,7 +195,7 @@ const createdTime = {
 
 const updaterId = {
   isSort: 'NO',
-  fieldName: 'UPDATER_ID',
+  fieldName: 'updater_id',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"更新人编号"}',
   minLength: 0,
@@ -222,7 +222,7 @@ const updaterId = {
 
 const updatedBy = {
   isSort: 'NO',
-  fieldName: 'UPDATED_BY',
+  fieldName: 'updated_by',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"更新人"}',
   minLength: 0,
@@ -249,7 +249,7 @@ const updatedBy = {
 
 const updatedTime = {
   isSort: 'NO',
-  fieldName: 'UPDATED_TIME',
+  fieldName: 'updated_time',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"更新时间"}',
   minLength: 0,
@@ -276,7 +276,7 @@ const updatedTime = {
 
 const isDeleted = {
   isSort: 'NO',
-  fieldName: 'IS_DELETED',
+  fieldName: 'is_deleted',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"是否删除"}',
   pattern: 'NONE',
@@ -300,7 +300,7 @@ const isDeleted = {
 
 const deleterId = {
   isSort: 'NO',
-  fieldName: 'DELETER_ID',
+  fieldName: 'deleter_id',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"删除人编号"}',
   minLength: 0,
@@ -327,7 +327,7 @@ const deleterId = {
 
 const deletedBy = {
   isSort: 'NO',
-  fieldName: 'DELETED_BY',
+  fieldName: 'deleted_by',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"删除人"}',
   minLength: 0,
@@ -354,7 +354,7 @@ const deletedBy = {
 
 const deletedTime = {
   isSort: 'NO',
-  fieldName: 'DELETED_TIME',
+  fieldName: 'deleted_time',
   isOverflow: 'NO',
   displayName: '{"zh_CN":"删除时间"}',
   minLength: 0,

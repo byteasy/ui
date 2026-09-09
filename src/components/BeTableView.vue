@@ -96,7 +96,7 @@
     >
       <template #default="scope">
         <el-space direction="horizontal" :size="4">
-          <slot name="table-operation" :row="scope.row">
+          <slot name="table-operation" :row="scope.row" :queryParams="props.queryParams">
             <be-popup-object-view :model-value="scope.row"
                                   :column="{ externalClass: props.tableProps.className }"
                                   :lang="props.tableProps.showLang">
@@ -108,7 +108,7 @@
                      type="primary">
               {{ t('table.edit') }}
             </el-link>
-            <slot name="table-operation-extra" :row="scope.row"></slot>
+            <slot name="table-operation-extra" :row="scope.row" :queryParams="props.queryParams"></slot>
             <el-popconfirm
               :confirm-button-text="$t('ok')"
               :cancel-button-text="$t('cancel')"
@@ -122,7 +122,7 @@
                 </el-link>
               </template>
             </el-popconfirm>
-            <slot name="table-operation-end-extra" :row="scope.row"></slot>
+            <slot name="table-operation-end-extra" :row="scope.row" :queryParams="props.queryParams"></slot>
           </slot>
         </el-space>
       </template>
@@ -147,6 +147,7 @@ const selectedRows = ref<any[]>([])
 const props = defineProps<{
   tableProps: BeTableProps,
   fields: Array<any>
+  queryParams?: Record<string, any>
 }>()
 
 const emit = defineEmits(['rowAction', 'refresh', 'selection-change'])
