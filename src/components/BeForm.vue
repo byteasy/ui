@@ -111,6 +111,7 @@ onMounted(() => {
 function onSaveClick() {
   if (Object.keys(validError.value).length > 0) {
     setFieldsErrors(validError.value);
+    console.log('validError.value length > 0')
     return;
   }
 
@@ -236,8 +237,8 @@ const loadCascade = (newVal) => {
       .then((rsp) => {
         Object.assign(cascadeModel.value, rsp.data.cascadeModel || {});
         Object.assign(formModel.value, rsp.data.formModel || {});
-        validError.value = rsp.data.validError;
-        setFieldsErrors(rsp.data.validError);
+        Object.assign(validError.value, rsp.data.validError || {});
+        setFieldsErrors(validError.value);
         resolve({});
       })
       .catch((err) => {
