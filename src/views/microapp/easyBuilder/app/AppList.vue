@@ -8,9 +8,6 @@
         <el-tab-pane :label="$t('platform.ebApp.model')" name="model" class="h-full">
           <tab-entity v-if="activeName === 'model'" :resource="activeTreeNode"/>
         </el-tab-pane>
-        <el-tab-pane :label="$t('platform.ebApp.api')" name="api" class="h-full">
-          <tab-api v-if="activeName === 'api'" :resource="activeTreeNode"/>
-        </el-tab-pane>
         <el-tab-pane :label="$t('platform.ebApp.pageLayout')" name="pageLayout" class="h-full">
           <tab-layout v-if="activeName === 'pageLayout'" :resource="activeTreeNode"/>
         </el-tab-pane>
@@ -20,7 +17,6 @@
 </template>
 <script setup lang="ts">
 import {ref} from "vue";
-import TabApi from "@/views/microapp/easyBuilder/app/TabApi.vue";
 import TabEntity from "@/views/microapp/easyBuilder/app/TabEntity.vue";
 import TabLayout from "@/views/microapp/easyBuilder/app/TabLayout.vue";
 import EbResourceExploer from '@/views/microapp/easyBuilder/app/EbResourceExploer.vue';
