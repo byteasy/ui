@@ -126,7 +126,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits, defineExpose, nextTick, onMounted, ref, watch } from 'vue';
+import { defineEmits, defineExpose, defineModel, nextTick, onMounted, ref, watch } from 'vue';
 import {
   ElMessage,
   ElMessageBox,
@@ -220,6 +220,8 @@ const emit = defineEmits([
 const session = useSessionStore();
 const { t } = useI18n();
 const { open } = useModal();
+
+const queryParams = defineModel<any>('queryParams', { default: () => ({}) });
 
 const loading = ref(true);
 const treeData = ref<any[]>([]);
@@ -417,7 +419,7 @@ async function handleDeleteNode(nodeData: any) {
 
 function loadTreeData(): Promise<void> {
   loading.value = true;
-  return executeOpenApi(props.apiQuery, {}, {})
+  return executeOpenApi(props.apiQuery, queryParams.value, {})
     .then((res: any) => {
       treeData.value = res.data || [];
     })
@@ -433,6 +435,7 @@ function loadTreeData(): Promise<void> {
 async function loadChildren(node: any, resolve: (data: any[]) => void, reject: (err: any) => void) {
   try {
     const parentParam = node.level === 0 ? {} : node.data || {};
+    Object.assign(parentParam, queryParams.value || {});
     const res: any = await executeOpenApi(props.apiQuery, parentParam, {});
     const result = res.data || [];
 
