@@ -25,11 +25,11 @@
                 <router-view v-slot="{ Component, route }">
                   <transition name="fade" mode="out-in">
                     <keep-alive>
-                      <component :is="Component" :key="route.name" v-if="permissionLoaded && (!route.meta.noCache || componentCacheEnable === '1') "/>
+                      <component :is="Component" :key="route.name" v-if="permissionLoaded && (!route.meta.noCache && componentCacheEnable === '1') "/>
                     </keep-alive>
                   </transition>
                   <transition name="fade" mode="out-in">
-                    <component :is="Component" :key="route.name" v-if="permissionLoaded && (route.meta.noCache === true && componentCacheEnable === '0')"/>
+                    <component :is="Component" :key="route.name" v-if="permissionLoaded && (route.meta.noCache === true || componentCacheEnable === '0')"/>
                   </transition>
                 </router-view>
               </div>

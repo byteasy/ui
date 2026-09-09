@@ -35,6 +35,7 @@ export default {
     },
     ebApp: {
       model: '模型',
+      permission: '权限',
       field: '字段定义',
       stdField: '标准属性',
       stdFieldBase: '基础实体属性',

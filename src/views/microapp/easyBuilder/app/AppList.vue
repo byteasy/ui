@@ -11,6 +11,9 @@
         <el-tab-pane :label="$t('platform.ebApp.pageLayout')" name="pageLayout" class="h-full">
           <tab-layout v-if="activeName === 'pageLayout'" :resource="activeTreeNode"/>
         </el-tab-pane>
+        <el-tab-pane :label="$t('platform.ebApp.permission')" name="permission" class="h-full">
+          <tab-permission v-if="activeName === 'permission'" :resource="activeTreeNode"/>
+        </el-tab-pane>
       </el-tabs>
     </el-splitter-panel>
   </el-splitter>
@@ -19,6 +22,7 @@
 import {ref} from "vue";
 import TabEntity from "@/views/microapp/easyBuilder/app/TabEntity.vue";
 import TabLayout from "@/views/microapp/easyBuilder/app/TabLayout.vue";
+import TabPermission from "@/views/microapp/easyBuilder/app/TabPermission.vue";
 import EbResourceExploer from '@/views/microapp/easyBuilder/app/EbResourceExploer.vue';
 
 const activeName = ref('model')

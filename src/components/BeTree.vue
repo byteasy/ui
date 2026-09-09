@@ -39,6 +39,7 @@
         :highlight-current="props.highlightCurrent"
         :default-expand-all="props.defaultExpandAll"
         :check-strictly="props.checkStrictly"
+        :show-checkbox="props.showCheckBox"
         :expand-on-click-node="props.expandOnClickNode"
         :filter-node-method="filterNode"
       >
@@ -173,6 +174,7 @@ const props = withDefaults(
     beforeEdit?: (nodeData: any) => boolean | Promise<boolean>;
     beforeDelete?: (nodeData: any) => boolean | Promise<boolean>;
 
+    showCheckBox?: boolean;
     contextExtraItems?: Array<ExtraItem>;
     label?: string;
     children?: string;
@@ -191,6 +193,7 @@ const props = withDefaults(
     className: undefined,
     parentKey: 'parentId',
     formComponent: undefined,
+    showCheckBox: false,
     contextExtraItems: undefined,
     label: 'name',
     children: 'children',
