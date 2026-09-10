@@ -65,6 +65,7 @@
                           parseComponent(col.fieldComponent || '/components/BeTableQueryField.vue'),
                         )
                       "
+                      v-if="queryParams[col.name + 'QueryType'] !== 'isNull' && queryParams[col.name + 'QueryType'] !== 'isNotNull'"
                       :param="
                         parseComponentParam(
                           col.fieldComponent || '/components/BeTableQueryField.vue',
@@ -173,6 +174,8 @@ function getOperatorsByFieldType(type: string) {
       { label: t('platform.ebApp.opLt'), value: 'lt' },
       { label: t('platform.ebApp.opLe'), value: 'le' },
       { label: t('platform.ebApp.opBetween'), value: 'between' },
+      { label: t('platform.ebApp.opNull'), value: 'isNull' },
+      { label: t('platform.ebApp.opNotNull'), value: 'isNotNull' },
     ];
   }
   if (type === 'LOCAL_DATE' || type === 'LOCAL_DATE_TIME') {
@@ -181,6 +184,8 @@ function getOperatorsByFieldType(type: string) {
       { label: t('platform.ebApp.opEq'), value: 'eq' },
       { label: t('platform.ebApp.opAfter'), value: 'ge' },
       { label: t('platform.ebApp.opBefore'), value: 'le' },
+      { label: t('platform.ebApp.opNull'), value: 'isNull' },
+      { label: t('platform.ebApp.opNotNull'), value: 'isNotNull' },
     ];
   }
   // ENUM / 参照 等默认使用包含或相等
@@ -188,6 +193,8 @@ function getOperatorsByFieldType(type: string) {
     { label: t('platform.ebApp.opIn'), value: 'in' },
     { label: t('platform.ebApp.opEq'), value: 'eq' },
     { label: t('platform.ebApp.opNe'), value: 'ne' },
+    { label: t('platform.ebApp.opNull'), value: 'isNull' },
+    { label: t('platform.ebApp.opNotNull'), value: 'isNotNull' },
   ];
 }
 

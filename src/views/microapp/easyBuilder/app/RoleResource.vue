@@ -1,19 +1,32 @@
 <template>
-  <be-tree
-    ref="treeRef"
-    api-query="4GJc62jqs"
-    :query-params="props.queryParams"
-    show-check-box
-    default-expand-all
-  />
+  <el-splitter>
+    <el-splitter-panel size="220" collapsible :min="220">
+      <be-tree
+        ref="treeRefResource"
+        api-query="4GViiNqQs"
+        :query-params="props.queryParams"
+        @node-click="onResourceGroupClick"
+        default-expand-all
+      />
+    </el-splitter-panel>
+    <el-splitter-panel size="320" collapsible :min="320">
+      <be-tree
+        ref="treeRefResource"
+        api-query="4GJc62jqs"
+        :query-params="resourceParams"
+        show-check-box
+        default-expand-all
+      />
+    </el-splitter-panel>
+  </el-splitter>
 </template>
 <script lang="ts" setup>
-import { defineEmits, defineExpose, onMounted, ref } from 'vue';
+import { defineEmits, defineExpose, ref, watch } from 'vue';
 import { executeOpenApi } from '@/api/common/platform';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 
-const treeRef = ref(null);
+const treeRefResource = ref(null);
 
 const props = defineProps<{
   role: object;
@@ -21,27 +34,50 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(['close']);
 const { t } = useI18n();
+const resourceParams = ref({ groupId: undefined });
 
-onMounted(() => {
+watch(
+  () => resourceParams.value,
+  (val) => {
+    loadGroupPermissions();
+  },
+  { deep: true },
+);
+
+function loadGroupPermissions() {
   // 查询角色拥有的权限
-  executeOpenApi('4GTmdZSgs', { roleId: props.role.id }, {}).then((rsp) => {
+  executeOpenApi(
+    '4GTmdZSgs',
+    { roleId: props.role.id, groupId: resourceParams.value.groupId },
+    {},
+  ).then((rsp) => {
     const keys = rsp.data.map((rsp: any) => {
       return rsp.resourceId;
     });
-    treeRef.value?.setCheckedKeys(keys);
+    treeRefResource.value?.setCheckedKeys(keys);
   });
-});
+}
+
+function onResourceGroupClick(data: any) {
+  if (data.groupId) {
+    resourceParams.value.groupId = data.groupId;
+  }
+}
 
 function onButtonClick(btnName) {
   if (btnName === 'ok') {
-    const keys = treeRef.value?.getCheckedKeys();
-    const arrs = [];
+    const keys = treeRefResource.value?.getCheckedKeys();
+    const menus = [];
+    const apis = [];
     for (let i = 0; i < keys.length; i++) {
-      if (keys[i].indexOf('group') < 0) {
-        arrs.push({ roleId: props.role.id, resourceId: keys[i] });
+      if (keys[i].indexOf('entity') < 0 && keys[i].indexOf('openapi') < 0) {
+        menus.push({ roleId: props.role.id, resourceId: keys[i] });
+      }
+      if(keys[i].indexOf('openapi') >= 0) {
+        apis.push({ roleId: props.role.id, openapiId: keys[i].replace('openapi-', '') });
       }
     }
-    executeOpenApi('4GUf7FyQs', { roleId: props.role.id }, arrs)
+    executeOpenApi('4GUf7FyQs', { roleId: props.role.id, groupId: resourceParams.value.groupId }, {menus: menus, apis: apis})
       .then(() => {
         ElMessage.success(t('operationSuccess'));
         emit('close', 'ok');
