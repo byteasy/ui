@@ -50,15 +50,15 @@
           $t('platform.ebApp.stdFieldRelation')
         }}</el-dropdown-item>
         <el-dropdown-item @click="loadFromDatabase">{{
-            $t('platform.ebApp.stdFieldSyncFromDb')
-          }}</el-dropdown-item>
+          $t('platform.ebApp.stdFieldSyncFromDb')
+        }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
 </template>
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
-import { getEntityDefine } from '@/api/common/platform';
+import { doHttpGet, getEntityDefine } from '@/api/common/platform';
 import { ElMessage } from 'element-plus';
 
 const { t, locale } = useI18n(); // 表单引用
@@ -394,7 +394,13 @@ const batchAddField = (rows) => {
 const loadFromDatabase = async () => {
   getEntityDefine(props.queryParams.className).then(entity => {
     const contextPath = entity.serviceInstance.contextPath
-
+    doHttpGet(contextPath + '/sapi/fields/database/' + props.queryParams.className, {}).then(response => {
+      const rows = response.data;
+      rows.forEach((row) => {
+        row.className = props.queryParams.className;
+      });
+      props.refTable.batchAddRow(rows);
+    })
   }).catch(error => {
     ElMessage.error(error);
   })

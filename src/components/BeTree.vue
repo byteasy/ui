@@ -660,6 +660,9 @@ const setCheckedNodes = (nodes: Node[], leafOnly?: boolean) => {
 const setCheckedKeys = (keys: TreeKey[], leafOnly?: boolean) => {
   return treeRef.value?.setCheckedKeys(keys, leafOnly);
 };
+const getCheckedKeys = (leafOnly?: boolean) => {
+  return treeRef.value?.getCheckedKeys(leafOnly);
+};
 const setChecked = (data: TreeKey | TreeNodeData, checked: boolean, deep: boolean) => {
   return treeRef.value?.setChecked(data, checked, deep);
 };
@@ -677,6 +680,7 @@ defineExpose({
   setCurrentKey,
   setCheckedNodes,
   setCheckedKeys,
+  getCheckedKeys,
   setChecked,
 });
 </script>
