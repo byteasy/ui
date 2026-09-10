@@ -54,7 +54,7 @@ function loadGroupPermissions() {
     const keys = rsp.data.map((rsp: any) => {
       return rsp.resourceId;
     });
-    treeRefResource.value?.setCheckedKeys(keys);
+    treeRefResource.value?.setCheckedKeys(keys, true);
   });
 }
 
