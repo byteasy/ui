@@ -67,6 +67,10 @@ function onResourceGroupClick(data: any) {
 function onButtonClick(btnName) {
   if (btnName === 'ok') {
     const keys = treeRefResource.value?.getCheckedKeys();
+    const halfKeys = treeRefResource.value?.getHalfCheckedKeys();
+    for (const key of halfKeys) {
+      keys.push(key);
+    }
     const menus = [];
     const apis = [];
     for (let i = 0; i < keys.length; i++) {
@@ -85,6 +89,8 @@ function onButtonClick(btnName) {
       .catch((err) => {
         ElMessage.error(err.message);
       });
+  } else {
+    emit('close', 'cancel');
   }
 }
 
