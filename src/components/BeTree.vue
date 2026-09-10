@@ -138,6 +138,8 @@ import { useI18n } from 'vue-i18n';
 import { useSessionStore } from '@/stores/session.ts';
 import { useModal } from '@/components/dialog/useModal.ts';
 import BeI18nDynamicInput from '@/components/BeI18nDynamicInput.vue';
+import { TreeKey, TreeNodeData } from 'element-plus/es/components/tree/src/tree.type';
+import { Node } from 'element-plus/es/components/tree/src/model/node';
 
 interface ExtraItem {
   label: string;
@@ -637,11 +639,44 @@ onMounted(() => {
   }
 });
 
+const getCheckedNodes = () => {
+  return treeRef.value?.getCheckedNodes();
+};
+const getHalfCheckedNodes = () => {
+  return treeRef.value?.getHalfCheckedNodes();
+};
+const getHalfCheckedKeys = () => {
+  return treeRef.value?.getHalfCheckedKeys();
+};
+const setCurrentNode = (node: Node, shouldAutoExpandParent?: boolean) => {
+  return treeRef.value?.setCurrentNode(node, shouldAutoExpandParent);
+};
+const setCurrentKey = (key?: TreeKey | null, shouldAutoExpandParent?: boolean) => {
+  return treeRef.value?.setCurrentKey(key, shouldAutoExpandParent);
+};
+const setCheckedNodes = (nodes: Node[], leafOnly?: boolean) => {
+  return treeRef.value?.setCheckedNodes(nodes, leafOnly);
+};
+const setCheckedKeys = (keys: TreeKey[], leafOnly?: boolean) => {
+  return treeRef.value?.setCheckedKeys(keys, leafOnly);
+};
+const setChecked = (data: TreeKey | TreeNodeData, checked: boolean, deep: boolean) => {
+  return treeRef.value?.setChecked(data, checked, deep);
+};
+
 defineExpose({
   refresh,
   refreshNodeAndExpand, // 🔥 新增子节点后调用
   refreshCurrentNode, // 🔥 编辑节点后调用
   removeNode, // 🔥 删除节点后调用
   treeRef,
+  getCheckedNodes,
+  getHalfCheckedNodes,
+  getHalfCheckedKeys,
+  setCurrentNode,
+  setCurrentKey,
+  setCheckedNodes,
+  setCheckedKeys,
+  setChecked,
 });
 </script>

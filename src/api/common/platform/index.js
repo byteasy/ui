@@ -101,9 +101,9 @@ export function genUri(url, params) {
 
 export function getEntityDefine(className) {
   return new Promise((resolve, reject) => {
-    executeOpenApi('queryEntityList', { code: className, codeQueryType: 'eq' }, {})
+    executeOpenApi('4GSabRyjA', { code: className, codeQueryType: 'eq' }, {})
       .then((response) => {
-        resolve(response.data?.records[0]);
+        resolve(response.data[0]);
       })
       .catch((error) => {
         reject(error);
@@ -170,9 +170,8 @@ export async function executeOpenApi(apiCode, params, data) {
     const openapi = await getOpenapiConfig(apiCode);
 
     if (openapi.scriptId && openapi.type === 'script') {
-      const contextPath = openapi?.serviceInstance?.contextPath || '';
       return request({
-        url: getUrl(`${contextPath}/sapi/script/api/${apiCode}`, params),
+        url: getUrl(genUri(openapi.uri, params), params),
         method: 'post',
         data: data,
       });

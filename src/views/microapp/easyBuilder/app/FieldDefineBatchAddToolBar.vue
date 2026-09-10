@@ -49,12 +49,17 @@
         <el-dropdown-item @click="batchAddField([creatorId, createdBy, createdTime])">{{
           $t('platform.ebApp.stdFieldRelation')
         }}</el-dropdown-item>
+        <el-dropdown-item @click="loadFromDatabase">{{
+            $t('platform.ebApp.stdFieldSyncFromDb')
+          }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
 </template>
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
+import { getEntityDefine } from '@/api/common/platform';
+import { ElMessage } from 'element-plus';
 
 const { t, locale } = useI18n(); // 表单引用
 
@@ -385,6 +390,15 @@ const batchAddField = (rows) => {
   });
   props.refTable.batchAddRow(rows);
 };
+
+const loadFromDatabase = async () => {
+  getEntityDefine(props.queryParams.className).then(entity => {
+    const contextPath = entity.serviceInstance.contextPath
+
+  }).catch(error => {
+    ElMessage.error(error);
+  })
+}
 </script>
 
 <style></style>
