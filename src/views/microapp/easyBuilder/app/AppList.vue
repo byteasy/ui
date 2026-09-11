@@ -6,13 +6,13 @@
     <el-splitter-panel :min="200" class="pl-2">
       <el-tabs v-model="activeName" class="h-full">
         <el-tab-pane :label="$t('platform.ebApp.model')" name="model" class="h-full">
-          <tab-entity v-if="activeName === 'model'" :resource="activeTreeNode"/>
+          <tab-entity :resource="activeTreeNode"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('platform.ebApp.pageLayout')" name="pageLayout" class="h-full">
-          <tab-layout v-if="activeName === 'pageLayout'" :resource="activeTreeNode"/>
+          <tab-layout :resource="activeTreeNode"/>
         </el-tab-pane>
         <el-tab-pane :label="$t('platform.ebApp.permission')" name="permission" class="h-full">
-          <tab-permission v-if="activeName === 'permission'" :resource="activeTreeNode"/>
+          <tab-permission :resource="activeTreeNode"/>
         </el-tab-pane>
       </el-tabs>
     </el-splitter-panel>
