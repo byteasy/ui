@@ -53,7 +53,7 @@
               <el-button @click="onButtonClick(btn.key, item)" :type="btn.type"
                          v-for="btn in item.btnExtras" :key="btn.key">
                 <be-svg-icon :svg="btn.icon" class="mr-1"/>
-                {{ btn.name }}
+                {{ getLangText(btn.name, locale) }}
               </el-button>
               <el-button v-debounce="() => onButtonClick('ok', item)" type="primary">
                 <be-svg-icon svg="Check" class="mr-1"/>
@@ -111,7 +111,7 @@
               <el-button @click="onButtonClick(btn.key, item)" :type="btn.type"
                          v-for="btn in item.btnExtras" :key="btn.key">
                 <be-svg-icon :svg="btn.icon" class="mr-1"/>
-                {{ btn.name }}
+                {{ getLangText(btn.name, locale) }}
               </el-button>
               <el-button v-debounce="() => onButtonClick('ok', item)" type="primary">
                 <be-svg-icon svg="Check" class="mr-1"/>
@@ -130,7 +130,7 @@ import {useModal} from './useModal.ts'
 import {computed, ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
-import {elementLocales} from '@/locales/common.ts'
+import {elementLocales, getLangText } from '@/locales/common.ts'
 import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()

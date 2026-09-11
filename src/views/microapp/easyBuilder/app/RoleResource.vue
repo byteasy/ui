@@ -46,7 +46,7 @@ function loadGroupPermissions() {
   ).then((rsp) => {
     for (const key of rsp.data) {
       const node = treeRefResource.value.getNode(String(key));
-      if(node.isLeaf === true) {
+      if (node.isLeaf === true) {
         treeRefResource.value?.setChecked(key, true, false);
       }
     }
@@ -60,7 +60,8 @@ function onResourceGroupClick(data: any) {
 }
 
 function onButtonClick(btnName) {
-  if (btnName === 'ok') {
+  console.log(btnName);
+  if (btnName === 'ok' || btnName === 'save') {
     const keys = treeRefResource.value?.getCheckedKeys();
     const halfKeys = treeRefResource.value?.getHalfCheckedKeys();
     for (const key of halfKeys) {
@@ -83,7 +84,9 @@ function onButtonClick(btnName) {
     )
       .then(() => {
         ElMessage.success(t('operationSuccess'));
-        emit('close', 'ok');
+        if (btnName === 'ok') {
+          emit('close', 'ok');
+        }
       })
       .catch((err) => {
         ElMessage.error(err.message);

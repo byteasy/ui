@@ -28,6 +28,7 @@ function onOpenRoleResource() {
     {
       title: t('table.edit') + t('platform.ebApp.resource') + t('platform.ebApp.permission'),
       width: '60%',
+      btnExtras: [{ key: 'save', type: 'primary', icon: 'FolderChecked', name: t('save') }],
     },
   );
 }

@@ -3,6 +3,13 @@ import { markRaw, reactive } from 'vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 type DrawerDirection = 'rtl' | 'ltr' | 'ttb' | 'btt'
 
+interface BtnExtras {
+  key: string
+  icon: string
+  type: string
+  name: string
+}
+
 // 直接用 reactive 对象，不用 ref
 interface ModalState {
   items: Array<{
@@ -20,7 +27,7 @@ interface ModalState {
     onClose?: (data?: unknown) => void
     btnOkTitle?: string
     btnCancelTitle?: string
-    btnExtras?: Array<Record<string, string>>
+    btnExtras?: Array<BtnExtras>
     footer?: boolean
   }>
 }
