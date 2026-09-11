@@ -105,7 +105,7 @@
               </template>
             </be-popup-object-view>
             <el-link underline="never" @click="handleRowAction(TableRowActionEnum.EDIT, scope.row)"
-                     type="primary">
+                     type="primary" v-if="hasPermission(tableProps.apiSave)">
               {{ t('table.edit') }}
             </el-link>
             <slot name="table-operation-extra" :row="scope.row" :queryParams="props.queryParams"></slot>
@@ -114,10 +114,11 @@
               :cancel-button-text="$t('cancel')"
               :title="$t('deleteWarn')"
               :hide-after="10"
+              v-if="hasPermission(tableProps.apiDelete)"
               @confirm="handleRowAction(TableRowActionEnum.DELETE, scope.row)"
             >
               <template #reference>
-                <el-link underline="never" type="danger">
+                <el-link underline="never" type="danger" v-if="hasPermission(tableProps.apiDelete)">
                   {{ t('table.delete') }}
                 </el-link>
               </template>
@@ -137,12 +138,14 @@ import {defineExpose, ref} from "vue";
 import {getClassFieldName, parseComponent, parseComponentParam} from "@/util/common.ts";
 import {getComponent} from "@/util/componentLoader.ts";
 import {type BeTableProps, TableRowActionEnum} from "@/components/BeTable.ts";
+import { useSessionStore } from '@/stores/session.ts';
 
 const refElTable = ref<any>(null)
 const {t, locale} = useI18n()
 const currentRow = ref(undefined)
 // 维护当前选中的所有行集合
 const selectedRows = ref<any[]>([])
+const { hasPermission } = useSessionStore();
 
 const props = defineProps<{
   tableProps: BeTableProps,
