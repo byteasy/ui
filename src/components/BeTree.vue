@@ -18,7 +18,7 @@
           suffix-icon="search"
         />
         <el-button-group direction="horizontal" class="flex-none">
-          <el-button :title="$t('add')" @click="handleAddNode(undefined)" type="primary">
+          <el-button :title="$t('add')" @click="handleAddNode(undefined)" type="primary" v-if="hasPermission(props.apiSave)">
             <IconLocalAddOne style="width: 1rem; height: 1rem; color: var(--my-text-color)" />
           </el-button>
           <slot name="tool-buttons-extra"></slot>
@@ -66,22 +66,22 @@
       >
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="handleAddNode(activeContextMenuData)">
+            <el-dropdown-item @click="handleAddNode(activeContextMenuData)" v-if="hasPermission(props.apiSave)">
               <el-icon><FolderAdd /></el-icon>
               {{ $t('add') }}
             </el-dropdown-item>
-            <el-dropdown-item @click="handleEditNode(activeContextMenuData)">
+            <el-dropdown-item @click="handleEditNode(activeContextMenuData)" v-if="hasPermission(props.apiSave)">
               <el-icon><FolderOpened /></el-icon>
               {{ $t('table.edit') }}
             </el-dropdown-item>
-            <el-dropdown-item @click="handleDeleteNode(activeContextMenuData)">
+            <el-dropdown-item @click="handleDeleteNode(activeContextMenuData)" v-if="hasPermission(props.apiDelete)">
               <el-icon style="color: var(--el-color-danger)"><FolderDelete /></el-icon>
               {{ $t('table.delete') }}
             </el-dropdown-item>
             <template v-for="extra in props.contextExtraItems" :key="extra.name">
               <el-dropdown-item
                 @click="onTreeNodeExtraClick(extra.name)"
-                v-if="extra.permission === undefined || session.authorize(extra.permission)"
+                v-if="extra.permission === undefined || hasPermission(extra.permission)"
               >
                 <be-svg-icon :svg="extra.icon" v-if="extra.icon" />
                 {{ $t(extra.label) }}
@@ -221,9 +221,9 @@ const emit = defineEmits([
   'deleteSuccess',
 ]);
 
-const session = useSessionStore();
 const { t } = useI18n();
 const { open } = useModal();
+const { hasPermission } = useSessionStore();
 
 const queryParams = defineModel<any>('queryParams', { default: () => ({}) });
 

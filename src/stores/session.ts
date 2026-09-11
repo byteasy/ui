@@ -21,6 +21,12 @@ export const useSessionStore = defineStore('session', {
     invalidateAuthorizedCode() {
       this.authorizedCodes = new Set()
     },
+    hasPermission(code: string | null | undefined) {
+      if(code === null || code === undefined) {
+        return false
+      }
+      return this.authorizedCodes.has(code)
+    },
     putLocalEnum(name: string, enums: any) {
       this.enumMap.set(name, enums)
     },

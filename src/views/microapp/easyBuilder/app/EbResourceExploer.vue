@@ -2,8 +2,8 @@
   <be-tree
     ref="refBeTree"
     api-query="getEbAppTree"
-    api-save="saveEbAppTreeNode"
-    api-delete="deleteEbAppTreeNode"
+    api-save="saveResourceCategory"
+    api-delete="deleteResourceCategory"
     node-key="code"
     parent-key="parentId"
     :lazy="true"

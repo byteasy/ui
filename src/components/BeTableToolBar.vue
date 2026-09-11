@@ -14,6 +14,7 @@
       >
         <el-button
           :title="$t('add')"
+          v-if="hasPermission(tableProps.apiSave)"
           @click="
             onToolbarActionClick(
               TableToolbarActionEnum.ADD,
@@ -27,6 +28,7 @@
 
         <el-button
           :title="$t('batchAdd')"
+          v-if="hasPermission(tableProps.apiImportBatchSave)"
           @click="
             onToolbarActionClick(
               TableToolbarActionEnum.BATCH_ADD,
@@ -40,6 +42,7 @@
 
         <el-button
           :title="$t('batchEdit')"
+          v-if="hasPermission(tableProps.apiImportBatchSave)"
           @click="
             onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_EDIT, selectionRows)
           "
@@ -59,7 +62,7 @@
             <el-button
               :title="$t('batchDelete')"
               type="danger"
-              v-if="selectionRows.length > 0 && props.tableProps.apiBatchDelete"
+              v-if="hasPermission(tableProps.apiBatchDelete) && selectionRows.length > 0 && props.tableProps.apiBatchDelete"
             >
               <IconLocalBatchDelete
                 style="width: 1rem; height: 1rem; color: var(--my-text-color)"
@@ -110,6 +113,7 @@
           :title="$t('save')"
           @click="onToolbarActionClick(TableToolbarActionEnum.TABLE_EDITOR_BATCH_SAVE, undefined)"
           icon="Check"
+          v-if="hasPermission(tableProps.apiImportBatchSave)"
           type="primary"
         >
           {{ $t('save') }}
@@ -147,6 +151,7 @@
               </el-dropdown-item>
               <el-dropdown-item
                 divided
+                v-if="hasPermission(tableProps.apiImportBatchSave)"
                 @click="
                   onToolbarActionClick(TableToolbarActionEnum.DOWNLOAD_EXCEL_TEMPLATE, undefined)
                 "
@@ -157,6 +162,7 @@
                 {{ $t('table.downLoadExcelTemplate') }}
               </el-dropdown-item>
               <el-dropdown-item
+                v-if="hasPermission(tableProps.apiImportBatchSave)"
                 @click="onToolbarActionClick(TableToolbarActionEnum.EXCEL_IMPORT, undefined)"
               >
                 <el-icon>
@@ -165,6 +171,7 @@
                 {{ $t('table.importByExcel') }}
               </el-dropdown-item>
               <el-dropdown-item
+                v-if="hasPermission(tableProps.apiExport)"
                 @click="onToolbarActionClick(TableToolbarActionEnum.EXCEL_EXPORT, undefined)"
               >
                 <el-icon>
@@ -232,7 +239,7 @@ const showCollapseBtn = ref(true);
 const advanceSearch = ref(false);
 const containerWidth = ref(600);
 const visibleFields = ref<BeColumn[]>([]);
-const sessionStore = useSessionStore();
+const { hasPermission } = useSessionStore();
 
 onMounted(() => {
   containerWidth.value = queryBarRef.value?.offsetWidth;
