@@ -187,6 +187,8 @@ const props = withDefaults(
     checkStrictly?: boolean;
     expandOnClickNode?: boolean;
     contextMenuEnable?: boolean;
+
+    dataLoadFinished?: () => void
   }>(),
   {
     apiQuery: undefined,
@@ -441,6 +443,9 @@ function loadTreeData(): Promise<void> {
     })
     .finally(() => {
       loading.value = false;
+      if(props.dataLoadFinished) {
+        props.dataLoadFinished();
+      }
     });
 }
 
@@ -677,6 +682,10 @@ const setChecked = (data: TreeKey | TreeNodeData, checked: boolean, deep: boolea
   return treeRef.value?.setChecked(data, checked, deep);
 };
 
+const getNode = (data: TreeKey | TreeNodeData) => {
+  return treeRef.value?.getNode(data);
+};
+
 defineExpose({
   refresh,
   refreshNodeAndExpand, // 🔥 新增子节点后调用
@@ -692,5 +701,6 @@ defineExpose({
   setCheckedKeys,
   getCheckedKeys,
   setChecked,
+  getNode,
 });
 </script>

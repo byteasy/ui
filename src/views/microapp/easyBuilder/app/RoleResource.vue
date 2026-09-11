@@ -2,7 +2,7 @@
   <el-splitter>
     <el-splitter-panel size="220" collapsible :min="220">
       <be-tree
-        ref="treeRefResource"
+        ref="treeRefCategory"
         api-query="4GViiNqQs"
         :query-params="props.queryParams"
         @node-click="onResourceGroupClick"
@@ -14,6 +14,7 @@
         ref="treeRefResource"
         api-query="4GJc62jqs"
         :query-params="resourceParams"
+        :data-load-finished="loadGroupPermissions"
         show-check-box
         default-expand-all
       />
@@ -21,7 +22,7 @@
   </el-splitter>
 </template>
 <script lang="ts" setup>
-import { defineEmits, defineExpose, ref, watch } from 'vue';
+import { defineEmits, defineExpose, ref } from 'vue';
 import { executeOpenApi } from '@/api/common/platform';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -36,14 +37,6 @@ const emit = defineEmits(['close']);
 const { t } = useI18n();
 const resourceParams = ref({ groupId: undefined });
 
-watch(
-  () => resourceParams.value,
-  (val) => {
-    loadGroupPermissions();
-  },
-  { deep: true },
-);
-
 function loadGroupPermissions() {
   // 查询角色拥有的权限
   executeOpenApi(
@@ -51,10 +44,12 @@ function loadGroupPermissions() {
     { roleId: props.role.id, groupId: resourceParams.value.groupId },
     {},
   ).then((rsp) => {
-    const keys = rsp.data.map((rsp: any) => {
-      return rsp.resourceId;
-    });
-    treeRefResource.value?.setCheckedKeys(keys, true);
+    for (const key of rsp.data) {
+      const node = treeRefResource.value.getNode(String(key));
+      if(node.isLeaf === true) {
+        treeRefResource.value?.setChecked(key, true, false);
+      }
+    }
   });
 }
 
@@ -77,11 +72,15 @@ function onButtonClick(btnName) {
       if (keys[i].indexOf('entity') < 0 && keys[i].indexOf('openapi') < 0) {
         menus.push({ roleId: props.role.id, resourceId: keys[i] });
       }
-      if(keys[i].indexOf('openapi') >= 0) {
+      if (keys[i].indexOf('openapi') >= 0) {
         apis.push({ roleId: props.role.id, openapiId: keys[i].replace('openapi-', '') });
       }
     }
-    executeOpenApi('4GUf7FyQs', { roleId: props.role.id, groupId: resourceParams.value.groupId }, {menus: menus, apis: apis})
+    executeOpenApi(
+      '4GUf7FyQs',
+      { roleId: props.role.id, groupId: resourceParams.value.groupId },
+      { menus: menus, apis: apis },
+    )
       .then(() => {
         ElMessage.success(t('operationSuccess'));
         emit('close', 'ok');
