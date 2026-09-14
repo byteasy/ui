@@ -81,37 +81,37 @@ function onServiceChange() {
 
 
 function onTypeChange(type) {
-  if (type === 'page') {
+  if (type === 'PAGE') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
-  } else if (type === 'list') {
+  } else if (type === 'LIST') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/all'
-  } else if (type === 'getByPrimaryKey') {
+  } else if (type === 'GET_BY_PRIMARY_KEY') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/{id}'
-  } else if (type === 'saveOrUpdate') {
+  } else if (type === 'SAVE_OR_UPDATE') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
-  } else if (type === 'removeByEntity') {
+  } else if (type === 'REMOVE_BY_ENTITY') {
     refBeForm.value.formModel.httpMethod = 'DELETE'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className
-  } else if (type === 'batchDelete') {
+  } else if (type === 'BATCH_DELETE') {
     refBeForm.value.formModel.httpMethod = 'DELETE'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/batch'
-  } else if (type === 'downloadImportTemplate') {
+  } else if (type === 'DOWNLOAD_IMPORT_TEMPLATE') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/template'
-  } else if (type === 'importPreview') {
+  } else if (type === 'IMPORT_PREVIEW') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/importPreview'
-  } else if (type === 'saveOrUpdateBatch') {
+  } else if (type === 'SAVE_OR_UPDATE_BATCH') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/batch'
-  } else if (type === 'exportExcel') {
+  } else if (type === 'EXPORT_EXCEL') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/excel/export'
-  } else if (type === 'script') {
+  } else if (type === 'SCRIPT') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/script/api/' + refBeForm.value.formModel.code
   }

@@ -44,6 +44,7 @@ export default {
       stdFieldLogicDelete: '逻辑删除实体属性',
       stdFieldRelation: '关系实体属性',
       stdFieldSyncFromDb: '从数据库加载',
+      stdFieldSyncFromSrc: '从代码加载',
       resourceCategory: '领域分类',
       serviceInstance: '服务实例',
       resourceGroup: '菜单分组',

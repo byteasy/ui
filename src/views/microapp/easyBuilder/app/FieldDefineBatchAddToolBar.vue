@@ -52,6 +52,9 @@
         <el-dropdown-item @click="loadFromDatabase">{{
           $t('platform.ebApp.stdFieldSyncFromDb')
         }}</el-dropdown-item>
+        <el-dropdown-item @click="loadFromSrc">{{
+            $t('platform.ebApp.stdFieldSyncFromSrc')
+          }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -395,6 +398,21 @@ const loadFromDatabase = async () => {
   getEntityDefine(props.queryParams.className).then(entity => {
     const contextPath = entity.serviceInstance.contextPath
     doHttpGet(contextPath + '/sapi/fields/database/' + props.queryParams.className, {}).then(response => {
+      const rows = response.data;
+      rows.forEach((row) => {
+        row.className = props.queryParams.className;
+      });
+      props.refTable.batchAddRow(rows);
+    })
+  }).catch(error => {
+    ElMessage.error(error);
+  })
+}
+
+const loadFromSrc = async () => {
+  getEntityDefine(props.queryParams.className).then(entity => {
+    const contextPath = entity.serviceInstance.contextPath
+    doHttpGet(contextPath + '/sapi/fields/src/' + props.queryParams.className, {}).then(response => {
       const rows = response.data;
       rows.forEach((row) => {
         row.className = props.queryParams.className;
