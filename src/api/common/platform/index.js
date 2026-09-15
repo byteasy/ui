@@ -53,9 +53,9 @@ export function getEnumValues(enumClassName) {
   return sessionStore.fetchEnumValues(enumClassName);
 }
 
-export function getEntitySchema(enumClassName) {
+export function getEntitySchema(className) {
   return request({
-    url: '/platformSvr/sapi/fields/' + enumClassName,
+    url: '/platformSvr/sapi/fieldDefines/entity/' + className,
     method: 'get',
   });
 }
@@ -126,10 +126,7 @@ async function getOpenapiConfig(apiCode) {
   const fetchPromise = (async () => {
     try {
       const response = await request({
-        url: getUrl('/platformSvr/sapi/common/com.byteasy.platform.entity.Openapi/all', {
-          code: apiCode,
-          codeQueryType: 'eq',
-        }),
+        url: getUrl('/platformSvr/sapi/openapis/codes/' + apiCode, {}),
         method: 'get',
       });
 
@@ -137,7 +134,7 @@ async function getOpenapiConfig(apiCode) {
         throw response.error || new Error('获取OpenAPI配置失败');
       }
 
-      const openapi = response.data?.[0];
+      const openapi = response.data
       if (!openapi) {
         throw new Error(`未找到 apiCode: ${apiCode} 对应的配置信息`);
       }
