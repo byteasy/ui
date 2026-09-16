@@ -30,7 +30,7 @@
     </template>
     <template v-slot:formItem_scriptId="scope">
       <el-form-item :label="getLangText(scope.column.displayName, locale)"
-                    v-if="scope.formModel.type === 'script'"
+                    v-if="scope.formModel.type === 'SCRIPT'"
                     :prop="scope.column.name" :rules="[
                     { required: scope.column.isRequire === 'YES', message: getLangText(scope.column.displayName, locale) + ' ' + t('validate.required') },
                     { validator: (rule, value, callback) => validateColumnRule(scope.column, rule, value, locale, callback), trigger: 'blur' }
