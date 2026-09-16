@@ -5,11 +5,11 @@
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item @click="batchAddField([id, version])">{{
+        <el-dropdown-item @click="batchAddField([id])">{{
           $t('platform.ebApp.stdFieldBase')
         }}</el-dropdown-item>
         <el-dropdown-item
-          @click="batchAddField([id, version, creatorId, createdBy, createdTime])"
+          @click="batchAddField([id, creatorId, createdBy, createdTime])"
           >{{ $t('platform.ebApp.stdFieldImmutably') }}</el-dropdown-item
         >
         <el-dropdown-item
