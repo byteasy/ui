@@ -21,14 +21,14 @@ const props = defineProps<{
 onMounted(() => {
   getEnumValues(props.code).then((rsp) => {
     rsp.data.forEach((item) => {
-      enumMap.value[XEUtils.toString(item.value)] = item
+      enumMap.value[XEUtils.toString(item.name)] = item
     })
   })
 })
 
 function parseLabel(value) {
   if (enumMap.value[XEUtils.toString(value)] !== undefined) {
-    return getLangText(enumMap.value[XEUtils.toString(value)]['label'], locale.value)
+    return getLangText(enumMap.value[XEUtils.toString(value)]['displayName'], locale.value)
   } else {
     return getLangText(value, locale.value)
   }
@@ -39,7 +39,7 @@ function parseType(value) {
   const key = XEUtils.toString(value)
 
   if (enumMap.value[key] !== undefined) {
-    return enumMap.value[key].css
+    return enumMap.value[key].typeClassName
   } else {
     return 'primary'
   }

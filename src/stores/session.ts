@@ -61,7 +61,7 @@ export const useSessionStore = defineStore('session', {
 
       // 3. 发起真实请求并存入 pending 队列
       const promise = request({
-        url: `/platformSvr/sapi/enums/${enumClassName}`,
+        url: `/platformSvr/sapi/fieldDefines/entity/${enumClassName}`,
         method: 'get',
       })
         .then((res: any) => {
