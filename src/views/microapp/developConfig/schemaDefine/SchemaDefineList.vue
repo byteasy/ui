@@ -70,7 +70,7 @@ function onSyncSchemaClick() {
   }
   doHttpGet('/platformSvr/sapi/fieldDefines/services/' + serviceName + '/context').then(res1 => {
     const ctxPath = res1.data
-    doHttpGet(ctxPath + '/sapi/fields/src/' + className).then(res2 => {
+    doHttpGet(ctxPath + '/sapi/fieldDefineHelper/src/' + className).then(res2 => {
       const columns = res2.data
       if(columns.length > 0) {
         doHttpPut('/platformSvr/sapi/fieldDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {
@@ -99,7 +99,7 @@ function onSyncSchemaFromDatabaseClick() {
   }
   doHttpGet('/platformSvr/sapi/fieldDefines/services/' + serviceName + '/context').then(res1 => {
     const ctxPath = res1.data
-    doHttpGet(ctxPath + '/sapi/fields/database/' + className).then(res2 => {
+    doHttpGet(ctxPath + '/sapi/fieldDefineHelper/database/' + className).then(res2 => {
       const columns = res2.data
       if(columns.length > 0) {
         doHttpPut('/platformSvr/sapi/fieldDefines/' + serviceName + '/' + className, {}, columns).then(res3 => {

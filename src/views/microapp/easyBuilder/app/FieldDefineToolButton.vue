@@ -53,8 +53,8 @@ function batchMoveFieldGroup() {
 }
 
 function syncToDb() {
-  getEntityDefine('com.byteasy.platform.entity.FieldGroup').then(entityDefine => {
-    doHttpPost(entityDefine.serviceInstance.contextPath + '/sapi/fields/database/currentSchema/' + props.queryParams.className, {}, {}).then(() => {
+  getEntityDefine(props.queryParams.className).then(entityDefine => {
+    doHttpPost(entityDefine.serviceInstance.contextPath + '/sapi/fieldDefineHelper/database/currentSchema/' + props.queryParams.className, {}, {}).then(() => {
       ElMessage.success(t('operationSuccess'))
     })
   })

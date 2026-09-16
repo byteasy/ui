@@ -397,7 +397,7 @@ const batchAddField = (rows) => {
 const loadFromDatabase = async () => {
   getEntityDefine(props.queryParams.className).then(entity => {
     const contextPath = entity.serviceInstance.contextPath
-    doHttpGet(contextPath + '/sapi/fields/database/' + props.queryParams.className, {}).then(response => {
+    doHttpGet(contextPath + '/sapi/fieldDefineHelper/database/' + props.queryParams.className, {}).then(response => {
       const rows = response.data;
       rows.forEach((row) => {
         row.className = props.queryParams.className;
@@ -412,7 +412,7 @@ const loadFromDatabase = async () => {
 const loadFromSrc = async () => {
   getEntityDefine(props.queryParams.className).then(entity => {
     const contextPath = entity.serviceInstance.contextPath
-    doHttpGet(contextPath + '/sapi/fields/src/' + props.queryParams.className, {}).then(response => {
+    doHttpGet(contextPath + '/sapi/fieldDefineHelper/src/' + props.queryParams.className, {}).then(response => {
       const rows = response.data;
       rows.forEach((row) => {
         row.className = props.queryParams.className;
