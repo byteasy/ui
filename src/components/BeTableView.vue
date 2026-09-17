@@ -40,21 +40,16 @@
           :label="getLangText(col.displayName, locale)"
           :prop="col.name"
           resizable
-          v-if="col.isShow === 'YES' && (col.type !== 'ENUM' || col.columnComponent)"
+          v-if="col.isShow === 'YES' && col.relationType !== 'DETAIL_TABLE' && (col.type !== 'ENUM' || col.columnComponent)"
           :min-width="col.width === 0 ? undefined : col.width"
           :show-overflow-tooltip="col.isOverflow === 'YES'"
           :sortable="col.isSort === 'YES'"
         >
           <template #default="scope">
             <slot :name="'table-cell-' + col.name" :row="scope.row">
-              <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'">
-                <be-i18n-value :model-value="scope.row[col.name] || col.displayName"
-                               :lang="props.tableProps.showLang"
-                               @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
-              </el-link>
               <be-popup-object-view :model-value="scope.row[getClassFieldName(col.externalClass)]"
                                     :column="col" :lang="props.tableProps.showLang"
-                                    v-else-if="col.relationType === 'EXTERNAL_KEY' && col.externalClassAutoFill === true"/>
+                                    v-if="col.relationType === 'EXTERNAL_KEY' && col.externalClassAutoFill === true"/>
               <component v-else-if="col.columnComponent"
                          :is="getComponent('..' + parseComponent(col.columnComponent))"
                          :param="parseComponentParam(col.columnComponent)"
@@ -90,7 +85,6 @@
     <el-table-column
       fixed="right"
       :label="$t('table.operation')"
-      v-if="props.tableProps.queryMode !== true"
       align="center"
       :min-width="props.tableProps.operationColumnWidth ? props.tableProps.operationColumnWidth : 160"
     >
@@ -104,8 +98,15 @@
                 {{ t('table.view') }}
               </template>
             </be-popup-object-view>
+            <template v-for="col in fields" :key="col.name">
+              <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'">
+                <be-i18n-value :model-value="scope.row[col.name] || col.displayName"
+                               :lang="props.tableProps.showLang"
+                               @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
+              </el-link>
+            </template>
             <el-link underline="never" @click="handleRowAction(TableRowActionEnum.EDIT, scope.row)"
-                     type="primary" v-if="hasPermission(tableProps.apiSave)">
+                     type="primary" v-if="hasPermission(tableProps.apiSave) && props.tableProps.queryMode !== true">
               {{ t('table.edit') }}
             </el-link>
             <slot name="table-operation-extra" :row="scope.row" :queryParams="props.queryParams"></slot>
@@ -114,11 +115,11 @@
               :cancel-button-text="$t('cancel')"
               :title="$t('deleteWarn')"
               :hide-after="10"
-              v-if="hasPermission(tableProps.apiDelete)"
+              v-if="hasPermission(tableProps.apiDelete) && props.tableProps.queryMode !== true"
               @confirm="handleRowAction(TableRowActionEnum.DELETE, scope.row)"
             >
               <template #reference>
-                <el-link underline="never" type="danger" v-if="hasPermission(tableProps.apiDelete)">
+                <el-link underline="never" type="danger" v-if="hasPermission(tableProps.apiDelete) && props.tableProps.queryMode !== true">
                   {{ t('table.delete') }}
                 </el-link>
               </template>
