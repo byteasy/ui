@@ -48,7 +48,7 @@
           <template #default="scope">
             <slot :name="'table-cell-' + col.name" :row="scope.row">
               <el-link underline="never" type="primary" v-if="col.relationType === 'DETAIL_TABLE'">
-                <be-i18n-value :model-value="scope.row[col.name]"
+                <be-i18n-value :model-value="scope.row[col.name] || col.displayName"
                                :lang="props.tableProps.showLang"
                                @click="handleRowAction('detailTable', { column: col, row: scope.row})"/>
               </el-link>
