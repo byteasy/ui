@@ -26,6 +26,14 @@
     type="number"
     :style="{ width: (props.column.width === 0 ? 160 : props.column.width) + 'px' }"
   />
+  <el-switch v-else-if="props.column.type === 'BOOL'">
+    <template #active-action>
+      <span>T</span>
+    </template>
+    <template #inactive-action>
+      <span>F</span>
+    </template>
+  </el-switch>
   <el-date-picker
     v-else-if="props.column.type === 'LOCAL_DATE'"
     type="daterange"
