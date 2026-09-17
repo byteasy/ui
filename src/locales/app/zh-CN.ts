@@ -79,6 +79,8 @@ export default {
       retry: '刷新重试',
       layoutLoadFailed: '布局加载失败',
       layoutLoadFailedReason: '布局配置有误',
+      replay: '回放',
+      replayWarn: '确认要执行接口回放？',
 
       // 🔥 针对 BeTableAdvanceQueryPanel 新增的高级查询国际化词条
       matchBelow: '满足以下',

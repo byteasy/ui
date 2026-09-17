@@ -460,7 +460,7 @@ function onView(row) {
 function onOpenTableDetail(column, row) {
   getEntityDefine(column.externalClass).then((entityDefine) => {
     const extrasParams = JSON.parse(column.extrasParams || '{}');
-    const queryParams = { formModel: row, column: column };
+    const queryParams = { };
     queryParams[column.externalClassPrimaryField + 'QueryType'] = 'eq';
     queryParams[column.externalClassPrimaryField] = row[column.innerPrimaryField];
     Object.assign(queryParams, extrasParams?.queryParams || {});
