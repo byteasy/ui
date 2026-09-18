@@ -552,12 +552,12 @@ function onEdit(row) {
 
 function onDelete(row) {
   if (props.apiDelete.startsWith('/')) {
-    doHttpDelete(props.apiDelete, queryParams.value, row).then(() => {
+    doHttpDelete(props.apiDelete, row, row).then(() => {
       ElMessage.success(t('operationSuccess'));
       refresh();
     });
   } else {
-    executeOpenApi(props.apiDelete, queryParams.value, row).then(() => {
+    executeOpenApi(props.apiDelete, row, row).then(() => {
       ElMessage.success(t('operationSuccess'));
       refresh();
     });
