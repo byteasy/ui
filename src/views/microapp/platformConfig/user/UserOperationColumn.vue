@@ -35,7 +35,7 @@ import { useI18n } from 'vue-i18n';
 import { doHttpDelete, doHttpPut } from '@/api/common/platform';
 import { ElMessage } from 'element-plus';
 import { useModal } from '@/components/dialog/useModal.ts';
-import UserRoleMgr from '@/views/microapp/platformMgr/UserRoleMgr.vue';
+import UserRoleMgr from '@/views/microapp/platformConfig/user/UserRoleMgr.vue';
 import { useSessionStore } from '@/stores/session.ts';
 const { open } = useModal();
 const { hasPermission } = useSessionStore();
