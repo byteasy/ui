@@ -25,7 +25,7 @@
                                         :column="col" :lang="props.lang"
                                         v-else-if="col.relationType === 'EXTERNAL_KEY'  && col.externalClassAutoFill === true"/>
                 <el-text style="max-width: 15vw;" truncated v-else-if="col.type ==='STRING'">{{ getLangText(showValue[col.name], props.lang) }}</el-text>
-                <span v-else> {{ showValue[col.name] }}</span>
+                <el-text style="max-width: 15vw;" truncated v-else> {{ showValue[col.name] }}</el-text>
               </slot>
             </el-descriptions-item>
           </template>

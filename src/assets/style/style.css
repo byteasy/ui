@@ -257,6 +257,18 @@ html.blue {
   color: var(--my-font-color-primay);
   font-size: 1rem;
 }
+.font-size-1rem {
+  font-size: 1rem;
+}
+.font-size-1p2rem {
+  font-size: 1.2rem;
+}
+.font-size-1p5rem {
+  font-size: 1.5rem;
+}
+.font-size-2rem {
+  font-size: 2rem;
+}
 .text-gray {
   color: var(--el-text-color-placeholder);
 }
