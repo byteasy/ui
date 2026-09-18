@@ -35,8 +35,8 @@
       <el-input type="text" v-model="scope.row.clientSecret" :disabled="scope.props.readonly" v-if="!scope.row.id" :placeholder="getLangText(scope.column.displayName, locale)"/>
       <div v-else>****</div>
     </template>
-    <template v-slot:form-json-tokenEndpointAuthenticationSigningAlgorithm="tokenEndpointAuthenticationSigningAlgorithmScope">
-      <el-select v-model="tokenEndpointAuthenticationSigningAlgorithmScope.row.tokenEndpointAuthenticationSigningAlgorithm" :disabled="tokenEndpointAuthenticationSigningAlgorithmScope.props.disabled">
+    <template v-slot:formItemField_tokenEndpointAuthenticationSigningAlgorithm="scope">
+      <el-select v-model="scope.row.tokenEndpointAuthenticationSigningAlgorithm" :disabled="scope.props.disabled">
         <!-- MacAlgorithm -->
         <el-option label="HS256" value="HS256" />
         <el-option label="HS384" value="HS384" />
