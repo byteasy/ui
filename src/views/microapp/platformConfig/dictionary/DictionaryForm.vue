@@ -7,9 +7,9 @@
 </template>
 <script setup lang="ts">
 import {defineExpose, onMounted, ref} from 'vue'
-import ResourceCategoryGroupTreeSelect
-  from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTreeSelect.vue";
 import {useI18n} from "vue-i18n";
+import ResourceCategoryGroupTreeSelect
+  from '@/views/microapp/platformConfig/dictionary/ResourceCategoryGroupTreeSelect.vue';
 
 const {t, locale} = useI18n()
 

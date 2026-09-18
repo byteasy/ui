@@ -30,13 +30,12 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import DictionaryForm from "@/views/microapp/platformConfig/dictionary/DictionaryForm.vue";
-import ResourceCategoryGroupTree
-  from "@/views/microapp/developConfig/resource/ResourceCategoryGroupTree.vue";
 import DictionaryItemList from "@/views/microapp/platformConfig/dictionary/DictionaryItemList.vue";
 import {getLangText} from "@/locales/common.ts";
 import {useI18n} from "vue-i18n";
 import {useRoute} from "vue-router";
 import {useModal} from "@/components/dialog/useModal.ts";
+import ResourceCategoryGroupTree from '@/views/microapp/platformConfig/dictionary/ResourceCategoryGroupTree.vue';
 
 const {t, locale} = useI18n()
 

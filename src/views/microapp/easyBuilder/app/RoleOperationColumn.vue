@@ -1,5 +1,5 @@
 <template>
-  <el-space direction="horizontal" :size="4">
+  <el-space direction="horizontal" :size="4" v-if="hasPermission('4GUf7FyQs')">
     <el-link underline="never" type="primary" @click="onOpenRoleResource">
       {{ t('platform.ebApp.permission') }}
     </el-link>
@@ -9,6 +9,8 @@
 import { useI18n } from 'vue-i18n';
 import { useModal } from '@/components/dialog/useModal.ts';
 import RoleResource from '@/views/microapp/easyBuilder/app/RoleResource.vue';
+import { useSessionStore } from '@/stores/session.ts';
+const { hasPermission } = useSessionStore();
 
 const { t, locale } = useI18n();
 const { open } = useModal();
