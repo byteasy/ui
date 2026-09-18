@@ -1,7 +1,7 @@
 <template>
   <el-space direction="horizontal" :size="4">
     <el-link underline="never" type="primary" @click="onOpenRoleResource">
-      {{ t('platform.ebApp.resource') }}
+      {{ t('platform.ebApp.permission') }}
     </el-link>
   </el-space>
 </template>

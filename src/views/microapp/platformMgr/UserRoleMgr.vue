@@ -73,12 +73,12 @@ onMounted(() => {
 })
 
 const loadTreeData = () => {
-  doHttpGet('/platformSvr/sapi/users/roles', {
-    userId: props.row.id
-  }).then((res) => {
-    treeData.value = res.data.roles
-    selectedKeys.value = res.data.roleIds
-    treeRef.value?.setCheckedKeys(selectedKeys.value, false)
+  doHttpGet('/platformSvr/sapi/roles/list/match', { ascColumns: [ 'code' ] }).then((res) => {
+    treeData.value = res.data
+    doHttpGet('/platformSvr/sapi/users/roles', { id: props.row.id }).then((res) => {
+      selectedKeys.value = res.data.roleIds
+      treeRef.value?.setCheckedKeys(selectedKeys.value, true)
+    })
   })
 }
 
