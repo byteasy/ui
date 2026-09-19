@@ -21,7 +21,7 @@ const props = withDefaults(
 )
 
 const metaData = ref({
-  className: 'com.byteasy.platform.entity.PlatformResourceLayout',
+  className: 'com.byteasy.platform.entity.ResourceLayout',
   queryParams: {
     resourceId: props.resource?.id
   }
