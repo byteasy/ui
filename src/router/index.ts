@@ -4,15 +4,29 @@ import { doHttpGet } from '@/api/common/platform';
 import { getComponent } from '@/util/componentLoader.ts';
 import { defineComponent, h } from 'vue';
 
+const routers = [
+  {
+    path: '/pub/index',
+    name: 'pubComponent',
+    component: () => wrapDynamicComponent('/views/layout/RouteLayoutAutoRender.vue', 'pubComponent'),
+  },
+]
+
 const router = createRouter({
   history: createWebHashHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/' : '/'),
-  routes: [],
+  routes: routers,
 });
 
 let isMicroAppRouterLoad = false;
 let activeMicroAppRouter = 'noActive';
 
 router.beforeEach(async (to, from, next) => {
+  // 脱离框架的公开访问页面
+  if(to.fullPath.startsWith('/pub')) {
+    next();
+    return;
+  }
+
   const paths = to.fullPath.split('/');
   const nowActiveAppRouter = '/' + (paths[1] || '') + '/' + (paths[2] || '');
 

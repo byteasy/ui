@@ -51,13 +51,13 @@ onMounted(() => {
 
   loading.value = true;
   if (layoutId) {
-    executeOpenApi('queryResourceLayout', { id: layoutId, idQueryType: 'eq' }, {})
+    executeOpenApi('4JLqmAjqs', { id: layoutId, idQueryType: 'eq' }, {})
       .then((rsp) => {
         layout.value = rsp.data;
         loading.value = false;
       })
       .catch((err) => {
-        loadFailed.value = err;
+        loadFailed.value = err.description;
       });
   } else {
     // 根据当前路由查询默认布局
