@@ -238,6 +238,7 @@ function handleReset() {
   searchFields.value.forEach((col) => {
     delete queryParams.value[col.name];
   });
+  delete queryParams.value.oneKeySearch
   emit('reset');
   handleSearch();
 }
