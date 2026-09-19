@@ -14,6 +14,9 @@
         <el-tab-pane :label="$t('platform.ebApp.permission')" name="permission" class="h-full">
           <tab-permission :resource="activeTreeNode"/>
         </el-tab-pane>
+        <el-tab-pane :label="$t('platform.ebApp.router')" name="router" class="h-full">
+          TODO
+        </el-tab-pane>
       </el-tabs>
     </el-splitter-panel>
   </el-splitter>
