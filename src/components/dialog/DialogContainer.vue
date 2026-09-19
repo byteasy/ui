@@ -20,20 +20,20 @@
           <template #header="{ close, titleId, titleClass }">
             <div class="flex-row w-full">
               <div class="flex-grow">
-                <el-icon class="my-icon-color-primary cursor-pointer">
+                <el-icon class="my-icon-color-primary cursor-pointer font-size-1p2rem">
                   <Document/>
                 </el-icon>
-                <el-text style="font-size: var(--el-font-size-large)" class="ml-2 font-bold">
+                <el-text class="ml-2 font-bold my-font-size-lg">
                   {{ item.title }}
                 </el-text>
               </div>
               <div class="flex-none">
-                <el-icon class="my-icon-color-primary cursor-pointer"
+                <el-icon class="my-icon-color-primary cursor-pointer font-size-1p2rem"
                          @click="onFullscreenClick(item)">
                   <FullScreen v-if="item.fullscreen === false"/>
                   <IconLocalExitFullscreen v-else/>
                 </el-icon>
-                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()">
+                <el-icon class="ml-2 my-icon-color-primary font-size-1p2rem cursor-pointer" @click="close()">
                   <Close/>
                 </el-icon>
               </div>
@@ -80,7 +80,7 @@
                 <el-icon class="my-icon-color-primary font-size-1p2rem cursor-pointer">
                   <Document/>
                 </el-icon>
-                <el-text class="ml-2 font-bold font-size-1p2rem" >
+                <el-text class="ml-2 font-bold my-font-size-lg">
                   {{ item.title }}
                 </el-text>
               </div>

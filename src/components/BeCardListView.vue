@@ -47,7 +47,7 @@
             <div class="mt-3">
               <slot name="table-column-title" :row="entity">
                 <el-link type="primary" @click="handleRowAction(TableRowActionEnum.VIEW, entity)" class="ml-3">
-                  <el-text size="large" class="my-font-bold">
+                  <el-text size="large" class="font-bold">
                     <be-i18n-value
                       :model-value="entity[props.tableProps.titleColumnName || 'name' ]"
                       class="text-truncate-36"></be-i18n-value>

@@ -26,6 +26,7 @@
                              :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                              :column="col"
                              clearable
+                             :multiple="col.multiple === 'YES'"
                              :disabled="props.disabled"
                              v-model="formValue[col.name]"/>
                   <be-form-field
