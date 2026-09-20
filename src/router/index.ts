@@ -8,7 +8,7 @@ const routers = [
   {
     path: '/pub/index',
     name: 'pubComponent',
-    component: () => wrapDynamicComponent('/views/layout/RouteLayoutAutoRender.vue', 'pubComponent'),
+    component: wrapDynamicComponent('/views/layout/RouteLayoutAutoRender.vue', 'pubComponent'),
   },
 ]
 
@@ -19,6 +19,7 @@ const router = createRouter({
 
 let isMicroAppRouterLoad = false;
 let activeMicroAppRouter = 'noActive';
+const WHITE_LIST_ROUTES = ['pubComponent'];
 
 router.beforeEach(async (to, from, next) => {
   // 脱离框架的公开访问页面
@@ -37,7 +38,7 @@ router.beforeEach(async (to, from, next) => {
 
     // 🔥 修复点 1：Vue Router 正规清理路由方式
     router.getRoutes().forEach((route) => {
-      if (route.name) {
+      if (route.name && !WHITE_LIST_ROUTES.includes(route.name as string)) {
         router.removeRoute(route.name);
       }
     });
