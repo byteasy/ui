@@ -15,6 +15,13 @@
     "lint": "eslint ui-main-app --fix --cache",
     "format": "prettier --write --experimental-cli src"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "vue-demi",
+      "@parcel/watcher"
+    ]
+  },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
     "@guolao/vue-monaco-editor": "^1.6.0",
