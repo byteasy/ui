@@ -4,7 +4,7 @@
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item>
-          <layout-column-param :row="props.row"/>
+          <layout-column-param :row="props.row" @refresh="refreshTable"/>
         </el-dropdown-item>
         <el-dropdown-item @click="onOpenTableDetail(props.row)">{{ $t('platform.ebApp.field') }}</el-dropdown-item>
         <el-dropdown-item @click="onOpenFieldGropTable(props.row)">{{ $t('platform.ebApp.fieldGroup') }}</el-dropdown-item>
@@ -27,7 +27,12 @@ const {open} = useModal()
 
 const props = defineProps<{
   row: object
+  refTable: any
 }>()
+
+const refreshTable = () => {
+  props.refTable.refresh()
+}
 
 function onOpenTableDetail(row) {
   getEntityDefine('com.byteasy.platform.entity.FieldDefine').then(entityDefine => {
