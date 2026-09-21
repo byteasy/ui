@@ -302,7 +302,7 @@ const isDeleted = {
   isShow: 'NO',
   typeClassName: 'java.lang.Integer',
   name: 'IS_DELETED',
-  showOrder: 10003,
+  showOrder: 10006,
   desensitize: 'NO',
 };
 
@@ -328,7 +328,7 @@ const deleterId = {
   isShow: 'NO',
   typeClassName: 'java.lang.String',
   name: 'deleterId',
-  showOrder: 10003,
+  showOrder: 10007,
   desensitize: 'NO',
   maxLength: 80,
 };
@@ -355,7 +355,7 @@ const deletedBy = {
   isShow: 'NO',
   typeClassName: 'java.lang.String',
   name: 'deletedBy',
-  showOrder: 10004,
+  showOrder: 10008,
   desensitize: 'NO',
   maxLength: 80,
 };
@@ -382,7 +382,7 @@ const deletedTime = {
   isShow: 'NO',
   typeClassName: 'java.time.LocalDateTime',
   name: 'deletedTime',
-  showOrder: 10005,
+  showOrder: 10009,
   desensitize: 'NO',
   maxLength: 80,
 };
