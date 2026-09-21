@@ -301,7 +301,7 @@ const isDeleted = {
   isForm: 'NO',
   isShow: 'NO',
   typeClassName: 'java.lang.Integer',
-  name: 'IS_DELETED',
+  name: 'isDeleted',
   showOrder: 10006,
   desensitize: 'NO',
 };
