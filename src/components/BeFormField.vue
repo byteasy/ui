@@ -2,14 +2,14 @@
   <be-object-select v-if="props.column.relationType === 'EXTERNAL_KEY'" :column="props.column"
                     :formModel="formModel"/>
   <be-i18n-dynamic-input v-else-if="props.column.isI18n === 'YES' && props.column.type === 'STRING'"
-                         :type="props.column.textareaRows === 1 ? 'text' : 'textarea'"
+                         :type="props.column.textareaRows === 1 || props.column.textareaRows === undefined ? 'text' : 'textarea'"
                          :rows="props.column.textareaRows"
                          :maxlength="props.column.maxLength"
                          :minlength="props.column.minLength"
                          :formModel="formModel"
   />
   <el-input
-    :type="props.column.textareaRows === 1 ? 'text' : 'textarea'"
+    :type="props.column.textareaRows === 1 || props.column.textareaRows === undefined ? 'text' : 'textarea'"
     :rows="props.column.textareaRows"
     :maxlength="props.column.maxLength"
     :minlength="props.column.minLength"
