@@ -40,6 +40,7 @@
         v-if="metaData.queryFormComponent"
         :param="parseComponentParam(metaData.queryFormComponent)"
         :refTable="refTable"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -49,6 +50,7 @@
         v-if="metaData.queryFormExtraComponent"
         :param="parseComponentParam(metaData.queryFormExtraComponent)"
         :refTable="refTable"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -58,6 +60,7 @@
         v-if="metaData.queryFormButtonsComponent"
         :param="parseComponentParam(metaData.queryFormButtonsComponent)"
         :refTable="refTable"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -67,6 +70,7 @@
         v-if="metaData.queryFormButtonExtraComponent"
         :param="parseComponentParam(metaData.queryFormButtonExtraComponent)"
         :refTable="refTable"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -77,6 +81,7 @@
         v-if="metaData.toolButtonsExtraComponent"
         :param="parseComponentParam(metaData.toolButtonsExtraComponent)"
         :refTable="refTable"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -86,6 +91,7 @@
         v-if="metaData.moreActionExtraComponent"
         :param="parseComponentParam(metaData.moreActionExtraComponent)"
         :refTable="refTable"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -98,6 +104,7 @@
         :param="operationComponents.main.param"
         :refTable="refTable"
         :row="scope.row"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -108,6 +115,7 @@
         :param="operationComponents.extra.param"
         :refTable="refTable"
         :row="scope.row"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -118,6 +126,7 @@
         :param="operationComponents.endExtra.param"
         :refTable="refTable"
         :row="scope.row"
+        @refresh="refreshTable"
         :queryParams="scope.queryParams"
       ></component>
     </template>
@@ -252,6 +261,10 @@ const getSelectionRows = () => {
 
 const reload = () => {
   window.location.reload();
+}
+
+const refreshTable = () => {
+  refTable.value?.refresh();
 }
 
 defineExpose({

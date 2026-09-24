@@ -38,6 +38,7 @@ export default {
       model: '模型',
       permission: '权限',
       router: '路由',
+      page: '页面',
       field: '字段定义',
       stdField: '批量导入',
       stdFieldBase: '基础实体属性',
