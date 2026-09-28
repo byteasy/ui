@@ -1,16 +1,18 @@
 <template>
   <div class="flex-column w-full el-card h-full">
-    <div class="w-full flex-row p-2 align-items-center gap-1"
-         style="border-bottom: 1px solid var(--el-border-color);">
+    <div
+      class="w-full flex-row p-2 align-items-center gap-1"
+      style="border-bottom: 1px solid var(--el-border-color)"
+    >
       <el-button-group direction="horizontal" class="flex-none">
-        <el-button type="primary" @click="evt => isMobile = false" :disabled="!isMobile">
+        <el-button type="primary" @click="(evt) => (isMobile = false)" :disabled="!isMobile">
           <el-icon size="24">
-            <IconLocalDesktop/>
+            <IconLocalDesktop />
           </el-icon>
         </el-button>
-        <el-button type="primary" @click="evt => isMobile = true" :disabled="isMobile">
+        <el-button type="primary" @click="(evt) => (isMobile = true)" :disabled="isMobile">
           <el-icon size="24">
-            <IconLocalMobile/>
+            <IconLocalMobile />
           </el-icon>
         </el-button>
       </el-button-group>
@@ -26,23 +28,39 @@
       </div>
     </div>
     <div
-      class="flex-grow flex-row w-full h-full justify-content-center align-items-center designer-container">
+      class="flex-grow flex-row w-full h-full justify-content-center align-items-center designer-container"
+    >
       <div :class="{ 'w-full h-full': !isMobile, 'mobile-container': isMobile }">
         <div
-          :class="{ 'desktop-root-rect w-full' : !isMobile, 'sense-rect-border flex-column': true, 'mobile-root-rect': isMobile}"
-          :style="{ height: `${props.height - 126}px` }">
+          :class="{
+            'desktop-root-rect w-full': !isMobile,
+            'sense-rect-border flex-column': true,
+            'mobile-root-rect': isMobile,
+          }"
+          :style="{ height: `${props.height - 126}px` }"
+        >
           <VueDraggable
             class="w-full be-material-target"
-            :style="{ 'min-height': isMobile ? '730px' : (props.height ? `${props.height - 136}px` : '100vh') }"
+            :style="{
+              'min-height': isMobile ? '730px' : props.height ? `${props.height - 136}px` : '100vh',
+            }"
             v-model="rootComponents"
-            v-bind="$attrs" :animation="150" group="material"
+            v-bind="$attrs"
+            :animation="150"
+            group="material"
             :on-add="onAdded"
-            ghostClass="drag-ghost" chosenClass="drag-chosen">
+            ghostClass="drag-ghost"
+            chosenClass="drag-chosen"
+          >
             <template v-for="root in rootComponents" :key="root.id">
-              <be-form-component :model-value="root" @click="onComponentClick(root)"
-                                 :active="root.id === activeComponent?.id"
-                                 @copy="onComponentCopy" @delete="onComponentDelete"
-                                 @update:modelValue="doUpdateModelValue"/>
+              <be-form-component
+                :model-value="root"
+                @click="onComponentClick(root)"
+                :active="root.id === activeComponent?.id"
+                @copy="onComponentCopy"
+                @delete="onComponentDelete"
+                @update:modelValue="doUpdateModelValue"
+              />
             </template>
           </VueDraggable>
         </div>
@@ -51,95 +69,105 @@
   </div>
 </template>
 <script setup lang="ts">
-import {VueDraggable} from "vue-draggable-plus";
-import {ref, watch} from "vue";
-import BeFormComponent from "@/components/form/BeFormComponent.vue";
-import {useFormEngine} from "@/stores/formEngine.ts";
-import {storeToRefs} from "pinia";
-import {VideoPlay} from "@element-plus/icons-vue";
+import { VueDraggable } from 'vue-draggable-plus';
+import { defineModel, ref, watch } from 'vue';
+import BeFormComponent from '@/components/form/BeFormComponent.vue';
+import { useFormEngine } from '@/stores/formEngine.ts';
+import { storeToRefs } from 'pinia';
+import { VideoPlay } from '@element-plus/icons-vue';
 
 const props = defineProps<{
-  height: number | undefined
-  modelValue: Array<any>,
-}>()
+  height: number | undefined;
+}>();
 
-const emit = defineEmits(['update', 'add', 'remove', 'selected', 'update:modelValue', 'playStart', 'playStoped'])
-const formEngine = useFormEngine()
+const emit = defineEmits([
+  'update',
+  'add',
+  'remove',
+  'selected',
+  'update:modelValue',
+  'playStart',
+  'playStoped',
+]);
+const formEngine = useFormEngine();
 const isMobile = ref(false);
 const isPlay = ref(false);
-const rootComponents = ref([...(props.modelValue || [])])
-const {activeComponent} = storeToRefs(formEngine)
 
-watch(() => rootComponents.value, (newVal, oldVal) => {
-  const newValue = JSON.parse(JSON.stringify(newVal))
-  emit('update:modelValue', newValue)
-}, {
-  deep: true
-})
+const rootComponents = defineModel<any>('rootComponents', { default: () => ([]) });
+const { activeComponent } = storeToRefs(formEngine);
 
-function handleDragStart(m) {
-}
+function handleDragStart(m) {}
 
-function handleDragEnd(m) {
-}
+function handleDragEnd(m) {}
 
-function onAdded(event) {
-}
+function onAdded(event) {}
 
 function onComponentCopy(root) {
-  const newRoot = JSON.parse(JSON.stringify(root))
-  newRoot.id = newRoot.id + '-' + new Date().getTime()
-  rootComponents.value.push(newRoot)
+  const newRoot = JSON.parse(JSON.stringify(root));
+  newRoot.id = newRoot.id + '-' + new Date().getTime();
+  rootComponents.value.push(newRoot);
 }
 
 function onComponentDelete(root) {
-  rootComponents.value = rootComponents.value.filter(item => item.id !== root.id)
+  rootComponents.value = rootComponents.value.filter((item) => item.id !== root.id);
   if (root.id === activeComponent?.value.id) {
-    formEngine.setActiveComponent(null)
+    formEngine.setActiveComponent(null);
   }
 }
 
 function onComponentClick(ponent) {
-  formEngine.setActiveComponent(ponent)
+  formEngine.setActiveComponent(ponent);
 }
 
 function onDragMoveHandle(event, originalEvent) {
-  if (event.from.classList.contains('be-material-source') && event.to.classList.contains('be-material-target')) {
+  if (
+    event.from.classList.contains('be-material-source') &&
+    event.to.classList.contains('be-material-target')
+  ) {
     return true;
   }
-  if (event.from.classList.contains('be-material-target') && event.to.classList.contains('be-material-target')) {
+  if (
+    event.from.classList.contains('be-material-target') &&
+    event.to.classList.contains('be-material-target')
+  ) {
     return true;
   }
-  if (event.from.classList.contains('be-material-source') && event.to.classList.contains('be-material-source')) {
-    return false
+  if (
+    event.from.classList.contains('be-material-source') &&
+    event.to.classList.contains('be-material-source')
+  ) {
+    return false;
   }
-  return false
+  return false;
 }
 
 function doUpdateModelValue(root) {
-  const index = rootComponents.value.findIndex(item => item.id === root.id)
+  const index = rootComponents.value.findIndex((item) => item.id === root.id);
   if (index > -1) {
-    rootComponents.value[index] = root
+    rootComponents.value[index] = root;
   }
 }
 
 function updateComponentProperties() {
-  rootComponents.value = [...(props.modelValue || [])]
+  rootComponents.value = [...(props.modelValue || [])];
 }
 
 function doPlay() {
-  isPlay.value = true
-  emit("playStart")
+  isPlay.value = true;
+  emit('playStart');
 }
 
 function doPlayStoped() {
-  isPlay.value = false
-  emit("playStoped")
+  isPlay.value = false;
+  emit('playStoped');
 }
 
 defineExpose({
-  handleDragStart, handleDragEnd, onDragMoveHandle, updateComponentProperties
-})
+  handleDragStart,
+  handleDragEnd,
+  onDragMoveHandle,
+  updateComponentProperties,
+});
 </script>
 <style scoped>
 .designer-container {
@@ -160,8 +188,8 @@ defineExpose({
 .mobile-root-rect {
   position: absolute;
   /* 百分比是相对于父容器宽高 */
-  left: 8%;    /* 距离父左侧8%宽度 */
-  top: 10%;    /* 距离父顶部16%高度 */
+  left: 8%; /* 距离父左侧8%宽度 */
+  top: 10%; /* 距离父顶部16%高度 */
   right: 8%;
   bottom: 10%;
   width: auto !important;

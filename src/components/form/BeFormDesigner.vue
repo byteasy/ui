@@ -13,8 +13,8 @@
         />
       </el-splitter-panel>
       <el-splitter-panel v-if="isPlay === false">
-        <BeFormSense ref="refFormSense" :height="props.height" v-model="formDefine"
-                     @update:modelValue="doUpdateModelValue" @play-start="isPlay = true" @play-stoped="isPlay = false"/>
+        <BeFormSense ref="refFormSense" :height="props.height" :rootComponents="formDefine"
+                     @play-start="isPlay = true" @play-stoped="isPlay = false"/>
       </el-splitter-panel>
       <el-splitter-panel size="300" collapsible v-if="isPlay === false">
         <be-form-component-prop-editor @updateProps="doUpdateComponentProps" />
@@ -55,11 +55,7 @@ const isPlay = ref(false);
 
 onMounted(() => {
   const arrs = JSON.parse(props.row?.formDefine || '[]');
-  for(let i = 0; i < arrs.length; i++) {
-    formDefine.value.push(arrs[i])
-    console.log('push', arrs[i])
-  }
-  console.log('formDefine', formDefine.value)
+  formDefine.value = arrs;
 })
 
 function onMaterialDrapStart(event) {
@@ -72,10 +68,6 @@ function onMaterialDrapEnd(event) {
 
 function onDragMoveHandle(event, originalEvent) {
   refFormSense.value.onDragMoveHandle(event, originalEvent);
-}
-
-function doUpdateModelValue(value) {
-  formDefine.value = value
 }
 
 function doUpdateComponentProps(compoent) {
