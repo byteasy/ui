@@ -105,7 +105,7 @@ function onAdded(event) {
 
 function onComponentCopy(root) {
   const newRoot = JSON.parse(JSON.stringify(root));
-  newRoot.id = newRoot.id + '-' + new Date().getTime();
+  newRoot.id = newRoot.id.split('-')[0] + '-' + new Date().getTime();
   formDefine.value.push(newRoot);
 }
 
