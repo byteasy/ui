@@ -72,7 +72,6 @@ function onDragMoveHandle(event, originalEvent) {
 
 function onButtonClick(btnName) {
   if (btnName === 'ok') {
-    console.log('formDefine', formDefine.value);
     const page = { ...props.row };
     page.formDefine = JSON.stringify(formDefine.value);
     executeOpenApi('4KNAj25xi', {}, page).then(() => {
