@@ -118,4 +118,8 @@ export default {
       opIn: '属于/包含',
     },
   },
+  formEngine: {
+    property: '属性',
+    id: '编号'
+  }
 } as const;

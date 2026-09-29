@@ -44,7 +44,7 @@
             :style="{
               'min-height': isMobile ? '730px' : props.height ? `${props.height - 136}px` : '100vh',
             }"
-            v-model="rootComponents"
+            v-model="formDefine"
             v-bind="$attrs"
             :animation="150"
             group="material"
@@ -52,7 +52,7 @@
             ghostClass="drag-ghost"
             chosenClass="drag-chosen"
           >
-            <template v-for="root in rootComponents" :key="root.id">
+            <template v-for="root in formDefine" :key="root.id">
               <be-form-component
                 :model-value="root"
                 @click="onComponentClick(root)"
@@ -93,23 +93,24 @@ const formEngine = useFormEngine();
 const isMobile = ref(false);
 const isPlay = ref(false);
 
-const rootComponents = defineModel<any>('rootComponents', { default: () => ([]) });
+const formDefine = defineModel<any>('formDefine', { default: () => ([]) });
 const { activeComponent } = storeToRefs(formEngine);
 
 function handleDragStart(m) {}
 
 function handleDragEnd(m) {}
 
-function onAdded(event) {}
+function onAdded(event) {
+}
 
 function onComponentCopy(root) {
   const newRoot = JSON.parse(JSON.stringify(root));
   newRoot.id = newRoot.id + '-' + new Date().getTime();
-  rootComponents.value.push(newRoot);
+  formDefine.value.push(newRoot);
 }
 
 function onComponentDelete(root) {
-  rootComponents.value = rootComponents.value.filter((item) => item.id !== root.id);
+  formDefine.value = formDefine.value.filter((item) => item.id !== root.id);
   if (root.id === activeComponent?.value.id) {
     formEngine.setActiveComponent(null);
   }
@@ -142,14 +143,10 @@ function onDragMoveHandle(event, originalEvent) {
 }
 
 function doUpdateModelValue(root) {
-  const index = rootComponents.value.findIndex((item) => item.id === root.id);
+  const index = formDefine.value.findIndex((item) => item.id === root.id);
   if (index > -1) {
-    rootComponents.value[index] = root;
+    formDefine.value[index] = root;
   }
-}
-
-function updateComponentProperties() {
-  rootComponents.value = [...(props.modelValue || [])];
 }
 
 function doPlay() {
@@ -166,7 +163,6 @@ defineExpose({
   handleDragStart,
   handleDragEnd,
   onDragMoveHandle,
-  updateComponentProperties,
 });
 </script>
 <style scoped>
