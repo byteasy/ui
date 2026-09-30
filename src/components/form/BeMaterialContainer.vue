@@ -227,7 +227,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputSlider' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'slider', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}' },
@@ -241,7 +240,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputNumber' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'number', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}' },
@@ -255,7 +253,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputText' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'text', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'text', minlength: 0, maxlength: 60 , clearable: true, editable: true },
@@ -269,7 +266,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputDate' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'date', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'date', format: 'YYYY-MM-DD', valueFormat: 'YYYY-MM-DD', clearable: true, editable: true },
@@ -283,7 +279,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputTag' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'tagInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true },
@@ -297,7 +292,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputRadio' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'radioInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true, type: 'string' },
@@ -311,7 +305,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputCheckbox' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'checkboxInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true, type: 'string' },
@@ -325,7 +318,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputSelect' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'selectInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true },
@@ -339,7 +331,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputMultiSelect' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'multiSelectInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true },
