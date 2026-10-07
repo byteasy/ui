@@ -13,13 +13,9 @@
 import { defineModel, ref } from 'vue';
 import BeRenderComponent from '@/components/formRender/BeRenderComponent.vue';
 
-const props = defineProps<{}>();
-
 const formValue = defineModel<any>('modelValue', { default: () => {} });
 const formDefine = defineModel<any>('formDefine', { default: () => [] });
 const cascadeModel = ref({});
-
-const emit = defineEmits(['update:modelValue']);
 
 defineExpose({});
 </script>

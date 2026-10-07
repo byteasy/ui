@@ -19,7 +19,6 @@
             :form-define="root"
             v-model="formValue"
             :cascade-model="cascadeModel"
-            @update:modelValue="(value) => emit('update:modelValue', value)"
           />
         </template>
       </el-form>
