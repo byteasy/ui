@@ -53,7 +53,6 @@ const componentGroups = [
         icon: '<svg t="1783756757184" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5169" width="200" height="200"><path d="M853.333333 827.733333H170.666667c-66.030933 0-102.4-36.369067-102.4-102.4v-426.666666c0-66.030933 36.369067-102.4 102.4-102.4h682.666666c66.030933 0 102.4 36.369067 102.4 102.4v426.666666c0 66.030933-36.369067 102.4-102.4 102.4z m-750.933333-341.333333v238.933333c0 47.223467 21.0432 68.266667 68.266667 68.266667h682.666666c47.223467 0 68.266667-21.0432 68.266667-68.266667v-238.933333H102.4z m0-34.133333h819.2v-136.533334H102.4v136.533334z m1.0752-170.666667h817.066667c-4.829867-35.242667-26.112-51.2-67.208534-51.2H170.666667c-41.079467 0-62.3616 15.957333-67.191467 51.2z m409.378133 460.8h-170.666666a17.066667 17.066667 0 1 1 0-34.133333h170.666666a17.066667 17.066667 0 1 1 0 34.133333z m-256 0H170.666667a17.066667 17.066667 0 1 1 0-34.133333h86.186666a17.066667 17.066667 0 1 1 0 34.133333z" p-id="5170"></path></svg>',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutCard.vue'},
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
         ],
         properties: {
@@ -69,7 +68,6 @@ const componentGroups = [
         icon: '<svg t="1783756821998" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6144" width="200" height="200"><path d="M179.712 501.28896l264.47872 0c11.32544 0 20.48-9.15456 20.48-20.48L464.67072 216.33024c0-11.32544-9.15456-20.48-20.48-20.48L179.712 195.85024c-11.32544 0-20.48 9.15456-20.48 20.48l0 264.47872C159.232 492.11392 168.40704 501.28896 179.712 501.28896zM200.192 236.81024l223.51872 0 0 223.51872L200.192 460.32896 200.192 236.81024z" p-id="6145"></path><path d="M529.63328 501.28896l264.47872 0c11.32544 0 20.48-9.15456 20.48-20.48L814.592 216.33024c0-11.32544-9.15456-20.48-20.48-20.48L529.63328 195.85024c-11.32544 0-20.48 9.15456-20.48 20.48l0 264.47872C509.15328 492.11392 518.32832 501.28896 529.63328 501.28896zM550.11328 236.81024l223.51872 0 0 223.51872L550.11328 460.32896 550.11328 236.81024z" p-id="6146"></path><path d="M179.712 851.21024l264.47872 0c11.32544 0 20.48-9.15456 20.48-20.48L464.67072 566.23104c0-11.32544-9.15456-20.48-20.48-20.48L179.712 545.75104c-11.32544 0-20.48 9.15456-20.48 20.48l0 264.47872C159.232 842.0352 168.40704 851.21024 179.712 851.21024zM200.192 586.71104l223.51872 0 0 223.51872L200.192 810.22976 200.192 586.71104z" p-id="6147"></path><path d="M509.15328 830.73024c0 11.32544 9.15456 20.48 20.48 20.48l264.47872 0c11.32544 0 20.48-9.15456 20.48-20.48L814.592 566.23104c0-11.32544-9.15456-20.48-20.48-20.48L529.63328 545.75104c-11.32544 0-20.48 9.15456-20.48 20.48L509.15328 830.73024zM550.11328 586.71104l223.51872 0 0 223.51872L550.11328 810.22976 550.11328 586.71104z" p-id="6148"></path></svg>',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGrid.vue'},
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
         ],
         properties: {
@@ -85,7 +83,6 @@ const componentGroups = [
             render: '/components/formRender/BeRenderLayoutGridItem.vue',
             propsForm: [
               { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
-              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
               { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
             ],
             properties: {
@@ -101,7 +98,6 @@ const componentGroups = [
             render: '/components/formRender/BeRenderLayoutGridItem.vue',
             propsForm: [
               { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
-              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
               { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
             ],
             properties: {
@@ -117,7 +113,6 @@ const componentGroups = [
             render: '/components/formRender/BeRenderLayoutGridItem.vue',
             propsForm: [
               { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutGridItem.vue' },
-              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
               { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
             ],
             properties: {
@@ -136,7 +131,6 @@ const componentGroups = [
         icon: '<svg t="1783756853842" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7138" width="200" height="200"><path d="M0 265.142857v713.142857h1024v-713.142857H0z m987.428571 676.571429H36.571429v-640h950.857142v640zM54.857143 228.571429h914.285714a18.285714 18.285714 0 0 0 0-36.571429H54.857143a18.285714 18.285714 0 0 0 0 36.571429zM109.714286 155.428571h804.571428a18.285714 18.285714 0 0 0 0-36.571428H109.714286a18.285714 18.285714 0 0 0 0 36.571428zM164.571429 82.285714h694.857142a18.285714 18.285714 0 0 0 0-36.571428H164.571429a18.285714 18.285714 0 0 0 0 36.571428z" fill="" p-id="7139"></path></svg>',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutTab.vue'},
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
         ],
         properties: {
@@ -151,7 +145,6 @@ const componentGroups = [
             render: '/components/formRender/BeRenderLayoutTabPane.vue',
             propsForm: [
               { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutTabPane.vue' },
-              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
               { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
             ],
             properties: {
@@ -170,7 +163,7 @@ const componentGroups = [
         icon: '<svg t="1783756877704" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8152" width="200" height="200"><path d="M277.333333 449.185185h469.333334v35.555556H277.333333z m0 143.407408h469.333334v35.555555H277.333333z m0 143.407407h312.888889v36.740741H277.333333zM626.962963 90.074074q-7.111111-37.925926-39.703704-64T512 0q-42.666667 0-75.259259 26.074074T397.037037 90.074074H43.851852v933.925926h936.296296V90.074074z m-213.333333 92.444445l20.148148-9.481482V107.851852q0-29.62963 23.111111-50.370371T512 36.740741q32 0 55.111111 20.74074T590.222222 107.851852v65.185185l20.148148 9.481482q58.074074 30.814815 84.148149 86.518518H329.481481q26.074074-55.703704 84.148149-86.518518z m527.407407 804.74074H82.962963V125.62963h311.703704v26.074074q-46.222222 23.703704-77.037037 64t-40.296297 90.074074h469.333334q-9.481481-49.777778-40.296297-90.074074t-77.037037-64V125.62963h311.703704z" p-id="8153"></path></svg>',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutForm.vue'},
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
+          { title: "{\"zh_CN\":\"接口定义\",\"en\":\"Component Properties\"}", form: 'components.form.interface'},
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
         ],
         properties: {
@@ -186,7 +179,6 @@ const componentGroups = [
         icon: '<svg t="1783756908266" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9128" width="200" height="200"><path d="M972.8 998.4H51.2a25.6 25.6 0 0 1-25.6-25.6V51.2A25.6 25.6 0 0 1 51.2 25.6h921.6a25.6 25.6 0 0 1 25.6 25.6v921.6a25.6 25.6 0 0 1-25.6 25.6z m-896-51.2h870.4V76.8H76.8v870.4z" p-id="9129"></path><path d="M870.4 537.6H153.6a25.6 25.6 0 1 1 0-51.2h716.8a25.6 25.6 0 1 1 0 51.2z" p-id="9130"></path></svg>',
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutCollapse.vue'},
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade'},
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
         ],
         properties: {
@@ -201,7 +193,6 @@ const componentGroups = [
             render: '/components/formRender/BeRenderLayoutCollapseItem.vue',
             propsForm: [
               { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutCollapseItem.vue' },
-              { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Properties\"}", form: 'components.form.base.cascade' },
               { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
             ],
             properties: {
@@ -227,7 +218,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputSlider' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'slider', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}' },
@@ -241,7 +231,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputNumber' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'number', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}' },
@@ -255,7 +244,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputText' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'text', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'text', minlength: 0, maxlength: 60 , clearable: true, editable: true },
@@ -269,7 +257,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputDate' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'date', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', type: 'date', format: 'YYYY-MM-DD', valueFormat: 'YYYY-MM-DD', clearable: true, editable: true },
@@ -283,7 +270,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputTag' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'tagInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true },
@@ -297,7 +283,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputRadio' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'radioInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true, type: 'string' },
@@ -311,7 +296,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputCheckbox' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'checkboxInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true, type: 'string' },
@@ -325,7 +309,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputSelect' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'selectInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true },
@@ -339,7 +322,6 @@ const componentGroups = [
         propsForm: [
           { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputMultiSelect' },
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
-          { title: "{\"zh_CN\":\"联动设置\",\"en\":\"Field Cascade Properties\"}", form: 'components.form.base.cascade' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
         properties: { width: '100%', height: '100%', component: 'multiSelectInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true },

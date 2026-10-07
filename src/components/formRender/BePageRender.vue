@@ -1,30 +1,25 @@
 <template>
   <div class="h-full w-full flex-column">
     <template v-for="root in formDefine" :key="root.id">
-      <be-render-component :form-define="root" v-model="formValue" />
+      <be-render-component
+        :form-define="root"
+        v-model:cascade-model="cascadeModel"
+        v-model="formValue"
+      />
     </template>
   </div>
 </template>
 <script setup lang="ts">
-import { defineModel, ref, watch } from 'vue';
+import { defineModel, ref } from 'vue';
 import BeRenderComponent from '@/components/formRender/BeRenderComponent.vue';
 
-const props = defineProps<{
-  modelValue: Record<string, any>;
-}>();
+const props = defineProps<{}>();
 
-const formValue = ref({ ...props.modelValue });
+const formValue = defineModel<any>('modelValue', { default: () => {} });
 const formDefine = defineModel<any>('formDefine', { default: () => [] });
+const cascadeModel = ref({});
 
 const emit = defineEmits(['update:modelValue']);
-
-watch(
-  formValue.value,
-  (newVal, oldVal) => {
-    emit('update:modelValue', newVal);
-  },
-  { deep: true },
-);
 
 defineExpose({});
 </script>

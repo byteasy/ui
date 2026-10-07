@@ -235,7 +235,6 @@ const loadCascade = (newVal) => {
   return new Promise((resolve, reject) => {
     executeOpenApi(props.apiCascade, {}, newVal)
       .then((rsp) => {
-        cascadeModel.value = {}
         Object.assign(cascadeModel.value, rsp.data.cascadeModel || {});
         Object.assign(formModel.value, rsp.data.formModel || {});
         validError.value = {}
