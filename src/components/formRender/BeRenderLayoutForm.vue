@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineModel, ref, watch } from 'vue';
+import { defineExpose, defineModel, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { renderCss } from '@/util/formUtil.ts';
 import BeRenderComponent from './BeRenderComponent.vue';
@@ -61,7 +61,7 @@ let lastJsonStr = ''; // 记录上一次真正请求时的内容快照
 watch(
   formValue.value,
   (newVal, oldVal) => {
-    if(props.formDefine.properties.apiCascade) {
+    if (props.formDefine.properties.apiCascade) {
       // 🔥 核心关键：将当前值与上次请求时的参数进行深层比对
       // 如果属性值实际上没有变（或者是浅拷贝无意义触发），直接忽略！
       const currentJsonStr = JSON.stringify(newVal);
@@ -86,10 +86,10 @@ const loadCascade = (newVal) => {
       .then((rsp) => {
         Object.assign(cascadeModel.value, rsp.data.cascadeModel || {});
         Object.assign(formValue.value, rsp.data.formModel || {});
-        validError.value = {}
+        validError.value = {};
         Object.assign(validError.value, rsp.data.validError || {});
         setFieldsErrors(validError.value);
-        console.log('cascadeModel', cascadeModel.value)
+        console.log('cascadeModel', cascadeModel.value);
         resolve({});
       })
       .catch((err) => {
@@ -112,7 +112,7 @@ function setFieldError(prop: string, errorMessage: string) {
 
   if (fieldItem) {
     // 2. 标记状态为 error（输入框变红）
-    if(errorMessage === '' || errorMessage === undefined) {
+    if (errorMessage === '' || errorMessage === undefined) {
       fieldItem.validateState = undefined;
     } else {
       fieldItem.validateState = 'error';
@@ -135,5 +135,12 @@ function setFieldsErrors(errorMap: Record<string, string>) {
     setFieldError(prop, errorMap[prop]);
   });
 }
+
+const onOkClick = () => {
+  console.log('BeRenderLayoutForm.vue okClick');
+  return Promise.resolve(true);
+};
+
+defineExpose({ onOkClick });
 </script>
 <style scoped></style>

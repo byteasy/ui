@@ -26,22 +26,33 @@ function onLayoutParamsEdit() {
 }
 
 function openEditForm(row) {
-  getEntityDefine('com.byteasy.platform.entity.PlatformStdLayoutParams').then(entityDefine => {
-    open(
-      BeForm, // 要显示的组件
-      {
-        formModel: row,
-        className: 'com.byteasy.platform.entity.PlatformStdLayoutParams',
-        apiSave: 'saveLayoutParams'
-      }, // 传给组件的 props
-      {
-        title: t('table.edit') + getLangText(entityDefine.name, locale.value),
-        width: '60%',
-        onClose: (data) => {
-          emit('refresh')
+  executeOpenApi(
+    'listLayoutParams',
+    {
+      className: 'com.byteasy.platform.entity.PlatformStdLayoutParams',
+      classNameQueryType: 'eq',
+    },
+    {},
+  ).then((rsp) => {
+    const layoutParams = rsp.data[0];
+    getEntityDefine('com.byteasy.platform.entity.PlatformStdLayoutParams').then(entityDefine => {
+      open(
+        BeForm, // 要显示的组件
+        {
+          formModel: row,
+          className: 'com.byteasy.platform.entity.PlatformStdLayoutParams',
+          apiSave: 'saveLayoutParams',
+          apiCascade: layoutParams?.apiCascade
+        }, // 传给组件的 props
+        {
+          title: t('table.edit') + getLangText(entityDefine.name, locale.value),
+          width: '60%',
+          onClose: (data) => {
+            emit('refresh')
+          },
         },
-      },
-    )
-  })
+      )
+    })
+  });
 }
 </script>
