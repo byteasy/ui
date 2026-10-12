@@ -69,7 +69,7 @@ onMounted(() => {
       .then((rsp) => {
         console.log('pageFormDefine', pageFormDefine);
         layout.value = rsp.data.layout;
-        pageFormDefine.value = JSON.parse(rsp.data.ebPage.formDefine);
+        pageFormDefine.value = JSON.parse(rsp.data.ebPage.formDefine || "[]");
         loading.value = false;
       })
       .catch((err) => {
