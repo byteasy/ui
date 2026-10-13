@@ -216,6 +216,7 @@ const componentGroups = [
         properties: {
           width: '100%',
           height: '100%',
+          layout: 'horizontal',
         },
         children: [
           {
@@ -230,6 +231,26 @@ const componentGroups = [
             properties: {
               width: '100%',
               height: '100%',
+              size: '30%',
+              resizable: true,
+              collapsible: true,
+            }
+          },
+          {
+            id: "LayoutSplitterItem",
+            name: "{\"zh_CN\":\"分割页\",\"en\":\"Layout Splitter Item\"}",
+            path: '/components/form/BeLayoutSplitterItem.vue',
+            render: '/components/formRender/BeRenderLayoutSplitterItem.vue',
+            propsForm: [
+              { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutSplitterItem.vue' },
+              { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+            ],
+            properties: {
+              width: '100%',
+              height: '100%',
+              size: '70%',
+              resizable: true,
+              collapsible: true,
             }
           },
         ]

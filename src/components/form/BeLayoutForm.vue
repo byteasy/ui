@@ -121,5 +121,6 @@ function updateChildrenValue(child) {
 
 .drag-container-border {
   border: 1px dashed var(--el-color-primary);
+  padding-bottom: 0.8rem;
 }
 </style>
