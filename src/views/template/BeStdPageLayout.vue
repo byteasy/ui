@@ -31,6 +31,8 @@
     :show-summary="metaData.showSummary"
     :data-render-finish="props.dataRenderFinish"
     :row-db-click="props.rowDbClick"
+    :form-type="metaData.formType"
+    :eb-page-id="metaData.ebPageId"
     v-else-if="loading === false && layoutSuccess === true"
   >
     <!-- 查询栏自定义组件 -->

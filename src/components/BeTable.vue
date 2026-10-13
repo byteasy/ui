@@ -126,6 +126,7 @@ import BeExcelExport from '@/components/BeExcelExport.vue';
 import { useModal } from '@/components/dialog/useModal.ts';
 import BeTableContainer from '@/components/BeTableContainer.vue';
 import BeForm from '@/components/BeForm.vue';
+import BePageRender from '@/components/formRender/BePageRender.vue';
 import {
   type BeTableProps,
   TableToolbarActionEnum,
@@ -146,6 +147,7 @@ const props = withDefaults(defineProps<BeTableProps>(), {
   multiple: false,
   showSummary: false,
   operationColumnWidth: 160,
+  formType: 'DEV',
 });
 
 const emit = defineEmits(['rowClick']);
@@ -460,7 +462,7 @@ function onView(row) {
 function onOpenTableDetail(column, row) {
   getEntityDefine(column.externalClass).then((entityDefine) => {
     const extrasParams = JSON.parse(column.extrasParams || '{}');
-    const queryParams = { };
+    const queryParams = {};
     queryParams[column.externalClassPrimaryField + 'QueryType'] = 'eq';
     queryParams[column.externalClassPrimaryField] = row[column.innerPrimaryField];
     Object.assign(queryParams, extrasParams?.queryParams || {});
@@ -485,25 +487,49 @@ function onOpenTableDetail(column, row) {
 
 function onAdd(row) {
   getEntityDefine(props.className).then((entityDefine) => {
-    open(
-      getFormComponent(), // 要显示的组件
-      {
-        formModel: JSON.parse(JSON.stringify(row || '{}')),
-        className: props.className,
-        apiSave: props.apiSave,
-        apiCascade: props.apiCascade,
-      }, // 传给组件的 props
-      {
-        title: t('add') + getLangText(entityDefine.name, locale.value),
-        width: getFormWidth(),
-        dialogModel: props.dialogModel,
-        onClose: (data) => {
-          if (data === 'ok') {
-            refresh();
-          }
+    if (props.formType === 'DEV') {
+      open(
+        getFormComponent(), // 要显示的组件
+        {
+          formModel: JSON.parse(JSON.stringify(row || '{}')),
+          className: props.className,
+          apiSave: props.apiSave,
+          apiCascade: props.apiCascade,
+        }, // 传给组件的 props
+        {
+          title: t('add') + getLangText(entityDefine.name, locale.value),
+          width: getFormWidth(),
+          dialogModel: props.dialogModel,
+          onClose: (data) => {
+            if (data === 'ok') {
+              refresh();
+            }
+          },
         },
-      },
-    );
+      );
+    } else {
+      executeOpenApi('4PDygedxi', { id: props.ebPageId, idQueryType: 'eq' }).then(
+        (pageListResult) => {
+          open(
+            BePageRender, // 要显示的组件
+            {
+              modelValue: JSON.parse(JSON.stringify(row || '{}')),
+              formDefine: JSON.parse(pageListResult.data.formDefine),
+            }, // 传给组件的 props
+            {
+              title: t('add') + getLangText(entityDefine.name, locale.value),
+              width: getFormWidth(),
+              dialogModel: props.dialogModel,
+              onClose: (data) => {
+                if (data === 'ok') {
+                  refresh();
+                }
+              },
+            },
+          );
+        },
+      );
+    }
   });
 }
 
@@ -511,7 +537,11 @@ function onBatchAdd(row) {
   getEntityDefine(props.className).then((entityDefine) => {
     open(
       BeTableBatchAdd,
-      { fields: tableColumns.value, tableProps: props, formModel: JSON.parse(JSON.stringify(row || '{}')) },
+      {
+        fields: tableColumns.value,
+        tableProps: props,
+        formModel: JSON.parse(JSON.stringify(row || '{}')),
+      },
       {
         title: t('batchAdd') + getLangText(entityDefine.name, locale.value),
         width: getFormWidth(),
@@ -528,25 +558,49 @@ function onBatchAdd(row) {
 
 function onEdit(row) {
   getEntityDefine(props.className).then((entityDefine) => {
-    open(
-      getFormComponent(), // 要显示的组件
-      {
-        formModel: JSON.parse(JSON.stringify(row || '{}')),
-        className: props.className,
-        apiSave: props.apiSave,
-        apiCascade: props.apiCascade,
-      }, // 传给组件的 props
-      {
-        title: t('table.edit') + getLangText(entityDefine.name, locale.value),
-        width: getFormWidth(),
-        dialogModel: props.dialogModel,
-        onClose: (data) => {
-          if (data === 'ok') {
-            refresh();
-          }
+    if (props.formType === 'DEV') {
+      open(
+        getFormComponent(), // 要显示的组件
+        {
+          formModel: JSON.parse(JSON.stringify(row || '{}')),
+          className: props.className,
+          apiSave: props.apiSave,
+          apiCascade: props.apiCascade,
+        }, // 传给组件的 props
+        {
+          title: t('table.edit') + getLangText(entityDefine.name, locale.value),
+          width: getFormWidth(),
+          dialogModel: props.dialogModel,
+          onClose: (data) => {
+            if (data === 'ok') {
+              refresh();
+            }
+          },
         },
-      },
-    );
+      );
+    } else {
+      executeOpenApi('4PDygedxi', { id: props.ebPageId, idQueryType: 'eq' }).then(
+        (pageListResult) => {
+          open(
+            BePageRender, // 要显示的组件
+            {
+              modelValue: JSON.parse(JSON.stringify(row || '{}')),
+              formDefine: JSON.parse(pageListResult.data.formDefine),
+            }, // 传给组件的 props
+            {
+              title: t('table.edit') + getLangText(entityDefine.name, locale.value),
+              width: getFormWidth(),
+              dialogModel: props.dialogModel,
+              onClose: (data) => {
+                if (data === 'ok') {
+                  refresh();
+                }
+              },
+            },
+          );
+        },
+      );
+    }
   });
 }
 

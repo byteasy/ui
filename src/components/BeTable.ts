@@ -173,6 +173,16 @@ export interface BeTableProps {
    * 拓展上下文对象（传递给枚举列、自定义列等）
    */
   context?: any
+
+  /**
+   * 表单类型
+   */
+  formType?: string
+
+  /**
+   * 低代码页面编号
+   */
+  ebPageId?: number
 }
 
 // src/enums/tableActionEnum.ts
