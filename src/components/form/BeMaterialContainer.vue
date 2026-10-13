@@ -203,6 +203,37 @@ const componentGroups = [
           },
         ]
       },
+      {
+        id: "LayoutSplitter",
+        name: "{\"zh_CN\":\"分隔板\",\"en\":\"Splitter Layout\"}",
+        path: '/components/form/BeLayoutSplitter.vue',
+        render: '/components/formRender/BeRenderLayoutSplitter.vue',
+        icon: '<svg t="1791873982617" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5206" width="200" height="200"><path d="M469.76 384.426667V128.213333h-341.333333v766.933334h341.333333V597.333333h-42.666667v255.146667h-256V170.88h256v213.546667h42.666667zM896 128.64H554.666667v255.786667h42.666666V171.306667h256v681.386666H597.333333V597.333333h-42.666666v298.026667h341.333333V128.64z" p-id="5207"></path><path d="M704 597.333333h42.666667v-170.666666h-42.666667v64H320v-64h-42.666667v170.666666h42.666667v-64h384z" p-id="5208"></path></svg>',
+        propsForm: [
+          { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutSplitter.vue'},
+          { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style'},
+        ],
+        properties: {
+          width: '100%',
+          height: '100%',
+        },
+        children: [
+          {
+            id: "LayoutSplitterItem",
+            name: "{\"zh_CN\":\"分割页\",\"en\":\"Layout Splitter Item\"}",
+            path: '/components/form/BeLayoutSplitterItem.vue',
+            render: '/components/formRender/BeRenderLayoutSplitterItem.vue',
+            propsForm: [
+              { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.BeLayoutSplitterItem.vue' },
+              { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+            ],
+            properties: {
+              width: '100%',
+              height: '100%',
+            }
+          },
+        ]
+      },
     ]
   },
   {
