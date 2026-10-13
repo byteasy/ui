@@ -6,6 +6,7 @@
         :form-define="root"
         v-model:cascade-model="cascadeModel"
         v-model="formValue"
+        @close="(arg) => $emit('close', arg)"
       />
     </template>
   </div>

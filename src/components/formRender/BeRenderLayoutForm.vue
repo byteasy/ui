@@ -4,7 +4,7 @@
       <el-form
         ref="refForm"
         :style="renderCss(props.formDefine.properties)"
-        v-model="formValue"
+        :model="formValue"
         :label-position="props.formDefine.properties.labelPosition"
         :label-width="props.formDefine.properties.labelWidth"
         :label-suffix="props.formDefine.properties.labelSuffix"
@@ -30,7 +30,8 @@ import { defineExpose, defineModel, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { renderCss } from '@/util/formUtil.ts';
 import BeRenderComponent from './BeRenderComponent.vue';
-import { executeOpenApi } from '@/api/common/platform';
+import { doHttpPost, executeOpenApi } from '@/api/common/platform';
+import { ElMessage } from 'element-plus';
 
 const props = defineProps<{
   formDefine: {
@@ -51,7 +52,7 @@ const cascadeModel = defineModel<any>('cascadeModel', { default: () => {} });
 const validError = ref({});
 
 const children = ref([...(props.formDefine.children || [])]);
-const emit = defineEmits(['selected', 'update:modelValue']);
+const emit = defineEmits(['close']);
 const { t, locale } = useI18n();
 
 // 表单联动
@@ -137,8 +138,38 @@ function setFieldsErrors(errorMap: Record<string, string>) {
 }
 
 const onOkClick = () => {
-  console.log('BeRenderLayoutForm.vue okClick');
-  return Promise.resolve(true);
+  if (Object.keys(validError.value).length > 0) {
+    setFieldsErrors(validError.value);
+    console.log('validError.value length > 0');
+    return Promise.reject(validError.value)
+  }
+
+  return new Promise((resolve, reject) => {
+    refForm.value?.validate((valid, fields) => {
+      if (!valid) {
+        console.log('validate error:', fields);
+        // 将表单验证失败的错误信息返回出去
+        return reject(fields);
+      }
+
+      // 3. 校验通过，执行保存逻辑
+      if (props.formDefine.properties.apiSave) {
+        executeOpenApi(props.formDefine.properties.apiSave, {}, formValue.value)
+          .then((res) => {
+            ElMessage.success(t('operationSuccess'));
+            emit('close', 'ok');
+            resolve(res); // 成功时 resolve
+          })
+          .catch((err) => {
+            ElMessage.error(err.message);
+            reject(err); // API 报错时 reject
+          });
+      } else {
+        emit('close', 'ok');
+        resolve(true);
+      }
+    });
+  });
 };
 
 defineExpose({ onOkClick });

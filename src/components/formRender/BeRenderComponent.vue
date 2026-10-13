@@ -7,6 +7,7 @@
       v-model:cascade-model="cascadeModel"
       class="w-full"
       v-model="formValue"
+      @close="(arg) => $emit('close', arg)"
     ></component>
   </div>
 </template>
@@ -31,7 +32,7 @@ const refComponent = ref(null);
 const formValue = defineModel<any>('modelValue', { default: () => {} });
 const cascadeModel = defineModel<any>('cascadeModel', { default: () => {} });
 
-const emit = defineEmits(['click', 'update:modelValue']);
+const emit = defineEmits(['click', 'close']);
 
 const { t, locale } = useI18n();
 
