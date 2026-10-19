@@ -10,7 +10,7 @@
         :is="getComponent(parseComponent(layout.componentPath))"
         :param="parseComponentParam(layout.componentParam)"
       />
-      <be-page-render v-else-if="layout !== undefined && layout?.type === 'EB'" v-model="emptyFormValue" :form-define="pageFormDefine"/>
+      <be-page-render v-else-if="layout !== undefined && layout?.type === 'EB'" v-model="ebFormValue" :form-define="pageFormDefine"/>
       <el-skeleton :rows="5" animated v-else />
     </template>
     <el-result
@@ -43,7 +43,7 @@ const layout = ref(undefined);
 const pageFormDefine = ref(undefined);
 const loading = ref(true);
 const loadFailed = ref(undefined);
-const emptyFormValue = ref({})
+const ebFormValue = ref({})
 
 onMounted(() => {
   let layoutId = props.layoutId;
@@ -70,6 +70,7 @@ onMounted(() => {
         console.log('pageFormDefine', pageFormDefine);
         layout.value = rsp.data.layout;
         pageFormDefine.value = JSON.parse(rsp.data.ebPage.formDefine || "[]");
+        ebFormValue.value = rsp.data.ebValue
         loading.value = false;
       })
       .catch((err) => {
