@@ -1,10 +1,19 @@
 <template>
   <div :style="props.modelValue.properties.marginStyle" class="w-full">
+    <div :style="renderCss(props.modelValue.properties)" v-if="props.modelValue.properties.component === 'label'">
+      <el-text class="w-full"
+               :type="props.modelValue.properties.type"
+               :size="props.modelValue.properties.size"
+               :truncated="props.modelValue.properties.truncated"
+               :line-clamp="props.modelValue.properties.lineClamp"
+               :style="renderCss(props.modelValue.properties)"
+      >{{ getLangText(props.modelValue.properties.fieldTitle, locale) }}</el-text>
+    </div>
     <el-form-item :prop="props.modelValue.properties.fieldName"
                   :rules="[
                     { required: props.modelValue.properties.required === true, message: getLangText(props.modelValue.properties.fieldTitle, locale) + ' ' + t('validate.required') },
                   ]"
-                  :style="renderCss(props.modelValue.properties)">
+                  :style="renderCss(props.modelValue.properties)" v-else>
       <template v-slot:label="scope">
         <span :style="props.modelValue.properties.fontStyle">{{
             getLangText(props.modelValue.properties.fieldTitle, locale) + scope.label

@@ -1,5 +1,14 @@
 <template>
   <div :style="props.formDefine.properties.marginStyle" v-if="cascadeModel[props.formDefine.properties.fieldName + 'Visible'] !== false">
+    <div :style="renderCss(props.formDefine.properties)" v-if="props.formDefine.properties.component === 'label'">
+      <el-text class="w-full"
+               :type="props.formDefine.properties.type"
+               :size="props.formDefine.properties.size"
+               :truncated="props.formDefine.properties.truncated"
+               :line-clamp="props.formDefine.properties.lineClamp"
+               :style="renderCss(props.formDefine.properties)"
+      >{{ getLangText(props.formDefine.properties.fieldTitle, locale) }}</el-text>
+    </div>
     <el-form-item
       :prop="props.formDefine.properties.fieldName"
       :rules="[
@@ -13,6 +22,7 @@
         { validator: (rule, value, callback) => callback(), trigger: 'blur' },
       ]"
       :style="renderCss(props.formDefine.properties)"
+      v-else
     >
       <template v-slot:label="scope">
         <span :style="props.formDefine.properties.fontStyle">{{
