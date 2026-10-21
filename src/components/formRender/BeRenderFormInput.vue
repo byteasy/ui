@@ -132,6 +132,17 @@
           />
         </template>
       </be-check-box-group>
+      <be-image-upload
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        :api-upload="props.formDefine.properties.apiUpload"
+        :api-remove="props.formDefine.properties.apiRemove"
+        v-else-if="props.formDefine.properties.component === 'imageUpload'"
+        :tabindex="props.formDefine.properties.tabindex"
+        :limit="1"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+      >
+      </be-image-upload>
     </el-form-item>
   </div>
 </template>

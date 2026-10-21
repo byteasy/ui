@@ -97,6 +97,16 @@
           <el-checkbox v-for="op in props.modelValue.properties.options" :key="op.id" :label="getLangText(op.label, locale)" :value="op.value" />
         </template>
       </be-check-box-group>
+      <be-image-upload
+        v-model="testValue"
+        class="w-full"
+        :api-upload="props.modelValue.properties.apiUpload"
+        :api-remove="props.modelValue.properties.apiRemove"
+        v-else-if="props.modelValue.properties.component === 'imageUpload'"
+        :tabindex="props.modelValue.properties.tabindex"
+        :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
+      >
+      </be-image-upload>
     </el-form-item>
   </div>
 </template>

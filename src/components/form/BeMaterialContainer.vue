@@ -379,6 +379,19 @@ const componentGroups = [
         properties: { width: '100%', height: '100%', component: 'multiSelectInput', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', clearable: true, editable: true },
       },
       {
+        id: "FormInputImageUpload",
+        name: "{\"zh_CN\":\"图片上传\",\"en\":\"Image Upload\"}",
+        path: '/components/form/BeFormInput.vue',
+        icon: '<svg t="1792549243860" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2526" width="200" height="200"><path d="M810.666667 554.666667a42.666667 42.666667 0 0 0-42.666667 42.666666v16.213334l-63.146667-63.146667a119.04 119.04 0 0 0-167.68 0l-29.866666 29.866667-105.813334-105.813334a121.6 121.6 0 0 0-167.68 0L170.666667 537.6V298.666667a42.666667 42.666667 0 0 1 42.666666-42.666667h298.666667a42.666667 42.666667 0 0 0 0-85.333333H213.333333a128 128 0 0 0-128 128v512a128 128 0 0 0 128 128h512a128 128 0 0 0 128-128v-213.333334a42.666667 42.666667 0 0 0-42.666666-42.666666zM213.333333 853.333333a42.666667 42.666667 0 0 1-42.666666-42.666666v-152.32l123.733333-123.733334a33.706667 33.706667 0 0 1 46.506667 0l135.253333 135.253334 183.466667 183.466666z m554.666667-42.666666a37.973333 37.973333 0 0 1-7.68 22.613333L567.893333 640l29.866667-29.866667a32.853333 32.853333 0 0 1 46.933333 0L768 734.293333z m200.96-627.626667l-128-128a42.666667 42.666667 0 0 0-14.08-8.96 42.666667 42.666667 0 0 0-32.426667 0 42.666667 42.666667 0 0 0-14.08 8.96l-128 128a42.666667 42.666667 0 0 0 60.586667 60.586667L768 188.16V426.666667a42.666667 42.666667 0 0 0 85.333333 0V188.16l55.04 55.466667a42.666667 42.666667 0 0 0 60.586667 0 42.666667 42.666667 0 0 0 0-60.586667z" p-id="2527"></path></svg>',
+        render: '/components/formRender/BeRenderFormInput.vue',
+        propsForm: [
+          { title: "{\"zh_CN\":\"组件属性\",\"en\":\"Component Properties\"}", form: 'components.form.InputImageUpload' },
+          { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
+          { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
+        ],
+        properties: { width: '100%', height: '100%', component: 'imageUpload', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}' },
+      },
+      {
         id: "FormLabel",
         name: "{\"zh_CN\":\"文本展示\",\"en\":\"Text Display\"}",
         path: '/components/form/BeFormInput.vue',
