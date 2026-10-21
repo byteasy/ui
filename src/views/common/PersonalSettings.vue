@@ -8,7 +8,7 @@
     <template v-slot:view_avatar="scope">
       <el-avatar shape="square" :size="100" fit="scale-down" :src="scope.value" />
       <el-upload
-        action="/platformSvr/sapi/files"
+        action="/platformSvr/sapi/files/private"
         v-if="editEnable"
         with-credentials
         :on-success="onAvatarUploadSuccess"

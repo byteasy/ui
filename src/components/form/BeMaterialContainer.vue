@@ -389,7 +389,7 @@ const componentGroups = [
           { title: "{\"zh_CN\":\"字段属性\",\"en\":\"Field Properties\"}", form: 'components.form.base.field' },
           { title: "{\"zh_CN\":\"样式属性\",\"en\":\"Component Properties\"}", form: 'components.form.base.style' },
         ],
-        properties: { width: '100%', height: '100%', component: 'imageUpload', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}' },
+        properties: { width: '100%', height: '100%', component: 'imageUpload', fieldTitle: '{\"zh_CN\":\"未命名\",\"en\":\"Title\"}', single: true, withCredentials: true, disabled: false, showFileList: true, drag: false, preview: true, multiple: false, autoUpload: true, listType: 'picture-card', formParamName: 'file', directory: false, download: true,  },
       },
       {
         id: "FormLabel",

@@ -5,15 +5,14 @@
         class="w-full p-2 be-material-target sense-rect-border drag-rect-border"
         v-model="children"
         v-bind="$attrs" :animation="150" group="material"
+        :style="renderCss(props.modelValue.properties)"
         ghostClass="drag-ghost" chosenClass="drag-chosen">
-        <div :style="renderCss(props.modelValue.properties)">
           <template v-for="root in children" :key="root.id">
             <be-form-component :model-value="root" @click="onComponentClick(root)"
                                @copy="onComponentCopy(root)" @delete="onComponentDelete(root)"
                                :active="root.id === activeComponent?.id"
                                @update:modelValue="value => updateChildrenValue(value)"/>
           </template>
-        </div>
       </VueDraggable>
     </div>
   </div>

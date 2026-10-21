@@ -1,66 +1,79 @@
 <template>
-  <el-upload
-    :action="props.apiUpload"
-    :list-type="props.listType"
-    :auto-upload="props.autoUpload"
-    :limit="props.limit"
-    :accept="props.accept"
-    :multiple="props.multiple"
-    :drag="props.drag"
-    :name="props.name"
-    :directory="props.directory"
-    :headers="props.headers"
-    :show-file-list="props.showFileList"
-    :with-credentials="props.withCredentials"
-    :on-success="handleUploadSuccess"
-    v-model:file-list="fileList"
-  >
-    <el-icon><Plus /></el-icon>
+  <div class="w-full">
+    <el-upload
+      ref="uploadRef"
+      :action="props.apiUpload"
+      :list-type="props.listType"
+      :auto-upload="props.autoUpload"
+      :limit="actualLimit"
+      :accept="props.accept"
+      :multiple="props.single ? false : props.multiple"
+      :drag="props.drag"
+      :name="props.formParamName"
+      :directory="props.directory"
+      :headers="props.headers"
+      :show-file-list="props.showFileList"
+      :with-credentials="props.withCredentials"
+      :on-success="handleUploadSuccess"
+      :on-change="handleChange"
+      :on-exceed="handleExceed"
+      v-model:file-list="fileList"
+    >
+      <el-icon><Plus /></el-icon>
 
-    <template #file="{ file }">
-      <div>
-        <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-        <span class="el-upload-list__item-actions">
-          <span
-            class="el-upload-list__item-preview"
-            @click="handlePictureCardPreview(file)"
-            v-if="props.preview"
-          >
-            <el-icon><ZoomIn /></el-icon>
+      <template #file="{ file }">
+        <div>
+          <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+          <span class="el-upload-list__item-actions">
+            <span
+              class="el-upload-list__item-preview"
+              @click="handlePictureCardPreview(file)"
+              v-if="props.preview"
+            >
+              <el-icon><ZoomIn /></el-icon>
+            </span>
+            <span
+              v-if="!props.disabled && props.download"
+              class="el-upload-list__item-delete"
+              @click="handleDownload(file)"
+            >
+              <el-icon><Download /></el-icon>
+            </span>
+            <span
+              v-if="!props.disabled && props.apiRemove"
+              class="el-upload-list__item-delete"
+              @click="handleRemove(file)"
+            >
+              <el-icon><Delete /></el-icon>
+            </span>
           </span>
-          <span
-            v-if="!props.disabled && props.download"
-            class="el-upload-list__item-delete"
-            @click="handleDownload(file)"
-          >
-            <el-icon><Download /></el-icon>
-          </span>
-          <span
-            v-if="!props.disabled && props.apiRemove"
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file)"
-          >
-            <el-icon><Delete /></el-icon>
-          </span>
-        </span>
-      </div>
-    </template>
-  </el-upload>
+        </div>
+      </template>
+    </el-upload>
 
-  <el-dialog v-model="dialogVisible" :fullscreen="props.fullscreen">
-    <img class="w-full" :src="dialogImageUrl" alt="Preview Image" />
-  </el-dialog>
+    <el-dialog v-model="dialogVisible" :fullscreen="props.fullscreen">
+      <img class="w-full" :src="dialogImageUrl" alt="Preview Image" />
+    </el-dialog>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { defineModel, ref, watch } from 'vue';
+import { computed, defineModel, ref, watch } from 'vue';
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue';
-import type { UploadFile, UploadUserFile } from 'element-plus';
+import type {
+  UploadFile,
+  UploadFiles,
+  UploadInstance,
+  UploadProps,
+  UploadRawFile,
+  UploadUserFile,
+} from 'element-plus';
+import { genFileId } from 'element-plus';
 import { executeOpenApi } from '@/api/common/platform';
 
 const props = withDefaults(
   defineProps<{
-    apiUpload: string;
+    apiUpload?: string;
     apiRemove?: string;
     withCredentials?: boolean;
     disabled?: boolean;
@@ -73,11 +86,13 @@ const props = withDefaults(
     accept?: string;
     limit?: number;
     listType?: string;
-    name?: string;
+    formParamName?: string;
     directory?: boolean;
     download?: boolean;
     fullscreen?: boolean;
     isDrawer?: boolean;
+    /** 🔥 是否启用单文件覆盖模式 */
+    single?: boolean;
   }>(),
   {
     withCredentials: true,
@@ -90,58 +105,104 @@ const props = withDefaults(
     directory: false,
     download: true,
     listType: 'picture-card',
-    name: 'file',
+    formParamName: 'file',
+    single: false,
   },
 );
 
+const uploadRef = ref<UploadInstance>();
 const fileListValue = defineModel<any>('modelValue', { default: () => '' });
 const fileList = ref<UploadUserFile[]>([]);
 
 const dialogImageUrl = ref('');
 const dialogVisible = ref(false);
 
-// -------------------------------------------------------------
-// TODO 1: 实现 fileListValue 和 fileList 的健壮双向同步（防死循环）
-// -------------------------------------------------------------
+// 单文件模式下强制 limit = 1
+const actualLimit = computed(() => (props.single ? 1 : props.limit));
+
 let isInternalChange = false;
+
+// -------------------------------------------------------------
+// 🔥 核心改进 1：超出限制时，自动替换覆盖上一个文件
+// -------------------------------------------------------------
+const handleExceed: UploadProps['onExceed'] = (files) => {
+  if (props.single || props.limit === 1) {
+    uploadRef.value!.clearFiles();
+    const rawFile = files[0] as UploadRawFile;
+    rawFile.uid = genFileId();
+    uploadRef.value!.handleStart(rawFile);
+    // 如果是自动上传，立即触发新文件上传
+    if (props.autoUpload) {
+      uploadRef.value!.submit();
+    }
+  }
+};
+
+// -------------------------------------------------------------
+// 🔥 核心改进 2：文件改变时的覆盖截取处理
+// -------------------------------------------------------------
+const handleChange: UploadProps['onChange'] = (
+  uploadFile: UploadFile,
+  uploadFiles: UploadFiles,
+) => {
+  if (props.single || props.limit === 1) {
+    // 强制只保留最后一个文件（最新选择的）
+    if (uploadFiles.length > 1) {
+      fileList.value = [uploadFiles[uploadFiles.length - 1]];
+    }
+  }
+};
 
 /** 解析外部传入的值为 Element Plus 标准的 UploadUserFile 数组 */
 function parseValueToFileList(val: any): UploadUserFile[] {
   if (!val) return [];
   // 1. 如果是对象数组
   if (Array.isArray(val)) {
-    return val.map((item, idx) => {
+    const arr = val.map((item, idx) => {
       if (typeof item === 'string') {
         return { name: item.substring(item.lastIndexOf('/') + 1) || `file_${idx}`, url: item };
       }
       return { ...item, name: item.name || `file_${idx}`, url: item.url };
     });
+    return props.single ? arr.slice(-1) : arr;
   }
-  // 2. 如果是 JSON 字符串格式
+  // 2. 如果是 JSON 格式字符串
   if (typeof val === 'string' && (val.trim().startsWith('[') || val.trim().startsWith('{'))) {
     try {
       const parsed = JSON.parse(val);
       return parseValueToFileList(parsed);
     } catch {
-      // 容错降级按逗号分割处理
+      // 容错按普通字符串处理
     }
   }
-  // 3. 如果是逗号分隔的 URL 字符串 (如 "url1,url2")
+  // 3. 如果是 URL 字符串（可能是单 URL 或逗号分隔）
   if (typeof val === 'string' && val.trim().length > 0) {
-    return val.split(',').filter(Boolean).map((url, idx) => ({
-      name: url.substring(url.lastIndexOf('/') + 1) || `file_${idx}`,
-      url: url.trim(),
-    }));
+    const list = val
+      .split(',')
+      .filter(Boolean)
+      .map((url, idx) => ({
+        name: url.substring(url.lastIndexOf('/') + 1) || `file_${idx}`,
+        url: url.trim(),
+      }));
+    return props.single ? list.slice(-1) : list;
   }
   return [];
 }
 
-/** 将 fileList 序列化回外部期望的数据格式（默认为 URL 数组或逗号字符串） */
+/** 将内部 fileList 同步回外部期望的数据格式 */
 function formatFileListToValue(list: UploadUserFile[]): any {
-  // 只提取上传成功并持有合法 url 的文件
-  const validFiles = list.filter((f) => f.url || (f.response && (f.response.url || f.response.data)));
+  const validFiles = list.filter(
+    (f) => f.url || (f.response && (f.response.url || f.response.data)),
+  );
 
-  // 如果外部初始传入的是 Array，则回传 Array；否则回传逗号分割的 URL 字符串
+  // 🔥 单文件模式下，直接返回单字符串 URL（如 "https://.../a.jpg"）
+  if (props.single) {
+    if (validFiles.length === 0) return '';
+    const last = validFiles[validFiles.length - 1];
+    return last.url || last.response?.url || last.response?.data || '';
+  }
+
+  // 多文件数组模式
   if (Array.isArray(fileListValue.value)) {
     return validFiles.map((f) => ({
       name: f.name,
@@ -149,7 +210,7 @@ function formatFileListToValue(list: UploadUserFile[]): any {
     }));
   }
 
-  // 默认格式：URL 逗号拼接字符串，便于直接保存到数据库 varchar 字段
+  // 多文件默认逗号拼接
   return validFiles
     .map((f) => f.url || f.response?.url || f.response?.data)
     .filter(Boolean)
@@ -174,7 +235,6 @@ watch(
   () => fileList.value,
   (newFiles) => {
     const formatted = formatFileListToValue(newFiles);
-    // 浅比对防无意义重复触发
     if (JSON.stringify(formatted) !== JSON.stringify(fileListValue.value)) {
       isInternalChange = true;
       fileListValue.value = formatted;
@@ -185,7 +245,6 @@ watch(
 
 // 监听上传成功回调
 function handleUploadSuccess(response: any, uploadFile: UploadFile) {
-  // 适配服务端接口返回的 url 字段
   if (response?.url) {
     uploadFile.url = response.url;
   } else if (response?.data?.url) {
@@ -193,12 +252,12 @@ function handleUploadSuccess(response: any, uploadFile: UploadFile) {
   }
 }
 
-// -------------------------------------------------------------
-// TODO 2: 安全移除与服务端联动
-// -------------------------------------------------------------
+// 移除文件
 const handleRemove = (file: UploadFile) => {
   const doSplice = () => {
-    const index = fileList.value.findIndex((item) => item.uid === file.uid || item.url === file.url);
+    const index = fileList.value.findIndex(
+      (item) => item.uid === file.uid || item.url === file.url,
+    );
     if (index > -1) {
       fileList.value.splice(index, 1);
     }
@@ -222,9 +281,7 @@ const handlePictureCardPreview = (file: UploadFile) => {
   dialogVisible.value = true;
 };
 
-// -------------------------------------------------------------
-// TODO 3: 前端文件下载（支持同源、跨域与 Blob 下载）
-// -------------------------------------------------------------
+// 文件下载
 const handleDownload = (file: UploadFile) => {
   const url = file.url || (file.response as any)?.url;
   const fileName = file.name || 'download_file';
@@ -234,7 +291,6 @@ const handleDownload = (file: UploadFile) => {
     return;
   }
 
-  // 通过 fetch 将图片或文件以 Blob 格式下载，解决 <a> 标签跨域时无法重命名 (download 属性失效) 的问题
   fetch(url, { credentials: props.withCredentials ? 'include' : 'same-origin' })
     .then((res) => {
       if (!res.ok) throw new Error('网络响应异常');
@@ -252,8 +308,7 @@ const handleDownload = (file: UploadFile) => {
       window.URL.revokeObjectURL(blobUrl);
     })
     .catch((err) => {
-      console.warn('Blob 下载失败，尝试降级为直接打开/下载:', err);
-      // 降级兼容：直接通过 window.location 下载
+      console.warn('Blob 下载失败，尝试降级为直接打开:', err);
       const link = document.createElement('a');
       link.href = url;
       link.target = '_blank';

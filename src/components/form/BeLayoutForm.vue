@@ -4,8 +4,10 @@
       <VueDraggable class="w-full h-full be-material-target sense-rect-border drag-rect-border"
                     v-model="children"
                     v-bind="$attrs" :animation="150" group="material"
+                    target=".el-form-inner-target"
                     ghostClass="drag-ghost" chosenClass="drag-chosen">
-        <el-form :style="renderCss(props.modelValue.properties)" :model="testModelValue"
+        <el-form class="el-form-inner-target"
+          :style="renderCss(props.modelValue.properties)" :model="testModelValue"
                  :label-position="props.modelValue.properties.labelPosition"
                  :label-width="props.modelValue.properties.labelWidth"
                  :label-suffix="props.modelValue.properties.labelSuffix"
