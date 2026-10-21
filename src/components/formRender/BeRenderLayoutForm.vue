@@ -26,12 +26,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineExpose, defineModel, ref, watch } from 'vue';
+import { defineExpose, defineModel, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { renderCss } from '@/util/formUtil.ts';
 import BeRenderComponent from './BeRenderComponent.vue';
 import { doHttpPost, executeOpenApi } from '@/api/common/platform';
 import { ElMessage } from 'element-plus';
+import { BeRenderLayoutFormKey } from '@/components/formRender/BeRenderLayoutFormContext.ts';
 
 const props = defineProps<{
   formDefine: {
@@ -141,7 +142,7 @@ const onOkClick = () => {
   if (Object.keys(validError.value).length > 0) {
     setFieldsErrors(validError.value);
     console.log('validError.value length > 0');
-    return Promise.reject(validError.value)
+    return Promise.reject(validError.value);
   }
 
   return new Promise((resolve, reject) => {
@@ -171,6 +172,26 @@ const onOkClick = () => {
     });
   });
 };
+
+// 1. 父组件内部的方法
+async function handleSubmit() {
+  return onOkClick();
+}
+
+function updateFieldValue(field: string, value: any) {
+  console.log(`父组件：更新字段 ${field} 的值为:`, value);
+}
+
+function resetForm() {
+  console.log('父组件：重置表单！');
+  refForm.value?.resetFields();
+}
+
+provide(BeRenderLayoutFormKey, {
+  handleSubmit,
+  updateFieldValue,
+  resetForm,
+});
 
 defineExpose({ onOkClick });
 </script>

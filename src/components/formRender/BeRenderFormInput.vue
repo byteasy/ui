@@ -1,13 +1,45 @@
 <template>
-  <div :style="props.formDefine.properties.marginStyle" v-if="cascadeModel[props.formDefine.properties.fieldName + 'Visible'] !== false">
-    <div :style="renderCss(props.formDefine.properties)" v-if="props.formDefine.properties.component === 'label'">
-      <el-text class="w-full"
-               :type="props.formDefine.properties.type"
-               :size="props.formDefine.properties.size"
-               :truncated="props.formDefine.properties.truncated"
-               :line-clamp="props.formDefine.properties.lineClamp"
-               :style="renderCss(props.formDefine.properties)"
-      >{{ getLangText(props.formDefine.properties.fieldTitle, locale) }}</el-text>
+  <div
+    :style="props.formDefine.properties.marginStyle"
+    v-if="cascadeModel[props.formDefine.properties.fieldName + 'Visible'] !== false"
+  >
+    <div
+      :style="renderCss(props.formDefine.properties)"
+      v-if="props.formDefine.properties.component === 'label'"
+    >
+      <el-text
+        class="w-full"
+        :type="props.formDefine.properties.type"
+        :size="props.formDefine.properties.size"
+        :truncated="props.formDefine.properties.truncated"
+        :line-clamp="props.formDefine.properties.lineClamp"
+        :style="renderCss(props.formDefine.properties)"
+        >{{ getLangText(props.formDefine.properties.fieldTitle, locale) }}</el-text
+      >
+    </div>
+    <div
+      :style="renderCss(props.formDefine.properties)"
+      v-else-if="props.formDefine.properties.component === 'submitButton'"
+    >
+      <be-form-submit-button
+        class="w-full"
+        :title="props.formDefine.properties.title"
+        :type="props.formDefine.properties.type"
+        :size="props.formDefine.properties.size"
+        :plain="props.formDefine.properties.plain"
+        :text="props.formDefine.properties.text"
+        :bg="props.formDefine.properties.bg"
+        :link="props.formDefine.properties.link"
+        :round="props.formDefine.properties.round"
+        :circle="props.formDefine.properties.circle"
+        :dashed="props.formDefine.properties.dashed"
+        :loading="props.formDefine.properties.loading"
+        :loading-icon="props.formDefine.properties.loadingIcon"
+        :disabled="props.formDefine.properties.disabled"
+        :icon="props.formDefine.properties.icon"
+        :autofocus="props.formDefine.properties.autofocus"
+        :dark="props.formDefine.properties.dark"
+      />
     </div>
     <el-form-item
       :prop="props.formDefine.properties.fieldName"

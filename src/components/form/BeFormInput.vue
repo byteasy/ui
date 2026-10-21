@@ -1,53 +1,99 @@
 <template>
   <div :style="props.modelValue.properties.marginStyle" class="w-full">
-    <div :style="renderCss(props.modelValue.properties)" v-if="props.modelValue.properties.component === 'label'">
-      <el-text class="w-full"
-               :type="props.modelValue.properties.type"
-               :size="props.modelValue.properties.size"
-               :truncated="props.modelValue.properties.truncated"
-               :line-clamp="props.modelValue.properties.lineClamp"
-               :style="renderCss(props.modelValue.properties)"
-      >{{ getLangText(props.modelValue.properties.fieldTitle, locale) }}</el-text>
+    <div
+      :style="renderCss(props.modelValue.properties)"
+      v-if="props.modelValue.properties.component === 'label'"
+    >
+      <el-text
+        class="w-full"
+        :type="props.modelValue.properties.type"
+        :size="props.modelValue.properties.size"
+        :truncated="props.modelValue.properties.truncated"
+        :line-clamp="props.modelValue.properties.lineClamp"
+        :style="renderCss(props.modelValue.properties)"
+        >{{ getLangText(props.modelValue.properties.fieldTitle, locale) }}</el-text
+      >
     </div>
-    <el-form-item :prop="props.modelValue.properties.fieldName"
-                  :rules="[
-                    { required: props.modelValue.properties.required === true, message: getLangText(props.modelValue.properties.fieldTitle, locale) + ' ' + t('validate.required') },
-                  ]"
-                  :style="renderCss(props.modelValue.properties)" v-else>
+    <div
+      :style="renderCss(props.modelValue.properties)"
+      v-else-if="props.modelValue.properties.component === 'submitButton'"
+    >
+      <be-form-submit-button
+        class="w-full"
+        :title="props.modelValue.properties.title"
+        :type="props.modelValue.properties.type"
+        :size="props.modelValue.properties.size"
+        :plain="props.modelValue.properties.plain"
+        :text="props.modelValue.properties.text"
+        :bg="props.modelValue.properties.bg"
+        :link="props.modelValue.properties.link"
+        :round="props.modelValue.properties.round"
+        :circle="props.modelValue.properties.circle"
+        :dashed="props.modelValue.properties.dashed"
+        :loading="props.modelValue.properties.loading"
+        :loading-icon="props.modelValue.properties.loadingIcon"
+        :disabled="props.modelValue.properties.disabled"
+        :icon="props.modelValue.properties.icon"
+        :autofocus="props.modelValue.properties.autofocus"
+        :dark="props.modelValue.properties.dark"
+      />
+    </div>
+    <el-form-item
+      :prop="props.modelValue.properties.fieldName"
+      :rules="[
+        {
+          required: props.modelValue.properties.required === true,
+          message:
+            getLangText(props.modelValue.properties.fieldTitle, locale) +
+            ' ' +
+            t('validate.required'),
+        },
+      ]"
+      :style="renderCss(props.modelValue.properties)"
+      v-else
+    >
       <template v-slot:label="scope">
         <span :style="props.modelValue.properties.fontStyle">{{
-            getLangText(props.modelValue.properties.fieldTitle, locale) + scope.label
-          }}</span>
+          getLangText(props.modelValue.properties.fieldTitle, locale) + scope.label
+        }}</span>
       </template>
-      <el-slider v-model="testValue" v-if="props.modelValue.properties.component === 'slider'"
-                 class="w-full"
-                 :min="props.modelValue.properties.min"
-                 :max="props.modelValue.properties.max"
-                 :show-input="props.modelValue.properties.showInput"
-                 :step="props.modelValue.properties.step"/>
-      <el-input-number v-model="testValue"
-                       class="w-full"
-                       v-else-if="props.modelValue.properties.component === 'number'"
-                       :min="props.modelValue.properties.min"
-                       :controls="props.modelValue.properties.controls"
-                       :controls-position="props.modelValue.properties.controlsPosition === true ? 'right' : ''"
-                       :tabindex="props.modelValue.properties.tabindex"
-                       :precision="props.modelValue.properties.precision"
-                       :max="props.modelValue.properties.max"
-                       :step="props.modelValue.properties.step"/>
-      <el-input v-model="testValue" v-else-if="props.modelValue.properties.component === 'text'"
-                class="w-full"
-                :type="props.modelValue.properties.type"
-                :minlength="props.modelValue.properties.minlength"
-                :maxlength="props.modelValue.properties.maxlength"
-                :show-word-limit="props.modelValue.properties.showWordLimit"
-                :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
-                :clearable="props.modelValue.properties.clearable"
-                :show-password="props.modelValue.properties.showPassword"
-                :rows="props.modelValue.properties.rows"
-                :autosize="props.modelValue.properties.autosize"
-                :tabindex="props.modelValue.properties.tabindex"
-                :word-limit-position="props.modelValue.properties.wordLimitPosition"/>
+      <el-slider
+        v-model="testValue"
+        v-if="props.modelValue.properties.component === 'slider'"
+        class="w-full"
+        :min="props.modelValue.properties.min"
+        :max="props.modelValue.properties.max"
+        :show-input="props.modelValue.properties.showInput"
+        :step="props.modelValue.properties.step"
+      />
+      <el-input-number
+        v-model="testValue"
+        class="w-full"
+        v-else-if="props.modelValue.properties.component === 'number'"
+        :min="props.modelValue.properties.min"
+        :controls="props.modelValue.properties.controls"
+        :controls-position="props.modelValue.properties.controlsPosition === true ? 'right' : ''"
+        :tabindex="props.modelValue.properties.tabindex"
+        :precision="props.modelValue.properties.precision"
+        :max="props.modelValue.properties.max"
+        :step="props.modelValue.properties.step"
+      />
+      <el-input
+        v-model="testValue"
+        v-else-if="props.modelValue.properties.component === 'text'"
+        class="w-full"
+        :type="props.modelValue.properties.type"
+        :minlength="props.modelValue.properties.minlength"
+        :maxlength="props.modelValue.properties.maxlength"
+        :show-word-limit="props.modelValue.properties.showWordLimit"
+        :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
+        :clearable="props.modelValue.properties.clearable"
+        :show-password="props.modelValue.properties.showPassword"
+        :rows="props.modelValue.properties.rows"
+        :autosize="props.modelValue.properties.autosize"
+        :tabindex="props.modelValue.properties.tabindex"
+        :word-limit-position="props.modelValue.properties.wordLimitPosition"
+      />
       <el-date-picker
         v-model="testValue"
         class="w-full"
@@ -69,7 +115,7 @@
         :effect="props.modelValue.properties.effect"
         :trigger="props.modelValue.properties.trigger"
         :draggable="props.modelValue.properties.draggable"
-        :delimiter ="props.modelValue.properties.delimiter"
+        :delimiter="props.modelValue.properties.delimiter"
         :clearable="props.modelValue.properties.clearable"
         :tabindex="props.modelValue.properties.tabindex"
         :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
@@ -83,7 +129,12 @@
         :tabindex="props.modelValue.properties.tabindex"
         :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
       >
-        <el-radio v-for="op in props.modelValue.properties.options" :key="op.id" :label="getLangText(op.label, locale)" :value="op.value" />
+        <el-radio
+          v-for="op in props.modelValue.properties.options"
+          :key="op.id"
+          :label="getLangText(op.label, locale)"
+          :value="op.value"
+        />
       </el-radio-group>
       <be-check-box-group
         v-model="testValue"
@@ -94,7 +145,12 @@
         :placeholder="getLangText(props.modelValue.properties.placeholder, locale)"
       >
         <template #default>
-          <el-checkbox v-for="op in props.modelValue.properties.options" :key="op.id" :label="getLangText(op.label, locale)" :value="op.value" />
+          <el-checkbox
+            v-for="op in props.modelValue.properties.options"
+            :key="op.id"
+            :label="getLangText(op.label, locale)"
+            :value="op.value"
+          />
         </template>
       </be-check-box-group>
       <be-image-upload
@@ -125,29 +181,25 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ref} from 'vue'
-import {useI18n} from "vue-i18n";
-import {renderCss} from "@/util/formUtil.ts";
-import {getLangText } from "@/locales/common.ts";
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { renderCss } from '@/util/formUtil.ts';
+import { getLangText } from '@/locales/common.ts';
 
 const props = defineProps<{
   modelValue: {
-    id: string
-    name: string
-    path: string
-    icon: string
-    propsForm: Array<object>
-    properties: object
-    children: any[]
-  }
-}>()
+    id: string;
+    name: string;
+    path: string;
+    icon: string;
+    propsForm: Array<object>;
+    properties: object;
+    children: any[];
+  };
+}>();
 
-const emit = defineEmits(['click', 'selected', 'update:modelValue'])
-const {t, locale} = useI18n()
-const testValue = ref(undefined)
-
+const emit = defineEmits(['click', 'selected', 'update:modelValue']);
+const { t, locale } = useI18n();
+const testValue = ref(undefined);
 </script>
-<style scoped>
-</style>
-
-
+<style scoped></style>
