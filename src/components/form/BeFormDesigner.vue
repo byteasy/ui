@@ -3,7 +3,7 @@
     class="w-full"
     :style="{ height: props.height ? `${props.height - 60}px !important` : '100vh !important' }"
   >
-    <el-splitter layout="horizontal">
+    <el-splitter layout="horizontal" class="h-full">
       <el-splitter-panel size="300" collapsible v-if="isPlay === false">
         <BeMaterialContainer
           ref="refMaterialContainer"

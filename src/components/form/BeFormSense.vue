@@ -27,9 +27,7 @@
         </el-button-group>
       </div>
     </div>
-    <div
-      class="flex-grow flex-row w-full h-full justify-content-center align-items-center designer-container"
-    >
+    <div class="flex-grow flex-row w-full h-full justify-content-center align-items-center designer-container">
       <div :class="{ 'w-full h-full': !isMobile, 'mobile-container': isMobile }">
         <div
           :class="{
@@ -40,7 +38,7 @@
           :style="{ height: `${props.height - 126}px` }"
         >
           <VueDraggable
-            class="w-full be-material-target"
+            class="w-full h-full be-material-target"
             :style="{
               'min-height': isMobile ? '730px' : props.height ? `${props.height - 136}px` : '100vh',
             }"
@@ -54,6 +52,7 @@
           >
             <template v-for="root in formDefine" :key="root.id">
               <be-form-component
+                class="h-full w-full"
                 :model-value="root"
                 @click="onComponentClick(root)"
                 :active="root.id === activeComponent?.id"
@@ -93,15 +92,14 @@ const formEngine = useFormEngine();
 const isMobile = ref(false);
 const isPlay = ref(false);
 
-const formDefine = defineModel<any>('formDefine', { default: () => ([]) });
+const formDefine = defineModel<any>('formDefine', { default: () => [] });
 const { activeComponent } = storeToRefs(formEngine);
 
 function handleDragStart(m) {}
 
 function handleDragEnd(m) {}
 
-function onAdded(event) {
-}
+function onAdded(event) {}
 
 function onComponentCopy(root) {
   const newRoot = JSON.parse(JSON.stringify(root));
