@@ -48,7 +48,7 @@ const emit = defineEmits(['click', 'selected', 'update:modelValue']);
 const { t, locale } = useI18n();
 
 const onNodeClick = (node) => {
-  formValue.value[props.formDefine.properties.nodeKey] = node
+  formValue.value[props.formDefine.properties.formKey] = node
 }
 </script>
 <style scoped></style>
