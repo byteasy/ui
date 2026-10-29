@@ -1,29 +1,27 @@
 <template>
-  <div class="w-full">
-    <div :style="props.formDefine.properties.marginStyle" class="w-full">
-      <el-splitter
-        :layout="props.formDefine.properties.layout"
-        :lazy="props.formDefine.properties.lazy"
-        :style="renderCss(props.formDefine.properties)"
-      >
-        <template v-for="root in children" :key="root.id">
-          <el-splitter-panel
-            :size="root.properties.size"
-            :min="root.properties.min"
-            :max="root.properties.max"
-            :resizable="root.properties.resizable"
-            :collapsible="root.properties.collapsible"
-          >
-            <be-render-component
-              class="w-full"
-              :form-define="root"
-              v-model="formValue"
-              v-model:cascade-model="cascadeModel"
-            />
-          </el-splitter-panel>
-        </template>
-      </el-splitter>
-    </div>
+  <div :style="props.formDefine.properties.marginStyle" class="w-full h-full">
+    <el-splitter
+      :layout="props.formDefine.properties.layout"
+      :lazy="props.formDefine.properties.lazy"
+      :style="renderCss(props.formDefine.properties)"
+    >
+      <template v-for="root in children" :key="root.id">
+        <el-splitter-panel
+          :size="root.properties.size"
+          :min="root.properties.min"
+          :max="root.properties.max"
+          :resizable="root.properties.resizable"
+          :collapsible="root.properties.collapsible"
+        >
+          <be-render-component
+            class="w-full"
+            :form-define="root"
+            v-model="formValue"
+            v-model:cascade-model="cascadeModel"
+          />
+        </el-splitter-panel>
+      </template>
+    </el-splitter>
   </div>
 </template>
 <script lang="ts" setup>

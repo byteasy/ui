@@ -1,27 +1,25 @@
 <template>
-  <div class="w-full">
-    <div :style="props.formDefine.properties.marginStyle">
-      <el-card :style="renderCss(props.formDefine.properties)">
-        <template #header>
-          <div class="card-header">
-            <span>{{
-              getLangText(
-                props.formDefine.properties.title || '{"zh_CN":"标题","en":"title"}',
-                locale,
-              )
-            }}</span>
-          </div>
-        </template>
-        <template v-for="root in children" :key="root.id">
-          <be-render-component
-            class="w-full"
-            :form-define="root"
-            v-model="formValue"
-            v-model:cascade-model="cascadeModel"
-          />
-        </template>
-      </el-card>
-    </div>
+  <div :style="props.formDefine.properties.marginStyle">
+    <el-card :style="renderCss(props.formDefine.properties)">
+      <template #header>
+        <div class="card-header">
+          <span>{{
+            getLangText(
+              props.formDefine.properties.title || '{"zh_CN":"标题","en":"title"}',
+              locale,
+            )
+          }}</span>
+        </div>
+      </template>
+      <template v-for="root in children" :key="root.id">
+        <be-render-component
+          class="w-full"
+          :form-define="root"
+          v-model="formValue"
+          v-model:cascade-model="cascadeModel"
+        />
+      </template>
+    </el-card>
   </div>
 </template>
 <script lang="ts" setup>

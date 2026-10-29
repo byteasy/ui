@@ -4,6 +4,7 @@
       <be-render-component
         ref="renderRefs"
         :form-define="root"
+        class="w-full h-full"
         v-model:cascade-model="cascadeModel"
         v-model="formValue"
         @close="(arg) => $emit('close', arg)"
