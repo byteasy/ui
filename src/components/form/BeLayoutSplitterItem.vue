@@ -1,5 +1,4 @@
 <template>
-  <div class="w-full h-full">
     <div :style="props.modelValue.properties.marginStyle" class="w-full h-full">
       <VueDraggable
         class="w-full h-full p-2 be-material-target drag-rect-border"
@@ -14,6 +13,7 @@
         <template v-for="root in children" :key="root.id">
           <be-form-component
             :model-value="root"
+            class="w-full h-full"
             @click="onComponentClick(root)"
             @copy="onComponentCopy(root)"
             @delete="onComponentDelete(root)"
@@ -23,7 +23,6 @@
         </template>
       </VueDraggable>
     </div>
-  </div>
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue';

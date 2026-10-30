@@ -49,7 +49,11 @@ const { t, locale } = useI18n();
 
 const onNodeClick = (node) => {
   if (props.formDefine.properties.formKey) {
-    formValue.value[props.formDefine.properties.formKey] = node;
+    if (props.formDefine.properties.formValueKey) {
+      formValue.value[props.formDefine.properties.formKey] = node[props.formDefine.properties.formValueKey];
+    } else {
+      formValue.value[props.formDefine.properties.formKey] = node;
+    }
   }
 };
 </script>

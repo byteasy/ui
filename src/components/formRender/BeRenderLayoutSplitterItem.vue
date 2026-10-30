@@ -1,18 +1,16 @@
 <template>
-  <div class="w-full">
-    <div :style="props.formDefine.properties.marginStyle">
+    <div :style="props.formDefine.properties.marginStyle" class="w-full h-full">
       <div :style="renderCss(props.formDefine.properties)">
         <template v-for="root in children" :key="root.id">
           <be-render-component
-            class="w-full"
             :form-define="root"
+            class="w-full h-full"
             v-model="formValue"
             v-model:cascade-model="cascadeModel"
           />
         </template>
       </div>
     </div>
-  </div>
 </template>
 <script lang="ts" setup>
 import { defineModel, ref } from 'vue';

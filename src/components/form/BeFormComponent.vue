@@ -1,7 +1,7 @@
 <template>
   <div class="flex-column w-full" @click.stop="$emit('click', modelValue)">
     <div style="position: relative;" class="w-full h-full">
-      <div v-if="props.active" class="w-full flex-row justify-content-end"
+      <div v-if="props.active" class="flex-none w-full flex-row justify-content-end"
            style="position: absolute; top: 4px; right: 4px; z-index: 10;">
         <el-button type="primary" icon="CopyDocument" circle size="small"
                    @click="emit('copy', props.modelValue)"/>
@@ -9,7 +9,7 @@
                    @click="emit('delete', props.modelValue)"/>
       </div>
       <component :is="getComponent(props.modelValue.path)" :model-value="props.modelValue"
-                 :class="{ 'be-component-selected': props.active}"
+                 :class="{ 'be-component-selected': props.active, 'flex-grow': true }"
                  @update:modelValue="value => emit('update:modelValue', value)">
       </component>
     </div>

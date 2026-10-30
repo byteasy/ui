@@ -14,7 +14,7 @@
           :collapsible="root.properties.collapsible"
         >
           <be-render-component
-            class="w-full"
+            class="w-full h-full"
             :form-define="root"
             v-model="formValue"
             v-model:cascade-model="cascadeModel"
