@@ -10,7 +10,12 @@
         :is="getComponent(parseComponent(layout.componentPath))"
         :param="parseComponentParam(layout.componentParam)"
       />
-      <be-page-render style="width: 100%; height: 100%" v-else-if="layout !== undefined && layout?.type === 'EB'" v-model="ebFormValue" :form-define="pageFormDefine"/>
+      <be-page-render
+        style="width: 100%; height: 100%"
+        v-else-if="layout !== undefined && layout?.type === 'EB'"
+        v-model="ebFormValue"
+        :form-define="pageFormDefine"
+      />
       <el-skeleton :rows="5" animated v-else />
     </template>
     <el-result
@@ -28,7 +33,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { executeOpenApi } from '@/api/common/platform';
+import { executeOpenApi, switchNoLoginMode } from '@/api/common/platform';
 import BeStdPageLayout from '@/views/template/BeStdPageLayout.vue';
 import { getComponent } from '@/util/componentLoader.ts';
 import { parseComponent, parseComponentParam } from '@/util/common.ts';
@@ -43,40 +48,59 @@ const layout = ref(undefined);
 const pageFormDefine = ref(undefined);
 const loading = ref(true);
 const loadFailed = ref(undefined);
-const ebFormValue = ref({})
+const ebFormValue = ref({});
 
 onMounted(() => {
-  let layoutId = props.layoutId;
-  const params = { ...route.query };
-  if (params && params.layoutId) {
-    layoutId = params.layoutId;
-  }
-
-  loading.value = true;
-  if (layoutId) {
-    executeOpenApi('4JLqmAjqs', { id: layoutId, idQueryType: 'eq' }, {})
-      .then((rsp) => {
-        layout.value = rsp.data;
-        loading.value = false;
-      })
-      .catch((err) => {
-        loadFailed.value = err.description;
-      });
-  } else {
-    // 根据当前路由查询默认布局
+  if (route.fullPath.startsWith('/pub/eb')) {
+    // 直接通过链接http(s)://host/index.html#/pub/eb/*****,将接口元数据的查询接口改为受限查询接口,后续的页面所有涉及接口均需设置为public类型
+    switchNoLoginMode();
+    // 根据当前路由查询页面所需的元数据
     const fullPath = route.fullPath;
-    executeOpenApi('4GEvaDgQs', { path: fullPath }, {})
+    executeOpenApi('4TMQTQ6wa', { path: fullPath }, {})
       .then((rsp) => {
         console.log('pageFormDefine', pageFormDefine);
         layout.value = rsp.data.layout;
-        pageFormDefine.value = JSON.parse(rsp.data.ebPage.formDefine || "[]");
-        ebFormValue.value = rsp.data.ebValue || {}
+        pageFormDefine.value = JSON.parse(rsp.data.ebPage.formDefine || '[]');
+        ebFormValue.value = rsp.data.ebValue || {};
         loading.value = false;
       })
       .catch((err) => {
         loading.value = false;
         loadFailed.value = err.description;
       });
+  } else {
+    let layoutId = props.layoutId;
+    const params = { ...route.query };
+    if (params && params.layoutId) {
+      layoutId = params.layoutId;
+    }
+
+    loading.value = true;
+    if (layoutId) {
+      executeOpenApi('4JLqmAjqs', { id: layoutId, idQueryType: 'eq' }, {})
+        .then((rsp) => {
+          layout.value = rsp.data;
+          loading.value = false;
+        })
+        .catch((err) => {
+          loadFailed.value = err.description;
+        });
+    } else {
+      // 根据当前路由查询默认布局
+      const fullPath = route.fullPath;
+      executeOpenApi('4GEvaDgQs', { path: fullPath }, {})
+        .then((rsp) => {
+          console.log('pageFormDefine', pageFormDefine);
+          layout.value = rsp.data.layout;
+          pageFormDefine.value = JSON.parse(rsp.data.ebPage.formDefine || '[]');
+          ebFormValue.value = rsp.data.ebValue || {};
+          loading.value = false;
+        })
+        .catch((err) => {
+          loading.value = false;
+          loadFailed.value = err.description;
+        });
+    }
   }
 });
 

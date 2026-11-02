@@ -6,7 +6,7 @@ import { defineComponent, h } from 'vue';
 
 const routers = [
   {
-    path: '/pub/index',
+    path: '/pub/eb/:code',
     name: 'pubComponent',
     component: wrapDynamicComponent('/views/layout/RouteLayoutAutoRender.vue', 'pubComponent'),
   },

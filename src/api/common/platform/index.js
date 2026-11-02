@@ -1,7 +1,8 @@
 import request from '../../request';
 import qs from 'qs';
 import { useSessionStore } from '@/stores/session.js';
-const openapiConfigCache = new Map()
+const openapiConfigCache = new Map();
+let noLoginMode = false;
 
 export function getUrl(url, params) {
   return (
@@ -111,6 +112,9 @@ export function getEntityDefine(className) {
   });
 }
 
+export function switchNoLoginMode() {
+  noLoginMode = true;
+}
 /**
  * 辅助函数：优先从内存缓存获取 OpenAPI 配置，无缓存则请求远程后台
  * @param {string} apiCode
@@ -125,8 +129,12 @@ async function getOpenapiConfig(apiCode) {
   // 2. 未命中缓存：创建请求 Promise 并立刻写入缓存（防止同一时刻并发重复请求）
   const fetchPromise = (async () => {
     try {
+      let url = '/platformSvr/sapi/openapis/codes/';
+      if (noLoginMode === true) {
+        url = url + 'noLogin/';
+      }
       const response = await request({
-        url: getUrl('/platformSvr/sapi/openapis/codes/' + apiCode, {}),
+        url: getUrl(url + apiCode, {}),
         method: 'get',
       });
 
@@ -134,7 +142,7 @@ async function getOpenapiConfig(apiCode) {
         throw response.error || new Error('获取OpenAPI配置失败');
       }
 
-      const openapi = response.data
+      const openapi = response.data;
       if (!openapi) {
         throw new Error(`未找到 apiCode: ${apiCode} 对应的配置信息`);
       }

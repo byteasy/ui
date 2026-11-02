@@ -30,7 +30,7 @@ import { defineExpose, defineModel, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { renderCss } from '@/util/formUtil.ts';
 import BeRenderComponent from './BeRenderComponent.vue';
-import { doHttpPost, executeOpenApi } from '@/api/common/platform';
+import { executeOpenApi } from '@/api/common/platform';
 import { ElMessage } from 'element-plus';
 import { BeRenderLayoutFormKey } from '@/components/formRender/BeRenderLayoutFormContext.ts';
 
