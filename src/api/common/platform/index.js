@@ -131,7 +131,7 @@ async function getOpenapiConfig(apiCode) {
     try {
       let url = '/platformSvr/sapi/openapis/codes/';
       if (noLoginMode === true) {
-        url = url + 'noLogin/';
+        url = '/platformSvr/papi/openapis/codes/';
       }
       const response = await request({
         url: getUrl(url + apiCode, {}),

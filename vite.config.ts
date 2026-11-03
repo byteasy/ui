@@ -66,6 +66,10 @@ export default defineConfig(({mode}) => {
           target: 'http://localhost:18080',
           changeOrigin: true,
         },
+        '/platformSvr/papi': {
+          target: 'http://localhost:18080',
+          changeOrigin: true,
+        },
       },
     },
     build: {
