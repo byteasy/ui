@@ -108,35 +108,37 @@ onMounted(() => {
   }
 });
 
-function onSaveClick() {
+async function onSaveClick() {
+  // 自定义校验错误拦截
   if (Object.keys(validError.value).length > 0) {
     setFieldsErrors(validError.value);
-    console.log('validError.value length > 0')
-    return;
+    console.log('validError.value length > 0');
+    return Promise.reject(new Error('Form validError > 0'));
   }
 
-  refForm.value?.validate((valid) => {
+  // Element Plus 的 validate() 在不传回调时原生返回 Promise
+  try {
+    const valid = await refForm.value?.validate();
     if (!valid) return;
-    if (props.apiSave.startsWith('/')) {
-      doHttpPost(props.apiSave, queryParam.value, formModel.value)
-        .then(() => {
-          ElMessage.success(t('operationSuccess'));
-          emit('close', 'ok');
-        })
-        .catch((err) => {
-          ElMessage.error(err.message);
-        });
-    } else {
-      executeOpenApi(props.apiSave, queryParam.value, formModel.value)
-        .then(() => {
-          ElMessage.success(t('operationSuccess'));
-          emit('close', 'ok');
-        })
-        .catch((err) => {
-          ElMessage.error(err.message);
-        });
+
+    // 统一根据 apiSave 路径调用保存接口
+    const requestPromise = props.apiSave.startsWith('/')
+      ? doHttpPost(props.apiSave, queryParam.value, formModel.value)
+      : executeOpenApi(props.apiSave, queryParam.value, formModel.value);
+
+    // 等待接口保存请求完成
+    await requestPromise;
+
+    ElMessage.success(t('operationSuccess'));
+    emit('close', 'ok');
+  } catch (err) {
+    // 捕获表单校验不通过（Element 会返回校验错误对象）或接口报错
+    if (err && err.message) {
+      ElMessage.error(err.message);
     }
-  });
+    // 抛出异常供上层捕获，确保即使失败也能正常结束父组件的 loading
+    throw err;
+  }
 }
 
 const validate = () => {
@@ -150,13 +152,14 @@ function onClearForm() {
   emit('close', 'cancel');
 }
 
-function onButtonClick(btnName) {
+// 2. onButtonClick 返回对应的异步 Promise
+const onButtonClick = (btnName) => {
   if (btnName === 'ok') {
-    onSaveClick();
+    return onSaveClick();
   } else if (btnName === 'cancel') {
     onClearForm();
   }
-}
+};
 
 // 表单联动
 let timer: any = null;

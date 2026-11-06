@@ -55,7 +55,7 @@
                 <be-svg-icon :svg="btn.icon" class="mr-1"/>
                 {{ getLangText(btn.name, locale) }}
               </el-button>
-              <el-button v-debounce="() => onButtonClick('ok', item)" type="primary">
+              <el-button v-debounce="() => onButtonClick('ok', item)" type="primary" v-loading="submitBtnLoading">
                 <be-svg-icon svg="Check" class="mr-1"/>
                 {{ t(item.btnOkTitle || 'ok') }}
               </el-button>
@@ -113,7 +113,7 @@
                 <be-svg-icon :svg="btn.icon" class="mr-1"/>
                 {{ getLangText(btn.name, locale) }}
               </el-button>
-              <el-button v-debounce="() => onButtonClick('ok', item)" type="primary">
+              <el-button v-debounce="() => onButtonClick('ok', item)" type="primary" v-loading="submitBtnLoading">
                 <be-svg-icon svg="Check" class="mr-1"/>
                 {{ t(item.btnOkTitle || 'ok') }}
               </el-button>
@@ -137,6 +137,7 @@ const {t} = useI18n()
 
 const appSettingsStore = useAppSettingsStore()
 const componentRef = ref(null)
+const submitBtnLoading = ref(false);
 
 const {componentSize, lang} = storeToRefs(appSettingsStore)
 
@@ -176,10 +177,28 @@ const calcDialogHeight = (item: any) => {
   }
 }
 
-const onButtonClick = (btn, item) => {
-  const len = componentRef.value.length
-  if (componentRef.value[len - 1]?.onButtonClick !== undefined) {
-    componentRef.value[len - 1]?.onButtonClick(btn)
+const onButtonClick = async (btn, item) => {
+  const len = componentRef.value?.length || 0
+  const activeComponent = componentRef.value?.[len - 1]
+
+  if (activeComponent?.onButtonClick !== undefined) {
+    try {
+      // 1. 执行函数，获取返回值
+      const result = activeComponent.onButtonClick(btn)
+
+      // 2. 判断返回值是否是 Promise（支持 async 函数或返回 Promise 的普通函数）
+      if (result && typeof result.then === 'function') {
+        // 设置当前按钮的 loading 状态为 true
+        submitBtnLoading.value = true // 或者你维护的 loadingRef.value = true
+        // 3. 等待异步操作完成（无论成功还是抛出异常，finally 都会关闭 loading）
+        await result
+      }
+    } catch (error) {
+      console.error('按钮异步操作执行失败:', error)
+    } finally {
+      // 4. 关闭 loading
+      submitBtnLoading.value = false
+    }
   } else {
     defaultButtonClickHandle(btn, item)
   }

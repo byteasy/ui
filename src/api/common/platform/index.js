@@ -101,15 +101,8 @@ export function genUri(url, params) {
 }
 
 export function getEntityDefine(className) {
-  return new Promise((resolve, reject) => {
-    executeOpenApi('4GSabRyjA', { code: className, codeQueryType: 'eq' }, {})
-      .then((response) => {
-        resolve(response.data[0]);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return executeOpenApi('4GSabRyjA', { code: className, codeQueryType: 'eq' }, {})
+    .then(response => response.data[0]);
 }
 
 export function switchNoLoginMode() {
