@@ -4,7 +4,7 @@
       <el-table-column :label="$t('table.columnNo')" type="index" width="60"/>
       <el-table-column :label="$t('table.columnLabel')" prop="displayName" resizable>
         <template #default="scope">
-          <tuna-i18n-value :model-value="scope.row.displayName" />
+          <be-i18n-value :model-value="scope.row.displayName" />
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.columnFieldName')" prop="name" resizable/>

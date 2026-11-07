@@ -1,82 +1,251 @@
 <template>
-  <div :style="props.formDefine.properties.marginStyle">
-    <el-form-item :prop="props.formDefine.properties.fieldName"
-                  :rules="[
-                    { required: props.formDefine.properties.required === true, message: getLangText(props.formDefine.properties.fieldTitle, locale) + ' ' + t('validate.required') },
-                    { validator: (rule, value, callback) => callback(), trigger: 'blur' }
-                  ]"
-                  :style="renderCss(props.formDefine.properties)">
+  <div
+    :style="props.formDefine.properties.marginStyle"
+    v-if="cascadeModel[props.formDefine.properties.fieldName + 'Visible'] !== false"
+  >
+    <div
+      :style="renderCss(props.formDefine.properties)"
+      v-if="props.formDefine.properties.component === 'label'"
+    >
+      <el-text
+        class="w-full"
+        :type="props.formDefine.properties.type"
+        :size="props.formDefine.properties.size"
+        :truncated="props.formDefine.properties.truncated"
+        :line-clamp="props.formDefine.properties.lineClamp"
+        :style="renderCss(props.formDefine.properties)"
+        >{{ getLangText(props.formDefine.properties.fieldTitle, locale) }}</el-text
+      >
+    </div>
+    <div
+      :style="renderCss(props.formDefine.properties)"
+      v-else-if="props.formDefine.properties.component === 'submitButton'"
+    >
+      <be-form-submit-button
+        class="w-full"
+        :title="props.formDefine.properties.title"
+        :type="props.formDefine.properties.type"
+        :size="props.formDefine.properties.size"
+        :plain="props.formDefine.properties.plain"
+        :text="props.formDefine.properties.text"
+        :bg="props.formDefine.properties.bg"
+        :link="props.formDefine.properties.link"
+        :round="props.formDefine.properties.round"
+        :circle="props.formDefine.properties.circle"
+        :dashed="props.formDefine.properties.dashed"
+        :loading="props.formDefine.properties.loading"
+        :loading-icon="props.formDefine.properties.loadingIcon"
+        :disabled="props.formDefine.properties.disabled"
+        :icon="props.formDefine.properties.icon"
+        :autofocus="props.formDefine.properties.autofocus"
+        :dark="props.formDefine.properties.dark"
+      />
+    </div>
+    <el-form-item
+      :prop="props.formDefine.properties.fieldName"
+      :rules="[
+        {
+          required: props.formDefine.properties.required === true,
+          message:
+            getLangText(props.formDefine.properties.fieldTitle, locale) +
+            ' ' +
+            t('validate.required'),
+        },
+        { validator: (rule, value, callback) => callback(), trigger: 'blur' },
+      ]"
+      :style="renderCss(props.formDefine.properties)"
+      v-else
+    >
       <template v-slot:label="scope">
-        <span :style="props.formDefine.properties.fontStyle">{{ getLangText(props.formDefine.properties.fieldTitle, locale) + scope.label }}</span>
+        <span :style="props.formDefine.properties.fontStyle">{{
+          getLangText(props.formDefine.properties.fieldTitle, locale) + scope.label
+        }}</span>
       </template>
-      <el-slider v-if="props.formDefine.properties.component === 'slider'"
-                 v-model="formValue[props.formDefine.properties.fieldName]"
-                 :min="props.formDefine.properties.min"
-                 :max="props.formDefine.properties.max"
-                 :show-input="props.formDefine.properties.showInput"
-                 :step="props.formDefine.properties.step"/>
-      <el-input-number v-else-if="props.formDefine.properties.component === 'number'"
-                       v-model="formValue[props.formDefine.properties.fieldName]"
-                       :controls="props.formDefine.properties.controls"
-                       :controls-position="props.formDefine.properties.controlsPosition === true ? 'right' : ''"
-                       :min="props.formDefine.properties.min"
-                       :max="props.formDefine.properties.max"
-                       :step="props.formDefine.properties.step"/>
-      <el-input v-model="formValue[props.formDefine.properties.fieldName]" v-else-if="props.formDefine.properties.component === 'text'"
-                       :type="props.formDefine.properties.type"
-                       :minlength="props.formDefine.properties.minlength"
-                       :maxlength="props.formDefine.properties.maxlength"
-                       :show-word-limit="props.formDefine.properties.showWordLimit"
-                       :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
-                       :clearable="props.formDefine.properties.clearable"
-                       :show-password="props.formDefine.properties.showPassword"
-                       :rows="props.formDefine.properties.rows"
-                       :autosize="props.formDefine.properties.autosize"
-                       :tabindex="props.formDefine.properties.tabindex"
-                       :word-limit-position="props.formDefine.properties.wordLimitPosition" />
+      <el-slider
+        v-if="props.formDefine.properties.component === 'slider'"
+        class="w-full"
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        :min="props.formDefine.properties.min"
+        :max="props.formDefine.properties.max"
+        :show-input="props.formDefine.properties.showInput"
+        :step="props.formDefine.properties.step"
+        :disabled="cascadeModel[props.formDefine.properties.fieldName + 'Disabled'] === true"
+      />
+      <el-input-number
+        v-else-if="props.formDefine.properties.component === 'number'"
+        class="w-full"
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        :controls="props.formDefine.properties.controls"
+        :controls-position="props.formDefine.properties.controlsPosition === true ? 'right' : ''"
+        :tabindex="props.formDefine.properties.tabindex"
+        :precision="props.formDefine.properties.precision"
+        :min="props.formDefine.properties.min"
+        :max="props.formDefine.properties.max"
+        :step="props.formDefine.properties.step"
+        :disabled="cascadeModel[props.formDefine.properties.fieldName + 'Disabled'] === true"
+      />
+      <el-input
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        v-else-if="props.formDefine.properties.component === 'text'"
+        class="w-full"
+        :type="props.formDefine.properties.type"
+        :minlength="props.formDefine.properties.minlength"
+        :maxlength="props.formDefine.properties.maxlength"
+        :show-word-limit="props.formDefine.properties.showWordLimit"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+        :clearable="props.formDefine.properties.clearable"
+        :show-password="props.formDefine.properties.showPassword"
+        :rows="props.formDefine.properties.rows"
+        :autosize="props.formDefine.properties.autosize"
+        :tabindex="props.formDefine.properties.tabindex"
+        :word-limit-position="props.formDefine.properties.wordLimitPosition"
+        :disabled="cascadeModel[props.formDefine.properties.fieldName + 'Disabled'] === true"
+      />
+      <el-date-picker
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        v-else-if="props.formDefine.properties.component === 'date'"
+        :editable="props.formDefine.properties.editable"
+        :clearable="props.formDefine.properties.clearable"
+        :type="props.formDefine.properties.type"
+        :format="props.formDefine.properties.format"
+        :value-format="props.formDefine.properties.valueFormat"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+        :disabled="cascadeModel[props.formDefine.properties.fieldName + 'Disabled'] === true"
+      />
+      <be-tag-input
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        v-else-if="props.formDefine.properties.component === 'tagInput'"
+        :editable="props.formDefine.properties.editable"
+        :max="props.formDefine.properties.max"
+        :tag-type="props.formDefine.properties.tagType"
+        :tag-effect="props.formDefine.properties.tagEffect"
+        :effect="props.formDefine.properties.effect"
+        :trigger="props.formDefine.properties.trigger"
+        :draggable="props.formDefine.properties.draggable"
+        :delimiter="props.formDefine.properties.delimiter"
+        :clearable="props.formDefine.properties.clearable"
+        :tabindex="props.formDefine.properties.tabindex"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+        :disabled="cascadeModel[props.formDefine.properties.fieldName + 'Disabled'] === true"
+      />
+      <el-radio-group
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        v-else-if="props.formDefine.properties.component === 'radioInput'"
+        :clearable="props.formDefine.properties.clearable"
+        :tabindex="props.formDefine.properties.tabindex"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+        :disabled="cascadeModel[props.formDefine.properties.fieldName + 'Disabled'] === true"
+      >
+        <el-radio
+          v-for="op in props.formDefine.properties.options"
+          :key="op.id"
+          :label="getLangText(op.label, locale)"
+          :value="op.value"
+        />
+      </el-radio-group>
+      <be-check-box-group
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        v-else-if="props.formDefine.properties.component === 'checkboxInput'"
+        :clearable="props.formDefine.properties.clearable"
+        :tabindex="props.formDefine.properties.tabindex"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+        :disabled="cascadeModel[props.formDefine.properties.fieldName + 'Disabled'] === true"
+      >
+        <template #default>
+          <el-checkbox
+            v-for="op in props.formDefine.properties.options"
+            :key="op.id"
+            :label="getLangText(op.label, locale)"
+            :value="op.value"
+          />
+        </template>
+      </be-check-box-group>
+      <be-image-upload
+        v-model="formValue[props.formDefine.properties.fieldName]"
+        class="w-full"
+        v-else-if="props.formDefine.properties.component === 'imageUpload'"
+        :api-upload="props.formDefine.properties.apiUpload"
+        :api-remove="props.formDefine.properties.apiRemove"
+        :single="props.formDefine.properties.single"
+        :limit="props.formDefine.properties.limit"
+        :accept="props.formDefine.properties.accept || 'image/*'"
+        :list-type="props.formDefine.properties.listType || 'picture-card'"
+        :auto-upload="props.formDefine.properties.autoUpload ?? true"
+        :multiple="props.formDefine.properties.multiple ?? false"
+        :disabled="props.formDefine.properties.disabled ?? false"
+        :drag="props.formDefine.properties.drag ?? false"
+        :preview="props.formDefine.properties.preview ?? true"
+        :download="props.formDefine.properties.download ?? true"
+        :show-file-list="props.formDefine.properties.showFileList ?? true"
+        :with-credentials="props.formDefine.properties.withCredentials ?? true"
+        :headers="props.formDefine.properties.headers"
+        :name="props.formDefine.properties.formParamName || 'file'"
+        :tabindex="props.formDefine.properties.tabindex"
+        :placeholder="getLangText(props.formDefine.properties.placeholder, locale)"
+      >
+      </be-image-upload>
     </el-form-item>
   </div>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue'
-import {useI18n} from "vue-i18n";
-import {renderCss} from "@/util/formUtil.ts";
-import {getLangText} from "@/locales/common.ts";
+import { defineModel, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { renderCss } from '@/util/formUtil.ts';
+import { getLangText } from '@/locales/common.ts';
+import dayjs from 'dayjs';
+import { runDefaultValueScript } from '@/api/common/platform';
 
 const props = defineProps<{
   formDefine: {
-    id: string
-    name: string
-    path: string
-    icon: string
-    propsForm: Array<object>
-    properties: object
-    children: any[]
-  },
-  modelValue: Record<string, any>
-}>()
+    id: string;
+    name: string;
+    path: string;
+    icon: string;
+    propsForm: Array<object>;
+    properties: object;
+    children: any[];
+  };
+}>();
 
-const formValue = ref(props.modelValue)
-const emit = defineEmits(['update:modelValue'])
-const {t, locale} = useI18n()
+const formValue = defineModel<any>('modelValue', { default: () => {} });
+const cascadeModel = defineModel<any>('cascadeModel', { default: () => {} });
+const emit = defineEmits(['update:modelValue']);
+const { t, locale } = useI18n();
 
 onMounted(() => {
   if (formValue.value[props.formDefine.properties.fieldName] === undefined) {
     if (props.formDefine.properties.defaultValue !== undefined) {
-      let defaultValue
-      if (props.formDefine.properties.component === 'slider'
-        || props.formDefine.properties.component === 'number') {
-        defaultValue = Number.parseInt(props.formDefine.properties.defaultValue)
+      let defaultValue;
+      if (
+        props.formDefine.properties.component === 'slider' ||
+        props.formDefine.properties.component === 'number'
+      ) {
+        defaultValue = props.formDefine.properties.defaultValue;
+      } else if (props.formDefine.properties.component === 'date') {
+        if (props.formDefine.properties.defaultValue === 'now') {
+          defaultValue = dayjs(new Date()).format(props.formDefine.properties.valueFormat);
+        }
       } else {
-        defaultValue = props.formDefine.properties.defaultValue
+        defaultValue = props.formDefine.properties.defaultValue;
       }
-      formValue.value[props.formDefine.properties.fieldName] = defaultValue
+      if (props.formDefine.properties.defaultValueScript !== undefined) {
+        runDefaultValueScript(
+          props.formDefine.properties,
+          props.formDefine.properties.defaultValueScript,
+        ).then((rsp) => {
+          formValue.value[props.formDefine.properties.fieldName] = dayjs(
+            new Date(Number.parseInt(rsp.data.output)),
+          ).format(props.formDefine.properties.valueFormat);
+        });
+      } else {
+        formValue.value[props.formDefine.properties.fieldName] = defaultValue;
+      }
     }
   }
-})
-
+});
 </script>
-<style scoped>
-</style>
-
-
+<style scoped></style>

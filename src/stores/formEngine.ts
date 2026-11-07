@@ -11,7 +11,7 @@ export const useFormEngine = defineStore('formEngine', () => {
       activeComponent.value = null
       return
     }
-    activeComponent.value = JSON.parse(JSON.stringify(component))
+    activeComponent.value = component
   }
 
   return {

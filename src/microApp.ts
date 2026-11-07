@@ -9,17 +9,38 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import '@/assets/style/style.css'
+import * as Vue from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import * as ElementPlusModule from 'element-plus'
+import * as VueI18n from 'vue-i18n'
+import axios from 'axios'
+import request from '@/api/request'
+import * as platformApi from '@/api/common/platform'
 import i18n from './locales'
 import App from './App.vue'
+import { loader } from '@guolao/vue-monaco-editor'
 
 import { debounce } from './directive/debounce'
 import { focus } from './directive/focus'
 import { permission } from './directive/permission'
 
-let app
+let app: any
 
 const render = (container) => {
+  loader.config({
+    paths: {
+      vs: '/platformSvr/common/lib/monaco-editor/vs'
+    }
+  })
+
+  ;(window as any).__SHARED_VUE__ = Vue
+  ;(window as any).__SHARED_ELEMENT_PLUS__ = ElementPlusModule
+  ;(window as any).__SHARED_ELEMENT_ICONS__ = ElementPlusIconsVue
+  ;(window as any).__SHARED_VUE_I18N__ = VueI18n
+  ;(window as any).__SHARED_AXIOS__ = axios
+  ;(window as any).__SHARED_REQUEST__ = request
+  ;(window as any).__SHARED_PLATFORM_API__ = platformApi
+
   app = createApp(App)
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
@@ -32,22 +53,27 @@ const render = (container) => {
   app.directive('focus', focus)
   app.directive('permission', permission)
 
+
   app.mount(container ? container.querySelector('#app') : '#app')
 }
 
 const initQianKun = () => {
-  console.log('init in qianqun')
+  console.log('[SubApp] init in qiankun')
   renderWithQiankun({
     mount(props) {
-      console.log('unmount')
+      console.log('[SubApp] mount')
       const { container } = props
       render(container)
     },
     bootstrap() {
+      console.log('[SubApp] bootstrap')
     },
     unmount() {
-      console.log('unmount')
-      app.unmount()
+      console.log('[SubApp] unmount')
+      if (app) {
+        app.unmount()
+        app = null // 关键：释放内存！
+      }
     }
   })
 }

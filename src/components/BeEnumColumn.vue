@@ -20,13 +20,12 @@ const enumMap = ref({})
 const props = defineProps<{
   code: string
   prop: string
-  context: string
 }>()
 
 onMounted(() => {
-  getEnumValues(props.context, props.code).then((rsp) => {
+  getEnumValues(props.code).then((rsp) => {
     rsp.data.forEach((item) => {
-      enumMap.value[XEUtils.toString(item.value)] = item
+      enumMap.value[XEUtils.toString(item.name)] = item
     })
   })
 })
@@ -34,7 +33,7 @@ onMounted(() => {
 function parseLabel(value) {
   const key = XEUtils.toString(value)
   if (enumMap.value[key] !== undefined) {
-    return getLangText(enumMap.value[key].label, locale.value)
+    return getLangText(enumMap.value[key].displayName, locale.value)
   } else {
     return getLangText(value, locale.value)
   }
@@ -45,7 +44,7 @@ function parseType(value) {
   const key = XEUtils.toString(value)
 
   if (enumMap.value[key] !== undefined) {
-    return enumMap.value[key].css
+    return enumMap.value[key].typeClassName
   } else {
     return 'primary'
   }

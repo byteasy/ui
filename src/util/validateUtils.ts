@@ -181,7 +181,7 @@ export function validateHighStrengthPassword(password: string) {
 export function validateColumnRule(col: any, rule: any, value: any, locale, callback: any) {
   const { t } = i18n.global
 
-  if (!value && col.isRequire === 'YES') {
+  if ((value === null || value === undefined) && col.isRequire === 'YES') {
     callback(new Error(getLangText(col.displayName, locale)  + ' ' + t('validate.required')))
     return
   }

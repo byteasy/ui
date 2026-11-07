@@ -22,17 +22,15 @@
                            :param="parseComponentParam(col.fieldComponent)"
                            :formModel="formValue"
                            v-if="col.fieldComponent"
-                           :context="props.context ? props.context : 'platformSvr'"
                            :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                            :column="col"
                            clearable
                            :disabled="props.disabled"
                            v-model="formValue[col.name]"
                            @change="onUpdateModelValueClick"></component>
-                <tuna-form-field
+                <be-form-field
                   :column="col"
                   v-else
-                  :context="props.context ? props.context : 'platformSvr'"
                   :placeholder="getLangText(col.description || col.displayName || col.name, locale)"
                   clearable
                   :disabled="props.disabled"
@@ -53,17 +51,15 @@ import {defineEmits, defineExpose, onMounted, ref, watch} from 'vue'
 import {getEntitySchema} from '@/api/common/platform'
 import {useI18n} from 'vue-i18n'
 import {getLangText} from "@/locales/common.ts";
-import TunaFormField from "@/components/TunaFormField.vue";
+import BeFormField from "@/components/BeFormField.vue";
 import {validateColumnRule} from '@/util/validateUtils.ts'
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
 import {parseComponent, parseComponentParam} from "@/util/common.ts";
-const {modules } = getRouteComponents()
+import {getComponent} from "@/util/componentLoader.ts";
 
 const {t, locale} = useI18n() // 表单引用
 
 const props = defineProps<{
   className: string
-  context?: string
   disabled?: boolean
   modelValue?: Record<string, any> | null
   columns?: number
@@ -76,16 +72,12 @@ const tableColumns = ref([])
 const formValue = ref({...props.modelValue})
 const refBeanFields = ref({})
 
-function getComponent(path) {
-  return modules['..' + path]
-}
-
 onMounted(() => {
   loadDynamicFields()
 })
 
 function loadDynamicFields() {
-  getEntitySchema(props.context ? props.context : 'platformSvr', props.className)
+  getEntitySchema(props.className)
     .then((response) => {
       tableColumns.value = response.data
       for (const col in tableColumns.value) {

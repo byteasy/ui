@@ -1,0 +1,130 @@
+<template>
+  <div class="w-full h-full drag-container-border">
+    <div :style="props.modelValue.properties.marginStyle" class="w-full h-full">
+      <el-splitter
+        :layout="props.modelValue.properties.layout"
+        :lazy="props.modelValue.properties.lazy"
+        :style="renderCss(props.modelValue.properties)"
+      >
+        <template v-for="root in children" :key="root.id">
+          <el-splitter-panel
+            :size="root.properties.size"
+            :min="root.properties.min"
+            :max="root.properties.max"
+            :resizable="root.properties.resizable"
+            :collapsible="root.properties.collapsible"
+          >
+            <be-form-component
+              :model-value="root"
+              @click="onComponentClick(root)"
+              @copy="onComponentCopy(root)"
+              @delete="onComponentDelete(root)"
+              :active="root.id === activeComponent?.id"
+              class="w-full h-full"
+              @update:modelValue="(value) => updateChildrenValue(value)"
+            />
+          </el-splitter-panel>
+        </template>
+      </el-splitter>
+    </div>
+  </div>
+</template>
+<script lang="ts" setup>
+import { ref, watch } from 'vue';
+import BeFormComponent from '@/components/form/BeFormComponent.vue';
+import { useFormEngine } from '@/stores/formEngine.ts';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
+import { renderCss } from '@/util/formUtil.ts';
+
+const props = defineProps<{
+  modelValue: {
+    id: string;
+    name: string;
+    path: string;
+    icon: string;
+    propsForm: Array<object>;
+    properties: object;
+    children: any[];
+  };
+}>();
+
+const formEngine = useFormEngine();
+const children = ref([...(props.modelValue.children || [])]);
+const emit = defineEmits(['selected', 'update:modelValue']);
+const { activeComponent } = storeToRefs(formEngine);
+const { t, locale } = useI18n();
+const editableTabsValue = ref(children.value.length > 0 ? children.value[0].id : undefined);
+
+function onComponentClick(ponent) {
+  formEngine.setActiveComponent(ponent);
+}
+
+function onComponentCopy(root) {
+  const newRoot = JSON.parse(JSON.stringify(root));
+  newRoot.id = newRoot.id + '-' + new Date().getTime();
+  children.value.push(newRoot);
+}
+
+function onComponentDelete(root) {
+  if (children.value.length < 2) {
+    return;
+  }
+  children.value = children.value.filter((item) => item.id !== root.id);
+  if (root.id === activeComponent.value?.id) {
+    formEngine.setActiveComponent(null);
+  }
+  editableTabsValue.value = children.value.length > 0 ? children.value[0].id : undefined;
+}
+
+watch(
+  () => children.value,
+  (newVal, oldVal) => {
+    doUpdateModelValue();
+  },
+  { deep: true },
+);
+
+watch(
+  () => {
+    return JSON.stringify(collectAllPropsNodes(props.modelValue.children));
+  },
+  () => {
+    children.value = props.modelValue.children;
+  },
+);
+
+function collectAllPropsNodes(list: any[]): Array<{ id: string; properties: any }> {
+  const result: Array<{ id: string; properties: any }> = [];
+  if (!Array.isArray(list)) return result;
+
+  for (const node of list) {
+    result.push({
+      id: node.id,
+      properties: node.properties,
+    });
+    result.push(...collectAllPropsNodes(node.children));
+  }
+  return result;
+}
+
+function doUpdateModelValue() {
+  const newValue = JSON.parse(JSON.stringify(props.modelValue));
+  newValue.children = children.value;
+  emit('update:modelValue', newValue);
+}
+
+function updateChildrenValue(child) {
+  const index = children.value.findIndex((item) => item.id === child.id);
+  if (index > -1) {
+    children.value[index] = child;
+  }
+  doUpdateModelValue();
+}
+</script>
+<style scoped>
+.drag-container-border {
+  border: 1px dashed var(--el-color-primary);
+  padding-bottom: 0.8rem;
+}
+</style>

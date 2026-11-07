@@ -1,149 +1,198 @@
-import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
-import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
-import { doHttpGet } from '@/api/common/platform'
-import AsideMain from '@/views/layout/AsideMain.vue'
-import XEUtils from 'xe-utils'
-import {getRouteComponents} from "@/util/autoImportComponent.ts";
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
+import { qiankunWindow } from 'vite-plugin-qiankun/dist/helper';
+import { doHttpGet } from '@/api/common/platform';
+import { getComponent } from '@/util/componentLoader.ts';
+import { defineComponent, h } from 'vue';
+
+const routers = [
+  {
+    path: '/pub/eb/:code',
+    name: 'pubComponent',
+    component: wrapDynamicComponent('/views/layout/RouteLayoutAutoRender.vue', 'pubComponent'),
+  },
+]
 
 const router = createRouter({
   history: createWebHashHistory(qiankunWindow.__POWERED_BY_QIANKUN__ ? '/' : '/'),
-  routes: [
-  ],
-})
+  routes: routers,
+});
 
-/**
- * 基座只有静态路由，并动态加载微应用的路由入口
- */
-let isMicroAppRouterLoad = false
-const { modules } = getRouteComponents()
-console.log('all ui component', modules)
+let isMicroAppRouterLoad = false;
+let activeMicroAppRouter = 'noActive';
+const WHITE_LIST_ROUTES = ['pubComponent'];
 
 router.beforeEach(async (to, from, next) => {
-  if (!isMicroAppRouterLoad) {
-    console.log('micro app router not init. try to init', to.fullPath)
-    await doHttpGet('/platformSvr/sapi/resources/leftMenu', { fullPath: to.fullPath }).then(
-      (response) => {
-        response.data.forEach((item) => {
-          try {
-            const dynamicRoute: RouteRecordRaw = {}
-            rebuildLeftMenus(dynamicRoute, item)
-            console.log('micro app add dynamicRoute', dynamicRoute, item)
-            router.addRoute(dynamicRoute)
-            console.log('micro app routes length:', router.getRoutes().length)
-          } catch (err) {
-            console.log('micro app add router err', err)
-          }
-        })
-      },
-    )
-    console.log('micro app router init finished', router.getRoutes().length)
-    isMicroAppRouterLoad = true
-    next({ ...to, replace: true })
-    return
+  // 脱离框架的公开访问页面
+  if(to.fullPath.startsWith('/pub')) {
+    next();
+    return;
   }
-  console.log('micro app goto', to.fullPath)
-  next()
-})
 
+  const paths = to.fullPath.split('/');
+  const nowActiveAppRouter = '/' + (paths[1] || '') + '/' + (paths[2] || '');
+
+  // 1. 切换微应用模块时，正确清理已注册的动态路由
+  if (!to.fullPath.startsWith(activeMicroAppRouter)) {
+    isMicroAppRouterLoad = false;
+    activeMicroAppRouter = nowActiveAppRouter;
+
+    // 🔥 修复点 1：Vue Router 正规清理路由方式
+    router.getRoutes().forEach((route) => {
+      if (route.name && !WHITE_LIST_ROUTES.includes(route.name as string)) {
+        router.removeRoute(route.name);
+      }
+    });
+  }
+
+  // 2. 动态加载当前微应用侧边栏路由
+  if (!isMicroAppRouterLoad) {
+    try {
+      const response = await doHttpGet('/platformSvr/sapi/resources/leftMenu', { fullPath: to.fullPath });
+      const menuList = response?.data || [];
+
+      menuList.forEach((item) => {
+        try {
+          const dynamicRoute: RouteRecordRaw = {};
+          rebuildLeftMenus(dynamicRoute, item);
+          if (dynamicRoute.path) {
+            router.addRoute(dynamicRoute);
+          }
+        } catch (err) {
+          console.error('micro app add router err', err, item);
+        }
+      });
+
+      isMicroAppRouterLoad = true;
+      // 携带 replace 参数重新进入路由解析，保证刚刚 addRoute 的路由生效
+      next({ ...to, replace: true });
+      return;
+    } catch (error) {
+      console.error('加载微应用路由失败:', error);
+      next();
+      return;
+    }
+  }
+
+  next();
+});
+
+/**
+ * 构建路由树
+ */
 function rebuildLeftMenus(node, menu) {
-  console.log('menu', menu)
-  // 支持一级菜单
-  if (menu.type === 'MENU' && (menu.parentId === null || menu.parentId === undefined)) {
-    const idx = (menu.routerUrl || '').lastIndexOf('/')
-    node.path = filteredQueryParameter(menu.routerUrl.substring(0, idx))
-    node.name = menu.code + 'Parent'
-    node.component = AsideMain
+  const Layout = getComponent(menu.layout || '/views/layout/AsideMain.vue');
+
+  // 情况 A：处理独立的一级菜单（自身是 MENU，没有父节点）
+  if (menu.type === 'MENU' && (!menu.parentId || menu.parentId === '0')) {
+    const rawUrl = filteredQueryParameter(menu.routerUrl || '');
+    const idx = rawUrl.lastIndexOf('/');
+
+    const parentPath = idx > 0 ? rawUrl.substring(0, idx) : rawUrl;
+    // 🔥 修复点 2：子路由 path 不能以 "/" 开头，必须为相对路径！
+    const subPath = idx >= 0 ? rawUrl.substring(idx + 1) : '';
+
+    node.path = parentPath;
+    node.name = menu.code + 'Parent';
+    node.component = Layout;
     node.children = [
       {
-        path: filteredQueryParameter(menu.routerUrl.substring(idx)),
+        path: subPath, // 正确的相对路径（如 "4FscHb4pi"）
         name: menu.code,
-        meta: { title: menu.title, noCache: menu.keepAlive === 'NO' },
-        component: getModule(menu.component),
+        // 🔥 修复点 3：统一读取 menu.name 作为标题
+        meta: {
+          title: menu.name,
+          noCache: menu.keepAlive === 'NO',
+          affix: menu.affix === 'YES',
+          query: parseQueryParameter(menu.routerUrl),
+        },
+        component: wrapDynamicComponent(menu.component, menu.code),
       },
-    ]
+    ];
+    return;
   }
+
+  // 情况 B：处理目录结构（包含多级子菜单）
   if (hasChildrenMenu(menu)) {
-    node.path = filteredQueryParameter(menu.routerUrl)
-    node.name = menu.code
-    node.component = AsideMain
-    node.redirect = menu.redirectUrl
-    node.children = []
-    node.meta = { title: menu.name }
-    menu.childrenList.forEach((child) => {
-      if (child.type === 'MENU' || child.type === 'DIRECTORY') {
-        if (hasChildrenMenu(child)) {
-          child.childrenList.forEach((subChild) => {
-            if (subChild.type === 'MENU') {
-              node.children.push({
-                path: filteredQueryParameter(child.routerUrl) + '/' + filteredQueryParameter(subChild.routerUrl),
-                name: subChild.code,
-                meta: {
-                  title: subChild.name,
-                  affix: subChild.affix === 'YES',
-                  noCache: subChild.keepAlive === 'NO',
-                  query: parseQueryParameter(subChild.routerUrl),
-                },
-                component: getModule(subChild.component),
-              })
-            }
-          })
-        } else {
-          node.children.push({
-            path: filteredQueryParameter(child.routerUrl),
-            name: child.code,
-            meta: {
-              title: child.name,
-              affix: child.affix === 'YES',
-              noCache: child.keepAlive === 'NO',
-              query: parseQueryParameter(child.routerUrl),
-            },
-            component: getModule(child.component),
-          })
-        }
-      }
-    })
+    node.path = filteredQueryParameter(menu.routerUrl || '');
+    node.name = menu.code;
+    node.component = Layout;
+    node.redirect = menu.redirectUrl;
+    node.meta = { title: menu.name };
+    node.children = [];
+
+    // 🔥 修复点 4：通用递归打平收集所有叶子菜单，支持任意层级目录嵌套
+    collectLeafMenus(menu.childrenList, '', node.children);
   }
+}
+
+/**
+ * 递归收集所有叶子菜单（MENU）并拼接相对路由路径
+ */
+function collectLeafMenus(childrenList, parentPrefix, targetChildren) {
+  if (!Array.isArray(childrenList) || childrenList.length === 0) return;
+
+  childrenList.forEach((child) => {
+    // 移除前置斜杠，确保拼接出来的路径符合 Vue Router 规范
+    const currentPath = filteredQueryParameter(child.routerUrl || '').replace(/^\//, '');
+    const combinedPath = parentPrefix ? `${parentPrefix}/${currentPath}` : currentPath;
+
+    if (child.type === 'MENU') {
+      targetChildren.push({
+        path: combinedPath,
+        name: child.code,
+        meta: {
+          title: child.name,
+          affix: child.affix === 'YES',
+          noCache: child.keepAlive === 'NO',
+          query: parseQueryParameter(child.routerUrl),
+        },
+        component: wrapDynamicComponent(child.component, child.code),
+      });
+    } else if (child.type === 'DIRECTORY' && child.childrenList && child.childrenList.length > 0) {
+      // 遇到中间目录继续递归向下收集，累加路径前缀
+      collectLeafMenus(child.childrenList, combinedPath, targetChildren);
+    }
+  });
 }
 
 function filteredQueryParameter(value) {
-  if (value.indexOf('?') >= 0) {
-    return value.split('?')[0]
-  } else {
-    return value
-  }
+  if (!value) return '';
+  return value.includes('?') ? value.split('?')[0] : value;
 }
 
 function parseQueryParameter(value) {
-  const index = value.indexOf('?')
-  if (index >= 0) {
-    return value.substring(index + 1)
-  } else {
-    return undefined
-  }
+  if (!value) return undefined;
+  const index = value.indexOf('?');
+  return index >= 0 ? value.substring(index + 1) : undefined;
 }
 
 function hasChildrenMenu(menu) {
-  if (XEUtils.hasOwnProp(menu, 'childrenList') && menu.childrenList !== null && menu.childrenList.length > 0) {
-    const len = menu.childrenList.length
-    for (let i = 0; i < len; i++) {
-      const child = menu.childrenList[i]
-      if (child.type === 'MENU') {
-        return true
-      }
-      const childHasChildren = hasChildrenMenu(child)
-      if (childHasChildren === true) {
-        return true
-      }
-    }
+  if (menu && Array.isArray(menu.childrenList) && menu.childrenList.length > 0) {
+    return menu.childrenList.some((child) => child.type === 'MENU' || hasChildrenMenu(child));
   }
-  return false
+  return false;
 }
 
 function getModule(name) {
-  if (modules['..' + name] !== undefined) {
-    return modules['..' + name]
+  const component = getComponent(name);
+  if (!component) {
+    return getComponent('/views/common/Error404.vue');
   }
-  return modules['../views/common/Error404.vue']
+  return component;
 }
 
-export default router
+// 🔥 2. 核心包装函数：根据菜单唯一的 code，动态为通用模板组件赋予唯一的 name
+function wrapDynamicComponent(componentPath, uniqueName) {
+  const RawComponent = getModule(componentPath);
+  if (!RawComponent) return RawComponent;
+
+  // 包装一层高阶组件，让它的 name 严格等于 route.name (即 menu.code)
+  return defineComponent({
+    name: uniqueName, // 🔥 核心：在这里把组件名重写为菜单唯一的 code！
+    render() {
+      return h(RawComponent);
+    },
+  });
+}
+
+export default router;

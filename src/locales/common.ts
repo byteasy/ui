@@ -65,6 +65,9 @@ const langList = [
 
 export function getLangText(text: any, currentLocale: string): string {
   if (!text) return ''
+  if (Number.isInteger(text)) {
+    return text
+  }
   const lang = langMap[currentLocale] || currentLocale
 
   try {

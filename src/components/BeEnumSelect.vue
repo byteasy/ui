@@ -1,6 +1,6 @@
 <template>
   <el-select :loading="loading" >
-    <el-option v-for="item in enumValues" :key="item.value" :label="getLangText(item.label, locale)" :value="item.value" />
+    <el-option v-for="item in enumValues" :key="item.name" :label="getLangText(item.displayName, locale)" :value="item.name" />
   </el-select>
 </template>
 <script lang="ts" setup>
@@ -13,13 +13,12 @@ const { t, locale } = useI18n()
 
 const props = defineProps<{
   code: string
-  context?: string
 }>()
 const enumValues = ref([])
 const loading = ref(false)
 
 onMounted(() => {
-  getEnumValues(props.context ? props.context : 'platformSvr', props.code).then(rsp => {
+  getEnumValues(props.code).then(rsp => {
     enumValues.value = rsp.data
   })
 })

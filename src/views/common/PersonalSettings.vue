@@ -1,5 +1,5 @@
 <template>
-  <tuna-viewer
+  <be-viewer
     context="platformSvr"
     class-name="com.byteasy.platform.vo.PersonalSettingsVO"
     :entity="user"
@@ -8,7 +8,7 @@
     <template v-slot:view_avatar="scope">
       <el-avatar shape="square" :size="100" fit="scale-down" :src="scope.value" />
       <el-upload
-        action="/platformSvr/sapi/files"
+        action="/platformSvr/sapi/files/private"
         v-if="editEnable"
         with-credentials
         :on-success="onAvatarUploadSuccess"
@@ -49,7 +49,7 @@
       }}</el-button>
       <el-button type="primary" @click="onSaveClick" v-if="editEnable">{{ $t('save') }}</el-button>
     </template>
-  </tuna-viewer>
+  </be-viewer>
 </template>
 
 <script setup lang="ts">
