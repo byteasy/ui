@@ -118,6 +118,7 @@ export default {
     operation: '操作',
     view: '查看',
     edit: '编辑',
+    audit: '审计',
     delete: '删除',
     role: '角色',
     save: '保存',

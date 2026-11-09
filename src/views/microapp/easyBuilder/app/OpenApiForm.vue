@@ -90,6 +90,9 @@ function onTypeChange(type) {
   } else if (type === 'GET_BY_PRIMARY_KEY') {
     refBeForm.value.formModel.httpMethod = 'GET'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/{id}'
+  } else if (type === 'PAGE_AUDIT_LOG') {
+    refBeForm.value.formModel.httpMethod = 'GET'
+    refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className + '/audit/log'
   } else if (type === 'SAVE_OR_UPDATE') {
     refBeForm.value.formModel.httpMethod = 'POST'
     refBeForm.value.formModel.uri = contextPath.value + '/sapi/common/' + refBeForm.value.formModel.className

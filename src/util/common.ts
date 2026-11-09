@@ -112,3 +112,57 @@ export const execDefaultValueScript = (scriptText, ctx) => {
   const fn = new Function("ctx", scriptText)
   return fn(ctx)
 }
+
+/**
+ * 判断是否为普通对象（排除 null、数组、函数、Date 等）
+ */
+function isPlainObject(val: unknown): val is Record<string, any> {
+  return Object.prototype.toString.call(val) === '[object Object]';
+}
+
+/**
+ * 递归合并两个对象，自动忽略 source 中值为 null 和 undefined 的属性
+ * @param target 目标对象（如 Vue 的 ref.value 或 reactive 对象）
+ * @param source 来源对象（如传入的 layoutParams）
+ * @returns 合并后的 target
+ */
+export function mergeWithoutNull<T extends Record<string, any>>(
+  target: T,
+  source: Record<string, any> | null | undefined
+): T {
+  // 如果 source 为空，直接返回目标对象
+  if (!source || !isPlainObject(source)) {
+    return target;
+  }
+
+  // 确保 target 是有效对象
+  if (!target || !isPlainObject(target)) {
+    return target;
+  }
+
+  for (const [key, sourceVal] of Object.entries(source)) {
+    // 1. 核心需求：忽略 null 和 undefined
+    if (sourceVal === null || sourceVal === undefined) {
+      continue;
+    }
+
+    // 2. 如果当前值是纯对象，递归深度合并
+    if (isPlainObject(sourceVal)) {
+      // 如果目标对象不存在该 key 或不是对象，先初始化一个空对象
+      if (!isPlainObject(target[key])) {
+        target[key] = {} as any;
+      }
+      mergeWithoutNull(target[key], sourceVal);
+    }
+    // 3. 数组处理：直接替换浅拷贝（符合大部分布局参数预期）
+    else if (Array.isArray(sourceVal)) {
+      target[key] = [...sourceVal] as any;
+    }
+    // 4. 基本类型（string, number, boolean 等）：直接覆盖赋值
+    else {
+      target[key] = sourceVal;
+    }
+  }
+
+  return target;
+}

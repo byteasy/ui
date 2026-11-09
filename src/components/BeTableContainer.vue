@@ -6,6 +6,7 @@
                         :queryParams="metaData.queryParams"
                         :query-mode="metaData.queryMode"
                         :multiple="metaData.multiple"
+                        :meta="props.meta"
                         :form-component="metaData.formComponent"
                         :data-render-finish="metaData.dataRenderFinish"
                         :row-db-click="metaData.rowDbClick"
@@ -20,6 +21,7 @@ const props = defineProps<{
   metaData: object | null | undefined
   dialogModel?: boolean
   fullscreen?: boolean
+  meta?: object | null | undefined
 }>()
 
 const refTable = ref(null)
