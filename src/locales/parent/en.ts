@@ -5,6 +5,7 @@ export default {
   close: 'Close',
   cancel: 'Cancel',
   search: 'Search',
+  searchByKeyword: 'Input keyword to search',
   deleteWarn: 'Are you sure you want to delete this record?',
   warning: 'Warning',
   i18nEditTitle: 'Language Settings',

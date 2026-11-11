@@ -8,6 +8,7 @@ export default {
   close: '关闭',
   cancel: '取消',
   search: '查询',
+  searchByKeyword: '输入关键词搜索',
   deleteWarn: '确定要删除这条记录？',
   batchDeleteWarn: '确定要删除选中记录？',
   warning: '提醒',
