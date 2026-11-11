@@ -114,6 +114,7 @@ export default {
     operation: 'Operation',
     view: 'View',
     edit: 'Edit',
+    audit: 'Audit',
     delete: 'Delete',
     role: 'Role',
     save: 'Save',

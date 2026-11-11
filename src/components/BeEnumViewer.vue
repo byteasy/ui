@@ -1,18 +1,14 @@
 <template>
-  <el-table-column>
-    <template #default="scope">
-      <el-tag :type="parseType(scope.row[$props.prop])" v-if="scope.row[$props.prop]">
-        {{ parseLabel(scope.row[$props.prop]) }}
-      </el-tag>
-    </template>
-  </el-table-column>
+  <el-tag :type="parseType($props.prop)" v-if="$props.prop">
+    {{ parseLabel($props.prop) }}</el-tag
+  >
 </template>
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { getEnumValues } from '@/api/common/platform'
 import XEUtils from 'xe-utils'
-import {useI18n} from "vue-i18n";
 import {getLangText} from "@/locales/common.ts";
+import {useI18n} from "vue-i18n";
 
 const {t, locale} = useI18n()
 const enumMap = ref({})
@@ -20,21 +16,19 @@ const enumMap = ref({})
 const props = defineProps<{
   code: string
   prop: string
-  context: string
 }>()
 
 onMounted(() => {
-  getEnumValues(props.context, props.code).then((rsp) => {
+  getEnumValues(props.code).then((rsp) => {
     rsp.data.forEach((item) => {
-      enumMap.value[XEUtils.toString(item.value)] = item
+      enumMap.value[XEUtils.toString(item.name)] = item
     })
   })
 })
 
 function parseLabel(value) {
-  const key = XEUtils.toString(value)
-  if (enumMap.value[key] !== undefined) {
-    return getLangText(enumMap.value[key].label, locale.value)
+  if (enumMap.value[XEUtils.toString(value)] !== undefined) {
+    return getLangText(enumMap.value[XEUtils.toString(value)]['displayName'], locale.value)
   } else {
     return getLangText(value, locale.value)
   }
@@ -45,7 +39,7 @@ function parseType(value) {
   const key = XEUtils.toString(value)
 
   if (enumMap.value[key] !== undefined) {
-    return enumMap.value[key].css
+    return enumMap.value[key].typeClassName
   } else {
     return 'primary'
   }

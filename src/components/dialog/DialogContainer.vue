@@ -20,30 +20,47 @@
           <template #header="{ close, titleId, titleClass }">
             <div class="flex-row w-full">
               <div class="flex-grow">
-                <el-icon class="my-icon-color-primary cursor-pointer">
+                <el-icon class="my-icon-color-primary cursor-pointer font-size-1p2rem">
                   <Document/>
                 </el-icon>
-                <el-text style="font-size: var(--el-font-size-large)" class="ml-2 font-bold">
+                <el-text class="ml-2 font-bold my-font-size-lg">
                   {{ item.title }}
                 </el-text>
               </div>
               <div class="flex-none">
-                <el-icon class="my-icon-color-primary cursor-pointer"
+                <el-icon class="my-icon-color-primary cursor-pointer font-size-1p2rem"
                          @click="onFullscreenClick(item)">
                   <FullScreen v-if="item.fullscreen === false"/>
                   <IconLocalExitFullscreen v-else/>
                 </el-icon>
-                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
-                         style="">
+                <el-icon class="ml-2 my-icon-color-primary font-size-1p2rem cursor-pointer" @click="close()">
                   <Close/>
                 </el-icon>
               </div>
             </div>
           </template>
           <el-scrollbar always class="w-full" max-height="95vh">
-            <component :is="item.component" v-bind="item.props"
-                       @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank" :height="calcDialogHeight(item)"/>
+            <component ref="componentRef" :is="item.component" v-bind="item.props"
+                       @close="(data) => handleClose(item.id, data)" class="p-3 my-bg-color-blank"
+                       :height="calcDialogHeight(item)"/>
           </el-scrollbar>
+          <template #footer>
+            <div class="dialog-footer" v-if="item.footer === true">
+              <el-button @click="onButtonClick('cancel', item)">
+                <be-svg-icon svg="Close" class="mr-1"/>
+                {{ t(item.btnCancelTitle || 'cancel') }}
+              </el-button>
+              <el-button @click="onButtonClick(btn.key, item)" :type="btn.type"
+                         v-for="btn in item.btnExtras" :key="btn.key">
+                <be-svg-icon :svg="btn.icon" class="mr-1"/>
+                {{ getLangText(btn.name, locale) }}
+              </el-button>
+              <el-button v-debounce="() => onButtonClick('ok', item)" type="primary" v-loading="submitBtnLoading">
+                <be-svg-icon svg="Check" class="mr-1"/>
+                {{ t(item.btnOkTitle || 'ok') }}
+              </el-button>
+            </div>
+          </template>
         </el-dialog>
         <el-drawer
           v-else
@@ -59,21 +76,21 @@
         >
           <template #header="{ close }">
             <div class="flex-row w-full">
-              <div class="flex-grow">
-                <el-icon class="my-icon-color-primary cursor-pointer">
+              <div class="flex-grow flex-row align-items-center">
+                <el-icon class="my-icon-color-primary font-size-1p2rem cursor-pointer">
                   <Document/>
                 </el-icon>
-                <el-text style="font-size: var(--el-font-size-large)" class="ml-2 font-bold">
+                <el-text class="ml-2 font-bold my-font-size-lg">
                   {{ item.title }}
                 </el-text>
               </div>
               <div class="flex-none">
-                <el-icon class="my-icon-color-primary cursor-pointer"
+                <el-icon class="my-icon-color-primary font-size-1p2rem cursor-pointer"
                          @click="onFullscreenClick(item)">
                   <FullScreen v-if="item.fullscreen === false"/>
                   <IconLocalExitFullscreen v-else/>
                 </el-icon>
-                <el-icon class="ml-2 my-icon-color-primary cursor-pointer" @click="close()"
+                <el-icon class="ml-2 my-icon-color-primary font-size-1p2rem cursor-pointer" @click="close()"
                          style="">
                   <Close/>
                 </el-icon>
@@ -81,9 +98,27 @@
             </div>
           </template>
           <el-scrollbar always class="w-full" :style="{ maxHeight: 'calc(100vh - 130px)' }">
-            <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true" :height="calcDrawlerHeight()"
+            <component ref="componentRef" :is="item.component" v-bind="item.props" :isDrawer="true"
+                       :height="calcDrawlerHeight(item)"
                        @close="(data) => handleClose(item.id, data)"/>
           </el-scrollbar>
+          <template #footer>
+            <div style="flex: auto" v-if="item.footer === true">
+              <el-button @click="onButtonClick('cancel', item)">
+                <be-svg-icon svg="Close" class="mr-1"/>
+                {{ t(item.btnCancelTitle || 'cancel') }}
+              </el-button>
+              <el-button @click="onButtonClick(btn.key, item)" :type="btn.type"
+                         v-for="btn in item.btnExtras" :key="btn.key">
+                <be-svg-icon :svg="btn.icon" class="mr-1"/>
+                {{ getLangText(btn.name, locale) }}
+              </el-button>
+              <el-button v-debounce="() => onButtonClick('ok', item)" type="primary" v-loading="submitBtnLoading">
+                <be-svg-icon svg="Check" class="mr-1"/>
+                {{ t(item.btnOkTitle || 'ok') }}
+              </el-button>
+            </div>
+          </template>
         </el-drawer>
       </div>
     </el-config-provider>
@@ -95,10 +130,15 @@ import {useModal} from './useModal.ts'
 import {computed, ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useAppSettingsStore} from '@/stores/appSettings.ts'
-import {elementLocales} from '@/locales/common.ts'
+import {elementLocales, getLangText } from '@/locales/common.ts'
+import BeSvgIcon from '@/components/BeSvgIcon.vue'
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const appSettingsStore = useAppSettingsStore()
 const componentRef = ref(null)
+const submitBtnLoading = ref(false);
 
 const {componentSize, lang} = storeToRefs(appSettingsStore)
 
@@ -120,10 +160,10 @@ function onFullscreenClick(item) {
 }
 
 const getDrawlerWidth = (item: any) => {
-  return (item.fullscreen ? '98%' : undefined) || item.width
+  return (item.fullscreen ? '100%' : undefined) || item.width
 }
 
-const calcDrawlerHeight = () => {
+const calcDrawlerHeight = (item: any) => {
   const vh100 = window.innerHeight
   return vh100 - 130
 }
@@ -135,6 +175,41 @@ const calcDialogHeight = (item: any) => {
   } else {
     const vh100 = Math.round(window.innerHeight / 3 * 2)
     return vh100 - 80
+  }
+}
+
+const onButtonClick = async (btn, item) => {
+  const len = componentRef.value?.length || 0
+  const activeComponent = componentRef.value?.[len - 1]
+
+  if (activeComponent?.onButtonClick !== undefined) {
+    try {
+      // 1. 执行函数，获取返回值
+      const result = activeComponent.onButtonClick(btn)
+
+      // 2. 判断返回值是否是 Promise（支持 async 函数或返回 Promise 的普通函数）
+      if (result && typeof result.then === 'function') {
+        // 设置当前按钮的 loading 状态为 true
+        submitBtnLoading.value = true // 或者你维护的 loadingRef.value = true
+        // 3. 等待异步操作完成（无论成功还是抛出异常，finally 都会关闭 loading）
+        await result
+      }
+    } catch (error) {
+      console.error('按钮异步操作执行失败:', error)
+    } finally {
+      // 4. 关闭 loading
+      submitBtnLoading.value = false
+    }
+  } else {
+    defaultButtonClickHandle(btn, item)
+  }
+}
+
+function defaultButtonClickHandle(btnName, item) {
+  if (btnName === 'ok') {
+    handleClose(item.id)
+  } else if (btnName === 'cancel') {
+    handleClose(item.id)
   }
 }
 </script>

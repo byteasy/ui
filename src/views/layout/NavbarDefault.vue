@@ -60,9 +60,7 @@ onMounted(() => {
         suffix-icon="Search"
         class="custom-search-input mr-3"
       />
-      <el-icon class="mr-3" size="30" style="color: var(--my-text-color)" :title="$t('help')"
-        ><QuestionFilled
-      /></el-icon>
+      <el-icon class="mr-3" size="30" style="color: var(--my-text-color)" :title="$t('help')"><QuestionFilled /></el-icon>
       <el-dropdown :placement="'bottom-start'">
         <div class="el-dropdown-link">
           <div class="flex-row align-items-center">
