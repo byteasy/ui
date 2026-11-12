@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import TopMenu from '@/views/layout/TopMenu.vue'
-import blackLogo from '@/assets/img/black-logo.png'
-import whiteLogo from '@/assets/img/white-logo.png'
 import defaultAvatar from '@/assets/img/defaultAvatar.png'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -10,10 +8,9 @@ const appSettingsStore = useAppSettingsStore()
 const { theme: storeTheme } = storeToRefs(appSettingsStore)
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
-import { getLoginPersonalInfo, getThemeConfig } from '@/api/common/user'
+import { getLoginPersonalInfo } from '@/api/common/user'
 
 const loginUser = ref({})
-const themeConfig = ref({})
 
 // 创建一个中转计算属性
 const theme = computed({
@@ -39,9 +36,6 @@ onMounted(() => {
   getLoginPersonalInfo().then((rsp) => {
     loginUser.value = rsp.data
   })
-  getThemeConfig().then((rsp) => {
-    themeConfig.value = rsp.data
-  })
 })
 </script>
 
@@ -49,8 +43,7 @@ onMounted(() => {
   <div class="navbar-layout my-bg-color-page">
     <div class="flex-row align-items-center flex-grow-2">
       <div class="flex-row flex-grow align-items-center justify-content-start">
-        <img :src="themeConfig.logoImg" v-if="themeConfig.logoImg" class="system_logo" />
-        <img :src="theme === 'light' ? blackLogo : whiteLogo" class="system_logo" alt="" v-else />
+        <img :src="theme === 'light' ? '/platformSvr/papi/theme/img/logoImg' : '/platformSvr/papi/theme/img/logoImgWhite'" class="system_logo" alt="" />
         <!--      <span class="system-title">-{{ t('title') }}</span>-->
       </div>
       <div class="flex-row flex-grow align-items-center justify-content-start">

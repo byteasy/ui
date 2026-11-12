@@ -30,10 +30,3 @@ export function getLoginPersonalInfo() {
     method: 'get',
   })
 }
-
-export function getThemeConfig() {
-  return request({
-    url: '/platformSvr/sapi/platformSettings/config',
-    method: 'get',
-  })
-}
