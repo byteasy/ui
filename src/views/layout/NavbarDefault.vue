@@ -7,6 +7,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 import { storeToRefs } from 'pinia'
 import { getLoginPersonalInfo } from '@/api/common/user'
+import { doHttpGet } from '@/api/common/platform'
 
 const appSettingsStore = useAppSettingsStore()
 const { theme: storeTheme } = storeToRefs(appSettingsStore)
@@ -29,10 +30,12 @@ const router = useRouter()
 function onSearch() {
   const keyword = searchValue.value?.trim()
 
-  router.push({
-    path: '/SystemManage/platform/search',
-    // 如果有输入则携带 query 参数 keyword，如果没有输入则直接跳转
-    query: keyword ? { keyword } : {},
+  doHttpGet('/platformSvr/sapi/platformSettings/searchRoute', {}).then(rsp => {
+    router.push({
+      path: rsp.data,
+      // 如果有输入则携带 query 参数 keyword，如果没有输入则直接跳转
+      query: keyword ? { keyword } : {},
+    })
   })
 }
 
