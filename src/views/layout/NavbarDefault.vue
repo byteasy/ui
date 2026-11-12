@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import TopMenu from '@/views/layout/TopMenu.vue'
-import blackLogo from '@/assets/img/black-logo.png'
-import whiteLogo from '@/assets/img/white-logo.png'
 import defaultAvatar from '@/assets/img/defaultAvatar.png'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -13,6 +11,7 @@ import { storeToRefs } from 'pinia'
 import { getLoginPersonalInfo } from '@/api/common/user'
 
 const loginUser = ref({})
+
 // 创建一个中转计算属性
 const theme = computed({
   get: () => storeTheme.value ?? 'light', // 读取时：如果 store 里是 null，返回 'light'
@@ -44,7 +43,7 @@ onMounted(() => {
   <div class="navbar-layout my-bg-color-page">
     <div class="flex-row align-items-center flex-grow-2">
       <div class="flex-row flex-grow align-items-center justify-content-start">
-        <img :src="theme === 'light' ? blackLogo : whiteLogo" class="system_logo" alt="" />
+        <img :src="theme === 'light' ? '/platformSvr/papi/theme/img/logoImg' : '/platformSvr/papi/theme/img/logoImgWhite'" class="system_logo" alt="" />
         <!--      <span class="system-title">-{{ t('title') }}</span>-->
       </div>
       <div class="flex-row flex-grow align-items-center justify-content-start">
@@ -53,68 +52,74 @@ onMounted(() => {
     </div>
     <div class="flex-row align-items-center flex-grow justify-content-end">
       <div class="flex-row align-items-center">
-
-      <el-input
-        v-model="searchValue"
-        placeholder="Please Input"
-        suffix-icon="Search"
-        class="custom-search-input mr-3"
-      />
-      <el-icon class="mr-3" size="30" style="color: var(--my-text-color)" :title="$t('help')"
-        ><QuestionFilled
-      /></el-icon>
-      <el-dropdown :placement="'bottom-start'">
-        <div class="el-dropdown-link">
-          <div class="flex-row align-items-center">
-            <el-avatar :size="45" :src="loginUser.avatar">
-              <img :src="defaultAvatar" />
-            </el-avatar>
-            <div class="flex-column ml-2" >
-              <el-text style="color: var(--my-text-color); font-size: var(--my-font-size)" class="font-bold-700" truncated>
-                {{ loginUser.realName }}
-              </el-text>
-              <el-text style="color: var(--my-text-gray); font-size: var(--my-font-size)" class="mt-1" truncated>
-                {{ loginUser.orgName }}
-              </el-text>
+        <el-input
+          v-model="searchValue"
+          :placeholder="$t('searchByKeyword')"
+          suffix-icon="Search"
+          class="custom-search-input mr-3"
+        />
+        <el-icon class="mr-3" size="30" style="color: var(--my-text-color)" :title="$t('help')"
+          ><QuestionFilled
+        /></el-icon>
+        <el-dropdown :placement="'bottom-start'">
+          <div class="el-dropdown-link">
+            <div class="flex-row align-items-center">
+              <el-avatar :size="45" :src="loginUser.avatar">
+                <img :src="defaultAvatar" />
+              </el-avatar>
+              <div class="flex-column ml-2">
+                <el-text
+                  style="color: var(--my-text-color); font-size: var(--my-font-size)"
+                  class="font-bold-700"
+                  truncated
+                >
+                  {{ loginUser.realName }}
+                </el-text>
+                <el-text
+                  style="color: var(--my-text-gray); font-size: var(--my-font-size)"
+                  class="mt-1"
+                  truncated
+                >
+                  {{ loginUser.orgName }}
+                </el-text>
+              </div>
             </div>
           </div>
-        </div>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="onSettingsClick('personalInformation')">
-              <div class="flex-row align-items-center">
-                <IconLocalAccount style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('platformCommon.personalInformation') }}</span>
-              </div>
-            </el-dropdown-item>
-            <el-dropdown-item @click="onSettingsClick('passwordSettings')">
-              <div class="flex-row align-items-center">
-                <IconLocalPassword style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('platformCommon.passwordSettings') }}</span>
-              </div>
-            </el-dropdown-item>
-            <el-dropdown-item divided @click="onSettingsClick('appearanceSettings')">
-              <div class="flex-row align-items-center">
-                <IconLocalShowSettings style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('platformCommon.appearanceSettings') }}</span>
-              </div>
-            </el-dropdown-item>
-            <el-dropdown-item @click="onSettingsClick('languageSettings')">
-              <div class="flex-row align-items-center">
-                <IconLocalLanguage style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('platformCommon.languageSettings') }}</span>
-              </div>
-            </el-dropdown-item>
-            <el-dropdown-item divided @click="onLogoutClick()">
-              <div class="flex-row align-items-center">
-                <IconLocalExit style="width: 0.8rem; height: 0.8rem" />
-                <span class="ml-2">{{ t('exit') }}</span>
-              </div>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="onSettingsClick('personalInformation')">
+                <div class="flex-row align-items-center">
+                  <IconLocalAccount style="width: 0.8rem; height: 0.8rem" />
+                  <span class="ml-2">{{ t('platformCommon.personalInformation') }}</span>
+                </div>
+              </el-dropdown-item>
+              <el-dropdown-item @click="onSettingsClick('passwordSettings')">
+                <div class="flex-row align-items-center">
+                  <IconLocalPassword style="width: 0.8rem; height: 0.8rem" />
+                  <span class="ml-2">{{ t('platformCommon.passwordSettings') }}</span>
+                </div>
+              </el-dropdown-item>
+              <el-dropdown-item divided @click="onSettingsClick('appearanceSettings')">
+                <div class="flex-row align-items-center">
+                  <IconLocalShowSettings style="width: 0.8rem; height: 0.8rem" />
+                  <span class="ml-2">{{ t('platformCommon.appearanceSettings') }}</span>
+                </div>
+              </el-dropdown-item>
+              <el-dropdown-item @click="onSettingsClick('languageSettings')">
+                <div class="flex-row align-items-center">
+                  <IconLocalLanguage style="width: 0.8rem; height: 0.8rem" />
+                  <span class="ml-2">{{ t('platformCommon.languageSettings') }}</span>
+                </div>
+              </el-dropdown-item>
+              <el-dropdown-item divided @click="onLogoutClick()">
+                <div class="flex-row align-items-center">
+                  <IconLocalExit style="width: 0.8rem; height: 0.8rem" />
+                  <span class="ml-2">{{ t('exit') }}</span>
+                </div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
   </div>
