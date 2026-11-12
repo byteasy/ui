@@ -10,6 +10,11 @@ const routers = [
     name: 'pubComponent',
     component: wrapDynamicComponent('/views/layout/RouteLayoutAutoRender.vue', 'pubComponent'),
   },
+  {
+    path: '/platform/search',
+    name: 'searchComponent',
+    component: wrapDynamicComponent('/views/common/FullSearch.vue', 'searchComponent'),
+  },
 ]
 
 const router = createRouter({
@@ -19,11 +24,16 @@ const router = createRouter({
 
 let isMicroAppRouterLoad = false;
 let activeMicroAppRouter = 'noActive';
-const WHITE_LIST_ROUTES = ['pubComponent'];
+const WHITE_LIST_ROUTES = ['pubComponent', 'searchComponent'];
 
 router.beforeEach(async (to, from, next) => {
   // 脱离框架的公开访问页面
   if(to.fullPath.startsWith('/pub')) {
+    next();
+    return;
+  }
+  // 不需要侧边栏菜单的平台基础功能
+  if(to.fullPath.startsWith('/platform')) {
     next();
     return;
   }
