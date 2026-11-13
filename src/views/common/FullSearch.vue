@@ -1,16 +1,16 @@
 <template>
   <div class="full-search-container">
     <!-- 右上角辅助按钮 -->
-    <div class="header-action">
-      <el-link type="primary" :underline="false" class="setting-link">设置</el-link>
-    </div>
+    <!--    <div class="header-action">-->
+    <!--      <el-link type="primary" :underline="false" class="setting-link">设置</el-link>-->
+    <!--    </div>-->
 
     <!-- ================= 模式一：初始搜索大主页（无搜索关键词时居中展示） ================= -->
     <div v-if="!hasSearched" class="initial-hero-wrapper">
       <div class="hero-bg-lines"></div>
 
       <div class="hero-content">
-        <h1 class="main-title">全文搜索</h1>
+        <h1 class="main-title">{{ $t('platform.fullTextSearch') }}</h1>
 
         <!-- 顶部业务分类 Tabs -->
         <div class="category-tabs-center">
@@ -64,7 +64,12 @@
                 class="hot-item"
                 @click="quickSearch(item.text)"
               >
-                <span :class="['rank-num', { top3: idx < 3, top1: idx === 0, top2: idx === 1, top3rd: idx === 2 }]">
+                <span
+                  :class="[
+                    'rank-num',
+                    { top3: idx < 3, top1: idx === 0, top2: idx === 1, top3rd: idx === 2 },
+                  ]"
+                >
                   {{ idx + 1 }}
                 </span>
                 <span class="rank-text" :title="item.text">{{ item.text }}</span>
@@ -82,7 +87,12 @@
                 class="hot-item"
                 @click="quickSearch(item.text)"
               >
-                <span :class="['rank-num', { top3: idx < 3, top1: idx === 0, top2: idx === 1, top3rd: idx === 2 }]">
+                <span
+                  :class="[
+                    'rank-num',
+                    { top3: idx < 3, top1: idx === 0, top2: idx === 1, top3rd: idx === 2 },
+                  ]"
+                >
                   {{ idx + 1 }}
                 </span>
                 <span class="rank-text" :title="item.text">{{ item.text }}</span>
@@ -121,18 +131,16 @@
             @keyup.enter="handleSearch"
           />
 
-          <el-icon
-            v-if="searchKeyword"
-            class="clear-icon"
-            @click="handleClear"
-          >
+          <el-icon v-if="searchKeyword" class="clear-icon" @click="handleClear">
             <CircleClose />
           </el-icon>
 
-          <button class="top-search-btn" @click="handleSearch">搜索</button>
+          <button class="top-search-btn" @click="handleSearch">
+            {{ $t('platform.ebApp.search') }}
+          </button>
         </div>
 
-        <el-tooltip content="搜索使用帮助说明" placement="top">
+        <el-tooltip :content="$t('platform.ebApp.searchHelpTip')" placement="top">
           <el-icon class="help-question-icon"><QuestionFilled /></el-icon>
         </el-tooltip>
       </div>
@@ -206,11 +214,7 @@
               <span>-图片</span>
             </div>
             <div class="images-scroll-row">
-              <div
-                v-for="img in searchResults.imageList"
-                :key="img.id"
-                class="image-thumb-card"
-              >
+              <div v-for="img in searchResults.imageList" :key="img.id" class="image-thumb-card">
                 <el-image
                   :src="img.url"
                   fit="cover"
@@ -228,11 +232,7 @@
 
           <!-- 3. 文档 / 流程 / 通用条目结果列表 -->
           <div class="doc-results-list">
-            <div
-              v-for="item in searchResults.docList"
-              :key="item.id"
-              class="doc-result-card"
-            >
+            <div v-for="item in searchResults.docList" :key="item.id" class="doc-result-card">
               <div class="doc-header-line">
                 <span class="doc-type-badge">[{{ item.typeLabel }}]</span>
                 <span class="doc-title-link" v-html="highlight(item.title)"></span>
@@ -313,7 +313,12 @@
                 class="side-hot-item"
                 @click="quickSearch(item.text)"
               >
-                <span :class="['rank-num', { top3: idx < 3, top1: idx === 0, top2: idx === 1, top3rd: idx === 2 }]">
+                <span
+                  :class="[
+                    'rank-num',
+                    { top3: idx < 3, top1: idx === 0, top2: idx === 1, top3rd: idx === 2 },
+                  ]"
+                >
                   {{ idx + 1 }}
                 </span>
                 <span class="hot-name">{{ item.text }}</span>
@@ -327,7 +332,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed } from 'vue';
 import {
   ArrowDown,
   ArrowLeft,
@@ -337,60 +342,60 @@ import {
   Operation,
   Pointer,
   Bottom,
-} from '@element-plus/icons-vue'
+} from '@element-plus/icons-vue';
 
 interface CategoryItem {
-  key: string
-  label: string
+  key: string;
+  label: string;
 }
 
 interface HotItem {
-  text: string
+  text: string;
 }
 
 interface PersonItem {
-  id: string
-  name: string
-  dept: string
-  manager: string
-  phone: string
-  mobile: string
-  avatar: string
+  id: string;
+  name: string;
+  dept: string;
+  manager: string;
+  phone: string;
+  mobile: string;
+  avatar: string;
 }
 
 interface ImageItem {
-  id: string
-  url: string
-  name: string
+  id: string;
+  url: string;
+  name: string;
 }
 
 interface DocItem {
-  id: string
-  typeLabel: string
-  title: string
-  creator: string
-  createTime: string
-  updateTime: string
+  id: string;
+  typeLabel: string;
+  title: string;
+  creator: string;
+  createTime: string;
+  updateTime: string;
 }
 
-const searchKeyword = ref('123')
-const hasSearched = ref(false)
-const currentSearchType = ref('all')
-const currentCategory = ref('all')
-const currentSort = ref('relevance')
-const sideHotTab = ref<'system' | 'personal'>('system')
+const searchKeyword = ref('123');
+const hasSearched = ref(false);
+const currentSearchType = ref('all');
+const currentCategory = ref('all');
+const currentSort = ref('relevance');
+const sideHotTab = ref<'system' | 'personal'>('system');
 
 // 分页状态
-const currentPage = ref(1)
-const pageSize = ref(20)
+const currentPage = ref(1);
+const pageSize = ref(20);
 
 const searchTypeMap: Record<string, string> = {
   all: '全文',
   title: '标题',
   person: '人员',
   doc: '文档',
-}
-const currentSearchTypeLabel = computed(() => searchTypeMap[currentSearchType.value] || '全文')
+};
+const currentSearchTypeLabel = computed(() => searchTypeMap[currentSearchType.value] || '全文');
 
 const categories: CategoryItem[] = [
   { key: 'all', label: '全部' },
@@ -403,14 +408,14 @@ const categories: CategoryItem[] = [
   { key: 'attachment', label: '附件' },
   { key: 'official', label: '公文' },
   { key: 'meeting', label: '会议' },
-]
+];
 
 const sortOptions = [
   { key: 'relevance', label: '相关度优先' },
   { key: 'latest_update', label: '最近更新优先' },
   { key: 'latest_create', label: '最新创建优先' },
   { key: 'earliest_create', label: '最早创建优先' },
-]
+];
 
 const systemHotList = ref<HotItem[]>([
   { text: '马斯克' },
@@ -419,7 +424,7 @@ const systemHotList = ref<HotItem[]>([
   { text: '马斯克' },
   { text: '马斯克' },
   { text: '马斯克' },
-])
+]);
 
 const personalHotList = ref<HotItem[]>([
   { text: '马斯克' },
@@ -428,11 +433,11 @@ const personalHotList = ref<HotItem[]>([
   { text: '马斯克' },
   { text: '1' },
   { text: '公文' },
-])
+]);
 
 const currentSideHotList = computed(() => {
-  return sideHotTab.value === 'system' ? systemHotList.value : personalHotList.value
-})
+  return sideHotTab.value === 'system' ? systemHotList.value : personalHotList.value;
+});
 
 const searchResults = ref({
   total: 325,
@@ -510,64 +515,67 @@ const searchResults = ref({
       updateTime: '2026-10-14 11:15:20',
     },
   ],
-})
+});
 
 function handleSearch() {
-  if (!searchKeyword.value.trim()) return
-  hasSearched.value = true
+  if (!searchKeyword.value.trim()) return;
+  hasSearched.value = true;
   console.log('执行搜索：', {
     keyword: searchKeyword.value,
     category: currentCategory.value,
     sort: currentSort.value,
     page: currentPage.value,
-    pageSize: pageSize.value
-  })
+    pageSize: pageSize.value,
+  });
 }
 
 function handleClear() {
-  searchKeyword.value = ''
+  searchKeyword.value = '';
 }
 
 function quickSearch(text: string) {
-  searchKeyword.value = text
-  currentPage.value = 1
-  handleSearch()
+  searchKeyword.value = text;
+  currentPage.value = 1;
+  handleSearch();
 }
 
 function handleCategoryChange(key: string) {
-  currentCategory.value = key
-  currentPage.value = 1
+  currentCategory.value = key;
+  currentPage.value = 1;
   if (hasSearched.value) {
-    handleSearch()
+    handleSearch();
   }
 }
 
 function handleSortChange(sortKey: string) {
-  currentSort.value = sortKey
-  currentPage.value = 1
-  handleSearch()
+  currentSort.value = sortKey;
+  currentPage.value = 1;
+  handleSearch();
 }
 
 function handleSearchTypeChange(type: string) {
-  currentSearchType.value = type
+  currentSearchType.value = type;
 }
 
 function handlePageChange(page: number) {
-  currentPage.value = page
-  handleSearch()
+  currentPage.value = page;
+  handleSearch();
 }
 
 function handleSizeChange(size: number) {
-  pageSize.value = size
-  currentPage.value = 1
-  handleSearch()
+  pageSize.value = size;
+  currentPage.value = 1;
+  handleSearch();
 }
 
 function highlight(text: string): string {
-  if (!text || !searchKeyword.value.trim()) return text
-  const kw = searchKeyword.value.trim()
-  const reg = new RegExp(`(${kw})`, 'gi')
-  return text.replace(reg, '<span style="color: var(--el-color-danger); font-weight: 500;">$1</span>')
+  if (!text || !searchKeyword.value.trim()) return text;
+  const kw = searchKeyword.value.trim();
+  const reg = new RegExp(`(${kw})`, 'gi');
+  return text.replace(
+    reg,
+    '<span style="color: var(--el-color-danger); font-weight: 500;">$1</span>',
+  );
 }
 </script>
 
@@ -605,7 +613,12 @@ function highlight(text: string): string {
   left: -20%;
   right: -20%;
   bottom: -40px;
-  background: radial-gradient(circle at 50% 30%, var(--el-color-primary-light-9) 0%, var(--el-fill-color-lighter) 60%, transparent 80%);
+  background: radial-gradient(
+    circle at 50% 30%,
+    var(--el-color-primary-light-9) 0%,
+    var(--el-fill-color-lighter) 60%,
+    transparent 80%
+  );
   pointer-events: none;
   z-index: 0;
 }
@@ -704,7 +717,11 @@ function highlight(text: string): string {
   padding: 0 28px;
   border: none;
   border-radius: 19px;
-  background: linear-gradient(135deg, var(--el-color-primary) 0%, var(--el-color-primary-dark-2) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--el-color-primary) 0%,
+    var(--el-color-primary-dark-2) 100%
+  );
   color: var(--el-color-white);
   font-size: var(--el-font-size-base);
   font-weight: 500;
@@ -841,7 +858,11 @@ function highlight(text: string): string {
   padding: 0 20px;
   border: none;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--el-color-primary) 0%, var(--el-color-primary-dark-2) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--el-color-primary) 0%,
+    var(--el-color-primary-dark-2) 100%
+  );
   color: var(--el-color-white);
   font-size: var(--el-font-size-base);
   cursor: pointer;

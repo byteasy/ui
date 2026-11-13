@@ -1,6 +1,7 @@
 export default {
   platform: {
     searchTip: '输入关键词过滤',
+    fullTextSearch: '全文搜索',
     serviceNameMissing: '缺少服务名参数',
     classNameMissing: '缺少类名参数',
     selectAll: '全选',
@@ -98,6 +99,7 @@ export default {
       saveFilterSuccess: '常用筛选方案已保存',
       openCustomConfig: '打开筛选字段配置',
       search: '搜索',
+      searchHelpTip: '搜索提示:对输入文本进行智能分词，对分词进行短语匹配，命中的数据按照命中词长、词性、是否包含中英文数字、数据所属模块、词间距等场景进行打分,得分越高相关度排序越靠前。',
       reset: '重置',
       collapse: '收起',
 
