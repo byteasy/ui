@@ -46,10 +46,10 @@
             type="text"
             class="hero-search-input"
             placeholder="请输入搜索内容关键字"
-            @keyup.enter="handleSearch"
+            @keyup.enter="handleSearch(true)"
           />
 
-          <button class="hero-search-btn" @click="handleSearch">搜 索</button>
+          <button class="hero-search-btn" @click="handleSearch(true)">搜 索</button>
         </div>
 
         <!-- 下方热点推荐卡片（双列布局） -->
@@ -60,7 +60,7 @@
             <div class="hot-grid">
               <div
                 v-for="(item, idx) in systemHotList"
-                :key="item.text"
+                :key="`${item.text}-${idx}`"
                 class="hot-item"
                 @click="quickSearch(item.text)"
               >
@@ -83,7 +83,7 @@
             <div class="hot-grid">
               <div
                 v-for="(item, idx) in personalHotList"
-                :key="item.text"
+                :key="`${item.text}-${idx}`"
                 class="hot-item"
                 @click="quickSearch(item.text)"
               >
@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    <!-- ================= 模式二：搜索结果页（有搜索关键词/已提交状态） ================= -->
+    <!-- ================= 模式二：搜索结果页 ================= -->
     <div v-else class="results-page-wrapper">
       <!-- 顶部搜索栏条目 -->
       <div class="top-search-bar">
@@ -128,14 +128,14 @@
             type="text"
             class="top-input"
             placeholder="请输入搜索内容关键字"
-            @keyup.enter="handleSearch"
+            @keyup.enter="handleSearch(true)"
           />
 
           <el-icon v-if="searchKeyword" class="clear-icon" @click="handleClear">
             <CircleClose />
           </el-icon>
 
-          <button class="top-search-btn" @click="handleSearch">
+          <button class="top-search-btn" @click="handleSearch(true)">
             {{ $t('platform.ebApp.search') }}
           </button>
         </div>
@@ -174,95 +174,75 @@
           <span class="search-tool-btn">
             <el-icon><Operation /></el-icon> 搜索工具
           </span>
-          <span class="stats-text">
-            {{ searchResults.total }} 条结果，耗时 {{ searchResults.costTime }} 秒
-          </span>
+          <span class="stats-text"> {{ total }} 条结果，耗时 {{ costTime }} 秒 </span>
         </div>
       </div>
 
       <!-- 主体结果左右分栏布局 -->
       <div class="results-layout-grid">
         <!-- 左侧：搜索主结果列表 -->
-        <div class="main-results-column">
-          <!-- 1. 人员卡片结果 -->
-          <div v-if="searchResults.personList?.length" class="person-cards-group">
-            <div
-              v-for="person in searchResults.personList"
-              :key="person.id"
-              class="person-card-item"
-            >
-              <el-avatar :size="52" :src="person.avatar" class="person-avatar" />
-              <div class="person-info-content">
-                <div class="person-title-row">
-                  <span class="person-name" v-html="highlight(person.name)"></span>
-                  <span class="person-dept">{{ person.dept }}</span>
+        <div v-loading="loading" class="main-results-column">
+          <template v-if="resultList.length > 0">
+            <div class="doc-results-list">
+              <div
+                v-for="item in resultList"
+                :key="`${item.className}-${item.entityId}`"
+                class="doc-result-card"
+                @click="handleResultClick(item)"
+              >
+                <div class="doc-header-line">
+                  <span class="doc-type-badge"
+                    >[{{ getCategoryLabel(item.categoryId, item.className) }}]</span
+                  >
+                  <span
+                    class="doc-title-link"
+                    v-html="highlight(item.title || item.entityCode || item.entityId)"
+                  ></span>
+                  <span v-if="item.entityCode && item.title" class="doc-code-tag">
+                    {{ item.entityCode }}
+                  </span>
                 </div>
-                <div class="person-meta-row">
-                  <span class="meta-field">装配工</span>
-                  <span class="meta-field">上级：{{ person.manager }}</span>
-                  <span class="meta-field">电话：{{ person.phone || '-' }}</span>
-                  <span class="meta-field">手机：{{ person.mobile }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- 2. 图片类结果横向展示 -->
-          <div v-if="searchResults.imageList?.length" class="images-result-section">
-            <div class="section-title">
-              <span class="keyword-highlight">{{ searchKeyword }}</span>
-              <span>-图片</span>
-            </div>
-            <div class="images-scroll-row">
-              <div v-for="img in searchResults.imageList" :key="img.id" class="image-thumb-card">
-                <el-image
-                  :src="img.url"
-                  fit="cover"
-                  class="thumb-img"
-                  :preview-src-list="[img.url]"
-                  preview-teleported
-                />
-                <div class="thumb-name" v-html="highlight(img.name)"></div>
-              </div>
-            </div>
-            <div class="more-images-link">
-              <el-link type="primary" :underline="false">查看全部图片 &gt;</el-link>
-            </div>
-          </div>
+                <!-- 摘要展示（带关键词高亮） -->
+                <div
+                  v-if="item.summary"
+                  class="doc-summary-line"
+                  v-html="highlight(item.summary)"
+                ></div>
 
-          <!-- 3. 文档 / 流程 / 通用条目结果列表 -->
-          <div class="doc-results-list">
-            <div v-for="item in searchResults.docList" :key="item.id" class="doc-result-card">
-              <div class="doc-header-line">
-                <span class="doc-type-badge">[{{ item.typeLabel }}]</span>
-                <span class="doc-title-link" v-html="highlight(item.title)"></span>
-              </div>
-              <div class="doc-meta-line">
-                <span class="meta-text">创建者：{{ item.creator }}</span>
-                <span class="meta-text">创建时间：{{ item.createTime }}</span>
-                <span class="meta-text">更新时间：{{ item.updateTime }}</span>
+                <div class="doc-meta-line">
+                  <span v-if="item.createdBy" class="meta-text">创建者：{{ item.createdBy }}</span>
+                  <span v-if="item.createdTime" class="meta-text">
+                    创建时间：{{ formatTime(item.createdTime) }}
+                  </span>
+                  <span v-if="item.updatedTime" class="meta-text">
+                    更新时间：{{ formatTime(item.updatedTime) }}
+                  </span>
 
-                <div class="doc-actions">
-                  <el-icon class="action-icon" :title="'有帮助'"><Pointer /></el-icon>
-                  <el-icon class="action-icon" :title="'没用'"><Bottom /></el-icon>
+                  <div class="doc-actions" @click.stop>
+                    <el-icon class="action-icon" title="有帮助"><Pointer /></el-icon>
+                    <el-icon class="action-icon" title="没用"><Bottom /></el-icon>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- 4. 底部标准分页组件 -->
-          <div class="pagination-wrapper">
-            <el-pagination
-              v-model:current-page="currentPage"
-              v-model:page-size="pageSize"
-              :page-sizes="[10, 20, 50, 100]"
-              :total="searchResults.total"
-              layout="total, sizes, prev, pager, next, jumper"
-              background
-              @size-change="handleSizeChange"
-              @current-change="handlePageChange"
-            />
-          </div>
+            <!-- 底部标准分页组件 -->
+            <div class="pagination-wrapper">
+              <el-pagination
+                v-model:current-page="currentPage"
+                v-model:page-size="pageSize"
+                :page-sizes="[10, 20, 50, 100]"
+                :total="total"
+                layout="total, sizes, prev, pager, next, jumper"
+                background
+                @size-change="handleSizeChange"
+                @current-change="handlePageChange"
+              />
+            </div>
+          </template>
+
+          <el-empty v-else-if="!loading" description="暂无匹配的搜索结果" :image-size="120" />
         </div>
 
         <!-- 右侧：侧边推荐栏 -->
@@ -284,7 +264,7 @@
               />
               <div class="feedback-info">
                 <div class="feedback-user">系统管理员 [流程]</div>
-                <div class="feedback-desc" v-html="highlight('123')"></div>
+                <div class="feedback-desc" v-html="highlight(searchKeyword || '系统通知')"></div>
                 <div class="feedback-date">2026-10-12 09:28:12</div>
               </div>
             </div>
@@ -309,7 +289,7 @@
             <div class="side-hot-list">
               <div
                 v-for="(item, idx) in currentSideHotList"
-                :key="item.text"
+                :key="`${item.text}-${idx}`"
                 class="side-hot-item"
                 @click="quickSearch(item.text)"
               >
@@ -332,82 +312,103 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { ElMessage } from 'element-plus';
 import {
   ArrowDown,
   ArrowLeft,
   ArrowRight,
+  Bottom,
   CircleClose,
-  QuestionFilled,
   Operation,
   Pointer,
-  Bottom,
+  QuestionFilled,
 } from '@element-plus/icons-vue';
+import { executeOpenApi, getEntityDefine } from '@/api/common/platform';
+import BeTableContainer from '@/components/BeTableContainer.vue';
+import { getLangText } from '@/locales/common.ts';
+import { useI18n } from 'vue-i18n';
+import { useModal } from '@/components/dialog/useModal.ts';
 
+// ================= 类型定义（与后端 SearchQueryDTO / SearchResultVO 严格对齐） =================
 interface CategoryItem {
   key: string;
   label: string;
+  categoryId: number | null;
 }
 
 interface HotItem {
   text: string;
 }
 
-interface PersonItem {
-  id: string;
-  name: string;
-  dept: string;
-  manager: string;
-  phone: string;
-  mobile: string;
-  avatar: string;
+interface SearchQueryPayload {
+  rawKeyword: string;
+  segmentedKeyword: string;
+  searchType: string;
+  categoryId: number | null;
+  groupId?: number | null;
+  className?: string;
+  sortType: string;
+  pageNum: number;
+  pageSize: number;
 }
 
-interface ImageItem {
-  id: string;
-  url: string;
-  name: string;
+interface SearchResultVO {
+  categoryId?: number;
+  groupId?: number;
+  className: string;
+  entityId: string;
+  entityCode: string;
+  title?: string;
+  summary?: string;
+  score?: number;
+  createdBy?: string;
+  createdTime?: string;
+  updatedBy?: string;
+  updatedTime?: string;
 }
 
-interface DocItem {
-  id: string;
-  typeLabel: string;
-  title: string;
-  creator: string;
-  createTime: string;
-  updateTime: string;
-}
+const route = useRoute();
 
-const searchKeyword = ref('123');
+// ================= 响应式状态 =================
+const searchKeyword = ref('');
 const hasSearched = ref(false);
+const loading = ref(false);
 const currentSearchType = ref('all');
 const currentCategory = ref('all');
 const currentSort = ref('relevance');
 const sideHotTab = ref<'system' | 'personal'>('system');
+const { open } = useModal();
 
-// 分页状态
+// 分页与结果状态
 const currentPage = ref(1);
 const pageSize = ref(20);
+const total = ref(0);
+const costTime = ref('0.000');
+const resultList = ref<SearchResultVO[]>([]);
+const { t, locale } = useI18n();
 
 const searchTypeMap: Record<string, string> = {
   all: '全文',
-  title: '标题',
-  person: '人员',
-  doc: '文档',
+  title: '按标题',
+  person: '按人员',
+  doc: '按文档',
 };
 const currentSearchTypeLabel = computed(() => searchTypeMap[currentSearchType.value] || '全文');
 
+// TODO: 请将 categoryId 替换为实际数据库/字典中的分类 ID
 const categories: CategoryItem[] = [
-  { key: 'all', label: '全部' },
-  { key: 'image', label: '图片' },
-  { key: 'doc', label: '文档' },
-  { key: 'flow', label: '流程' },
-  { key: 'person', label: '人员' },
-  { key: 'schedule', label: '日程' },
-  { key: 'mail', label: '邮件' },
-  { key: 'attachment', label: '附件' },
-  { key: 'official', label: '公文' },
-  { key: 'meeting', label: '会议' },
+  { key: 'all', label: '全部', categoryId: null },
+  { key: 'image', label: '图片', categoryId: 1 },
+  { key: 'doc', label: '文档', categoryId: 2 },
+  { key: 'flow', label: '流程', categoryId: 3 },
+  { key: 'person', label: '人员', categoryId: 4 },
+  { key: 'schedule', label: '日程', categoryId: 5 },
+  { key: 'mail', label: '邮件', categoryId: 6 },
+  { key: 'attachment', label: '附件', categoryId: 7 },
+  { key: 'official', label: '公文', categoryId: 8 },
+  { key: 'meeting', label: '会议', categoryId: 9 },
 ];
 
 const sortOptions = [
@@ -418,115 +419,73 @@ const sortOptions = [
 ];
 
 const systemHotList = ref<HotItem[]>([
-  { text: '马斯克' },
-  { text: '马斯克' },
-  { text: '马斯克' },
-  { text: '马斯克' },
-  { text: '马斯克' },
-  { text: '马斯克' },
+  { text: 'MDM' },
+  { text: '物料' },
+  { text: '采购' },
+  { text: '审批' },
+  { text: '发票助手' },
+  { text: '公文' },
 ]);
 
 const personalHotList = ref<HotItem[]>([
-  { text: '马斯克' },
-  { text: '马斯克' },
-  { text: '马斯克' },
-  { text: '马斯克' },
-  { text: '1' },
-  { text: '公文' },
+  { text: 'MDM' },
+  { text: '物料分类' },
+  { text: '123' },
+  { text: '配置' },
+  { text: '日志' },
+  { text: '接口' },
 ]);
 
 const currentSideHotList = computed(() => {
   return sideHotTab.value === 'system' ? systemHotList.value : personalHotList.value;
 });
 
-const searchResults = ref({
-  total: 325,
-  costTime: 1.043,
-  personList: [
-    {
-      id: 'p1',
-      name: '马斯克',
-      dept: '加工中心1',
-      manager: '马斯克',
-      phone: '12345678912',
-      mobile: '12345678912',
-      avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-    },
-    {
-      id: 'p2',
-      name: '马斯克',
-      dept: '加工中心1',
-      manager: '马斯克',
-      phone: '',
-      mobile: '12345678912',
-      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-    },
-  ],
-  imageList: [
-    {
-      id: 'img1',
-      url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&h=160&fit=crop',
-      name: 'tmp_830b74c1fa7f1232ccfebb363807db...',
-    },
-    {
-      id: 'img2',
-      url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&h=160&fit=crop',
-      name: 'tmp_ec1afe73e1123602a511e1bd8b433...',
-    },
-    {
-      id: 'img3',
-      url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=160&h=160&fit=crop',
-      name: 'tmp_e5f6b6d0a1d76818123b9ba088cfd...',
-    },
-    {
-      id: 'img4',
-      url: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=160&h=160&fit=crop',
-      name: 'tmp_cdf122adaafdb1237f547bc7ebd989...',
-    },
-    {
-      id: 'img5',
-      url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&h=160&fit=crop',
-      name: 'tmp_a8ba8d3551594115861b4af11554...',
-    },
-  ],
-  docList: [
-    {
-      id: 'd1',
-      typeLabel: '文档',
-      title: 'tmp_830b74c1fa7f1232ccfebb363807db2c9e01fc6717cc25',
-      creator: '系统管理员',
-      createTime: '2026-10-16 14:25:51',
-      updateTime: '2026-10-16 14:25:51',
-    },
-    {
-      id: 'd2',
-      typeLabel: '文档',
-      title: 'tmp_ec1afe73e1123602a511e1bd8b43367b',
-      creator: '系统管理员',
-      createTime: '2026-10-15 15:41:04',
-      updateTime: '2026-10-15 15:41:04',
-    },
-    {
-      id: 'd3',
-      typeLabel: '文档',
-      title: 'zjjr_CMBC03_1786423592092_pdf_x512026081112463123046373620012249',
-      creator: '系统管理员',
-      createTime: '2026-10-14 11:15:20',
-      updateTime: '2026-10-14 11:15:20',
-    },
-  ],
+const currentCategoryId = computed<number | null>(() => {
+  const found = categories.find((c) => c.key === currentCategory.value);
+  return found ? found.categoryId : null;
 });
 
-function handleSearch() {
-  if (!searchKeyword.value.trim()) return;
-  hasSearched.value = true;
-  console.log('执行搜索：', {
-    keyword: searchKeyword.value,
-    category: currentCategory.value,
-    sort: currentSort.value,
-    page: currentPage.value,
+// ================= 核心接口调用 =================
+async function fetchSearchResults() {
+  loading.value = true;
+  const startTime = performance.now();
+
+  // 构建 SearchQueryDTO 请求体
+  const kw = searchKeyword.value.trim();
+  const payload: SearchQueryPayload = {
+    rawKeyword: kw,
+    segmentedKeyword: kw, // 后端 SearchIndexService 中对 rawKeyword 做 HanLP 分词
+    searchType: currentSearchType.value,
+    categoryId: currentCategoryId.value,
+    sortType: currentSort.value,
+    pageNum: currentPage.value,
     pageSize: pageSize.value,
-  });
+  };
+
+  executeOpenApi('4VAvzFmxi', {}, payload)
+    .then((res) => {
+      const pageData = res.data;
+      resultList.value = pageData?.records || [];
+      total.value = Number(pageData?.total || 0);
+
+      costTime.value = ((performance.now() - startTime) / 1000).toFixed(3);
+      loading.value = false;
+    })
+    .catch((err) => {
+      console.error('全文检索接口异常:', err);
+      ElMessage.error(err?.message || '搜索服务请求失败');
+      resultList.value = [];
+      total.value = 0;
+    });
+}
+
+// ================= 交互处理 =================
+function handleSearch(resetPage = false) {
+  if (resetPage) {
+    currentPage.value = 1;
+  }
+  hasSearched.value = true;
+  fetchSearchResults();
 }
 
 function handleClear() {
@@ -535,48 +494,127 @@ function handleClear() {
 
 function quickSearch(text: string) {
   searchKeyword.value = text;
-  currentPage.value = 1;
-  handleSearch();
+  handleSearch(true);
 }
 
 function handleCategoryChange(key: string) {
   currentCategory.value = key;
-  currentPage.value = 1;
   if (hasSearched.value) {
-    handleSearch();
+    handleSearch(true);
   }
 }
 
 function handleSortChange(sortKey: string) {
   currentSort.value = sortKey;
-  currentPage.value = 1;
-  handleSearch();
+  handleSearch(true);
 }
 
 function handleSearchTypeChange(type: string) {
   currentSearchType.value = type;
+  // 如果选择按人员/按文档，也可以按需同步联动 categoryId，或由后端按 searchType 过滤
+  if (hasSearched.value) {
+    handleSearch(true);
+  }
 }
 
 function handlePageChange(page: number) {
   currentPage.value = page;
-  handleSearch();
+  handleSearch(false);
 }
 
 function handleSizeChange(size: number) {
   pageSize.value = size;
-  currentPage.value = 1;
-  handleSearch();
+  handleSearch(true);
 }
 
-function highlight(text: string): string {
-  if (!text || !searchKeyword.value.trim()) return text;
+function handleResultClick(item: SearchResultVO) {
+  getEntityDefine(item.className).then((entityDefine) => {
+    const queryParams = {};
+    queryParams['idQueryType'] = 'eq';
+    queryParams['id'] = item.entityId;
+    const metaData = {
+      queryParams: queryParams,
+      className: item.className,
+    };
+    open(
+      BeTableContainer,
+      {
+        metaData: metaData,
+      },
+      {
+        title: getLangText(entityDefine.name, locale.value),
+        width: '60%',
+        dialogModel: false,
+        footer: false,
+      },
+    );
+  });
+}
+
+// ================= 辅助格式化函数 =================
+function getCategoryLabel(categoryId?: number, className?: string): string {
+  if (categoryId != null) {
+    const cat = categories.find((c) => c.categoryId === categoryId);
+    if (cat) return cat.label;
+  }
+  return className || '文档';
+}
+
+function formatTime(timeStr?: string): string {
+  if (!timeStr) return '-';
+  return timeStr.replace('T', ' ').slice(0, 19);
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function highlight(text?: string): string {
+  if (!text) return '';
+  const safeText = escapeHtml(text);
   const kw = searchKeyword.value.trim();
-  const reg = new RegExp(`(${kw})`, 'gi');
-  return text.replace(
+  if (!kw) return safeText;
+
+  // 多个空格分词同时高亮，且转义正则特殊字符防止报错
+  const tokens = kw
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  if (!tokens.length) return safeText;
+
+  const reg = new RegExp(`(${tokens.join('|')})`, 'gi');
+  return safeText.replace(
     reg,
     '<span style="color: var(--el-color-danger); font-weight: 500;">$1</span>',
   );
 }
+
+// ================= 路由参数联动（兼容 Navbar 跳转） =================
+onMounted(() => {
+  const kw = route.query.keyword;
+  if (typeof kw === 'string' && kw.trim()) {
+    searchKeyword.value = kw.trim();
+    handleSearch(true);
+  }
+});
+
+watch(
+  () => route.query.keyword,
+  (newKw) => {
+    if (typeof newKw === 'string' && newKw.trim()) {
+      searchKeyword.value = newKw.trim();
+      handleSearch(true);
+    } else if (newKw === undefined && hasSearched.value) {
+      // 从 Navbar 空回车再次跳转过来时回到主页或刷新列表
+      searchKeyword.value = '';
+    }
+  },
+);
 </script>
 
 <style scoped>
@@ -587,16 +625,6 @@ function highlight(text: string): string {
   position: relative;
   font-family: var(--el-font-family);
   color: var(--el-text-color-primary);
-}
-
-.header-action {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 8px;
-}
-.setting-link {
-  font-size: var(--el-font-size-small);
-  color: var(--el-color-primary);
 }
 
 /* ================= 模式一：居中主页样式 ================= */
@@ -964,91 +992,8 @@ function highlight(text: string): string {
   gap: 28px;
 }
 
-/* 人员卡片 */
-.person-cards-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.person-card-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  background: var(--el-fill-color-lighter);
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: var(--el-border-radius-base);
-}
-
-.person-avatar {
-  margin-right: 16px;
-}
-
-.person-title-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 6px;
-}
-.person-name {
-  font-size: var(--el-font-size-medium);
-  font-weight: 600;
-  color: var(--el-color-primary);
-}
-.person-dept {
-  font-size: var(--el-font-size-small);
-  color: var(--el-text-color-secondary);
-}
-
-.person-meta-row {
-  display: flex;
-  gap: 20px;
-  font-size: var(--el-font-size-extra-small);
-  color: var(--el-text-color-regular);
-}
-
-/* 图片类结果横向展示 */
-.images-result-section {
-  margin-bottom: 24px;
-}
-.section-title {
-  font-size: var(--el-font-size-base);
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--el-text-color-primary);
-}
-.keyword-highlight {
-  color: var(--el-color-danger);
-}
-
-.images-scroll-row {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  margin-bottom: 8px;
-}
-.image-thumb-card {
-  width: 140px;
-  flex-shrink: 0;
-}
-.thumb-img {
-  width: 140px;
-  height: 110px;
-  border-radius: var(--el-border-radius-base);
-  display: block;
-}
-.thumb-name {
-  font-size: 11px;
-  color: var(--el-text-color-secondary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-top: 4px;
-}
-
-.more-images-link {
-  font-size: var(--el-font-size-extra-small);
+.main-results-column {
+  min-height: 240px;
 }
 
 /* 文档列表 */
@@ -1064,6 +1009,7 @@ function highlight(text: string): string {
   border: 1px solid var(--el-border-color-lighter);
   border-radius: var(--el-border-radius-base);
   transition: all var(--el-transition-duration);
+  cursor: pointer;
 }
 .doc-result-card:hover {
   border-color: var(--el-color-primary-light-5);
@@ -1073,22 +1019,41 @@ function highlight(text: string): string {
 .doc-header-line {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
 }
 .doc-type-badge {
   font-size: var(--el-font-size-small);
   color: var(--el-text-color-regular);
+  flex-shrink: 0;
 }
 .doc-title-link {
   font-size: var(--el-font-size-base);
   font-weight: 500;
   color: var(--el-color-primary);
-  cursor: pointer;
   word-break: break-all;
 }
-.doc-title-link:hover {
+.doc-result-card:hover .doc-title-link {
   text-decoration: underline;
+}
+.doc-code-tag {
+  font-size: var(--el-font-size-extra-small);
+  color: var(--el-text-color-secondary);
+  background: var(--el-fill-color-light);
+  padding: 1px 6px;
+  border-radius: var(--el-border-radius-small);
+}
+
+.doc-summary-line {
+  font-size: var(--el-font-size-small);
+  color: var(--el-text-color-regular);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .doc-meta-line {
