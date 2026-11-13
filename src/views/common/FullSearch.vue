@@ -192,7 +192,7 @@
               >
                 <div class="doc-header-line">
                   <span class="doc-type-badge"
-                    >[{{ getCategoryLabel(item.categoryId, item.className) }}]</span
+                  >[{{ getCategoryLabel(item.categoryId, item.className) }}]</span
                   >
                   <span
                     class="doc-title-link"
@@ -245,7 +245,7 @@
           <el-empty v-else-if="!loading" description="暂无匹配的搜索结果" :image-size="120" />
         </div>
 
-        <!-- 右侧：侧边推荐栏 -->
+        <!-- 右侧：侧边推荐栏（吸顶保持可见） -->
         <div class="side-recommend-column">
           <!-- 相关反馈卡片 -->
           <div class="side-card feedback-card">
@@ -370,6 +370,7 @@ interface SearchResultVO {
 }
 
 const route = useRoute();
+const containerRef = ref<HTMLElement | null>(null);
 
 // ================= 响应式状态 =================
 const searchKeyword = ref('');
@@ -387,7 +388,7 @@ const pageSize = ref(20);
 const total = ref(0);
 const costTime = ref('0.000');
 const resultList = ref<SearchResultVO[]>([]);
-const { t, locale } = useI18n();
+const { locale } = useI18n();
 
 const searchTypeMap: Record<string, string> = {
   all: '全文',
@@ -446,15 +447,14 @@ const currentCategoryId = computed<number | null>(() => {
 });
 
 // ================= 核心接口调用 =================
-async function fetchSearchResults() {
+function fetchSearchResults() {
   loading.value = true;
   const startTime = performance.now();
 
-  // 构建 SearchQueryDTO 请求体
   const kw = searchKeyword.value.trim();
   const payload: SearchQueryPayload = {
     rawKeyword: kw,
-    segmentedKeyword: kw, // 后端 SearchIndexService 中对 rawKeyword 做 HanLP 分词
+    segmentedKeyword: kw,
     searchType: currentSearchType.value,
     categoryId: currentCategoryId.value,
     sortType: currentSort.value,
@@ -462,21 +462,33 @@ async function fetchSearchResults() {
     pageSize: pageSize.value,
   };
 
-  executeOpenApi('4VAvzFmxi', {}, payload)
+  // 同时通过第 2 参数传递分页 Query，兼容后端 RequestUtil.getPage()
+  const pageQuery = {
+    current: currentPage.value,
+    size: pageSize.value,
+  };
+
+  executeOpenApi('4VAvzFmxi', pageQuery, payload)
     .then((res) => {
       const pageData = res.data;
       resultList.value = pageData?.records || [];
       total.value = Number(pageData?.total || 0);
-
       costTime.value = ((performance.now() - startTime) / 1000).toFixed(3);
-      loading.value = false;
     })
     .catch((err) => {
       console.error('全文检索接口异常:', err);
       ElMessage.error(err?.message || '搜索服务请求失败');
       resultList.value = [];
       total.value = 0;
+    })
+    .finally(() => {
+      loading.value = false;
     });
+}
+
+// 滚动到容器顶部
+function scrollToTop() {
+  containerRef.value?.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ================= 交互处理 =================
@@ -511,7 +523,6 @@ function handleSortChange(sortKey: string) {
 
 function handleSearchTypeChange(type: string) {
   currentSearchType.value = type;
-  // 如果选择按人员/按文档，也可以按需同步联动 categoryId，或由后端按 searchType 过滤
   if (hasSearched.value) {
     handleSearch(true);
   }
@@ -520,26 +531,29 @@ function handleSearchTypeChange(type: string) {
 function handlePageChange(page: number) {
   currentPage.value = page;
   handleSearch(false);
+  scrollToTop();
 }
 
 function handleSizeChange(size: number) {
   pageSize.value = size;
   handleSearch(true);
+  scrollToTop();
 }
 
 function handleResultClick(item: SearchResultVO) {
   getEntityDefine(item.className).then((entityDefine) => {
-    const queryParams = {};
-    queryParams['idQueryType'] = 'eq';
-    queryParams['id'] = item.entityId;
+    const queryParams: Record<string, any> = {
+      idQueryType: 'eq',
+      id: item.entityId,
+    };
     const metaData = {
-      queryParams: queryParams,
+      queryParams,
       className: item.className,
     };
     open(
       BeTableContainer,
       {
-        metaData: metaData,
+        metaData,
       },
       {
         title: getLangText(entityDefine.name, locale.value),
@@ -580,7 +594,6 @@ function highlight(text?: string): string {
   const kw = searchKeyword.value.trim();
   if (!kw) return safeText;
 
-  // 多个空格分词同时高亮，且转义正则特殊字符防止报错
   const tokens = kw
     .split(/\s+/)
     .filter(Boolean)
@@ -610,7 +623,6 @@ watch(
       searchKeyword.value = newKw.trim();
       handleSearch(true);
     } else if (newKw === undefined && hasSearched.value) {
-      // 从 Navbar 空回车再次跳转过来时回到主页或刷新列表
       searchKeyword.value = '';
     }
   },
@@ -619,12 +631,29 @@ watch(
 
 <style scoped>
 .full-search-container {
-  min-height: calc(100vh - 60px);
+  /* 核心修复：限制最大高度并开启内部纵向滚动，防止被外层布局的 overflow: hidden 截断 */
+  height: 100%;
+  max-height: calc(100vh - 55px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
   background-color: var(--el-bg-color);
   padding: 16px 24px 40px;
   position: relative;
   font-family: var(--el-font-family);
   color: var(--el-text-color-primary);
+  scrollbar-width: thin;
+}
+
+.full-search-container::-webkit-scrollbar {
+  width: 6px;
+}
+.full-search-container::-webkit-scrollbar-thumb {
+  background-color: var(--el-border-color);
+  border-radius: 3px;
+}
+.full-search-container::-webkit-scrollbar-thumb:hover {
+  background-color: var(--el-text-color-placeholder);
 }
 
 /* ================= 模式一：居中主页样式 ================= */
@@ -990,6 +1019,7 @@ watch(
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
   gap: 28px;
+  align-items: start;
 }
 
 .main-results-column {
@@ -1086,11 +1116,13 @@ watch(
   justify-content: flex-start;
 }
 
-/* 右侧栏样式 */
+/* 右侧栏样式（吸顶） */
 .side-recommend-column {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: sticky;
+  top: 0;
 }
 
 .side-card {
