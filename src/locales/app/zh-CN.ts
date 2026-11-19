@@ -42,6 +42,7 @@ export default {
       page: '页面',
       link: '链接',
       field: '字段定义',
+      differentCompare: '差异',
       stdField: '批量导入',
       stdFieldBase: '基础实体属性',
       stdFieldImmutably: '不可变实体属性',
