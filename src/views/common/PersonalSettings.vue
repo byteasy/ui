@@ -1,14 +1,14 @@
 <template>
-  <tuna-viewer
+  <be-viewer
     context="platformSvr"
-    class-name="com.tuna.platform.vo.PersonalSettingsVO"
+    class-name="com.byteasy.platform.vo.PersonalSettingsVO"
     :entity="user"
     :title="$t('user.basic')"
   >
     <template v-slot:view_avatar="scope">
       <el-avatar shape="square" :size="100" fit="scale-down" :src="scope.value" />
       <el-upload
-        action="/platformSvr/sapi/files"
+        action="/platformSvr/sapi/files/public"
         v-if="editEnable"
         with-credentials
         :on-success="onAvatarUploadSuccess"
@@ -41,7 +41,7 @@
       />
     </template>
     <template v-slot:view_gender="scope">
-      <enum-select v-if="editEnable" code="com.tuna.enums.Gender" context="platformSvr" v-model="user.gender" clearable/>
+      <be-enum-select v-if="editEnable" code="com.byteasy.enums.Gender" context="platformSvr" v-model="user.gender" clearable/>
     </template>
     <template v-slot:extra>
       <el-button type="primary" @click="editEnable = !editEnable" v-if="!editEnable">{{
@@ -49,7 +49,7 @@
       }}</el-button>
       <el-button type="primary" @click="onSaveClick" v-if="editEnable">{{ $t('save') }}</el-button>
     </template>
-  </tuna-viewer>
+  </be-viewer>
 </template>
 
 <script setup lang="ts">
@@ -57,6 +57,8 @@ import { onMounted, ref } from 'vue'
 import { editPersonalInfo, getLoginPersonalInfo } from '@/api/common/user'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import BeViewer from '@/components/BeViewer.vue'
+import BeEnumSelect from '@/components/BeEnumSelect.vue'
 
 const user = ref({})
 const editEnable = ref(false)

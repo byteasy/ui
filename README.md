@@ -1,4 +1,3 @@
-![Byteasy项目演示](./src/assets/img/white-logo.png)
 # Byteasy 易码之道（码道）
 
 ## 一、项目简介
@@ -56,7 +55,7 @@
 ## 五、在线体验
 
 - admin/admin123
-- 演示地址(国内网速较慢，请耐心等待):[https://www.byteasy.cn](https://www.byteasy.cn)
+- 演示地址:[https://www.byteasy.cn](https://www.byteasy.cn)
 - 文档地址:[https://doc.byteasy.cn](https://doc.byteasy.cn)
 
 ## 六、开源仓库地址
@@ -65,14 +64,16 @@
 | 模块              | 说明       | 地址                                         |
 |-----------------|----------|--------------------------------------------|
 | cloud-framework | 通用共性基础框架 | https://github.com/byteasy/cloud-framework |
-| ui-app          | 前端代码仓    | https://github.com/byteasy/ui          |
+| cloud-platform  | 平台基础服务   | https://github.com/byteasy/cloud-platform  |
+| ui-app          | 前端代码仓    | https://github.com/byteasy/ui-app          |
 
 6.2 Gitee传送地址
 
 | 模块              | 说明       | 地址                                          |
 |-----------------|----------|---------------------------------------------|
 | cloud-framework | 通用共性基础框架 | https://gitee.com/byteasy/cloud-framework |
-| ui-app          | 前端代码仓    | https://gitee.com/byteasy/ui          |
+| cloud-platform  | 平台基础服务   | https://gitee.com/byteasy/cloud-platform  |
+| ui-app          | 前端代码仓    | https://gitee.com/byteasy/ui-app          |
 
 ## 七、快速开始
 

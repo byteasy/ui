@@ -101,18 +101,18 @@ function onGroupClick(category) {
 </script>
 <template>
   <div class="flex-row align-items-center">
-    <el-text
-      v-for="item in quickMenus"
-      :key="item.code"
-      :class="{
-        'app-text-color ml-1': true,
-        'app-text-color-active': activeGroup?.code === item.code,
-      }"
-      @click="onItemClick(item)"
-    >
-      <tuna-i18n-value :model-value="item.name" />
-    </el-text
-    >
+    <template v-for="item in quickMenus" :key="item.code">
+      <el-text
+        v-if="item.isHide === false"
+        :class="{
+          'app-text-color ml-1': true,
+          'app-text-color-active': activeGroup?.code === item.code,
+        }"
+        @click="onItemClick(item)"
+      >
+        <be-i18n-value :model-value="item.name" />
+      </el-text>
+    </template>
     <el-popover placement="bottom-start" :width="popoverWidth" ref="refPopWindow">
       <template #reference>
         <div
@@ -120,7 +120,7 @@ function onGroupClick(category) {
           style="cursor: pointer"
         >
           <el-icon :size="20">
-            <Menu/>
+            <Menu />
           </el-icon>
         </div>
       </template>
@@ -137,7 +137,7 @@ function onGroupClick(category) {
               class="group-one"
               @mouseenter="onGroupClick(item)"
             >
-              <tuna-i18n-value :model-value="item.name" />
+              <be-i18n-value :model-value="item.name" />
             </div>
           </div>
         </div>
@@ -151,16 +151,19 @@ function onGroupClick(category) {
               <!--              <div class="my-font-size group-tow-child" @click="onItemClick">供应商档案参数配置</div>-->
               <!--              <div v-for="n in 10" :key="n" class="my-font-size group-tow-child">供应商子项 {{n}}</div>-->
               <!--            </div>-->
-              <div class="flex-column align-items-start p-3" v-for="group in groupEntries" :key="group.id">
-                <div class="my-font-size-md font-bold mb-2"><tuna-i18n-value :model-value="group.name" /></div>
-                <div
-                  v-for="item in group.resourceGroups"
-                  :key="item.code"
-                  class="my-font-size group-tow-child"
-                  @click="onItemClick(item)"
-                >
-                  <tuna-i18n-value :model-value="item.name" />
+              <div
+                class="flex-column align-items-start p-3"
+                v-for="group in groupEntries"
+                :key="group.id"
+              >
+                <div class="my-font-size-md font-bold mb-2">
+                  <be-i18n-value :model-value="group.name" />
                 </div>
+                <template v-for="item in group.resourceGroups" :key="item.code">
+                  <div class="my-font-size group-tow-child" @click="onItemClick(item)" v-if="item.isHide === false">
+                    <be-i18n-value :model-value="item.name" />
+                  </div>
+                </template>
               </div>
             </el-space>
           </div>

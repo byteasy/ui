@@ -2,9 +2,21 @@
 <html lang="">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="/platformSvr/papi/img/favicon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Byteasy</title>
+    <script>
+      fetch('/platformSvr/papi/theme/title')
+        .then(function(res) { return res.text(); })
+        .then(function(title) {
+          if (title && title.trim()) {
+            document.title = title.trim();
+          }
+        })
+        .catch(function(err) {
+          document.title = 'Byteasy'; // 接口报错时的兜底标题
+        });
+    </script>
   </head>
   <body>
     <div id="app"></div>

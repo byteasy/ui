@@ -4,6 +4,13 @@ import { markRaw, reactive } from 'vue'
 import { useAppSettingsStore } from '@/stores/appSettings.ts'
 type DrawerDirection = 'rtl' | 'ltr' | 'ttb' | 'btt'
 
+interface BtnExtras {
+  key: string
+  icon: string
+  type: string
+  name: string
+}
+
 // 直接用 reactive 对象，不用 ref
 interface ModalState {
   items: Array<{
@@ -19,6 +26,10 @@ interface ModalState {
     fullscreen: boolean // 仅对dialog有效
     direction?: DrawerDirection // 仅对抽屉有效
     onClose?: (data?: unknown) => void
+    btnOkTitle?: string
+    btnCancelTitle?: string
+    btnExtras?: Array<BtnExtras>
+    footer?: boolean
   }>
 }
 
@@ -40,6 +51,7 @@ export const useModal = () => {
     const defaultOptions = {
       draggable: true, // 默认值
       fullscreen: false,
+      footer: true,
       dialogModel: (appSettingsStore.dialogModel) === '1',
       closeOnClickModal: (appSettingsStore.closeOnClickModal) === '1',
       width: '50%',

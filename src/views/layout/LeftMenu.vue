@@ -9,7 +9,7 @@
     >
       <el-sub-menu :index="root.routerUrl" v-for="root in menuTree" :key="root.code">
         <template #title>
-          <tuna-svg-icon :svg="root.icon" />
+          <be-svg-icon :svg="root.icon" />
           <span class="my-font-size-md">{{ root.name }}</span>
         </template>
         <el-menu-item :index="root.routerUrl" v-if="root.type === 'MENU' && root.visible === 'YES'">
@@ -43,7 +43,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { doHttpGet } from '@/api/common/platform'
-import TunaSvgIcon from '@/components/TunaSvgIcon.vue'
+import BeSvgIcon from '@/components/BeSvgIcon.vue'
 
 const route = useRoute()
 const refMenu = ref()
