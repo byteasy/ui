@@ -48,6 +48,11 @@ export interface BeTableProps {
   apiDelete?: string
 
   /**
+   * 审计日志查询接口
+   */
+  apiAuditLog?: string
+
+  /**
    * 批量删除接口
    */
   apiBatchDelete?: string
@@ -245,6 +250,9 @@ export enum TableRowActionEnum {
 
   /** 编辑行数据 */
   EDIT = 'edit',
+
+  /** 审计日志查询 */
+  AUDIT_LOG = 'auditLog',
 
   /** 删除单行 */
   DELETE = 'delete',

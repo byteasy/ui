@@ -104,7 +104,6 @@ import {
   onBeforeMount,
   onMounted,
   ref,
-  useSlots,
 } from 'vue';
 import { watchDebounced } from '@vueuse/core';
 import BeContainer from '@/components/BeContainer.vue';
@@ -362,6 +361,8 @@ function onRowActionHandle(action, args) {
     onEdit(args);
   } else if (action === TableRowActionEnum.VIEW) {
     onView(args);
+  } else if (action === TableRowActionEnum.AUDIT_LOG) {
+    onAuditLog(args);
   } else if (action === TableRowActionEnum.DELETE) {
     onDelete(args);
   } else if (action === TableRowActionEnum.DETAIL_TABLE) {
@@ -435,6 +436,29 @@ function onExcelExportClick() {
         onClose: (data) => {
           refresh();
         },
+      },
+    );
+  });
+}
+
+function onAuditLog(row) {
+  getEntityDefine(props.className).then((entityDefine) => {
+    const queryParams = {};
+    queryParams['idQueryType'] = 'eq';
+    queryParams['id'] = row.id;
+    const metaData = { queryParams: queryParams, apiQuery: props.apiAuditLog, className: 'com.byteasy.entity.AuditLog' };
+    const meta = { apiQuery: props.apiAuditLog }
+    open(
+      BeTableContainer,
+      {
+        metaData: metaData,
+        meta: meta,
+      },
+      {
+        title: getLangText(entityDefine.name, locale.value),
+        width: getFormWidth(),
+        dialogModel: props.dialogModel,
+        footer: false
       },
     );
   });

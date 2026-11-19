@@ -24,7 +24,7 @@
                 <be-popup-object-view :model-value="showValue[getClassFieldName(col.externalClass)]"
                                         :column="col" :lang="props.lang"
                                         v-else-if="col.relationType === 'EXTERNAL_KEY'  && col.externalClassAutoFill === true"/>
-                <el-text style="max-width: 15vw;" truncated v-else-if="col.type ==='STRING'">{{ getLangText(showValue[col.name], props.lang) }}</el-text>
+                <el-text style="max-width: 15vw;" truncated v-else-if="col.type ==='STRING' && col.isI18n === 'YES'">{{ getLangText(showValue[col.name], props.lang) }}</el-text>
                 <el-text style="max-width: 15vw;" truncated v-else> {{ showValue[col.name] }}</el-text>
               </slot>
             </el-descriptions-item>

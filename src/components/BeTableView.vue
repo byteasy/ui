@@ -109,6 +109,10 @@
                      type="primary" v-if="hasPermission(tableProps.apiSave) && props.tableProps.queryMode !== true">
               {{ t('table.edit') }}
             </el-link>
+            <el-link underline="never" @click="handleRowAction(TableRowActionEnum.AUDIT_LOG, scope.row)"
+                     type="warning" v-if="hasPermission(tableProps.apiAuditLog)">
+              {{ t('table.audit') }}
+            </el-link>
             <slot name="table-operation-extra" :row="scope.row" :queryParams="props.queryParams"></slot>
             <el-popconfirm
               :confirm-button-text="$t('ok')"

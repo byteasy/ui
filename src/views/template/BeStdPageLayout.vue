@@ -8,6 +8,7 @@
     :api-save="metaData.apiSave"
     :api-cascade="metaData.apiCascade"
     :api-delete="metaData.apiDelete"
+    :api-audit-log="metaData.apiAuditLog"
     :api-batch-delete="metaData.apiBatchDelete"
     :api-download-import-template="metaData.apiDownloadImportTemplate"
     :api-export="metaData.apiExport"
@@ -143,7 +144,7 @@
 <script lang="ts" setup>
 import { computed, defineExpose, defineModel, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { parseComponent, parseComponentParam } from '@/util/common.ts';
+import { mergeWithoutNull, parseComponent, parseComponentParam } from '@/util/common.ts';
 import { executeOpenApi } from '@/api/common/platform';
 import { getComponent } from '@/util/componentLoader.ts';
 
@@ -230,7 +231,7 @@ onMounted(() => {
     }
     layoutSuccess.value = true;
 
-    Object.assign(metaData.value, layoutParams);
+    mergeWithoutNull(metaData.value, layoutParams);
     metaData.value.queryParams = queryParams.value;
     Object.assign(metaData.value.queryParams, JSON.parse(layoutParams?.queryParams || '{}'));
     loading.value = false;

@@ -1,4 +1,3 @@
-![Byteasy项目演示](./src/assets/img/white-logo.png)
 # Byteasy 易码之道（码道）
 
 ## 一、项目简介

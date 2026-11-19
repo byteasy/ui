@@ -245,10 +245,8 @@ watch(
 
 // 监听上传成功回调
 function handleUploadSuccess(response: any, uploadFile: UploadFile) {
-  if (response?.url) {
-    uploadFile.url = response.url;
-  } else if (response?.data?.url) {
-    uploadFile.url = response.data.url;
+  if (response?.data) {
+    uploadFile.url = response.data;
   }
 }
 
